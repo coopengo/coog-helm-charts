@@ -1,0 +1,25 @@
+{{- if .Values.coog.enabled -}}
+{{- if .Values.coog.persistentVolume.enabled -}}
+{{- if not .Values.coog.persistentVolume.existingClaim -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
+  {{- if .Values.coog.persistentVolume.annotations }}
+  annotations:
+{{ toYaml .Values.coog.persistentVolume.annotations | indent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "{{ .Values.coog.persistentVolume.storageClass }}"
+  {{- if .Values.coog.persistentVolume.claim.name }}
+  volumeName: "{{ .Values.coog.persistentVolume.claim.name }}"
+  {{- end }}
+  resources:
+    requests:
+      storage: "{{ .Values.coog.persistentVolume.size }}"
+
+{{- end -}}
+{{- end -}}
+{{- end }}
