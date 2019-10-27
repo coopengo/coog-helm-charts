@@ -1,0 +1,207 @@
+{{- if .Values.coog.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "full_name" . }}
+  labels:
+{{ include "chart_labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.coog.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "short_name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "short_name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.coog.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- if .Values.coog.persistentVolume.enabled }}
+      volumes:
+        - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
+    {{- end }}
+      initContainers:
+        - name: "{{ .Chart.Name }}-module-update"
+          image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
+          imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+          command: ['sh', '-c', 'ep admin -d {{ .Values.coog.postgres.database }} -u ir res --activate-dependencies']
+          env:
+            - name:  COOG_SERVER_WORKERS
+              value: "{{ .Values.coog.workers }}"
+            - name:  COOG_TIMEOUT
+              value: "{{ .Values.coog.timeout }}"
+            - name:  LOG_LEVEL
+              value: "{{ .Values.coog.log_level }}"
+            - name:  COOG_POSTGRES_HOST
+            {{- if not .Values.coog.external_postgres.enabled }}
+              value: "{{ .Release.Name }}-postgresql"
+            {{ else }}
+              value: "{{ .Values.coog.external_postgres.host }}"
+            {{- end }}
+            - name:  COOG_POSTGRES_PORT
+            {{- if not .Values.coog.external_postgres.enabled }}
+              value: "{{ .Values.postgresql.service.port }}"
+            {{ else }}
+              value: "{{ .Values.coog.external_postgres.port }}"
+            {{- end }}
+            - name:  COOG_DB_NAME
+              value: "{{ .Values.coog.postgres.database}}"
+            - name:  COOG_DB_USER
+              value: "{{ .Values.coog.postgres.user }}"
+            - name:  COOG_DB_PASSWORD
+              value: "{{ .Values.coog.postgres.password }}"
+            {{- if .Values.coog.extraEnv }}
+            {{- range $key, $value := .Values.coog.extraEnv }}
+            - name:  {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            - name:  TRYTOND_ASYNC_CELERY
+              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
+            - name:  TRYTOND_CACHE__CLASS
+              value: "trytond.cache.MemoryCache"
+            - name:  TRYTOND_CACHE__URI
+              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/0"
+            - name:  TRYTOND_DATABASE__URI
+            {{- if not .Values.coog.external_postgres.enabled }}
+              value: "postgresql://postgres:{{ .Values.coog.postgres.password }}@{{ .Release.Name }}-postgresql:{{ .Values.postgresql.service.port }}/{{ .Values.coog.postgres.database}}"
+            {{ else }}
+              value: "postgresql://{{ .Values.coog.postgres.user }}:{{ .Values.coog.postgres.password }}@{{ .Values.coog.external_postgres.host }}:{{ .Values.coog.external_postgres.port }}/{{ .Values.coog.postgres.database}}"
+            {{ end }}
+            - name: TRYTOND_DATABASE__LANGUAGE
+              value: fr
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
+          imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+          command:
+            - ep
+            - server
+            - "{{ .Values.coog.workers }}"
+        {{- if .Values.coog.persistentVolume.enabled }}
+          volumeMounts:
+            - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
+              mountPath: {{ .Values.coog.root_dir }}
+              readOnly: false
+        {{- end }}
+          env:
+            - name:  COOG_SERVER_WORKERS
+              value: "{{ .Values.coog.workers }}"
+            - name:  COOG_TIMEOUT
+              value: "{{ .Values.coog.timeout }}"
+            - name:  LOG_LEVEL
+              value: "{{ .Values.coog.log_level }}"
+            - name:  COOG_REDIS_HOST
+              value: "{{ .Release.Name }}-redis-master"
+            - name:  COOG_REDIS_PORT
+              value: "{{ .Values.redis.redisPort }}"
+            - name:  COOG_POSTGRES_HOST
+            {{- if not .Values.coog.external_postgres.enabled }}
+              value: "{{ .Release.Name }}-postgresql"
+            {{ else }}
+              value: "{{ .Values.coog.external_postgres.host }}"
+            {{- end }}
+            - name:  COOG_POSTGRES_PORT
+            {{- if not .Values.coog.external_postgres.enabled }}
+              value: "{{ .Values.postgresql.service.port }}"
+            {{ else }}
+              value: "{{ .Values.coog.external_postgres.port }}"
+            {{- end }}
+            - name:  COOG_DB_NAME
+              value: "{{ .Values.coog.postgres.database}}"
+            - name:  COOG_DB_USER
+              value: "{{ .Values.coog.postgres.user }}"
+            - name:  COOG_DB_PASSWORD
+              value: "{{ .Values.coog.postgres.password }}"
+            {{- if .Values.coog.extraEnv }}
+            {{- range $key, $value := .Values.coog.extraEnv }}
+            - name:  {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+            - name:  TRYTOND_ASYNC_CELERY
+              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
+            - name:  TRYTOND_CACHE__CLASS
+              value: "trytond.cache.SerializableMemoryCache"
+            - name:  TRYTOND_CACHE__CLEAN_TIMEOUT
+              value: "0"
+            - name:  TRYTOND_CACHE__URI
+              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/0"
+            - name:  TRYTOND_DATABASE__URI
+            {{- if not .Values.coog.external_postgres.enabled }}
+              value: "postgresql://postgres:{{ .Values.coog.postgres.password }}@{{ .Release.Name }}-postgresql:{{ .Values.postgresql.service.port }}/{{ .Values.coog.postgres.database}}"
+            {{ else }}
+              value: "postgresql://{{ .Values.coog.postgres.user }}:{{ .Values.coog.postgres.password }}@{{ .Values.coog.external_postgres.host }}:{{ .Values.coog.external_postgres.port }}/{{ .Values.coog.postgres.database}}"
+            {{ end }}
+            - name: TRYTOND_DATABASE__LANGUAGE
+              value: fr
+            - name: TRYTOND_EMAIL__URI
+              value: "{{ .Values.coog.email_uri }}"
+            - name: TRYTOND_EMAIL__FROM
+              value: "{{ .Values.coog.email_from }}"
+            - name: TRYTOND_REPORT__UNOCONV
+              value: "True"
+            - name:  TRYTOND_DEBUG__VIEWS
+              value: "False"
+            - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
+              value: "True"
+            - name: TRYTOND_REPORT__API
+              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-unoconv:5000/unoconv/{oext}/"
+            - name: COOG_IWC
+              value: "1"
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: http
+          readinessProbe:
+            httpGet:
+              path: "/{{ .Values.coog.postgres.database }}/readiness"
+              port: http
+          resources:
+            {{- toYaml .Values.coog.resources | nindent 12 }}
+      {{- with .Values.coog.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.coog.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.coog.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}
