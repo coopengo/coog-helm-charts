@@ -1,5 +1,5 @@
-{{- if .Values.portal.enabled -}}
-{{- if .Values.portal.ingress.enabled -}}
+{{- if .Values.app_b2c.enabled -}}
+{{- if .Values.app_b2c.ingress.enabled -}}
 {{- $fullName := include "full_name" . -}}
 apiVersion: extensions/v1beta1
 kind: Ingress
@@ -7,14 +7,14 @@ metadata:
   name: {{ $fullName }}
   labels:
 {{ include "chart_labels" . | indent 4 }}
-  {{- with .Values.portal.ingress.annotations }}
+  {{- with .Values.app_b2c.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if .Values.portal.ingress.tls }}
+{{- if .Values.app_b2c.ingress.tls }}
   tls:
-  {{- range .Values.portal.ingress.tls }}
+  {{- range .Values.app_b2c.ingress.tls }}
     - hosts:
       {{- range .hosts }}
         - {{ . | quote }}
@@ -23,7 +23,7 @@ spec:
   {{- end }}
 {{- end }}
   rules:
-  {{- range .Values.portal.ingress.hosts }}
+  {{- range .Values.app_b2c.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:

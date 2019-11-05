@@ -1,4 +1,4 @@
-{{- if .Values.portal.enabled -}}
+{{- if .Values.app_b2c.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,7 +6,7 @@ metadata:
   labels:
 {{ include "chart_labels" . | indent 4 }}
 spec:
-  replicas: {{ .Values.portal.replicaCount }}
+  replicas: {{ .Values.app_b2c.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "short_name" . }}
@@ -17,14 +17,14 @@ spec:
         app.kubernetes.io/name: {{ include "short_name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-    {{- with .Values.portal.imagePullSecrets }}
+    {{- with .Values.app_b2c.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.portal.image.repository }}:{{ .Values.portal.image.tag }}"
-          imagePullPolicy: {{ .Values.portal.image.pullPolicy }}
+          image: "{{ .Values.app_b2c.image.repository }}:{{ .Values.app_b2c.image.tag }}"
+          imagePullPolicy: {{ .Values.app_b2c.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -50,16 +50,16 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.portal.resources | nindent 12 }}
-      {{- with .Values.portal.nodeSelector }}
+            {{- toYaml .Values.app_b2c.resources | nindent 12 }}
+      {{- with .Values.app_b2c.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.portal.affinity }}
+    {{- with .Values.app_b2c.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.portal.tolerations }}
+    {{- with .Values.app_b2c.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
