@@ -1,0 +1,72 @@
+{{- if .Values.api_b2c.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "full_name" . }}
+  labels:
+{{ include "chart_labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.api_b2c.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "short_name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "short_name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.api_b2c.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.api_b2c.image.repository }}:{{ .Values.api_b2c.image.tag }}"
+          imagePullPolicy: {{ .Values.api_b2c.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          env:
+            - name: COOG_URL
+              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
+            - name: COOG_DB_NAME
+              value: "{{ .Values.coog.postgres.database }}"
+            - name: COOG_DOCUMENT_TOKEN_SECRET
+              value: "{{ .Values.coog.document_token}}"
+            - name:  JWT_INTERNAL_ENCRYPTION
+              value: "{{ .Values.jwt.internal.encryption }}"
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.api_b2c.resources | nindent 12 }}
+      {{- with .Values.api_b2c.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.api_b2c.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.api_b2c.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- end }}
