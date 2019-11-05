@@ -3,20 +3,20 @@ entries:
   coog:
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2019-11-05T11:08:33.547556836+01:00"
+    created: "2019-11-05T16:05:27.603136479+01:00"
     description: A Helm chart for Coog
-    digest: 755425593bdc4fdc7974b8d636546d178d419d13f9687ed94eb01c24d81457b3
+    digest: a58b3a201d80631c008c78095b1068693a65f3d48366a3201b10a16245fa6a43
     name: coog
     urls:
     - coog-0.1.21.tgz
     version: 0.1.21
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2019-11-05T11:08:33.54268233+01:00"
+    created: "2019-11-05T16:05:27.598963857+01:00"
     description: A Helm chart for Coog
     digest: 77a0ec3c0381d27846c08ee0fd9c60a91cd399478ada5b95c6ae3040fcd267c5
     name: coog
     urls:
     - coog-0.1.20.tgz
     version: 0.1.20
-generated: "2019-11-05T11:08:33.53724468+01:00"
+generated: "2019-11-05T16:05:27.594662966+01:00"
