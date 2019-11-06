@@ -27,7 +27,7 @@ api:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 32m
+      cpu: 500m
       memory: 256Mi
     requests:
       cpu: 32m
@@ -200,6 +200,16 @@ celery:
   replicaCount: 1
   specificBatchConcurrency:
     enabled: true
+  affinity: {}
+  nodeSelector: {}
+  resources:
+    limits:
+      cpu: 400m
+      memory: 300Mi
+    requests:
+      cpu: 400m
+      memory: 300Mi
+  tolerations: []
 
 coog:
   workers: 4
@@ -266,6 +276,17 @@ coog:
 
 cron:
   enabled: true
+  affinity: {}
+  nodeSelector: {}
+  resources:
+    limits:
+      cpu: 400m
+      memory: 300Mi
+    requests:
+      cpu: 400m
+      memory: 300Mi
+  tolerations: []
+
 
 
 paybox:

@@ -125,16 +125,16 @@ spec:
                 - "-c"
                 - "PYTHONPATH=/workspace/coog/bin/lib celery -A coog_async.broker_celery status"
           resources:
-            {{- toYaml .Values.coog.resources | nindent 12 }}
-      {{- with .Values.coog.nodeSelector }}
+            {{- toYaml .Values.cron.resources | nindent 12 }}
+      {{- with .Values.cron.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.coog.affinity }}
+    {{- with .Values.cron.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.coog.tolerations }}
+    {{- with .Values.cron.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
