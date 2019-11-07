@@ -130,7 +130,7 @@ spec:
                 - "/bin/bash"
                 - "-c"
                 - "PYTHONPATH=/workspace/coog/bin/lib celery -A coog_async.broker_celery status"
-            {{- toYaml .Values.celery.livenessProbe | indent 12 }}
+            {{- toYaml .Values.celery.livenessProbe | nindent 12 }}
           readinessProbe:
             exec:
               command:
