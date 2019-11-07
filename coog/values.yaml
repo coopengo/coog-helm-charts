@@ -177,7 +177,7 @@ unoconv:
     type: ClusterIP
     port: 5000
 
-  resources: {}
+  resources:
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -210,6 +210,11 @@ celery:
       cpu: 400m
       memory: 300Mi
   tolerations: []
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 120
+    timeoutSeconds: 10
+
 
 coog:
   workers: 4
@@ -286,7 +291,10 @@ cron:
       cpu: 400m
       memory: 300Mi
   tolerations: []
-
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 120
+    timeoutSeconds: 10
 
 
 paybox:
@@ -419,7 +427,7 @@ portal:
     #    hosts:
     #      - chart-example.local
 
-  resources: {}
+  resources:
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -469,7 +477,7 @@ gateway:
     #    hosts:
     #      - chart-example.local
 
-  resources: {}
+  resources:
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -517,7 +525,7 @@ static:
     #    hosts:
     #      - chart-example.local
 
-  resources: {}
+  resources:
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following

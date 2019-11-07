@@ -52,62 +52,6 @@ spec:
           env:
             - name:  COOG_SERVER_WORKERS
               value: "{{ .Values.coog.workers }}"
-            - name:  COOG_CELERY_WORKERS
-              value: "{{ .Values.coog.workers }}"
-            - name:  COOG_TIMEOUT
-              value: "{{ .Values.coog.timeout }}"
-            - name:  LOG_LEVEL
-              value: "{{ .Values.coog.log_level }}"
-            - name:  COOG_REDIS_HOST
-              value: "{{ .Release.Name }}-redis-master"
-            - name:  COOG_REDIS_PORT
-              value: "{{ .Values.redis.redisPort }}"
-            - name:  COOG_POSTGRES_HOST
-            {{- if not .Values.coog.external_postgres.enabled }}
-              value: "{{ .Release.Name }}-postgresql"
-            {{ else }}
-              value: "{{ .Values.coog.external_postgres.host }}"
-            {{- end }}
-            - name:  COOG_POSTGRES_PORT
-            {{- if not .Values.coog.external_postgres.enabled }}
-              value: "{{ .Values.postgresql.service.port }}"
-            {{ else }}
-              value: "{{ .Values.coog.external_postgres.port }}"
-            {{- end }}
-            - name:  COOG_DB_NAME
-              value: "{{ .Values.coog.postgres.database}}"
-            - name:  COOG_DB_USER
-              value: "{{ .Values.coog.postgres.user }}"
-            - name:  COOG_DB_PASSWORD
-              value: "{{ .Values.coog.postgres.password }}"
-            {{- if .Values.coog.extraEnv }}
-            {{- range $key, $value := .Values.coog.extraEnv }}
-            - name:  {{ $key }}
-              value: {{ $value | quote }}
-            {{- end }}
-            {{- end }}
-            - name:  TRYTOND_ASYNC_CELERY
-              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
-            - name:  TRYTOND_CACHE__CLASS
-              value: "trytond.cache.SerializableMemoryCache"
-            - name:  TRYTOND_CACHE__CLEAN_TIMEOUT
-              value: "0"
-            - name:  TRYTOND_CACHE__URI
-              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/0"
-            - name:  TRYTOND_DATABASE__URI
-            {{- if not .Values.coog.external_postgres.enabled }}
-              value: "postgresql://postgres:{{ .Values.coog.postgres.password }}@{{ .Release.Name }}-postgresql:{{ .Values.postgresql.service.port }}/{{ .Values.coog.postgres.database}}"
-            {{ else }}
-              value: "postgresql://{{ .Values.coog.postgres.user }}:{{ .Values.coog.postgres.password }}@{{ .Values.coog.external_postgres.host }}:{{ .Values.coog.external_postgres.port }}/{{ .Values.coog.postgres.database}}"
-            {{ end }}
-            - name:  TRYTOND_DEBUG__VIEWS
-              value: "False"
-            - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
-              value: "True"
-            - name: TRYTOND_REPORT__API
-              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-unoconv:5000/unoconv/{oext}/"
-            - name: COOG_IWC
-              value: "1"
           ports:
             - name: http
               containerPort: 8000
@@ -118,6 +62,7 @@ spec:
                 - "/bin/bash"
                 - "-c"
                 - "PYTHONPATH=/workspace/coog/bin/lib celery -A coog_async.broker_celery status"
+              {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
           readinessProbe:
             exec:
               command:
