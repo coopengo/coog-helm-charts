@@ -28,10 +28,10 @@ api:
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
       cpu: 200m
-      memory: 150Mi
+      memory: 200Mi
     requests:
       cpu: 100m
-      memory: 200Mi
+      memory: 150Mi
 
   nodeSelector: {}
 
