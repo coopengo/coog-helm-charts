@@ -184,7 +184,7 @@ unoconv:
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
       cpu: 200m
-      memory: 150Mi
+      memory: 250Mi
     requests:
       cpu: 100m
       memory: 250Mi
