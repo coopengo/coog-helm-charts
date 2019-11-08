@@ -1,6 +1,6 @@
 # coog-helm-charts
 
-
+##INJECTER LES SECRETS POUR LOADER LES IMAGES DE DOCKERHUB (login/password)
 kubectl apply -f docker-client-secret.yml
 ######################################
 apiVersion: v1
@@ -13,14 +13,20 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 #####################################
 
+##IMPORTANT 
+.dockerconfigjson = {"auths": {"docker.io": { "auth": "login:pass ==>   enbase64" }}}
 
 
 
 
 
-# INSTALLATION
+
+
+# INSTALLATION DE COOG
 helm repo add coopengo https://raw.githubusercontent.com/coopengo/coog-helm-charts/master/index.yaml
 
 helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
 
+#INSTALLATION DE NINX INGRESS
+helm install stable/nginx-ingress
 
