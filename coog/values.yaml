@@ -204,7 +204,7 @@ celery:
   nodeSelector: {}
   resources:
     limits:
-      cpu: 400m
+      cpu: 1
       memory: 300Mi
     requests:
       cpu: 400m
@@ -266,7 +266,7 @@ coog:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 1000m
+      cpu: 1
       memory: 2048Mi
     requests:
       cpu: 500m
