@@ -253,6 +253,10 @@ celery:
 
 
 coog:
+  external_postgres: 
+    enabled: true
+  postgres:
+    database: coog
   workers: 4
   log_level: INFO
   timeout: 3600
@@ -578,3 +582,6 @@ static:
   tolerations: []
 
   affinity: {}
+
+redis:
+  port: 27017

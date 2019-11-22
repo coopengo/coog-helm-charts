@@ -67,6 +67,8 @@ spec:
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-api-b2b-config"
             - name:  COOG_API_B2C_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-api-b2c"
+            - name:  COOG_API_REFERENTIAL_URL
+              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-api-referential"
             - name:  COOG_API_IDENTITY_MANAGER_URL
               value: "http://localhost:3000"
             - name:  COOG_WEB_TOKEN

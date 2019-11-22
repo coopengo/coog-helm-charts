@@ -1,4 +1,4 @@
-{{- if .Values.api_b2c.enabled -}}
+{{- if .Values.api_referential.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,7 +6,7 @@ metadata:
   labels:
 {{ include "chart_labels" . | indent 4 }}
 spec:
-  replicas: {{ .Values.api_b2c.replicaCount }}
+  replicas: {{ .Values.api_referential.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "short_name" . }}
@@ -17,14 +17,14 @@ spec:
         app.kubernetes.io/name: {{ include "short_name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-    {{- with .Values.api_b2c.imagePullSecrets }}
+    {{- with .Values.api_referential.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.api_b2c.image.repository }}:{{ .Values.api_b2c.image.tag }}"
-          imagePullPolicy: {{ .Values.api_b2c.image.pullPolicy }}
+          image: "{{ .Values.api_referential.image.repository }}:{{ .Values.api_referential.image.tag }}"
+          imagePullPolicy: {{ .Values.api_referential.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -39,8 +39,6 @@ spec:
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
             - name: COOG_DB_NAME
               value: "{{ .Values.coog.postgres.database }}"
-            - name: COOG_DOCUMENT_TOKEN_SECRET
-              value: "{{ .Values.coog.document_token}}"
             - name:  JWT_INTERNAL_ENCRYPTION
               value: "{{ .Values.jwt.internal.encryption }}"
           ports:
@@ -56,16 +54,16 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.api_b2c.resources | nindent 12 }}
-      {{- with .Values.api_b2c.nodeSelector }}
+            {{- toYaml .Values.api_referential.resources | nindent 12 }}
+      {{- with .Values.api_referential.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.api_b2c.affinity }}
+    {{- with .Values.api_referential.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.api_b2c.tolerations }}
+    {{- with .Values.api_referential.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
