@@ -27,8 +27,8 @@ api:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 500m
-      memory: 200Mi
+      cpu: 1
+      memory: 500Mi
     requests:
       cpu: 200m
       memory: 150Mi
@@ -241,7 +241,7 @@ celery:
   resources:
     limits:
       cpu: 1
-      memory: 300Mi
+      memory: 1000Mi
     requests:
       cpu: 400m
       memory: 300Mi
@@ -326,7 +326,7 @@ cron:
   resources:
     limits:
       cpu: 1
-      memory: 300Mi
+      memory: 1000Mi
     requests:
       cpu: 400m
       memory: 300Mi
@@ -423,8 +423,8 @@ web:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 200m
-      memory: 128Mi
+      cpu: 500m
+      memory: 512Mi
     requests:
       cpu: 100m
       memory: 128Mi
@@ -473,8 +473,8 @@ portal:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 500m
-      memory: 128Mi
+      cpu: 1
+      memory: 512Mi
     requests:
       cpu: 100m
       memory: 128Mi
@@ -523,8 +523,8 @@ gateway:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 300m
-      memory: 300Mi
+      cpu: 500m
+      memory: 1000Mi
     requests:
       cpu: 100m
       memory: 300Mi
@@ -571,11 +571,11 @@ static:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 300m
-      memory: 200Mi
+      cpu: 1
+      memory: 1024Mi
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 200m
+      memory: 200Mi
 
   nodeSelector: {}
 
