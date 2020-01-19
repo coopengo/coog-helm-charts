@@ -584,4 +584,6 @@ static:
   affinity: {}
 
 redis:
+  master:
+    disableCommands: []
   port: 27017
