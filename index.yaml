@@ -3,7 +3,16 @@ entries:
   coog:
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-01-19T06:29:57.330393657+01:00
+    created: "2020-01-20T14:25:50.101608252+01:00"
+    description: A Helm chart for Coog
+    digest: 14df1ecc94c45e166951f7da18759595ea337de19d50aba6c7f6b9e666c68299
+    name: coog
+    urls:
+    - coog-0.1.29.tgz
+    version: 0.1.29
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2020-01-20T14:25:50.098598302+01:00"
     description: A Helm chart for Coog
     digest: f73cfbe816a8d55f0547cca595974b7e2bc34b0fc826afcc27183d3f2d749a6a
     name: coog
@@ -12,7 +21,7 @@ entries:
     version: 0.1.28
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-01-19T06:29:57.327081481+01:00
+    created: "2020-01-20T14:25:50.09488852+01:00"
     description: A Helm chart for Coog
     digest: ae312368c0c64e440fa995165a7d718c21ce6733d43da44c0e24dcfc249ce6a3
     name: coog
@@ -21,7 +30,7 @@ entries:
     version: 0.1.27
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-01-19T06:29:57.323282007+01:00
+    created: "2020-01-20T14:25:50.089535288+01:00"
     description: A Helm chart for Coog
     digest: d967b30a7291e63705e8a8a8c3feb5f0bcf8aeb117d7bdde43e2cfc122627e77
     name: coog
@@ -30,7 +39,7 @@ entries:
     version: 0.1.26
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-01-19T06:29:57.318135239+01:00
+    created: "2020-01-20T14:25:50.083409963+01:00"
     description: A Helm chart for Coog
     digest: a7d192183c56236b47bbfacfc570428683c49e03d9377fd21f7950b56b6f0f00
     name: coog
@@ -39,7 +48,7 @@ entries:
     version: 0.1.25
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-01-19T06:29:57.314970159+01:00
+    created: "2020-01-20T14:25:50.078708771+01:00"
     description: A Helm chart for Coog
     digest: 1d4328fb7ae08d01c9f68f0ad5f91cc4ed5181d1c79c28cda8fa834202b12662
     name: coog
@@ -48,7 +57,7 @@ entries:
     version: 0.1.24
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-01-19T06:29:57.310924828+01:00
+    created: "2020-01-20T14:25:50.07557316+01:00"
     description: A Helm chart for Coog
     digest: c331e59aed6ad2b2ebb8f48ed8b598b8bfe24af67e18d2ee5d6663361f6d3f44
     name: coog
@@ -57,7 +66,7 @@ entries:
     version: 0.1.23
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-01-19T06:29:57.307432595+01:00
+    created: "2020-01-20T14:25:50.072628118+01:00"
     description: A Helm chart for Coog
     digest: afc84bfbb6d0c51ab46b6f375c0f2998da6bd58324e2f734a35f8cfe1c3cfed3
     name: coog
@@ -66,7 +75,7 @@ entries:
     version: 0.1.22
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-01-19T06:29:57.304287534+01:00
+    created: "2020-01-20T14:25:50.068917414+01:00"
     description: A Helm chart for Coog
     digest: a58b3a201d80631c008c78095b1068693a65f3d48366a3201b10a16245fa6a43
     name: coog
@@ -75,11 +84,11 @@ entries:
     version: 0.1.21
   - apiVersion: v1
     appVersion: "1.0"
-    created: 2020-01-19T06:29:57.300003125+01:00
+    created: "2020-01-20T14:25:50.065492649+01:00"
     description: A Helm chart for Coog
     digest: 77a0ec3c0381d27846c08ee0fd9c60a91cd399478ada5b95c6ae3040fcd267c5
     name: coog
     urls:
     - coog-0.1.20.tgz
     version: 0.1.20
-generated: 2020-01-19T06:29:57.2965802+01:00
+generated: "2020-01-20T14:25:50.062315525+01:00"
