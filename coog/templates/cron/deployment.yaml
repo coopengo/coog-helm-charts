@@ -46,7 +46,7 @@ spec:
         {{- if .Values.coog.persistentVolume.enabled }}
           volumeMounts:
             - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
-              mountPath: {{ .Values.cron.root_dir }}
+              mountPath: {{ .Values.coog.root_dir }}
               readOnly: false
         {{- end }}
           env:

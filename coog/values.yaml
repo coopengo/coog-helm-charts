@@ -3,6 +3,7 @@
 # Declare variables to be passed into your templates.
 
 api:
+  enabled: true
   replicaCount: 1
 
   mongodb:
@@ -10,10 +11,10 @@ api:
 
   image:
     repository: coopengo/api
-    tag: latest
+    tag: 2.6.7
     pullPolicy: Always
-
-  imagePullSecrets: []
+  imagePullSecrets:
+    - name: docker-registry
   nameOverride: ""
   fullnameOverride: ""
 
@@ -41,14 +42,16 @@ api:
 
 
 api_b2b_config:
+  enabled: false
   replicaCount: 1
 
   image:
     repository: coopengo/api-b2b-config
-    tag: latest
+    tag: 2.6.7
     pullPolicy: Always
+  imagePullSecrets:
+    - name: docker-registry
 
-  imagePullSecrets: []
   nameOverride: ""
   fullnameOverride: ""
 
@@ -81,10 +84,11 @@ api_b2c:
 
   image:
     repository: coopengo/api-b2c
-    tag: latest
+    tag: 2.6.7
     pullPolicy: Always
 
-  imagePullSecrets: []
+  imagePullSecrets:
+    - name: docker-registry
   nameOverride: ""
   fullnameOverride: ""
 
@@ -117,10 +121,11 @@ api_referential:
 
   image:
     repository: coopengo/api-referential
-    tag: latest
+    tag: 2.6.7
     pullPolicy: Always
 
-  imagePullSecrets: []
+  imagePullSecrets:
+    - name: docker-registry
   nameOverride: ""
   fullnameOverride: ""
 
@@ -153,10 +158,11 @@ app_b2c:
 
   image:
     repository: coopengo/app-b2c
-    tag: latest
+    tag: 2.6.7
     pullPolicy: Always
 
-  imagePullSecrets: []
+  imagePullSecrets:
+    - name: docker-registry
   nameOverride: ""
   fullnameOverride: ""
 
@@ -202,10 +208,11 @@ unoconv:
 
   image:
     repository: coopengo/unoconv
-    tag: latest
+    tag: 2.6.7
     pullPolicy: Always
 
-  imagePullSecrets: []
+  imagePullSecrets:
+    - name: docker-registry
   nameOverride: ""
   fullnameOverride: ""
 
@@ -253,8 +260,10 @@ celery:
 
 
 coog:
+  enabled: true
   external_postgres: 
     enabled: true
+  root_dir: /workspace/io
   postgres:
     database: coog
   workers: 4
@@ -272,10 +281,11 @@ coog:
 
   image:
     repository: coopengo/coog
-    tag: latest
+    tag: 2.6.7
     pullPolicy: Always
 
-  imagePullSecrets: []
+  imagePullSecrets:
+    - name: docker-registry
   nameOverride: ""
   fullnameOverride: ""
 
@@ -301,10 +311,6 @@ coog:
     #      - chart-example.local
 
   resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
       cpu: 1
       memory: 2048Mi
@@ -346,7 +352,8 @@ paybox:
     tag: latest
     pullPolicy: Always
 
-  imagePullSecrets: []
+  imagePullSecrets:
+    - name: docker-registry
   nameOverride: ""
   fullnameOverride: ""
 
@@ -388,14 +395,16 @@ paybox:
 
 
 web:
+  enabled: true
   replicaCount: 1
 
   image:
     repository: coopengo/web
-    tag: latest
+    tag: 2.6.7
     pullPolicy: Always
 
-  imagePullSecrets: []
+  imagePullSecrets:
+    - name: docker-registry
   nameOverride: ""
   fullnameOverride: ""
 
@@ -445,7 +454,8 @@ portal:
     tag: latest
     pullPolicy: Always
 
-  imagePullSecrets: []
+  imagePullSecrets:
+    - name: docker-registry
   nameOverride: ""
   fullnameOverride: ""
 
@@ -487,15 +497,24 @@ portal:
 
 
 gateway:
+  enabled: true
+  external_mongodb:
+    enabled: false
+  mongodb:
+    database: coog-gateway
+  jwt:
+    encryption: secret
+    expiration: 3600
   whitelist:
   replicaCount: 1
 
   image:
     repository: coopengo/gateway
-    tag: latest
+    tag: 2.6.7
     pullPolicy: Always
 
-  imagePullSecrets: []
+  imagePullSecrets:
+    - name: docker-registry
   nameOverride: ""
   fullnameOverride: ""
 
@@ -536,6 +555,7 @@ gateway:
   affinity: {}
 
 static:
+  enabled: true
   replicaCount: 1
 
   image:
@@ -543,7 +563,8 @@ static:
     tag: latest
     pullPolicy: Always
 
-  imagePullSecrets: []
+  imagePullSecrets:
+    - name: docker-registry
   nameOverride: ""
   fullnameOverride: ""
 
@@ -587,3 +608,7 @@ redis:
   master:
     disableCommands: []
   port: 27017
+
+jwt:
+  internal:
+    encryption: changeme
