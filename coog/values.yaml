@@ -2,6 +2,21 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+postgresql:
+  enabled: true
+  persistence:
+    enabled: false
+  image:
+    debug: true
+  initdbUsername: coog
+  initdbPassword:	coog
+  postgresqlDatabase: coog
+  postgresqlPassword: coog
+  initdbScripts:
+    db-init.sql: |
+      CREATE ROLE coog WITH LOGIN PASSWORD 'coog';
+      CREATE DATABASE coog OWNER coog;
+
 api:
   enabled: true
   replicaCount: 1
@@ -23,13 +38,9 @@ api:
     port: 80
 
   resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 1
-      memory: 500Mi
+      cpu: 700m
+      memory: 300Mi
     requests:
       cpu: 200m
       memory: 150Mi
@@ -59,17 +70,13 @@ api_b2b_config:
     type: ClusterIP
     port: 80
 
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 32m
-    #   memory: 256Mi
-    # requests:
-    #   cpu: 32m
-    #   memory: 256Mi
+  resources:
+    limits:
+      cpu: 200m
+      memory: 250Mi
+    requests:
+      cpu: 100m
+      memory: 200Mi
 
   nodeSelector: {}
 
@@ -96,17 +103,45 @@ api_b2c:
     type: ClusterIP
     port: 80
 
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 32m
-    #   memory: 256Mi
-    # requests:
-    #   cpu: 32m
-    #   memory: 256Mi
+  resources:
+    limits:
+      cpu: 200m
+      memory: 250Mi
+    requests:
+      cpu: 100m
+      memory: 250Mi
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+api_identity:
+  enabled: true
+  replicaCount: 1
+
+  image:
+    repository: coopengo/api-identity
+    tag: 2.6.7
+    pullPolicy: Always
+
+  imagePullSecrets:
+    - name: docker-registry
+  nameOverride: ""
+  fullnameOverride: ""
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  resources:
+    limits:
+      cpu: 200m
+      memory: 400Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
 
   nodeSelector: {}
 
@@ -133,17 +168,13 @@ api_referential:
     type: ClusterIP
     port: 80
 
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 32m
-    #   memory: 256Mi
-    # requests:
-    #   cpu: 32m
-    #   memory: 256Mi
+  resources:
+    limits:
+      cpu: 200m
+      memory: 400Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
 
   nodeSelector: {}
 
@@ -184,17 +215,13 @@ app_b2c:
     #    hosts:
     #      - chart-example.local
 
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  resources:
+    limits:
+      cpu: 200m
+      memory: 250Mi
+    requests:
+      cpu: 100m
+      memory: 75Mi
 
   nodeSelector: {}
 
@@ -221,10 +248,6 @@ unoconv:
     port: 5000
 
   resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
       cpu: 200m
       memory: 250Mi
@@ -247,7 +270,7 @@ celery:
   nodeSelector: {}
   resources:
     limits:
-      cpu: 2
+      cpu: 1
       memory: 2000Mi
     requests:
       cpu: 400m
@@ -262,10 +285,12 @@ celery:
 coog:
   enabled: true
   external_postgres: 
-    enabled: true
+    enabled: false
   root_dir: /workspace/io
   postgres:
     database: coog
+    user: coog
+    password: coog
   workers: 4
   log_level: INFO
   timeout: 3600
@@ -312,7 +337,7 @@ coog:
 
   resources:
     limits:
-      cpu: 1
+      cpu: 700m
       memory: 2048Mi
     requests:
       cpu: 200m
@@ -321,6 +346,10 @@ coog:
   nodeSelector: {}
 
   tolerations: []
+
+  livenessProbe:
+    periodSeconds: 60
+    timeoutSeconds: 30
 
   affinity: {}
 
@@ -375,17 +404,13 @@ paybox:
     #    hosts:
     #      - chart-example.local
 
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 32m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 32m
-    #   memory: 128Mi
+  resources:
+    limits:
+      cpu: 300m
+      memory: 128Mi
+    requests:
+      cpu: 128m
+      memory: 128Mi
 
   nodeSelector: {}
 
@@ -427,12 +452,8 @@ web:
     #      - chart-example.local
 
   resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 500m
+      cpu: 300m
       memory: 512Mi
     requests:
       cpu: 100m
@@ -451,7 +472,7 @@ portal:
 
   image:
     repository: coopengo/portal
-    tag: latest
+    tag: 2.6.7
     pullPolicy: Always
 
   imagePullSecrets:
@@ -537,13 +558,9 @@ gateway:
     #      - chart-example.local
 
   resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
       cpu: 500m
-      memory: 1000Mi
+      memory: 600Mi
     requests:
       cpu: 100m
       memory: 300Mi
@@ -560,7 +577,7 @@ static:
 
   image:
     repository: coopengo/static
-    tag: latest
+    tag: 2.7.1
     pullPolicy: Always
 
   imagePullSecrets:
@@ -587,16 +604,12 @@ static:
     #      - chart-example.local
 
   resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
       cpu: 1
-      memory: 1024Mi
+      memory: 512Mi
     requests:
       cpu: 200m
-      memory: 200Mi
+      memory: 128Mi
 
   nodeSelector: {}
 

@@ -186,6 +186,8 @@ spec:
             httpGet:
               path: /liveness
               port: http
+            exec:
+              {{- toYaml .Values.coog.livenessProbe | nindent 12 }}
           readinessProbe:
             httpGet:
               path: "/{{ .Values.coog.postgres.database }}/readiness"
