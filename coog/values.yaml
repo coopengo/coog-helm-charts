@@ -2,6 +2,45 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+redis:
+  enabled: true
+  usePassword: false
+  cluster:
+    enabled: false
+  rbac:
+    create: true
+  master:
+    persistence:
+      enabled: false
+    disableCommands: []
+  port: 27017
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1000Mi
+    requests:
+      cpu: 200m
+      memory: 150Mi
+
+mongodb:
+  enabled: true
+  image:
+    tag: "4.0.10-debian-9-r39"
+  replicaSet:
+    enabled: false
+  usePassword: true
+  mongodbUsername: "root"
+  mongodbPassword: "admin"
+  mongodbDatabase: coog-gateway
+  mongodbRootPassword: "admin"
+  resources:
+    limits:
+      cpu: 500m
+      memory: 500Mi
+    requests:
+      cpu: 200m
+      memory: 250Mi
+
 postgresql:
   enabled: true
   persistence:
@@ -16,6 +55,7 @@ postgresql:
     db-init.sql: |
       CREATE ROLE coog WITH LOGIN PASSWORD 'coog';
       CREATE DATABASE coog OWNER coog;
+
 
 api:
   enabled: true
@@ -117,13 +157,13 @@ api_b2c:
 
   affinity: {}
 
-api_identity:
+api_identity_manager:
   enabled: true
   replicaCount: 1
 
   image:
-    repository: coopengo/api-identity
-    tag: 2.6.7
+    repository: coopengo/api-identity-manager
+    tag: master
     pullPolicy: Always
 
   imagePullSecrets:
@@ -425,7 +465,7 @@ web:
 
   image:
     repository: coopengo/web
-    tag: 2.6.7
+    tag: 2.6.8
     pullPolicy: Always
 
   imagePullSecrets:
@@ -523,11 +563,19 @@ gateway:
     enabled: false
   mongodb:
     database: coog-gateway
+  mongodb_user: root
+  mongodb_root_password: admin
   jwt:
     encryption: secret
     expiration: 3600
   whitelist:
   replicaCount: 1
+  coog_web_token: "changeme"
+  portal_url: https://coog.local
+  gateway_url: https://coog.local
+  entrypoint: "/gateway"
+  extraEnv:
+    COOG_TOKEN_MODULE: "false"
 
   image:
     repository: coopengo/gateway
@@ -616,11 +664,6 @@ static:
   tolerations: []
 
   affinity: {}
-
-redis:
-  master:
-    disableCommands: []
-  port: 27017
 
 jwt:
   internal:

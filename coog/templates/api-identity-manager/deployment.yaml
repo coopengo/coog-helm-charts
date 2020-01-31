@@ -1,4 +1,4 @@
-{{- if .Values.api_identity.enabled -}}
+{{- if .Values.api_identity_manager.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -6,7 +6,7 @@ metadata:
   labels:
 {{ include "chart_labels" . | indent 4 }}
 spec:
-  replicas: {{ .Values.api_identity.replicaCount }}
+  replicas: {{ .Values.api_identity_manager.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "short_name" . }}
@@ -17,14 +17,14 @@ spec:
         app.kubernetes.io/name: {{ include "short_name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
-    {{- with .Values.api_identity.imagePullSecrets }}
+    {{- with .Values.api_identity_manager.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.api_identity.image.repository }}:{{ .Values.api_identity.image.tag }}"
-          imagePullPolicy: {{ .Values.api_identity.image.pullPolicy }}
+          image: "{{ .Values.api_identity_manager.image.repository }}:{{ .Values.api_identity_manager.image.tag }}"
+          imagePullPolicy: {{ .Values.api_identity_manager.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -59,8 +59,8 @@ spec:
               value: "{{ .Values.coog.postgres.database }}"
             - name:  JWT_INTERNAL_ENCRYPTION
               value: "{{ .Values.jwt.internal.encryption }}"
-            {{- if .Values.api_identity.extraEnv }}
-            {{- range $key, $value := .Values.api_identity.extraEnv }}
+            {{- if .Values.api_identity_manager.extraEnv }}
+            {{- range $key, $value := .Values.api_identity_manager.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
@@ -78,16 +78,16 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.api_identity.resources | nindent 12 }}
-      {{- with .Values.api_identity.nodeSelector }}
+            {{- toYaml .Values.api_identity_manager.resources | nindent 12 }}
+      {{- with .Values.api_identity_manager.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.api_identity.affinity }}
+    {{- with .Values.api_identity_manager.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.api_identity.tolerations }}
+    {{- with .Values.api_identity_manager.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
