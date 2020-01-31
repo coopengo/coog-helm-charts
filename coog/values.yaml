@@ -66,7 +66,7 @@ api:
 
   image:
     repository: coopengo/api
-    tag: 2.6.7
+    tag: coog-2.7.9
     pullPolicy: Always
   imagePullSecrets:
     - name: docker-registry
@@ -98,7 +98,7 @@ api_b2b_config:
 
   image:
     repository: coopengo/api-b2b-config
-    tag: 2.6.7
+    tag: coog-2.7.9
     pullPolicy: Always
   imagePullSecrets:
     - name: docker-registry
@@ -131,7 +131,7 @@ api_b2c:
 
   image:
     repository: coopengo/api-b2c
-    tag: 2.6.7
+    tag: coog-2.7.9
     pullPolicy: Always
 
   imagePullSecrets:
@@ -163,7 +163,7 @@ api_identity_manager:
 
   image:
     repository: coopengo/api-identity-manager
-    tag: master
+    tag: coog-2.7.9
     pullPolicy: Always
 
   imagePullSecrets:
@@ -196,7 +196,7 @@ api_referential:
 
   image:
     repository: coopengo/api-referential
-    tag: 2.6.7
+    tag: coog-2.7.9
     pullPolicy: Always
 
   imagePullSecrets:
@@ -229,7 +229,7 @@ app_b2c:
 
   image:
     repository: coopengo/app-b2c
-    tag: 2.6.7
+    tag: coog-2.7.9
     pullPolicy: Always
 
   imagePullSecrets:
@@ -275,7 +275,7 @@ unoconv:
 
   image:
     repository: coopengo/unoconv
-    tag: 2.6.7
+    tag: coog-2.7.9
     pullPolicy: Always
 
   imagePullSecrets:
@@ -346,7 +346,7 @@ coog:
 
   image:
     repository: coopengo/coog
-    tag: 2.6.8
+    tag: coog-2.7.9
     pullPolicy: Always
 
   imagePullSecrets:
@@ -418,7 +418,7 @@ paybox:
 
   image:
     repository: coopengo/paybox
-    tag: latest
+    tag: coog-2.7.9
     pullPolicy: Always
 
   imagePullSecrets:
@@ -465,7 +465,7 @@ web:
 
   image:
     repository: coopengo/web
-    tag: 2.6.8
+    tag: coog-2.7.9
     pullPolicy: Always
 
   imagePullSecrets:
@@ -512,7 +512,7 @@ portal:
 
   image:
     repository: coopengo/portal
-    tag: 2.6.7
+    tag: coog-2.7.9
     pullPolicy: Always
 
   imagePullSecrets:
@@ -579,7 +579,7 @@ gateway:
 
   image:
     repository: coopengo/gateway
-    tag: 2.6.7
+    tag: coog-2.7.9
     pullPolicy: Always
 
   imagePullSecrets:
@@ -625,7 +625,7 @@ static:
 
   image:
     repository: coopengo/static
-    tag: 2.7.1
+    tag: coog-2.7.9
     pullPolicy: Always
 
   imagePullSecrets:
