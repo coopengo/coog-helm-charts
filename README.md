@@ -23,7 +23,7 @@ type: kubernetes.io/dockerconfigjson
 
 
 # INSTALLATION DE COOG
-helm repo add coopengo https://raw.githubusercontent.com/coopengo/coog-helm-charts/master/index.yaml
+helm repo add coopengo https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
 
 helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
 
