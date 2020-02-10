@@ -9,13 +9,11 @@ spec:
   concurrencyPolicy: Forbid
   schedule: {{ .Values.celery.batch.schedule }}
   failedJobsHistoryLimit: 1
-  restartPolicy: Never
   jobTemplate:
     spec:
       backoffLimit: 0
       template:
         spec:
-          backoffLimit: 0
           restartPolicy: Never
         {{- if .Values.coog.persistentVolume.enabled }}
           volumes:
