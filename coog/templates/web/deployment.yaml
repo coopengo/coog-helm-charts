@@ -58,6 +58,8 @@ spec:
             httpGet:
               path: /auth
               port: http
+            exec:
+              {{- toYaml .Values.web.livenessProbe | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /auth
