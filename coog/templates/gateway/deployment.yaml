@@ -70,7 +70,11 @@ spec:
             - name:  COOG_API_REFERENTIAL_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-api-referential"
             - name:  COOG_API_IDENTITY_MANAGER_URL
+            {{- if not .Values.api_identity_manager.enabled }}
+              value: "http://localhost:3000"
+            {{ else }}
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-api-identity-manager"
+            {{- end }}
             - name:  COOG_WEB_TOKEN
               value: "{{ .Values.gateway.coog_web_token }}"
             - name:  COOG_MODULE

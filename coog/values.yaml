@@ -575,8 +575,8 @@ gateway:
   whitelist:
   replicaCount: 1
   coog_web_token: "changeme"
-  portal_url: https://coog.local
-  gateway_url: https://coog.local
+  portal_url: coog.local
+  gateway_url: coog.local
   entrypoint: "/gateway"
   extraEnv:
     COOG_TOKEN_MODULE: "false"
