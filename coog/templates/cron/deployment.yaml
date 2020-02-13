@@ -86,6 +86,8 @@ spec:
               value: {{ $value | quote }}
             {{- end }}
             {{- end }}
+            - name:  TRYTOND_ASYNC_CELERY
+              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
             - name:  TRYTOND_ASYNC__CELERY
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
             - name:  TRYTOND_CACHE__CLASS
