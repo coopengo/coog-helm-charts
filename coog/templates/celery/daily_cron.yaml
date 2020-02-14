@@ -101,6 +101,10 @@ spec:
                   value: "False"
                 - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
                   value: "True"
+                - name: TRYTOND_EMAIL__URI
+                  value: "{{ .Values.coog.email_uri }}"
+                - name: TRYTOND_EMAIL__FROM
+                  value: "{{ .Values.coog.email_from }}"
                 - name: TRYTOND_REPORT__API
                   value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-unoconv:5000/unoconv/{oext}/"
                 - name: DB_NAME
