@@ -14,6 +14,12 @@ redis:
       enabled: false
     disableCommands: []
   port: 27017
+  podSecurityPolicy:
+    create: false
+  metrics:
+    enabled: false
+    prometheusRule:
+      enabled: false
   resources:
     limits:
       cpu: 1000m
