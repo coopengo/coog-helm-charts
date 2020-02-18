@@ -13,6 +13,13 @@ redis:
     persistence:
       enabled: false
     disableCommands: []
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1000Mi
+      requests:
+        cpu: 200m
+        memory: 150Mi
   port: 27017
   podSecurityPolicy:
     create: false
@@ -20,13 +27,6 @@ redis:
     enabled: false
     prometheusRule:
       enabled: false
-  resources:
-    limits:
-      cpu: 1000m
-      memory: 1000Mi
-    requests:
-      cpu: 200m
-      memory: 150Mi
 
 mongodb:
   enabled: true
