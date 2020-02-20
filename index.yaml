@@ -3,20 +3,17 @@ entries:
   coog:
   - apiVersion: v1
     appVersion: coog-2.7.12
-    created: "2020-02-18T17:04:31.35731448+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 10.5.0
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.2.0
+    created: "2020-02-20T07:42:26.650920532+01:00"
+    description: A Helm chart for Coog
+    digest: 8f677b0561490b59ec69d2193dd5f606500afb4f518497593ee25f22add84328
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.13.tgz
+    version: 1.0.13
+  - apiVersion: v1
+    appVersion: coog-2.7.12
+    created: "2020-02-20T07:42:26.646473792+01:00"
     description: A Helm chart for Coog
     digest: dd6f86d46645898e64229f040cdca0f14b8ea9a9bb04cb7fdee22ec207313622
     icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
@@ -26,20 +23,7 @@ entries:
     version: 1.0.12
   - apiVersion: v1
     appVersion: coog-2.7.12
-    created: "2020-02-18T17:04:31.348820742+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 10.5.0
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.2.0
+    created: "2020-02-20T07:42:26.642698157+01:00"
     description: A Helm chart for Coog
     digest: 3a45aa9acf163b6749973b86260d1acc4f1d6701dba11801abcbff7acac548e0
     icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
@@ -49,20 +33,7 @@ entries:
     version: 1.0.11
   - apiVersion: v1
     appVersion: coog-2.7.12
-    created: "2020-02-18T17:04:31.340275586+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 10.5.0
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.2.0
+    created: "2020-02-20T07:42:26.638291953+01:00"
     description: A Helm chart for Coog
     digest: 89c8c6abc3d9d30e734fd974bba8ac2d7230865ab046766c5c19f99ac062f6ed
     icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
@@ -72,20 +43,7 @@ entries:
     version: 1.0.10
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2020-02-18T17:04:31.421657394+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 10.5.0
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.2.0
+    created: "2020-02-20T07:42:26.682553145+01:00"
     description: A Helm chart for Coog
     digest: 879bef77e314d292ef191b23d34df5c2dc18636ddcc89f5c73bd88865d25aaa7
     icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
@@ -95,20 +53,7 @@ entries:
     version: 1.0.9
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2020-02-18T17:04:31.413336552+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 10.5.0
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.2.0
+    created: "2020-02-20T07:42:26.678786099+01:00"
     description: A Helm chart for Coog
     digest: f2148069b0bed39bbefb4037f30626bc8e2f77ef6cb3cd8bd0093c62610fadd7
     icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
@@ -118,20 +63,7 @@ entries:
     version: 1.0.8
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2020-02-18T17:04:31.404957227+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.2.0
+    created: "2020-02-20T07:42:26.674522654+01:00"
     description: A Helm chart for Coog
     digest: 17d997f51b616c1606b33b43a36c8ada20b013aa45b70573d7220a22f9c6bde1
     icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
@@ -141,20 +73,7 @@ entries:
     version: 1.0.7
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2020-02-18T17:04:31.396986161+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.2.0
+    created: "2020-02-20T07:42:26.670931061+01:00"
     description: A Helm chart for Coog
     digest: d5de93705638ee9c8966af3775f82b89c8b3a9bb008bddf76b692fd2d12f8b69
     icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
@@ -164,20 +83,7 @@ entries:
     version: 1.0.6
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2020-02-18T17:04:31.388786823+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.2.0
+    created: "2020-02-20T07:42:26.66650551+01:00"
     description: A Helm chart for Coog
     digest: 011c423003c7f2101c608982c3a6fba8b4126a17ec82fee373588431fa2e8638
     icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
@@ -187,20 +93,7 @@ entries:
     version: 1.0.5
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2020-02-18T17:04:31.381351857+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.2.0
+    created: "2020-02-20T07:42:26.662091001+01:00"
     description: A Helm chart for Coog
     digest: 2fd9ae2a6dfd81a99ad5e793ef9f1dbb10e14d2e4cdb013a1416d89309f75d1e
     icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
@@ -210,20 +103,7 @@ entries:
     version: 1.0.4
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2020-02-18T17:04:31.373202428+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.2.0
+    created: "2020-02-20T07:42:26.658499195+01:00"
     description: A Helm chart for Coog
     digest: 9e23c6f68c735575f8c3db9979081a614ed1d3507e0c1e33ab5fc0127411c167
     icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
@@ -233,20 +113,7 @@ entries:
     version: 1.0.3
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2020-02-18T17:04:31.365363238+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.2.0
+    created: "2020-02-20T07:42:26.654419705+01:00"
     description: A Helm chart for Coog
     digest: 2caf64c905bd3f9b47761e659d2e8b97d3c79d86f079b8214f421c48cbd1c3ed
     name: coog
@@ -255,20 +122,7 @@ entries:
     version: 1.0.2
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-18T17:04:31.32733955+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.3.12
+    created: "2020-02-20T07:42:26.634373772+01:00"
     description: A Helm chart for Coog
     digest: 5df04d6a643b82d99f8f9660aeac27f56be804e7eb3581f55d567632f2d6b601
     name: coog
@@ -277,20 +131,7 @@ entries:
     version: 1.0.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-18T17:04:31.321768057+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.3.12
+    created: "2020-02-20T07:42:26.630567588+01:00"
     description: A Helm chart for Coog
     digest: 14df1ecc94c45e166951f7da18759595ea337de19d50aba6c7f6b9e666c68299
     name: coog
@@ -299,20 +140,7 @@ entries:
     version: 0.1.29
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-18T17:04:31.315636859+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.3.12
+    created: "2020-02-20T07:42:26.62732412+01:00"
     description: A Helm chart for Coog
     digest: f73cfbe816a8d55f0547cca595974b7e2bc34b0fc826afcc27183d3f2d749a6a
     name: coog
@@ -321,20 +149,7 @@ entries:
     version: 0.1.28
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-18T17:04:31.309677387+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.3.12
+    created: "2020-02-20T07:42:26.623285129+01:00"
     description: A Helm chart for Coog
     digest: ae312368c0c64e440fa995165a7d718c21ce6733d43da44c0e24dcfc249ce6a3
     name: coog
@@ -343,20 +158,7 @@ entries:
     version: 0.1.27
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-18T17:04:31.302955618+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.3.12
+    created: "2020-02-20T07:42:26.619511742+01:00"
     description: A Helm chart for Coog
     digest: d967b30a7291e63705e8a8a8c3feb5f0bcf8aeb117d7bdde43e2cfc122627e77
     name: coog
@@ -365,20 +167,7 @@ entries:
     version: 0.1.26
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-18T17:04:31.296916578+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.3.12
+    created: "2020-02-20T07:42:26.614984115+01:00"
     description: A Helm chart for Coog
     digest: a7d192183c56236b47bbfacfc570428683c49e03d9377fd21f7950b56b6f0f00
     name: coog
@@ -387,20 +176,7 @@ entries:
     version: 0.1.25
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-18T17:04:31.290826554+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.3.12
+    created: "2020-02-20T07:42:26.611124082+01:00"
     description: A Helm chart for Coog
     digest: 1d4328fb7ae08d01c9f68f0ad5f91cc4ed5181d1c79c28cda8fa834202b12662
     name: coog
@@ -409,20 +185,7 @@ entries:
     version: 0.1.24
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-18T17:04:31.28510542+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.3.12
+    created: "2020-02-20T07:42:26.607852021+01:00"
     description: A Helm chart for Coog
     digest: c331e59aed6ad2b2ebb8f48ed8b598b8bfe24af67e18d2ee5d6663361f6d3f44
     name: coog
@@ -431,20 +194,7 @@ entries:
     version: 0.1.23
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-18T17:04:31.279253803+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.3.12
+    created: "2020-02-20T07:42:26.604582371+01:00"
     description: A Helm chart for Coog
     digest: afc84bfbb6d0c51ab46b6f375c0f2998da6bd58324e2f734a35f8cfe1c3cfed3
     name: coog
@@ -453,20 +203,7 @@ entries:
     version: 0.1.22
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-18T17:04:31.274561948+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.3.12
+    created: "2020-02-20T07:42:26.600281895+01:00"
     description: A Helm chart for Coog
     digest: a58b3a201d80631c008c78095b1068693a65f3d48366a3201b10a16245fa6a43
     name: coog
@@ -475,24 +212,11 @@ entries:
     version: 0.1.21
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2020-02-18T17:04:31.256095636+01:00"
-    dependencies:
-    - condition: mongodb.enabled
-      name: mongodb
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 6.1.1
-    - condition: redis.enabled
-      name: redis
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 8.1.2
-    - condition: postgresql.enabled
-      name: postgresql
-      repository: https://kubernetes-charts.storage.googleapis.com/
-      version: 5.3.12
+    created: "2020-02-20T07:42:26.596838305+01:00"
     description: A Helm chart for Coog
     digest: 77a0ec3c0381d27846c08ee0fd9c60a91cd399478ada5b95c6ae3040fcd267c5
     name: coog
     urls:
     - coog-0.1.20.tgz
     version: 0.1.20
-generated: "2020-02-18T17:04:31.235748138+01:00"
+generated: "2020-02-20T07:42:26.592339863+01:00"

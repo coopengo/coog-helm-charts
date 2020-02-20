@@ -295,11 +295,11 @@ unoconv:
 
   resources:
     limits:
-      cpu: 200m
-      memory: 250Mi
+      cpu: 300m
+      memory: 500Mi
     requests:
       cpu: 100m
-      memory: 250Mi
+      memory: 350Mi
 
   nodeSelector: {}
 
