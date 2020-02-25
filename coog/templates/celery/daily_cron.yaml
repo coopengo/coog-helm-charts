@@ -24,6 +24,7 @@ spec:
           containers:
             - name: {{ .Chart.Name }}-daily
               image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
+              imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
               securityContext:
                 allowPrivilegeEscalation: false
                 capabilities:
