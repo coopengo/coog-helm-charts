@@ -329,8 +329,9 @@ celery:
 
 
 coog:
+  cache_record: 50000
   enabled: true
-  external_postgres: 
+  external_postgres:
     enabled: false
   root_dir: /workspace/io
   postgres:
@@ -349,6 +350,7 @@ coog:
     size: 10Gi
     claim:
       name: ""
+
 
   image:
     repository: coopengo/coog
