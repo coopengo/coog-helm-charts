@@ -14,6 +14,10 @@ spec:
       backoffLimit: 0
       template:
         spec:
+        {{- with .Values.coog.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
           restartPolicy: Never
         {{- if .Values.coog.persistentVolume.enabled }}
           volumes:

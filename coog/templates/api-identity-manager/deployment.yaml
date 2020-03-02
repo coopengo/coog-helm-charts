@@ -91,4 +91,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+{{- if .Values.api_identity_manager.dnsPolicy }}
+      dnsPolicy: {{ .Values.api_identity_manager.dnsPolicy }}
+{{- end }}
+{{- if .Values.api_identity_manager.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.api_identity_manager.dnsConfig | indent 8 }}
 {{- end }}

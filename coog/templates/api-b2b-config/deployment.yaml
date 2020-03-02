@@ -73,4 +73,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+{{- if .Values.api_b2b_config.dnsPolicy }}
+      dnsPolicy: {{ .Values.api_b2b_config.dnsPolicy }}
+{{- end }}
+{{- if .Values.api_b2b_config.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.api_b2b_config.dnsConfig | indent 8 }}
 {{- end }}

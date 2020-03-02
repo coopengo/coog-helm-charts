@@ -60,4 +60,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+{{- if .Values.coog.dnsPolicy }}
+      dnsPolicy: {{ .Values.coog.dnsPolicy }}
+{{- end }}
+{{- if .Values.coog.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.coog.dnsConfig | indent 8 }}
 {{- end }}

@@ -75,4 +75,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+{{- if .Values.api_b2c.dnsPolicy }}
+      dnsPolicy: {{ .Values.api_b2c.dnsPolicy }}
+{{- end }}
+{{- if .Values.api_b2c.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.api_b2c.dnsConfig | indent 8 }}
 {{- end }}

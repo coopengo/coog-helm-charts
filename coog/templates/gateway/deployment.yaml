@@ -102,7 +102,7 @@ spec:
             - name:  MONGO_PASSWORD
               value: "{{ .Values.gateway.mongodb_root_password }}"
             - name:  COOG_GATEWAY_URL
-              value: "https://{{ .Values.gateway.gateway_url }}"
+              value: "{{ .Values.gateway.gateway_url }}"
             - name:  COOG_GATEWAY_BASE_PATH
               value: "{{ .Values.gateway.entrypoint }}"
             - name:  COOG_URL
@@ -141,4 +141,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+{{- if .Values.gateway.dnsPolicy }}
+      dnsPolicy: {{ .Values.gateway.dnsPolicy }}
+{{- end }}
+{{- if .Values.gateway.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.gateway.dnsConfig | indent 8 }}
 {{- end }}

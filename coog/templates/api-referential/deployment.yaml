@@ -73,4 +73,10 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+{{- if .Values.api_referential.dnsPolicy }}
+      dnsPolicy: {{ .Values.api_referential.dnsPolicy }}
+{{- end }}
+{{- if .Values.api_referential.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.api_referential.dnsConfig | indent 8 }}
 {{- end }}
