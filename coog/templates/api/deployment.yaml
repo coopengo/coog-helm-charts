@@ -100,3 +100,4 @@ spec:
       dnsConfig:
 {{ toYaml .Values.api.dnsConfig | indent 8 }}
 {{- end }}
+{{- end }}
