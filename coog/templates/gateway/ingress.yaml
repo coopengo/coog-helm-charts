@@ -7,10 +7,10 @@ metadata:
   name: {{ $fullName }}
   labels:
 {{ include "chart_labels" . | indent 4 }}
-  {{- with .Values.gateway.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- range $key, $value := .Values.gateway.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
 spec:
 {{- if .Values.gateway.ingress.tls }}
   tls:
