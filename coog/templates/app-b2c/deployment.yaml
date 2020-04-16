@@ -35,8 +35,9 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           command:
-            - ep
-            - server
+            - serve
+            - -s
+            - .
           ports:
             - name: http
               containerPort: 5000
