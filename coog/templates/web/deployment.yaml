@@ -50,6 +50,9 @@ spec:
               value: "/web/api"
             - name: COOG_API_APP_PATH
               value: "/web"
+{{- if .Values.web.extraEnv }}
+{{ toYaml .Values.web.extraEnv | indent 12 }}
+{{- end }}
           ports:
             - name: http
               containerPort: 3000

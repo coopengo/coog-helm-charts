@@ -517,6 +517,9 @@ web:
 
   affinity: {}
 
+  extraEnv:
+    - NAME: ytrsy
+      values: coucou
 
 portal:
   enabled: false
