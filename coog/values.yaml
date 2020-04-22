@@ -403,7 +403,7 @@ coog:
 
 
 cron:
-  enabled: true
+  enabled: false
   affinity: {}
   nodeSelector: {}
   resources:
