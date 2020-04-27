@@ -198,6 +198,8 @@ spec:
             httpGet:
               path: "/{{ .Values.coog.postgres.database }}/readiness"
               port: http
+            exec:
+              {{- toYaml .Values.coog.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.coog.resources | nindent 12 }}
       {{- with .Values.coog.nodeSelector }}
