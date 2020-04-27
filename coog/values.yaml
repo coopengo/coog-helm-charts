@@ -15,10 +15,10 @@ redis:
     disableCommands: []
     resources:
       limits:
-        cpu: 1000m
-        memory: 1000Mi
-      requests:
         cpu: 200m
+        memory: 250Mi
+      requests:
+        cpu: 100m
         memory: 150Mi
   port: 27017
   podSecurityPolicy:
@@ -72,7 +72,7 @@ api:
 
   image:
     repository: coopengo/api
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
   imagePullSecrets:
     - name: docker-registry
@@ -104,7 +104,7 @@ api_b2b_config:
 
   image:
     repository: coopengo/api-b2b-config
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
   imagePullSecrets:
     - name: docker-registry
@@ -137,7 +137,7 @@ api_b2c:
 
   image:
     repository: coopengo/api-b2c
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
 
   imagePullSecrets:
@@ -169,7 +169,7 @@ api_identity_manager:
 
   image:
     repository: coopengo/api-identity-manager
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
 
   imagePullSecrets:
@@ -187,7 +187,7 @@ api_identity_manager:
       memory: 400Mi
     requests:
       cpu: 100m
-      memory: 256Mi
+      memory: 250Mi
 
   nodeSelector: {}
 
@@ -202,7 +202,7 @@ api_referential:
 
   image:
     repository: coopengo/api-referential
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
 
   imagePullSecrets:
@@ -220,7 +220,7 @@ api_referential:
       memory: 400Mi
     requests:
       cpu: 100m
-      memory: 256Mi
+      memory: 250Mi
 
   nodeSelector: {}
 
@@ -235,7 +235,7 @@ app_b2c:
 
   image:
     repository: coopengo/app-b2c
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
 
   imagePullSecrets:
@@ -277,11 +277,11 @@ app_b2c:
 
 
 unoconv:
-  replicaCount: 2
+  replicaCount: 1
 
   image:
     repository: coopengo/unoconv
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
 
   imagePullSecrets:
@@ -308,19 +308,24 @@ unoconv:
   affinity: {}
 
 celery:
-  workers: 4
   replicaCount: 1
-  specificBatchConcurrency:
-    enabled: true
   affinity: {}
   nodeSelector: {}
   resources:
     limits:
       cpu: 1
-      memory: 2000Mi
+      memory: 1000Mi
     requests:
       cpu: 400m
       memory: 300Mi
+  cron:
+    resources:
+      limits:
+        cpu: 200m
+        memory: 300Mi
+      requests:
+        cpu: 100m
+        memory: 100Mi
   tolerations: []
   livenessProbe:
     initialDelaySeconds: 30
@@ -354,7 +359,7 @@ coog:
 
   image:
     repository: coopengo/coog
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
 
   imagePullSecrets:
@@ -386,10 +391,10 @@ coog:
   resources:
     limits:
       cpu: 700m
-      memory: 2048Mi
+      memory: 1000Mi
     requests:
       cpu: 200m
-      memory: 1024Mi
+      memory: 700Mi
 
   nodeSelector: {}
 
@@ -426,7 +431,7 @@ paybox:
 
   image:
     repository: coopengo/paybox
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
 
   imagePullSecrets:
@@ -455,10 +460,10 @@ paybox:
   resources:
     limits:
       cpu: 300m
-      memory: 128Mi
+      memory: 100Mi
     requests:
-      cpu: 128m
-      memory: 128Mi
+      cpu: 100m
+      memory: 100Mi
 
   nodeSelector: {}
 
@@ -473,7 +478,7 @@ web:
 
   image:
     repository: coopengo/web
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
 
   imagePullSecrets:
@@ -523,7 +528,7 @@ portal:
 
   image:
     repository: coopengo/portal
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
 
   imagePullSecrets:
@@ -555,11 +560,11 @@ portal:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 1
-      memory: 512Mi
+      cpu: 200m
+      memory: 150Mi
     requests:
       cpu: 100m
-      memory: 128Mi
+      memory: 100Mi
 
   nodeSelector: {}
 
@@ -590,7 +595,7 @@ gateway:
 
   image:
     repository: coopengo/gateway
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
 
   imagePullSecrets:
@@ -636,7 +641,7 @@ static:
 
   image:
     repository: coopengo/static
-    tag: coog-2.7.12
+    tag: coog-2.7.32
     pullPolicy: Always
 
   imagePullSecrets:
@@ -664,11 +669,11 @@ static:
 
   resources:
     limits:
-      cpu: 1
-      memory: 512Mi
-    requests:
       cpu: 200m
-      memory: 128Mi
+      memory: 100Mi
+    requests:
+      cpu: 100m
+      memory: 50Mi
 
   nodeSelector: {}
 

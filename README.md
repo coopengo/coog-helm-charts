@@ -1,5 +1,10 @@
 # coog-helm-charts
 
+# Mise à jour des version des Charts 
+
+
+    helm3 package coog && helm3 repo index .
+
 ##INJECTER LES SECRETS POUR LOADER LES IMAGES DE DOCKERHUB (login/password)
 kubectl apply -f docker-client-secret.yml
 ######################################

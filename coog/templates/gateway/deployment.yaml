@@ -35,8 +35,6 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
           env:
-            - name:  WHITELIST
-              value: "{{ .Values.gateway.whitelist }}"
             - name:  COOG_PORTAL_URL
               value: "{{ .Values.gateway.portal_url }}"
             - name:  MONGO_HOST
@@ -81,22 +79,10 @@ spec:
               value: "true"
             - name:  GOOGLE_MODULE
               value: "false"
-            - name:  GOOGLE_CLIENT_ID
-              value:
-            - name:  GOOGLE_CLIENT_SECRET
-              value:
             - name:  FACEBOOK_MODULE
               value: "false"
-            - name:  FACEBOOK_CLIENT_ID
-              value:
-            - name:  FACEBOOK_CLIENT_SECRET
-              value:
             - name:  FORCEDOTCOM_MODULE
               value: "false"
-            - name:  FOCEDOTCOM_CLIENT_ID
-              value:
-            - name:  FORCEDOTCOM_CLIENT_SECRET
-              value:
             - name:  MONGO_USER
               value: "{{ .Values.gateway.mongodb_user }}"
             - name:  MONGO_PASSWORD
