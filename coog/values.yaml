@@ -308,6 +308,9 @@ unoconv:
   affinity: {}
 
 celery:
+  enabled: false
+  specificBatchConcurrency:
+    enabled: false
   replicaCount: 1
   affinity: {}
   nodeSelector: {}
