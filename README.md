@@ -1,5 +1,14 @@
 # coog-helm-charts
 
+
+## Prérequis :
+- Kubernetes en version 1.15
+- Installer helm 2 : voir sur https://helm.sh/
+- Installer un Controller Ingress :
+   - Nginx Ingress Controller est conseillé : https://kubernetes.github.io/ingress-nginx/deploy/
+- Configurer des PersistentVolumes pour la persistence des données (indispensable en production)
+   - https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/
+
 ## Mise à jour des version des Charts
 
 ```bash
@@ -12,7 +21,7 @@
     kubectl apply -f docker-client-secret.yml
 ```
 
-ex de ficheirs docker-client-secret.yml
+Exemple de fichiers docker-client-secret.yml
 
 ```yaml
     apiVersion: v1
@@ -38,7 +47,7 @@ La valeur de monsecretenbase64 doit correspondre au résultat de la commande
     helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
 ```
 
-## INSTALLATION DE NINX INGRESS
+## INSTALLATION DE NGINX INGRESS VIA HELM
 
 ```bash
     helm install stable/nginx-ingress
