@@ -2,7 +2,7 @@ coog
 ====
 A Helm chart for Coog
 
-Current chart version is `1.0.3`
+Current chart version is `1.1.2`
 
 
 
@@ -12,7 +12,7 @@ Current chart version is `1.0.3`
 |------------|------|---------|
 | https://kubernetes-charts.storage.googleapis.com/ | mongodb | 6.1.1 |
 | https://kubernetes-charts.storage.googleapis.com/ | postgresql | 8.2.0 |
-| https://kubernetes-charts.storage.googleapis.com/ | redis | 8.1.2 |
+| https://kubernetes-charts.storage.googleapis.com/ | redis | 10.5.0 |
 
 ## Chart Values
 
@@ -23,7 +23,7 @@ Current chart version is `1.0.3`
 | api.fullnameOverride | string | `""` |  |
 | api.image.pullPolicy | string | `"Always"` |  |
 | api.image.repository | string | `"coopengo/api"` |  |
-| api.image.tag | string | `"coog-2.7.9"` |  |
+| api.image.tag | string | `"coog-2.7.32"` |  |
 | api.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | api.mongodb.database | string | `"coog-api-v2"` |  |
 | api.nameOverride | string | `""` |  |
@@ -41,7 +41,7 @@ Current chart version is `1.0.3`
 | api_b2b_config.fullnameOverride | string | `""` |  |
 | api_b2b_config.image.pullPolicy | string | `"Always"` |  |
 | api_b2b_config.image.repository | string | `"coopengo/api-b2b-config"` |  |
-| api_b2b_config.image.tag | string | `"coog-2.7.9"` |  |
+| api_b2b_config.image.tag | string | `"coog-2.7.32"` |  |
 | api_b2b_config.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | api_b2b_config.nameOverride | string | `""` |  |
 | api_b2b_config.nodeSelector | object | `{}` |  |
@@ -58,7 +58,7 @@ Current chart version is `1.0.3`
 | api_b2c.fullnameOverride | string | `""` |  |
 | api_b2c.image.pullPolicy | string | `"Always"` |  |
 | api_b2c.image.repository | string | `"coopengo/api-b2c"` |  |
-| api_b2c.image.tag | string | `"coog-2.7.9"` |  |
+| api_b2c.image.tag | string | `"coog-2.7.32"` |  |
 | api_b2c.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | api_b2c.nameOverride | string | `""` |  |
 | api_b2c.nodeSelector | object | `{}` |  |
@@ -75,7 +75,7 @@ Current chart version is `1.0.3`
 | api_identity_manager.fullnameOverride | string | `""` |  |
 | api_identity_manager.image.pullPolicy | string | `"Always"` |  |
 | api_identity_manager.image.repository | string | `"coopengo/api-identity-manager"` |  |
-| api_identity_manager.image.tag | string | `"coog-2.7.9"` |  |
+| api_identity_manager.image.tag | string | `"coog-2.7.32"` |  |
 | api_identity_manager.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | api_identity_manager.nameOverride | string | `""` |  |
 | api_identity_manager.nodeSelector | object | `{}` |  |
@@ -83,7 +83,7 @@ Current chart version is `1.0.3`
 | api_identity_manager.resources.limits.cpu | string | `"200m"` |  |
 | api_identity_manager.resources.limits.memory | string | `"400Mi"` |  |
 | api_identity_manager.resources.requests.cpu | string | `"100m"` |  |
-| api_identity_manager.resources.requests.memory | string | `"256Mi"` |  |
+| api_identity_manager.resources.requests.memory | string | `"250Mi"` |  |
 | api_identity_manager.service.port | int | `80` |  |
 | api_identity_manager.service.type | string | `"ClusterIP"` |  |
 | api_identity_manager.tolerations | list | `[]` |  |
@@ -92,7 +92,7 @@ Current chart version is `1.0.3`
 | api_referential.fullnameOverride | string | `""` |  |
 | api_referential.image.pullPolicy | string | `"Always"` |  |
 | api_referential.image.repository | string | `"coopengo/api-referential"` |  |
-| api_referential.image.tag | string | `"coog-2.7.9"` |  |
+| api_referential.image.tag | string | `"coog-2.7.32"` |  |
 | api_referential.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | api_referential.nameOverride | string | `""` |  |
 | api_referential.nodeSelector | object | `{}` |  |
@@ -100,7 +100,7 @@ Current chart version is `1.0.3`
 | api_referential.resources.limits.cpu | string | `"200m"` |  |
 | api_referential.resources.limits.memory | string | `"400Mi"` |  |
 | api_referential.resources.requests.cpu | string | `"100m"` |  |
-| api_referential.resources.requests.memory | string | `"256Mi"` |  |
+| api_referential.resources.requests.memory | string | `"250Mi"` |  |
 | api_referential.service.port | int | `80` |  |
 | api_referential.service.type | string | `"ClusterIP"` |  |
 | api_referential.tolerations | list | `[]` |  |
@@ -109,7 +109,7 @@ Current chart version is `1.0.3`
 | app_b2c.fullnameOverride | string | `""` |  |
 | app_b2c.image.pullPolicy | string | `"Always"` |  |
 | app_b2c.image.repository | string | `"coopengo/app-b2c"` |  |
-| app_b2c.image.tag | string | `"coog-2.7.9"` |  |
+| app_b2c.image.tag | string | `"coog-2.7.32"` |  |
 | app_b2c.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | app_b2c.ingress.annotations | object | `{}` |  |
 | app_b2c.ingress.enabled | bool | `false` |  |
@@ -127,25 +127,30 @@ Current chart version is `1.0.3`
 | app_b2c.service.type | string | `"ClusterIP"` |  |
 | app_b2c.tolerations | list | `[]` |  |
 | celery.affinity | object | `{}` |  |
+| celery.cron.resources.limits.cpu | string | `"200m"` |  |
+| celery.cron.resources.limits.memory | string | `"300Mi"` |  |
+| celery.cron.resources.requests.cpu | string | `"100m"` |  |
+| celery.cron.resources.requests.memory | string | `"100Mi"` |  |
+| celery.enabled | bool | `false` |  |
 | celery.livenessProbe.initialDelaySeconds | int | `30` |  |
 | celery.livenessProbe.periodSeconds | int | `120` |  |
 | celery.livenessProbe.timeoutSeconds | int | `10` |  |
 | celery.nodeSelector | object | `{}` |  |
 | celery.replicaCount | int | `1` |  |
 | celery.resources.limits.cpu | int | `1` |  |
-| celery.resources.limits.memory | string | `"2000Mi"` |  |
+| celery.resources.limits.memory | string | `"1000Mi"` |  |
 | celery.resources.requests.cpu | string | `"400m"` |  |
 | celery.resources.requests.memory | string | `"300Mi"` |  |
-| celery.specificBatchConcurrency.enabled | bool | `true` |  |
+| celery.specificBatchConcurrency.enabled | bool | `false` |  |
 | celery.tolerations | list | `[]` |  |
-| celery.workers | int | `4` |  |
 | coog.affinity | object | `{}` |  |
+| coog.cache_record | int | `50000` |  |
 | coog.enabled | bool | `true` |  |
 | coog.external_postgres.enabled | bool | `false` |  |
 | coog.fullnameOverride | string | `""` |  |
 | coog.image.pullPolicy | string | `"Always"` |  |
 | coog.image.repository | string | `"coopengo/coog"` |  |
-| coog.image.tag | string | `"coog-2.7.9"` |  |
+| coog.image.tag | string | `"coog-2.7.32"` |  |
 | coog.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | coog.ingress.annotations | object | `{}` |  |
 | coog.ingress.enabled | bool | `false` |  |
@@ -166,11 +171,13 @@ Current chart version is `1.0.3`
 | coog.postgres.database | string | `"coog"` |  |
 | coog.postgres.password | string | `"coog"` |  |
 | coog.postgres.user | string | `"coog"` |  |
+| coog.readinessProbe.periodSeconds | int | `30` |  |
+| coog.readinessProbe.timeoutSeconds | int | `30` |  |
 | coog.replicaCount | int | `1` |  |
 | coog.resources.limits.cpu | string | `"700m"` |  |
-| coog.resources.limits.memory | string | `"2048Mi"` |  |
+| coog.resources.limits.memory | string | `"1000Mi"` |  |
 | coog.resources.requests.cpu | string | `"200m"` |  |
-| coog.resources.requests.memory | string | `"1024Mi"` |  |
+| coog.resources.requests.memory | string | `"700Mi"` |  |
 | coog.root_dir | string | `"/workspace/io"` |  |
 | coog.securityContext.runAsUser | int | `1000` |  |
 | coog.service.port | int | `80` |  |
@@ -179,7 +186,7 @@ Current chart version is `1.0.3`
 | coog.tolerations | list | `[]` |  |
 | coog.workers | int | `4` |  |
 | cron.affinity | object | `{}` |  |
-| cron.enabled | bool | `true` |  |
+| cron.enabled | bool | `false` |  |
 | cron.livenessProbe.initialDelaySeconds | int | `30` |  |
 | cron.livenessProbe.periodSeconds | int | `120` |  |
 | cron.livenessProbe.timeoutSeconds | int | `10` |  |
@@ -196,10 +203,10 @@ Current chart version is `1.0.3`
 | gateway.external_mongodb.enabled | bool | `false` |  |
 | gateway.extraEnv.COOG_TOKEN_MODULE | string | `"false"` |  |
 | gateway.fullnameOverride | string | `""` |  |
-| gateway.gateway_url | string | `"https://coog.local"` |  |
+| gateway.gateway_url | string | `"coog.local"` |  |
 | gateway.image.pullPolicy | string | `"Always"` |  |
 | gateway.image.repository | string | `"coopengo/gateway"` |  |
-| gateway.image.tag | string | `"coog-2.7.9"` |  |
+| gateway.image.tag | string | `"coog-2.7.32"` |  |
 | gateway.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | gateway.ingress.annotations | object | `{}` |  |
 | gateway.ingress.enabled | bool | `false` |  |
@@ -213,7 +220,7 @@ Current chart version is `1.0.3`
 | gateway.mongodb_user | string | `"root"` |  |
 | gateway.nameOverride | string | `""` |  |
 | gateway.nodeSelector | object | `{}` |  |
-| gateway.portal_url | string | `"https://coog.local"` |  |
+| gateway.portal_url | string | `"coog.local"` |  |
 | gateway.replicaCount | int | `1` |  |
 | gateway.resources.limits.cpu | string | `"500m"` |  |
 | gateway.resources.limits.memory | string | `"600Mi"` |  |
@@ -241,7 +248,7 @@ Current chart version is `1.0.3`
 | paybox.fullnameOverride | string | `""` |  |
 | paybox.image.pullPolicy | string | `"Always"` |  |
 | paybox.image.repository | string | `"coopengo/paybox"` |  |
-| paybox.image.tag | string | `"coog-2.7.9"` |  |
+| paybox.image.tag | string | `"coog-2.7.32"` |  |
 | paybox.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | paybox.ingress.annotations | object | `{}` |  |
 | paybox.ingress.enabled | bool | `false` |  |
@@ -252,9 +259,9 @@ Current chart version is `1.0.3`
 | paybox.nodeSelector | object | `{}` |  |
 | paybox.replicaCount | int | `1` |  |
 | paybox.resources.limits.cpu | string | `"300m"` |  |
-| paybox.resources.limits.memory | string | `"128Mi"` |  |
-| paybox.resources.requests.cpu | string | `"128m"` |  |
-| paybox.resources.requests.memory | string | `"128Mi"` |  |
+| paybox.resources.limits.memory | string | `"100Mi"` |  |
+| paybox.resources.requests.cpu | string | `"100m"` |  |
+| paybox.resources.requests.memory | string | `"100Mi"` |  |
 | paybox.service.port | int | `80` |  |
 | paybox.service.type | string | `"ClusterIP"` |  |
 | paybox.tolerations | list | `[]` |  |
@@ -263,7 +270,7 @@ Current chart version is `1.0.3`
 | portal.fullnameOverride | string | `""` |  |
 | portal.image.pullPolicy | string | `"Always"` |  |
 | portal.image.repository | string | `"coopengo/portal"` |  |
-| portal.image.tag | string | `"coog-2.7.9"` |  |
+| portal.image.tag | string | `"coog-2.7.32"` |  |
 | portal.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | portal.ingress.annotations | object | `{}` |  |
 | portal.ingress.enabled | bool | `false` |  |
@@ -273,10 +280,10 @@ Current chart version is `1.0.3`
 | portal.nameOverride | string | `""` |  |
 | portal.nodeSelector | object | `{}` |  |
 | portal.replicaCount | int | `1` |  |
-| portal.resources.limits.cpu | int | `1` |  |
-| portal.resources.limits.memory | string | `"512Mi"` |  |
+| portal.resources.limits.cpu | string | `"200m"` |  |
+| portal.resources.limits.memory | string | `"150Mi"` |  |
 | portal.resources.requests.cpu | string | `"100m"` |  |
-| portal.resources.requests.memory | string | `"128Mi"` |  |
+| portal.resources.requests.memory | string | `"100Mi"` |  |
 | portal.service.port | int | `80` |  |
 | portal.service.type | string | `"ClusterIP"` |  |
 | portal.tolerations | list | `[]` |  |
@@ -292,19 +299,22 @@ Current chart version is `1.0.3`
 | redis.enabled | bool | `true` |  |
 | redis.master.disableCommands | list | `[]` |  |
 | redis.master.persistence.enabled | bool | `false` |  |
+| redis.master.resources.limits.cpu | string | `"200m"` |  |
+| redis.master.resources.limits.memory | string | `"250Mi"` |  |
+| redis.master.resources.requests.cpu | string | `"100m"` |  |
+| redis.master.resources.requests.memory | string | `"150Mi"` |  |
+| redis.metrics.enabled | bool | `false` |  |
+| redis.metrics.prometheusRule.enabled | bool | `false` |  |
+| redis.podSecurityPolicy.create | bool | `false` |  |
 | redis.port | int | `27017` |  |
 | redis.rbac.create | bool | `true` |  |
-| redis.resources.limits.cpu | string | `"1000m"` |  |
-| redis.resources.limits.memory | string | `"1000Mi"` |  |
-| redis.resources.requests.cpu | string | `"200m"` |  |
-| redis.resources.requests.memory | string | `"150Mi"` |  |
 | redis.usePassword | bool | `false` |  |
 | static.affinity | object | `{}` |  |
 | static.enabled | bool | `true` |  |
 | static.fullnameOverride | string | `""` |  |
 | static.image.pullPolicy | string | `"Always"` |  |
 | static.image.repository | string | `"coopengo/static"` |  |
-| static.image.tag | string | `"coog-2.7.9"` |  |
+| static.image.tag | string | `"coog-2.7.32"` |  |
 | static.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | static.ingress.annotations | object | `{}` |  |
 | static.ingress.enabled | bool | `false` |  |
@@ -314,10 +324,10 @@ Current chart version is `1.0.3`
 | static.nameOverride | string | `""` |  |
 | static.nodeSelector | object | `{}` |  |
 | static.replicaCount | int | `1` |  |
-| static.resources.limits.cpu | int | `1` |  |
-| static.resources.limits.memory | string | `"512Mi"` |  |
-| static.resources.requests.cpu | string | `"200m"` |  |
-| static.resources.requests.memory | string | `"128Mi"` |  |
+| static.resources.limits.cpu | string | `"200m"` |  |
+| static.resources.limits.memory | string | `"100Mi"` |  |
+| static.resources.requests.cpu | string | `"100m"` |  |
+| static.resources.requests.memory | string | `"50Mi"` |  |
 | static.service.port | int | `80` |  |
 | static.service.type | string | `"ClusterIP"` |  |
 | static.tolerations | list | `[]` |  |
@@ -325,15 +335,15 @@ Current chart version is `1.0.3`
 | unoconv.fullnameOverride | string | `""` |  |
 | unoconv.image.pullPolicy | string | `"Always"` |  |
 | unoconv.image.repository | string | `"coopengo/unoconv"` |  |
-| unoconv.image.tag | string | `"coog-2.7.9"` |  |
+| unoconv.image.tag | string | `"coog-2.7.32"` |  |
 | unoconv.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | unoconv.nameOverride | string | `""` |  |
 | unoconv.nodeSelector | object | `{}` |  |
-| unoconv.replicaCount | int | `2` |  |
-| unoconv.resources.limits.cpu | string | `"200m"` |  |
-| unoconv.resources.limits.memory | string | `"250Mi"` |  |
+| unoconv.replicaCount | int | `1` |  |
+| unoconv.resources.limits.cpu | string | `"300m"` |  |
+| unoconv.resources.limits.memory | string | `"500Mi"` |  |
 | unoconv.resources.requests.cpu | string | `"100m"` |  |
-| unoconv.resources.requests.memory | string | `"250Mi"` |  |
+| unoconv.resources.requests.memory | string | `"350Mi"` |  |
 | unoconv.service.port | int | `5000` |  |
 | unoconv.service.type | string | `"ClusterIP"` |  |
 | unoconv.tolerations | list | `[]` |  |
@@ -342,13 +352,15 @@ Current chart version is `1.0.3`
 | web.fullnameOverride | string | `""` |  |
 | web.image.pullPolicy | string | `"Always"` |  |
 | web.image.repository | string | `"coopengo/web"` |  |
-| web.image.tag | string | `"coog-2.7.9"` |  |
+| web.image.tag | string | `"coog-2.7.32"` |  |
 | web.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | web.ingress.annotations | object | `{}` |  |
 | web.ingress.enabled | bool | `false` |  |
 | web.ingress.hosts[0].host | string | `"web.local"` |  |
 | web.ingress.hosts[0].paths | list | `[]` |  |
 | web.ingress.tls | list | `[]` |  |
+| web.livenessProbe.periodSeconds | int | `60` |  |
+| web.livenessProbe.timeoutSeconds | int | `30` |  |
 | web.nameOverride | string | `""` |  |
 | web.nodeSelector | object | `{}` |  |
 | web.replicaCount | int | `1` |  |
