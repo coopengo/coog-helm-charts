@@ -2,18 +2,13 @@
 
 
 ## Prérequis :
+- Créer un compte sur https://hub.docker.com/ et demander des accès aux conteneurs à Coopengo
 - Kubernetes en version 1.15
 - Installer helm 2 : voir sur https://helm.sh/
 - Installer un Controller Ingress :
    - Nginx Ingress Controller est conseillé : https://kubernetes.github.io/ingress-nginx/deploy/
 - Configurer des PersistentVolumes pour la persistence des données (indispensable en production)
    - https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/
-
-## Mise à jour des version des Charts
-
-```bash
-    helm3 package coog && helm3 repo index .
-```
 
 ## INJECTER LES SECRETS POUR LOADER LES IMAGES DE DOCKERHUB (login/password)
 
@@ -51,4 +46,10 @@ La valeur de monsecretenbase64 doit correspondre au résultat de la commande
 
 ```bash
     helm install stable/nginx-ingress
+```
+
+## Mise à jour des version des Charts
+
+```bash
+    helm3 package coog && helm3 repo index .
 ```
