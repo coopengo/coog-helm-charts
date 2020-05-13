@@ -10,8 +10,8 @@ dependencies:
   condition: redis.enabled
 
 - name: postgresql
-  version: 8.2.0
-  repository: https://kubernetes-charts.storage.googleapis.com/
+  version: 8.9.6
+  repository: https://charts.bitnami.com/bitnami
   condition: postgresql.enabled
 
   #- name: nginx

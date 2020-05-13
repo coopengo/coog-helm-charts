@@ -13,43 +13,48 @@
 ## INJECTER LES SECRETS POUR LOADER LES IMAGES DE DOCKERHUB (login/password)
 
 ```bash
-    kubectl apply -f docker-client-secret.yml
+kubectl apply -f docker-registry.yml
 ```
 
-Exemple de fichiers docker-client-secret.yml
+Exemple de fichiers docker-registry.yml
 
 ```yaml
-    apiVersion: v1
-    data:
-      .dockerconfigjson: monsecretenbase64
-    kind: Secret
-    metadata:
-      name: dockerhub-client
-      namespace: coog-client
-    type: kubernetes.io/dockerconfigjson
+apiVersion: v1
+data:
+  .dockerconfigjson: monsecretenbase64
+kind: Secret
+metadata:
+  name: docker-registry
+  # namespace: coog-client
+type: kubernetes.io/dockerconfigjson
 ```
 
-La valeur de monsecretenbase64 doit correspondre au résultat de la commande
+La valeur de monsecretenbase64 doit correspondre au résultat de la commande.
+
+A consulter : https://kubernetes.io/fr/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials
 
 ```bash
-    echo '{"auths": {"docker.io": { "auth": "login:pass ==>   enbase64" }}}'|base64
+echo '{"auths": {"docker.io": { "auth": "login:pass ==>   enbase64" }}}'|base64
 ```
+
+## OPTIONNEL : CONFIGURATION SPECIFIQUE CLIENTS
+Il faut créer un fichier client_values.yml (standard helm) si l'on souhaite apporter des configurations spécifiques liées à l'environnement.
 
 ## INSTALLATION DE COOG
 
 ```bash
-    helm repo add coopengo https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
-    helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
+helm repo add coopengo https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
 ```
 
 ## INSTALLATION DE NGINX INGRESS VIA HELM
 
 ```bash
-    helm install stable/nginx-ingress
+helm install stable/nginx-ingress
 ```
 
 ## Mise à jour des version des Charts
 
 ```bash
-    helm3 package coog && helm3 repo index .
+helm3 package coog && helm3 repo index .
 ```
