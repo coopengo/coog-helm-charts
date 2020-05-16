@@ -3,9 +3,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-configuration
+  name: {{ include "full_name" . }}
   labels:
-  {{ include "chart_labels" . | indent 4 }}
+{{ include "chart_labels" . | indent 4 }}
 data:
   {{- range $key, $val := .Values.coog.configurationFiles }}
     {{ $key }}: |-

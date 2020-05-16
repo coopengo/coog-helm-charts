@@ -342,8 +342,8 @@ celery:
 coog:
   cache_record: 50000
   configurationFiles:
-    batch.conf: |
-    coog.conf: |
+    batch.conf: |-
+    coog.conf: |-
   enabled: true
   external_postgres:
     enabled: false
