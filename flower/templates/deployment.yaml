@@ -35,7 +35,7 @@ spec:
             - --debug=True
             - --address=0.0.0.0
           ports:
-            - name: {{ .Values.service.name }}
+            - name: http
               containerPort: {{ .Values.service.internalPort }}
 {{/*          livenessProbe:*/}}
 {{/*            failureThreshold: 10*/}}
