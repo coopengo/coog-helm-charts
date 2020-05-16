@@ -33,6 +33,7 @@ securityContext: {}
 
 service:
   type: ClusterIP
+  port: 5555
   externalPort: 5555
   internalPort: 5555
 
