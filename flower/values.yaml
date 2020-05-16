@@ -38,13 +38,13 @@ service:
   internalPort: 5555
 
 ingress:
-  enabled: false
+  enabled: true
   annotations: {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
     - host: flower.local
-      paths: []
+      paths: ["/flower"]
 
   tls: []
   #  - secretName: chart-example-tls
