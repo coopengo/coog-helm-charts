@@ -26,7 +26,10 @@ spec:
         - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
           persistentVolumeClaim:
             claimName: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
-    {{- end }}
+        - name: {{ .Release.Name }}-configuration
+          configMap:
+            name: {{ .Release.Name }}-configuration
+      {{- end }}
       initContainers:
         - name: "{{ .Chart.Name }}-module-update"
           image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
@@ -40,7 +43,8 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
-          command: ['sh', '-c', 'ep admin -d {{ .Values.coog.postgres.database }} -cu ir res --activate-dependencies']
+{{/*          command: ['sh', '-c', 'ep admin -d {{ .Values.coog.postgres.database }} -cu ir res --activate-dependencies']*/}}
+          command: ['sh', '-c', 'ep admin -d {{ .Values.coog.postgres.database }} -u ir res']
           env:
             - name:  COOG_SERVER_WORKERS
               value: "{{ .Values.coog.workers }}"
@@ -111,12 +115,19 @@ spec:
             - ep
             - server
             - "{{ .Values.coog.workers }}"
-        {{- if .Values.coog.persistentVolume.enabled }}
           volumeMounts:
+            {{- if .Values.coog.persistentVolume.enabled }}
             - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
               mountPath: {{ .Values.coog.root_dir }}
               readOnly: false
-        {{- end }}
+            {{- end }}
+            {{- if .Values.coog.configurationFiles }}
+            {{- range $key, $val := .Values.coog.configurationFiles }}
+            - name: {{ $.Release.Name }}-configuration
+              mountPath: /workspace/{{ $key }}
+              subPath: {{ $key }}
+            {{- end }}
+            {{- end }}
           env:
             - name:  COOG_SERVER_WORKERS
               value: "{{ .Values.coog.workers }}"

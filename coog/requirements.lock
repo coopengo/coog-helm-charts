@@ -8,5 +8,8 @@ dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 8.9.6
-digest: sha256:88edbd2e0255c34b8779bdde0d7170e95928e4ae4c9d70379859591f2c0338cf
-generated: "2020-05-12T19:35:21.605772747+02:00"
+- name: flower
+  repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+  version: 0.1.0
+digest: sha256:35435f9da7b45ddfd23928d9ff79a1925aa5de1e592b2af98669efa2f999c984
+generated: "2020-05-16T11:34:07.410074429+02:00"

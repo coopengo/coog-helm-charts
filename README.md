@@ -58,3 +58,9 @@ helm install stable/nginx-ingress
 ```bash
 helm3 package coog && helm3 repo index .
 ```
+
+
+## Initialisation de la base de donnée 
+```yaml
+command: ['sh', '-c', 'ep admin -d {{ .Values.coog.postgres.database }} -u ir res']
+```

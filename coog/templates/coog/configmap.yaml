@@ -1,0 +1,15 @@
+{{- if .Values.coog.enabled }}
+{{- if .Values.coog.configurationFiles }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-configuration
+  labels:
+  {{ include "chart_labels" . | indent 4 }}
+data:
+  {{- range $key, $val := .Values.coog.configurationFiles }}
+    {{ $key }}: |-
+    {{ $val | indent 4}}
+  {{- end }}
+{{- end -}}
+{{- end -}}

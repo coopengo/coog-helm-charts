@@ -2,6 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+flower:
+  enabled: false
+
 redis:
   enabled: true
   usePassword: false
@@ -60,7 +63,6 @@ postgresql:
   initdbScripts:
     db-init.sql: |
       CREATE ROLE coog WITH LOGIN PASSWORD 'coog';
-      CREATE DATABASE coog OWNER coog;
 
 
 api:
@@ -72,7 +74,7 @@ api:
 
   image:
     repository: coopengo/api
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
   imagePullSecrets:
     - name: docker-registry
@@ -104,7 +106,7 @@ api_b2b_config:
 
   image:
     repository: coopengo/api-b2b-config
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
   imagePullSecrets:
     - name: docker-registry
@@ -137,7 +139,7 @@ api_b2c:
 
   image:
     repository: coopengo/api-b2c
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
 
   imagePullSecrets:
@@ -169,7 +171,7 @@ api_identity_manager:
 
   image:
     repository: coopengo/api-identity-manager
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
 
   imagePullSecrets:
@@ -202,7 +204,7 @@ api_referential:
 
   image:
     repository: coopengo/api-referential
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
 
   imagePullSecrets:
@@ -235,7 +237,7 @@ app_b2c:
 
   image:
     repository: coopengo/app-b2c
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
 
   imagePullSecrets:
@@ -281,7 +283,7 @@ unoconv:
 
   image:
     repository: coopengo/unoconv
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
 
   imagePullSecrets:
@@ -309,6 +311,7 @@ unoconv:
 
 celery:
   enabled: false
+  workers: 1
   specificBatchConcurrency:
     enabled: false
   replicaCount: 1
@@ -338,6 +341,9 @@ celery:
 
 coog:
   cache_record: 50000
+  configurationFiles:
+    batch.conf: |
+    coog.conf: |
   enabled: true
   external_postgres:
     enabled: false
@@ -355,6 +361,7 @@ coog:
     name: workspace-io
     io: /workspace/io/
     storageClass: nfs-client
+#    storageClass: standard
     size: 10Gi
     claim:
       name: ""
@@ -362,7 +369,7 @@ coog:
 
   image:
     repository: coopengo/coog
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
 
   imagePullSecrets:
@@ -437,7 +444,7 @@ paybox:
 
   image:
     repository: coopengo/paybox
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
 
   imagePullSecrets:
@@ -484,7 +491,7 @@ web:
 
   image:
     repository: coopengo/web
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
 
   imagePullSecrets:
@@ -534,7 +541,7 @@ portal:
 
   image:
     repository: coopengo/portal
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
 
   imagePullSecrets:
@@ -601,7 +608,7 @@ gateway:
 
   image:
     repository: coopengo/gateway
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
 
   imagePullSecrets:
@@ -647,7 +654,7 @@ static:
 
   image:
     repository: coopengo/static
-    tag: coog-2.8.1
+    tag: coog-2.8.2
     pullPolicy: Always
 
   imagePullSecrets:
