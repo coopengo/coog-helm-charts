@@ -34,6 +34,7 @@ spec:
             - /usr/local/bin/flower
             - --debug=True
             - --address=0.0.0.0
+            - --url_prefix=flower
           ports:
             - name: http
               containerPort: {{ .Values.service.internalPort }}
