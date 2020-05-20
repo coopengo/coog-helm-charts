@@ -5,6 +5,9 @@
 flower:
   enabled: false
 
+##
+## Redis chart configuration
+##
 redis:
   enabled: true
   usePassword: false
@@ -30,6 +33,17 @@ redis:
     enabled: false
     prometheusRule:
       enabled: false
+
+externalRedis:
+  ## All of these values are only used when redis.enabled is set to false
+  ## Redis host
+  ##
+  host: localhost
+  ## Redis port number
+  ##
+  port: 6379
+  ## Redis password
+  ##
 
 mongodb:
   enabled: true

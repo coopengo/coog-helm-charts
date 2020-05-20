@@ -56,7 +56,9 @@ helm install stable/nginx-ingress
 ## Mise à jour des version des Charts
 
 ```bash
-helm3 package coog flower && helm3 repo index .
+helm3 package flower && helm3 repo index .
+helm3 dependency update coog
+helm3 package coog && helm3 repo index .
 ```
 
 
