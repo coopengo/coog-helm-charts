@@ -13,6 +13,11 @@
 ## INJECTER LES SECRETS POUR LOADER LES IMAGES DE DOCKERHUB (login/password)
 
 ```bash
+kubectl create secret docker-registry docker-registry --docker-server="https://index.docker.io/v1/" --docker-username=login --docker-password=password --docker-email=email
+```
+ou
+
+```bash
 kubectl apply -f docker-registry.yml
 ```
 
@@ -34,7 +39,7 @@ La valeur de monsecretenbase64 doit correspondre au résultat de la commande.
 A consulter : https://kubernetes.io/fr/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials
 
 ```bash
-echo '{"auths": {"docker.io": { "auth": "login:pass ==>   enbase64" }}}'|base64
+echo '{"auths": {"docker.io": { "auth": "login:pass ==> base64" }}}'|base64
 ```
 
 ## OPTIONNEL : CONFIGURATION SPECIFIQUE CLIENTS

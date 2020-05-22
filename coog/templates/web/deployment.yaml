@@ -39,7 +39,11 @@ spec:
             - server
           env:
             - name: COOG_API_REDIS_URL
-              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }} "
+              {{- if .Values.redis.enabled }}
+              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}"
+              {{- else }}
+              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.redisPort }}"
+              {{- end }}
             - name: COOG_API_REDIS_DB
               value: "7"
             - name: COOG_API_COOG_URL

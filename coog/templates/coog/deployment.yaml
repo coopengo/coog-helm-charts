@@ -79,13 +79,25 @@ spec:
             - name: TRYTOND_CACHE__RECORD
               value: "{{ .Values.coog.cache_record }}"
             - name:  TRYTOND_ASYNC__CELERY
+              {{- if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
+              {{- else }}
+              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.redisPort }}/1"
+              {{- end }}
             - name:  TRYTOND_ASYNC_CELERY
+              {{- if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
+              {{- else }}
+              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.redisPort }}/1"
+              {{- end }}
             - name:  TRYTOND_CACHE__CLASS
               value: "trytond.cache.MemoryCache"
             - name:  TRYTOND_CACHE__URI
+              {{- if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/0"
+              {{- else }}
+              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.redisPort }}/0"
+              {{- end }}
             - name:  TRYTOND_DATABASE__URI
             {{- if not .Values.coog.external_postgres.enabled }}
               value: "postgresql://postgres:{{ .Values.coog.postgres.password }}@{{ .Release.Name }}-postgresql:{{ .Values.postgresql.service.port }}/{{ .Values.coog.postgres.database}}"
@@ -172,15 +184,27 @@ spec:
             {{- end }}
             {{- end }}
             - name:  TRYTOND_ASYNC__CELERY
+              {{- if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
+              {{- else }}
+              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.redisPort }}/1"
+              {{- end }}
             - name:  TRYTOND_ASYNC_CELERY
+              {{- if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
+              {{- else }}
+              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.redisPort }}/1"
+              {{- end }}
             - name:  TRYTOND_CACHE__CLASS
               value: "trytond.cache.SerializableMemoryCache"
             - name:  TRYTOND_CACHE__CLEAN_TIMEOUT
               value: "0"
             - name:  TRYTOND_CACHE__URI
+              {{- if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/0"
+              {{- else }}
+              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.redisPort }}/0"
+              {{- end }}
             - name:  TRYTOND_DATABASE__URI
             {{- if not .Values.coog.external_postgres.enabled }}
               value: "postgresql://postgres:{{ .Values.coog.postgres.password }}@{{ .Release.Name }}-postgresql:{{ .Values.postgresql.service.port }}/{{ .Values.coog.postgres.database}}"
