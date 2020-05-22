@@ -68,3 +68,7 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+celeryBrokerUrl: redis://redis:6379/1
+
+urlPrefix: flower
