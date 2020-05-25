@@ -100,13 +100,13 @@ spec:
               {{- if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
               {{- else }}
-              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.redisPort }}/1"
+              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}/1"
               {{- end }}
             - name:  TRYTOND_ASYNC__CELERY
               {{- if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
               {{- else }}
-              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.redisPort }}/1"
+              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}/1"
               {{- end }}
             - name:  TRYTOND_CACHE__CLASS
               value: "trytond.cache.SerializableMemoryCache"
