@@ -35,6 +35,12 @@ spec:
             - --debug=True
             - --address=0.0.0.0
             - --url_prefix=flower
+          {{- with .Values.args }}
+          args:
+          {{- range . }}
+            - {{ . | quote }}
+          {{- end }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.internalPort }}
