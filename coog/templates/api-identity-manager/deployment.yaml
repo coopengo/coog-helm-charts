@@ -21,6 +21,38 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
+      initContainers:
+        - name: "{{ .Chart.Name }}-migrator"
+          image: "{{ .Values.api_identity_manager_migrator.image.repository }}:{{ .Values.api_identity_manager.image.tag }}"
+          imagePullPolicy: {{ .Values.api_identity_manager.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          env:
+            - name:  MONGO_HOST
+            {{- if not .Values.gateway.external_mongodb.enabled }}
+              value: "{{ .Release.Name }}-mongodb"
+            {{ else }}
+              value: "{{ .Values.gateway.external_mongodb.host }}"
+            {{- end }}
+            - name:  MONGO_PORT
+            {{- if not .Values.gateway.external_mongodb.enabled }}
+              value: "{{ .Values.mongodb.service.port }}"
+            {{ else }}
+              value: "{{ .Values.gateway.external_mongodb.port }}"
+            {{- end }}
+            - name:  MONGO_DB_NAME
+              value: "{{ .Values.api.mongodb.database }}"
+            - name:  MONGO_USER
+              value: "{{ .Values.gateway.mongodb_user }}"
+            - name:  MONGO_PASSWORD
+              value: "{{ .Values.gateway.mongodb_root_password }}"
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.api_identity_manager.image.repository }}:{{ .Values.api_identity_manager.image.tag }}"

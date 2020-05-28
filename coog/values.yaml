@@ -212,6 +212,10 @@ api_identity_manager:
   affinity: {}
 
 
+api_identity_manager_migrator:
+  image:
+    repository: coopengo/api-identity-manager-migrator
+
 api_referential:
   enabled: false
   replicaCount: 1
