@@ -36,14 +36,11 @@ spec:
             runAsUser: 1000
           envFrom:
             - configMapRef:
-                name: service-config
-                path: security
+                name: service-coog-config
             - configMapRef:
-                name: service-config
-                path: mongo
+                name: service-security-config
             - configMapRef:
-                name: service-config
-                path: coog
+                name: service-mongo-config
           env:
             {{- if .Values.api_identity_manager.extraEnv }}
             {{- range $key, $value := .Values.api_identity_manager.extraEnv }}

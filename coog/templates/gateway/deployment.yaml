@@ -36,17 +36,13 @@ spec:
             runAsUser: 1000
           envFrom:
             - configMapRef:
-                name: service-config
-                path: security
+                name: service-coog-config
             - configMapRef:
-                name: service-config
-                path: mongo
+                name: service-security-config
             - configMapRef:
-                name: service-config
-                path: coog
+                name: service-mongo-config
             - configMapRef:
-                name: service-config
-                path: document
+                name: service-document-config
           env:
             - name:  COOG_PORTAL_URL
               value: "{{ .Values.gateway.portal_url }}"

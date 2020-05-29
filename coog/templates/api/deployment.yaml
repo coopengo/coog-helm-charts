@@ -36,17 +36,13 @@ spec:
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           envFrom:
             - configMapRef:
-                name: service-config
-                path: security
+                name: service-coog-config
             - configMapRef:
-                name: service-config
-                path: mongo
+                name: service-security-config
             - configMapRef:
-                name: service-config
-                path: coog
+                name: service-mongo-config
             - configMapRef:
-                name: service-config
-                path: document
+                name: service-document-config
           env:
             - name:  COOG_API_V1_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-web"

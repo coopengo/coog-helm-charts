@@ -617,6 +617,8 @@ gateway:
   portal_url: coog.local
   gateway_url: coog.local
   entrypoint: "/gateway"
+  document:
+    document_limit: 10
   extraEnv:
     COOG_TOKEN_MODULE: "false"
 
