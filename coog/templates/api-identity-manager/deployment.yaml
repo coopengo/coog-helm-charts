@@ -34,31 +34,17 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: 1000
+          envFrom:
+            - configMapRef:
+                name: service-config
+                path: security
+            - configMapRef:
+                name: service-config
+                path: mongo
+            - configMapRef:
+                name: service-config
+                path: coog
           env:
-            - name:  MONGO_HOST
-            {{- if not .Values.gateway.external_mongodb.enabled }}
-              value: "{{ .Release.Name }}-mongodb"
-            {{ else }}
-              value: "{{ .Values.gateway.external_mongodb.host }}"
-            {{- end }}
-            - name:  MONGO_PORT
-            {{- if not .Values.gateway.external_mongodb.enabled }}
-              value: "{{ .Values.mongodb.service.port }}"
-            {{ else }}
-              value: "{{ .Values.gateway.external_mongodb.port }}"
-            {{- end }}
-            - name:  MONGO_DB_NAME
-              value: "{{ .Values.api.mongodb.database }}"
-            - name:  MONGO_USER
-              value: "{{ .Values.gateway.mongodb_user }}"
-            - name:  MONGO_PASSWORD
-              value: "{{ .Values.gateway.mongodb_root_password }}"
-            - name: COOG_URL
-              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
-            - name: COOG_DB_NAME
-              value: "{{ .Values.coog.postgres.database }}"
-            - name:  JWT_INTERNAL_ENCRYPTION
-              value: "{{ .Values.jwt.internal.encryption }}"
             {{- if .Values.api_identity_manager.extraEnv }}
             {{- range $key, $value := .Values.api_identity_manager.extraEnv }}
             - name:  {{ $key }}

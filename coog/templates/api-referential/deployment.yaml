@@ -34,13 +34,14 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: 1000
+          envFrom:
+            - configMapRef:
+                name: service-config
+                path: security
+            - configMapRef:
+                name: service-config
+                path: coog
           env:
-            - name: COOG_URL
-              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
-            - name: COOG_DB_NAME
-              value: "{{ .Values.coog.postgres.database }}"
-            - name:  JWT_INTERNAL_ENCRYPTION
-              value: "{{ .Values.jwt.internal.encryption }}"
             {{- if .Values.api_referential.extraEnv }}
             {{- range $key, $value := .Values.api_referential.extraEnv }}
             - name:  {{ $key }}

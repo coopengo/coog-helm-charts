@@ -1,0 +1,25 @@
+apiVerison: v1
+kind: ConfigMap
+metadata:
+  name: service-config
+data:
+  security: |
+    JWT_INTERNAL_ENCRYPTION: "{{ .Values.jwt.internal.encryption }}"
+  coog: |
+    COOG_URL: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
+    COOG_DB_NAME: "{{ .Values.coog.postgres.database }}"
+  mongo:
+    MONGO_USER: "{{ .Values.gateway.mongodb.mongodb_user }}"
+    MONGO_PASSWORD: "{{ .Values.gateway.mongodb.mongodb_password }}"
+    {{- if not .Values.gateway.external_mongodb.enabled }}
+      MONGO_HOST: "{{ .Values.mongodb.service.host }}"
+    {{ else }}
+      MONGO_HOST: "{{ .Values.gateway.external_mongodb.host }}"
+    {{- end }}
+    {{- if not .Values.gateway.external_mongodb.enabled }}
+      MONGO_PORT: "{{ .Values.mongodb.service.port }}"
+    {{ else }}
+      MONGO_PORT: "{{ .Values.gateway.external_mongodb.port }}"
+    {{- end }}
+  document:
+    MAX_LIMIT_FILE_SIZE_UPLOAD: "{{ .Values.gateway.document.document_limit }}"
