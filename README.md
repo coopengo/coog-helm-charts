@@ -63,11 +63,11 @@ helm install stable/nginx-ingress
 ```bash
 helm3 repo update
 helm3 package flower && helm3 repo index .
-# git add . & git commit -m 'Flower packaging' & git push
+# git add . && git commit -m 'Flower packaging' && git push
 helm3 repo update
 helm3 dependency update coog
 helm3 package coog && helm3 repo index .
-# git add . & git commit -m 'Coog packaging' & git push 
+# git add . && git commit -m 'Coog packaging' && git push 
 ```
 
 
