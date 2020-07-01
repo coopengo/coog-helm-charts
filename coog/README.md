@@ -2,7 +2,7 @@ coog
 ====
 A Helm chart for Coog
 
-Current chart version is `1.4.8`
+Current chart version is `1.5.0`
 
 
 
@@ -342,7 +342,7 @@ Current chart version is `1.4.8`
 | unoconv.fullnameOverride | string | `""` |  |
 | unoconv.image.pullPolicy | string | `"Always"` |  |
 | unoconv.image.repository | string | `"coopengo/unoconv"` |  |
-| unoconv.image.tag | string | `"coog-2.8.2"` |  |
+| unoconv.image.tag | string | `"tfk-coog-0.0.0"` |  |
 | unoconv.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | unoconv.nameOverride | string | `""` |  |
 | unoconv.nodeSelector | object | `{}` |  |

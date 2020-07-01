@@ -223,7 +223,7 @@ spec:
             - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
               value: "True"
             - name: TRYTOND_REPORT__API
-              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-unoconv:5000/unoconv/{oext}/"
+              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-unoconv:5000/unoconv/{oext}"
             - name: COOG_IWC
               value: "1"
           ports:

@@ -297,7 +297,7 @@ unoconv:
 
   image:
     repository: coopengo/unoconv
-    tag: coog-2.8.2
+    tag: tfk-coog-0.0.0
     pullPolicy: Always
 
   imagePullSecrets:
