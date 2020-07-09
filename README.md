@@ -75,3 +75,7 @@ helm3 package coog && helm3 repo index .
 ```yaml
 command: ['sh', '-c', 'ep admin -d {{ .Values.coog.postgres.database }} -u ir res']
 ```
+
+## Sécurité
+
+Sur Nginx, penser à configurer ```server_tokens off``` pour cacher les informations serveurs.
