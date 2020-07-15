@@ -1,0 +1,62 @@
+{{- if .Values.batch.migquottosr.enabled -}}
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "full_name" . }}
+  labels:
+{{ include "chart_labels" . | indent 4 }}
+spec:
+  concurrencyPolicy: Forbid
+  schedule: {{ .Values.batch.migquottosr.schedule }}
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+        {{- with .Values.batch.migquottosr.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 12 }}
+        {{- end }}
+          restartPolicy: Never
+          containers:
+            - name: {{ .Chart.Name }}
+              image: "{{ .Values.batch.migquottosr.image.repository }}:{{ .Values.batch.migquottosr.image.tags }}"
+              imagePullPolicy: {{ .Values.batch.migquottosr.image.pullPolicy }}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                privileged: false
+                procMount: Default
+                runAsNonRoot: true
+                runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+              env:
+                - name: COOG_DB_NAME
+                  value: "{{ .Values.coog.postgres.database }}"
+                - name:  REDIS_URL
+                  {{- if .Values.redis.enabled }}
+                  value: "{{ .Release.Name }}-redis-master"
+                  {{- else }}
+                  value: {{ .Values.externalRedis.host | quote }}
+                {{- end }}
+                - name: REDIS_DB
+                  value: "7"
+                - name: MONGO_URL
+                  {{- if not .Values.gateway.external_mongodb.enabled }}
+                  value: "{{ .Release.Name }}-mongodb"
+                  {{ else }}
+                  value: "{{ .Values.gateway.external_mongodb.host }}"
+                {{- end }}
+                - name: MONGO_USER
+                  value: "{{ .Values.gateway.mongodb_user }}"
+                - name: MONGO_PASSWORD
+                  value: "{{ .Values.gateway.mongodb_root_password }}"
+                - name: MONGO_API_DB
+                  value: "{{ .Values.api.mongodb.database }}"
+                - name: MONGO_IDENTITY_DB
+                  value: "{{ .Values.api.mongodb.database }}"
+              resources:
+{{ toYaml .Values.batch.migquottosr.resources | indent 16 }}
+{{- end }}

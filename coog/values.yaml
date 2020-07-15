@@ -711,3 +711,21 @@ static:
 jwt:
   internal:
     encryption: changeme
+
+batch:
+  migquottosr:
+    enabled: false
+    image:
+      pullPolicy: Always
+      repository: coopengo/migquottosr
+      tags: latest
+    schedule: "0 20 * * *"
+    imagePullSecrets:
+      - name: docker-registry
+    resources:
+      limits:
+        cpu: 200m
+        memory: 100Mi
+      requests:
+        cpu: 100m
+        memory: 50Mi
