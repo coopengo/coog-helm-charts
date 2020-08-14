@@ -140,6 +140,8 @@ spec:
                   value: {{ $value | quote }}
                 {{- end }}
                 {{- end }}
+              - name: TRYTOND_DATABASE__LANGUAGE
+                value: fr
               resources:
 {{ toYaml .Values.celery.cron.resources | indent 16 }}
 {{- end }}

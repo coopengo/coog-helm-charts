@@ -128,6 +128,8 @@ spec:
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-unoconv:5000/unoconv/{oext}"
             - name: COOG_IWC
               value: "1"
+            - name: TRYTOND_DATABASE__LANGUAGE
+              value: fr
           ports:
             - name: http
               containerPort: 8000

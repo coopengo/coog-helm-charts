@@ -147,6 +147,8 @@ spec:
               value: {{ $value | quote }}
             {{- end }}
             {{- end }}
+            - name: TRYTOND_DATABASE__LANGUAGE
+              value: fr
 
           ports:
             - name: http
