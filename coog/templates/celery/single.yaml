@@ -55,6 +55,8 @@ spec:
               value: "{{ .Values.coog.workers }}"
             - name:  COOG_CELERY_WORKERS
               value: "{{ .Values.celery.workers }}"
+            - name:  CELERY_MAX_MEMORY_PER_CHILD
+              value: " {{ .Values.coog.max_worker_memory }}"
             - name:  COOG_TIMEOUT
               value: "{{ .Values.coog.timeout }}"
             - name:  LOG_LEVEL
