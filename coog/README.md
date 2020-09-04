@@ -164,6 +164,7 @@ Current chart version is `1.5.0`
 | coog.livenessProbe.periodSeconds | int | `60` |  |
 | coog.livenessProbe.timeoutSeconds | int | `30` |  |
 | coog.log_level | string | `"INFO"` |  |
+| coog.max_worker_memory | int | `0` |  |
 | coog.nameOverride | string | `""` |  |
 | coog.nodeSelector | object | `{}` |  |
 | coog.persistentVolume.claim.name | string | `""` |  |

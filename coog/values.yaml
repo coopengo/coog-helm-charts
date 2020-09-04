@@ -367,6 +367,7 @@ coog:
     user: coog
     password: coog
   workers: 4
+  max_worker_memory: 0
   log_level: INFO
   timeout: 3600
   replicaCount: 1
