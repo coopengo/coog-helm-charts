@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.4] - 2020-09-15
+
+### Added
+
+- Indentation for DATABASE LANGUAGE
+- celery: Add max-memory-per-child management
+
 ## [1.6.3] - 2020-08-14
 
 ### Added
