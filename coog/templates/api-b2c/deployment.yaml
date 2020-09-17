@@ -34,15 +34,14 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: 1000
+          envFrom:
+            - configMapRef:
+                name: service-coog-config
+            - configMapRef:
+                name: service-security-config
+            - configMapRef:
+                name: service-document-config
           env:
-            - name: COOG_URL
-              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
-            - name: COOG_DB_NAME
-              value: "{{ .Values.coog.postgres.database }}"
-            - name: COOG_DOCUMENT_TOKEN_SECRET
-              value: "{{ .Values.coog.document_token}}"
-            - name:  JWT_INTERNAL_ENCRYPTION
-              value: "{{ .Values.jwt.internal.encryption }}"
             {{- if .Values.api_b2c.extraEnv }}
             {{- range $key, $value := .Values.api_b2c.extraEnv }}
             - name:  {{ $key }}
