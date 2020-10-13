@@ -2,6 +2,9 @@ dependencies:
 - name: mongodb
   repository: https://charts.bitnami.com/bitnami
   version: 7.14.1
+- name: rabbitmq
+  repository: https://charts.bitnami.com/bitnami
+  version: 7.6.8
 - name: redis
   repository: https://kubernetes-charts.storage.googleapis.com/
   version: 10.5.0
@@ -11,5 +14,5 @@ dependencies:
 - name: flower
   repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
   version: 0.1.5
-digest: sha256:ddd15d2960e541c328c7ec04a1e3973d8d82714495f1a6564e2d651031264b51
-generated: "2020-05-28T10:35:13.866909551+02:00"
+digest: sha256:08e939e9c87b2ef2f10f31034f407ac6a0c40e9d8627ab0de71bf7bb18510af9
+generated: "2020-10-13T10:42:22.985056742+02:00"

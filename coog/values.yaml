@@ -5,6 +5,9 @@
 flower:
   enabled: false
 
+rabbitmq:
+  enabled: true
+
 ##
 ## Redis chart configuration
 ##

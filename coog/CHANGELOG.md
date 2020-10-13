@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.0] - 2020-010-13
+
+### Added
+
+- Add rabbitmq support
+
 ## [1.6.4] - 2020-09-15
 
 ### Added
