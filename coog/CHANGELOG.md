@@ -5,6 +5,7 @@
 ### Added
 
 - Add rabbitmq support
+- Coog default version : coog-2.10.2042
 
 ## [1.6.4] - 2020-09-15
 
