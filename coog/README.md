@@ -2,7 +2,7 @@ coog
 ====
 A Helm chart for Coog
 
-Current chart version is `1.5.0`
+Current chart version is `2.0.0`
 
 
 
@@ -12,6 +12,7 @@ Current chart version is `1.5.0`
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | mongodb | 7.14.1 |
 | https://charts.bitnami.com/bitnami | postgresql | 8.9.6 |
+| https://charts.bitnami.com/bitnami | rabbitmq | 7.6.8 |
 | https://kubernetes-charts.storage.googleapis.com/ | redis | 10.5.0 |
 | https://raw.githubusercontent.com/coopengo/coog-helm-charts/master | flower | 0.1.5 |
 
@@ -24,7 +25,7 @@ Current chart version is `1.5.0`
 | api.fullnameOverride | string | `""` |  |
 | api.image.pullPolicy | string | `"Always"` |  |
 | api.image.repository | string | `"coopengo/api"` |  |
-| api.image.tag | string | `"coog-2.8.2"` |  |
+| api.image.tag | string | `"coog-2.10.2042"` |  |
 | api.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | api.mongodb.database | string | `"coog-api-v2"` |  |
 | api.nameOverride | string | `""` |  |
@@ -42,7 +43,7 @@ Current chart version is `1.5.0`
 | api_b2b_config.fullnameOverride | string | `""` |  |
 | api_b2b_config.image.pullPolicy | string | `"Always"` |  |
 | api_b2b_config.image.repository | string | `"coopengo/api-b2b-config"` |  |
-| api_b2b_config.image.tag | string | `"coog-2.8.2"` |  |
+| api_b2b_config.image.tag | string | `"coog-2.10.2042"` |  |
 | api_b2b_config.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | api_b2b_config.nameOverride | string | `""` |  |
 | api_b2b_config.nodeSelector | object | `{}` |  |
@@ -59,7 +60,7 @@ Current chart version is `1.5.0`
 | api_b2c.fullnameOverride | string | `""` |  |
 | api_b2c.image.pullPolicy | string | `"Always"` |  |
 | api_b2c.image.repository | string | `"coopengo/api-b2c"` |  |
-| api_b2c.image.tag | string | `"coog-2.8.2"` |  |
+| api_b2c.image.tag | string | `"coog-2.10.2042"` |  |
 | api_b2c.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | api_b2c.nameOverride | string | `""` |  |
 | api_b2c.nodeSelector | object | `{}` |  |
@@ -76,7 +77,7 @@ Current chart version is `1.5.0`
 | api_identity_manager.fullnameOverride | string | `""` |  |
 | api_identity_manager.image.pullPolicy | string | `"Always"` |  |
 | api_identity_manager.image.repository | string | `"coopengo/api-identity-manager"` |  |
-| api_identity_manager.image.tag | string | `"coog-2.8.2"` |  |
+| api_identity_manager.image.tag | string | `"coog-2.10.2042"` |  |
 | api_identity_manager.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | api_identity_manager.nameOverride | string | `""` |  |
 | api_identity_manager.nodeSelector | object | `{}` |  |
@@ -93,7 +94,7 @@ Current chart version is `1.5.0`
 | api_referential.fullnameOverride | string | `""` |  |
 | api_referential.image.pullPolicy | string | `"Always"` |  |
 | api_referential.image.repository | string | `"coopengo/api-referential"` |  |
-| api_referential.image.tag | string | `"coog-2.8.2"` |  |
+| api_referential.image.tag | string | `"coog-2.10.2042"` |  |
 | api_referential.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | api_referential.nameOverride | string | `""` |  |
 | api_referential.nodeSelector | object | `{}` |  |
@@ -110,7 +111,7 @@ Current chart version is `1.5.0`
 | app_b2c.fullnameOverride | string | `""` |  |
 | app_b2c.image.pullPolicy | string | `"Always"` |  |
 | app_b2c.image.repository | string | `"coopengo/app-b2c"` |  |
-| app_b2c.image.tag | string | `"coog-2.8.2"` |  |
+| app_b2c.image.tag | string | `"coog-2.10.2042"` |  |
 | app_b2c.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | app_b2c.ingress.annotations | object | `{}` |  |
 | app_b2c.ingress.enabled | bool | `false` |  |
@@ -127,6 +128,16 @@ Current chart version is `1.5.0`
 | app_b2c.service.port | int | `80` |  |
 | app_b2c.service.type | string | `"ClusterIP"` |  |
 | app_b2c.tolerations | list | `[]` |  |
+| batch.migquottosr.enabled | bool | `false` |  |
+| batch.migquottosr.image.pullPolicy | string | `"Always"` |  |
+| batch.migquottosr.image.repository | string | `"coopengo/migquottosr"` |  |
+| batch.migquottosr.image.tags | string | `"latest"` |  |
+| batch.migquottosr.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| batch.migquottosr.resources.limits.cpu | string | `"200m"` |  |
+| batch.migquottosr.resources.limits.memory | string | `"100Mi"` |  |
+| batch.migquottosr.resources.requests.cpu | string | `"100m"` |  |
+| batch.migquottosr.resources.requests.memory | string | `"50Mi"` |  |
+| batch.migquottosr.schedule | string | `"0 20 * * *"` |  |
 | celery.affinity | object | `{}` |  |
 | celery.cron.resources.limits.cpu | string | `"200m"` |  |
 | celery.cron.resources.limits.memory | string | `"300Mi"` |  |
@@ -154,7 +165,7 @@ Current chart version is `1.5.0`
 | coog.fullnameOverride | string | `""` |  |
 | coog.image.pullPolicy | string | `"Always"` |  |
 | coog.image.repository | string | `"coopengo/coog"` |  |
-| coog.image.tag | string | `"coog-2.8.2"` |  |
+| coog.image.tag | string | `"coog-2.10.2042"` |  |
 | coog.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | coog.ingress.annotations | object | `{}` |  |
 | coog.ingress.enabled | bool | `false` |  |
@@ -214,7 +225,7 @@ Current chart version is `1.5.0`
 | gateway.gateway_url | string | `"coog.local"` |  |
 | gateway.image.pullPolicy | string | `"Always"` |  |
 | gateway.image.repository | string | `"coopengo/gateway"` |  |
-| gateway.image.tag | string | `"coog-2.8.2"` |  |
+| gateway.image.tag | string | `"coog-2.10.2042"` |  |
 | gateway.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | gateway.ingress.annotations | object | `{}` |  |
 | gateway.ingress.enabled | bool | `false` |  |
@@ -256,7 +267,7 @@ Current chart version is `1.5.0`
 | paybox.fullnameOverride | string | `""` |  |
 | paybox.image.pullPolicy | string | `"Always"` |  |
 | paybox.image.repository | string | `"coopengo/paybox"` |  |
-| paybox.image.tag | string | `"coog-2.8.2"` |  |
+| paybox.image.tag | string | `"coog-2.10.2042"` |  |
 | paybox.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | paybox.ingress.annotations | object | `{}` |  |
 | paybox.ingress.enabled | bool | `false` |  |
@@ -278,7 +289,7 @@ Current chart version is `1.5.0`
 | portal.fullnameOverride | string | `""` |  |
 | portal.image.pullPolicy | string | `"Always"` |  |
 | portal.image.repository | string | `"coopengo/portal"` |  |
-| portal.image.tag | string | `"coog-2.8.2"` |  |
+| portal.image.tag | string | `"coog-2.10.2042"` |  |
 | portal.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | portal.ingress.annotations | object | `{}` |  |
 | portal.ingress.enabled | bool | `false` |  |
@@ -303,6 +314,7 @@ Current chart version is `1.5.0`
 | postgresql.persistence.enabled | bool | `false` |  |
 | postgresql.postgresqlDatabase | string | `"coog"` |  |
 | postgresql.postgresqlPassword | string | `"coog"` |  |
+| rabbitmq.enabled | bool | `true` |  |
 | redis.cluster.enabled | bool | `false` |  |
 | redis.enabled | bool | `true` |  |
 | redis.master.disableCommands | list | `[]` |  |
@@ -322,7 +334,7 @@ Current chart version is `1.5.0`
 | static.fullnameOverride | string | `""` |  |
 | static.image.pullPolicy | string | `"Always"` |  |
 | static.image.repository | string | `"coopengo/static"` |  |
-| static.image.tag | string | `"coog-2.8.2"` |  |
+| static.image.tag | string | `"coog-2.10.2042"` |  |
 | static.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | static.ingress.annotations | object | `{}` |  |
 | static.ingress.enabled | bool | `false` |  |
@@ -343,7 +355,7 @@ Current chart version is `1.5.0`
 | unoconv.fullnameOverride | string | `""` |  |
 | unoconv.image.pullPolicy | string | `"Always"` |  |
 | unoconv.image.repository | string | `"coopengo/unoconv"` |  |
-| unoconv.image.tag | string | `"tfk-coog-0.0.0"` |  |
+| unoconv.image.tag | string | `"tfk-coog-0.0.2"` |  |
 | unoconv.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | unoconv.nameOverride | string | `""` |  |
 | unoconv.nodeSelector | object | `{}` |  |
@@ -360,7 +372,7 @@ Current chart version is `1.5.0`
 | web.fullnameOverride | string | `""` |  |
 | web.image.pullPolicy | string | `"Always"` |  |
 | web.image.repository | string | `"coopengo/web"` |  |
-| web.image.tag | string | `"coog-2.8.2"` |  |
+| web.image.tag | string | `"coog-2.10.2042"` |  |
 | web.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | web.ingress.annotations | object | `{}` |  |
 | web.ingress.enabled | bool | `false` |  |
