@@ -14,5 +14,5 @@ dependencies:
 - name: flower
   repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
   version: 0.1.5
-digest: sha256:08e939e9c87b2ef2f10f31034f407ac6a0c40e9d8627ab0de71bf7bb18510af9
-generated: "2020-10-13T10:42:22.985056742+02:00"
+digest: sha256:6d0f39a7a50abacc00963a2b96395de2244d364f5c5627d8b9adf528e70a21b2
+generated: "2020-10-20T19:40:08.101438202+02:00"
