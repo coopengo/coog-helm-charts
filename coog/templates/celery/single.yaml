@@ -158,14 +158,14 @@ spec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "PYTHONPATH=/workspace/coog/bin/lib celery -A coog_async.broker_celery status"
+                - "PYTHONPATH=/workspace/coog/bin/lib celery -A coog_async.coog_celery status"
             {{- toYaml .Values.celery.livenessProbe | nindent 12 }}
           readinessProbe:
             exec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "PYTHONPATH=/workspace/coog/bin/lib celery -A coog_async.broker_celery status"
+                - "PYTHONPATH=/workspace/coog/bin/lib celery -A coog_async.coog_celery status"
           resources:
             {{- toYaml .Values.celery.resources | nindent 12 }}
       {{- with .Values.celery.nodeSelector }}

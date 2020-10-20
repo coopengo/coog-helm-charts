@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.0.2] - 2020-10-20
+
+### Fix
+
+- Fix celery broker declaration (change broker_celery to coog_celery)
+
 ## [2.0.1] - 2020-10-19
 
 ### Fix
