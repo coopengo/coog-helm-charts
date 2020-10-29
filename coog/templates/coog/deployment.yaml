@@ -170,7 +170,7 @@ spec:
             {{- end }}
             - name:  TRYTOND_ASYNC__CELERY
               {{- if .Values.rabbitmq.enabled }}
-              value: "{{ .Values.rabbitmq.auth.username }}:{{ .Values.rabbitmq.auth.password }}@amqp://{{ .Release.Name }}-rabbitmq:{{ .Values.rabbitmq.service.port }}"
+              value: "amqp://{{ .Values.rabbitmq.auth.username }}:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq:{{ .Values.rabbitmq.service.port }}"
               {{- else if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
               {{- else }}
@@ -178,7 +178,7 @@ spec:
               {{- end }}
             - name:  TRYTOND_ASYNC_CELERY
               {{- if .Values.rabbitmq.enabled }}
-              value: "{{ .Values.rabbitmq.auth.username }}:{{ .Values.rabbitmq.auth.password }}@amqp://{{ .Release.Name }}-rabbitmq:{{ .Values.rabbitmq.service.port }}"
+              value: "amqp://{{ .Values.rabbitmq.auth.username }}:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq:{{ .Values.rabbitmq.service.port }}"
               {{- else if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/1"
               {{- else }}
