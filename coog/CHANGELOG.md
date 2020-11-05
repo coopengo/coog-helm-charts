@@ -1,6 +1,12 @@
 # Changelog
 
-## [2.0.2] - 2020-10-20
+## [2.0.4] - 2020-11-05
+
+### Fix
+
+- Remove pythonpath for celery
+
+## [2.0.3] - 2020-10-20
 
 ### Fix
 
