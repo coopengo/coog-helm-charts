@@ -1,12 +1,18 @@
 # Changelog
 
-## [2.1.0] - 2020-11-05
+## [2.1.1] - 2020-11-12
+
+### Fix
+
+- Revert redis var env for version < coog-2.10
+
+## [2.1.0] - 2020-11-12
 
 ### Fix
 
 - Var for coogCeleryModule (default: coog_async.coog_celery)
 
-## [2.0.4] - 2020-11-05
+## [2.0.5] - 2020-11-05
 
 ### Fix
 
