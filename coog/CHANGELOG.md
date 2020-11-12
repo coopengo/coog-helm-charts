@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.4] - 2020-11-12
+
+### Fix
+
+-  Fix redis var for celery_single for version < coog-2.10
+
 ## [2.1.3] - 2020-11-12
 
 ### Fix
