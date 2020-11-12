@@ -355,7 +355,6 @@ celery:
     periodSeconds: 120
     timeoutSeconds: 10
 
-
 coog:
   cache_record: 50000
   configurationFiles:
@@ -454,6 +453,7 @@ cron:
     initialDelaySeconds: 30
     periodSeconds: 120
     timeoutSeconds: 10
+  coogCeleryModule: coog_async.coog_celery
 
 
 paybox:

@@ -1,5 +1,17 @@
 # Changelog
 
+## [2.1.0] - 2020-11-05
+
+### Fix
+
+- Var for coogCeleryModule (default: coog_async.coog_celery)
+
+## [2.0.4] - 2020-11-05
+
+### Fix
+
+- Remove FORCEDOTCOM varenv
+
 ## [2.0.4] - 2020-11-05
 
 ### Fix
