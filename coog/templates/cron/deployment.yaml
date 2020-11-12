@@ -71,6 +71,12 @@ spec:
               {{- else }}
               value: {{ .Values.externalRedis.port | quote }}
               {{- end }}
+            - name:  TRYTOND_CACHE__URI
+              {{- if .Values.redis.enabled }}
+              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/0"
+              {{- else }}
+              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}/0"
+              {{- end }}
             {{- end }}
             - name:  COOG_POSTGRES_HOST
             {{- if not .Values.coog.external_postgres.enabled }}

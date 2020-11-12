@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.2] - 2020-11-12
+
+### Fix
+
+- Revert cache_uri var env for version < coog-2.10
+
 ## [2.1.1] - 2020-11-12
 
 ### Fix
