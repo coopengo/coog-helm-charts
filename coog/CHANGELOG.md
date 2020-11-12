@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.1.3] - 2020-11-12
+
+### Fix
+
+-  coogCeleryModule for celery
+
 ## [2.1.2] - 2020-11-12
 
 ### Fix
