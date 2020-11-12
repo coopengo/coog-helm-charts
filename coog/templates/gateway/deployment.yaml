@@ -81,8 +81,6 @@ spec:
               value: "false"
             - name:  FACEBOOK_MODULE
               value: "false"
-            - name:  FORCEDOTCOM_MODULE
-              value: "false"
             - name:  MONGO_USER
               value: "{{ .Values.gateway.mongodb_user }}"
             - name:  MONGO_PASSWORD
