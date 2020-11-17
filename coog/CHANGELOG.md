@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.2] - 2020-11-17
+
+### Fix
+
+-  Unoconv version to dgw-0.0.1
+
+
 ## [2.2.1] - 2020-11-17
 
 ### Fix

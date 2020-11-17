@@ -300,7 +300,7 @@ unoconv:
 
   image:
     repository: coopengo/unoconv
-    tag: dgw-0.0.0
+    tag: dgw-0.0.1
     pullPolicy: Always
 
   imagePullSecrets:
