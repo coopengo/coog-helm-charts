@@ -326,6 +326,13 @@ unoconv:
 
   affinity: {}
 
+  livenessProbe:
+    periodSeconds: 60
+    timeoutSeconds: 30
+  readinessProbe:
+    periodSeconds: 30
+    timeoutSeconds: 30
+
 celery:
   enabled: false
   workers: 1

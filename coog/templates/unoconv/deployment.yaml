@@ -43,13 +43,13 @@ spec:
               path: /liveness
               port: http
             exec:
-          {{- toYaml .Values.unoconv.livenessProbe | nindent 12 }}
+              {{- toYaml .Values.unoconv.livenessProbe | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /liveness
               port: http
             exec:
-          {{- toYaml .Values.coog.livenessProbe | nindent 12 }}
+              {{- toYaml .Values.coog.livenessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.unoconv.resources | nindent 12 }}
       {{- with .Values.unoconv.nodeSelector }}

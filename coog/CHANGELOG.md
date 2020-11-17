@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1] - 2020-11-17
+
+### Fix
+
+-  Fix default value for unoconv liveness/readiness
+
+
 ## [2.2.0] - 2020-11-17
 
 ### Added
