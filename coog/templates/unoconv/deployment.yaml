@@ -39,11 +39,17 @@ spec:
               containerPort: 5000
               protocol: TCP
           livenessProbe:
-            tcpSocket:
-              port: 5000
+            httpGet:
+              path: /liveness
+              port: http
+            exec:
+          {{- toYaml .Values.unoconv.livenessProbe | nindent 12 }}
           readinessProbe:
-            tcpSocket:
-              port: 5000
+            httpGet:
+              path: /liveness
+              port: http
+            exec:
+          {{- toYaml .Values.coog.livenessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.unoconv.resources | nindent 12 }}
       {{- with .Values.unoconv.nodeSelector }}

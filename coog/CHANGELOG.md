@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.2.0] - 2020-11-17
+
+### Added
+
+-  New unoconv realease
+
 ## [2.1.4] - 2020-11-12
 
 ### Fix
