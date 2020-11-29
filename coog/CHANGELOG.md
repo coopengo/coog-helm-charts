@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.1] - 2020-11-29
+
+### Fix
+
+-  Use coopengohub registry + 2.10.2048 default version
+
 ## [2.3.0] - 2020-11-29
 
 ### Fix

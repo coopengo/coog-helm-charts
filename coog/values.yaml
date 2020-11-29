@@ -90,8 +90,8 @@ api:
     database: coog-api-v2
 
   image:
-    repository: coopengo/api
-    tag: coog-2.10.2042
+    repository: coopengohub/api
+    tag: coog-2.10.2048
     pullPolicy: Always
   imagePullSecrets:
     - name: docker-registry
@@ -122,8 +122,8 @@ api_b2b_config:
   replicaCount: 1
 
   image:
-    repository: coopengo/api-b2b-config
-    tag: coog-2.10.2042
+    repository: coopengohub/api-b2b-config
+    tag: coog-2.10.2048
     pullPolicy: Always
   imagePullSecrets:
     - name: docker-registry
@@ -155,8 +155,8 @@ api_b2c:
   replicaCount: 1
 
   image:
-    repository: coopengo/api-b2c
-    tag: coog-2.10.2042
+    repository: coopengohub/api-b2c
+    tag: coog-2.10.2048
     pullPolicy: Always
 
   imagePullSecrets:
@@ -187,8 +187,8 @@ api_identity_manager:
   replicaCount: 1
 
   image:
-    repository: coopengo/api-identity-manager
-    tag: coog-2.10.2042
+    repository: coopengohub/api-identity-manager
+    tag: coog-2.10.2048
     pullPolicy: Always
 
   imagePullSecrets:
@@ -220,8 +220,8 @@ api_referential:
   replicaCount: 1
 
   image:
-    repository: coopengo/api-referential
-    tag: coog-2.10.2042
+    repository: coopengohub/api-referential
+    tag: coog-2.10.2048
     pullPolicy: Always
 
   imagePullSecrets:
@@ -253,8 +253,8 @@ app_b2c:
   replicaCount: 1
 
   image:
-    repository: coopengo/app-b2c
-    tag: coog-2.10.2042
+    repository: coopengohub/app-b2c
+    tag: coog-2.10.2048
     pullPolicy: Always
 
   imagePullSecrets:
@@ -299,7 +299,7 @@ unoconv:
   replicaCount: 1
 
   image:
-    repository: coopengo/unoconv
+    repository: coopengohub/unoconv
     tag: dgw-0.0.1
     pullPolicy: Always
 
@@ -392,8 +392,8 @@ coog:
 
 
   image:
-    repository: coopengo/coog
-    tag: coog-2.10.2042
+    repository: coopengohub/coog
+    tag: coog-2.10.2048
     pullPolicy: Always
 
   imagePullSecrets:
@@ -468,8 +468,8 @@ paybox:
   replicaCount: 1
 
   image:
-    repository: coopengo/paybox
-    tag: coog-2.10.2042
+    repository: coopengohub/paybox
+    tag: coog-2.10.2048
     pullPolicy: Always
 
   imagePullSecrets:
@@ -515,8 +515,8 @@ web:
   replicaCount: 1
 
   image:
-    repository: coopengo/web
-    tag: coog-2.10.2042
+    repository: coopengohub/web
+    tag: coog-2.10.2048
     pullPolicy: Always
 
   imagePullSecrets:
@@ -565,8 +565,8 @@ portal:
   replicaCount: 1
 
   image:
-    repository: coopengo/portal
-    tag: coog-2.10.2042
+    repository: coopengohub/portal
+    tag: coog-2.10.2048
     pullPolicy: Always
 
   imagePullSecrets:
@@ -632,8 +632,8 @@ gateway:
     COOG_TOKEN_MODULE: "false"
 
   image:
-    repository: coopengo/gateway
-    tag: coog-2.10.2042
+    repository: coopengohub/gateway
+    tag: coog-2.10.2048
     pullPolicy: Always
 
   imagePullSecrets:
@@ -678,8 +678,8 @@ static:
   replicaCount: 1
 
   image:
-    repository: coopengo/static
-    tag: coog-2.10.2042
+    repository: coopengohub/static
+    tag: coog-2.10.2048
     pullPolicy: Always
 
   imagePullSecrets:
@@ -728,7 +728,7 @@ batch:
     enabled: false
     image:
       pullPolicy: Always
-      repository: coopengo/migquottosr
+      repository: coopengohub/migquottosr
       tags: latest
     schedule: "0 20 * * *"
     imagePullSecrets:
