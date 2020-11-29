@@ -29,12 +29,6 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - /usr/local/bin/python
-            - /usr/local/bin/flower
-            - --debug=True
-            - --address=0.0.0.0
-            - --url_prefix=flower
           {{- with .Values.args }}
           args:
           {{- range . }}
@@ -63,7 +57,7 @@ spec:
           env:
             - name: CELERY_BROKER_URL
               value: {{ .Values.celeryBrokerUrl }}
-            - name: URL_PREFIX
+            - name: FLOWER_URL_PREFIX
               value: {{ .Values.urlPrefix }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

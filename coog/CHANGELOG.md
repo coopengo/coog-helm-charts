@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.0] - 2020-11-29
+
+### Fix
+
+-  Update flower to 0.9.5 + non root mode
+
 ## [2.2.2] - 2020-11-17
 
 ### Fix

@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: mher/flower
-  tag: latest
+  tag: 0.9.5
   pullPolicy: Always
 
 imagePullSecrets: []
@@ -25,13 +25,15 @@ serviceAccount:
 podSecurityContext: {}
   # fsGroup: 2000
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  privileged: false
+  procMount: Default
+  runAsNonRoot: true
+  runAsUser: 1000
 
 service:
   type: ClusterIP
