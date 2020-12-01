@@ -47,8 +47,6 @@ spec:
             timeoutSeconds: {{ .Values.unoconv.livenessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.unoconv.livenessProbe.successThreshold }}
             failureThreshold: {{ .Values.unoconv.livenessProbe.failureThreshold }}
-            exec:
-              {{- toYaml .Values.unoconv.livenessProbe.exec | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /liveness
@@ -58,8 +56,6 @@ spec:
             timeoutSeconds: {{ .Values.unoconv.readinessProbe.timeoutSeconds }}
             successThreshold: {{ .Values.unoconv.readinessProbe.successThreshold }}
             failureThreshold: {{ .Values.unoconv.readinessProbe.failureThreshold }}
-            exec:
-              {{- toYaml .Values.unoconv.readinessProbe.exec | nindent 12 }}
           resources:
             {{- toYaml .Values.unoconv.resources | nindent 12 }}
       {{- with .Values.unoconv.nodeSelector }}
