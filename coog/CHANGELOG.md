@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.2] - 2020-12-01
+
+### Fix
+
+-  Unoconv liveness/readiness configuration
+
 ## [2.3.1] - 2020-11-29
 
 ### Fix
