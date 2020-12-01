@@ -296,6 +296,7 @@ app_b2c:
 
 
 unoconv:
+  enabled: true
   replicaCount: 1
 
   image:
@@ -332,12 +333,14 @@ unoconv:
     timeoutSeconds: 30
     successThreshold: 1
     failureThreshold: 1
+    exec:  {}
   readinessProbe:
     initialDelaySeconds: 0
     periodSeconds: 30
     timeoutSeconds: 30
     successThreshold: 1
     failureThreshold: 3
+    exec:  {}
 
 celery:
   enabled: false
