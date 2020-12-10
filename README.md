@@ -84,4 +84,4 @@ Sur Nginx, penser à configurer ```server_tokens off``` pour cacher les informat
 
   Il faut ajouter la variable d'environnement au niveau du conteneur coog :
 
-  TRYTOND_SENTRY_DSN : The dsn to a sentry instance that can be used to handle
+  TRYTOND_SENTRY_DSN : The dsn to a sentry instance that can be used to handle errors
