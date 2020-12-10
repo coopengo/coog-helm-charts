@@ -79,3 +79,8 @@ command: ['sh', '-c', 'ep admin -d {{ .Values.coog.postgres.database }} -u ir re
 ## Sécurité
 
 Sur Nginx, penser à configurer ```server_tokens off``` pour cacher les informations serveurs.
+
+## Router les erreurs vers sentry
+
+Il faut ajouter la variable d'environnement au niveau du conteneur coog :
+TRYTOND_SENTRY_DSN : The dsn to a sentry instance that can be used to handle
