@@ -102,6 +102,7 @@ api:
     type: ClusterIP
     port: 80
 
+  # -- api containers' resource requests and limits
   resources:
     limits:
       cpu: 700m
@@ -139,6 +140,7 @@ api_b2b_config:
     type: ClusterIP
     port: 80
 
+  # -- api_b2b_config containers' resource requests and limits
   resources:
     limits:
       cpu: 200m
@@ -155,7 +157,6 @@ api_b2b_config:
 
   # -- Tolerations for pod assignment
   tolerations: []
-
 
 
 api_b2c:
@@ -176,6 +177,7 @@ api_b2c:
     type: ClusterIP
     port: 80
 
+  # -- api_b2c containers' resource requests and limits
   resources:
     limits:
       cpu: 200m
@@ -212,6 +214,7 @@ api_identity_manager:
     type: ClusterIP
     port: 80
 
+  # -- api_identity_manager containers' resource requests and limits
   resources:
     limits:
       cpu: 200m
@@ -249,6 +252,7 @@ api_referential:
     type: ClusterIP
     port: 80
 
+  # -- api_referential containers' resource requests and limits
   resources:
     limits:
       cpu: 200m
@@ -300,6 +304,7 @@ app_b2c:
     #    hosts:
     #      - chart-example.local
 
+  # -- app_b2c containers' resource requests and limits
   resources:
     limits:
       cpu: 200m
@@ -336,6 +341,7 @@ unoconv:
     type: ClusterIP
     port: 5000
 
+  # -- unoconv containers' resource requests and limits
   resources:
     limits:
       cpu: 300m
@@ -373,6 +379,7 @@ celery:
     enabled: false
   replicaCount: 1
 
+  # -- celery containers' resource requests and limits
   resources:
     limits:
       cpu: 1
@@ -381,6 +388,7 @@ celery:
       cpu: 400m
       memory: 300Mi
   cron:
+    # -- celery cron job containers' resource requests and limits
     resources:
       limits:
         cpu: 200m
@@ -463,6 +471,7 @@ coog:
     #    hosts:
     #      - chart-example.local
 
+  # -- coog containers' resource requests and limits
   resources:
     limits:
       cpu: 700m
@@ -491,6 +500,8 @@ coog:
 cron:
   enabled: false
   affinity: {}
+
+  # -- cron containers' resource requests and limits
   resources:
     limits:
       cpu: 1
@@ -543,6 +554,7 @@ paybox:
     #    hosts:
     #      - chart-example.local
 
+  # -- paybox containers' resource requests and limits
   resources:
     limits:
       cpu: 300m
@@ -597,6 +609,7 @@ web:
     periodSeconds: 60
     timeoutSeconds: 30
 
+  # -- web containers' resource requests and limits
   resources:
     limits:
       cpu: 300m
@@ -646,6 +659,7 @@ portal:
     #    hosts:
     #      - chart-example.local
 
+  # -- portal containers' resource requests and limits
   resources:
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
@@ -716,6 +730,7 @@ gateway:
     #    hosts:
     #      - chart-example.local
 
+  # -- gateway containers' resource requests and limits
   resources:
     limits:
       cpu: 500m
@@ -765,6 +780,7 @@ static:
     #    hosts:
     #      - chart-example.local
 
+  # -- static containers' resource requests and limits
   resources:
     limits:
       cpu: 200m
