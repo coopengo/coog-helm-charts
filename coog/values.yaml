@@ -91,9 +91,14 @@ api:
     database: coog-api-v2
 
   image:
+    # -- api image repository
     repository: coopengohub/api
+    # -- api image tag
     tag: coog-2.10.2048
+    # -- api image pull policy
     pullPolicy: Always
+
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
@@ -129,9 +134,14 @@ api_b2b_config:
   replicaCount: 1
 
   image:
+    # -- api_b2b_config image repository
     repository: coopengohub/api-b2b-config
+    # -- api_b2b_config image tag
     tag: coog-2.10.2048
+    # -- api_b2b_config image pull policy
     pullPolicy: Always
+
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
 
@@ -167,10 +177,14 @@ api_b2c:
   replicaCount: 1
 
   image:
+    # -- api_b2c image repository
     repository: coopengohub/api-b2c
+    # -- api_b2c image tag
     tag: coog-2.10.2048
+    # -- api_b2c image pull policy
     pullPolicy: Always
 
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
@@ -205,10 +219,14 @@ api_identity_manager:
   replicaCount: 1
 
   image:
+    # -- api-identity-manager image repository
     repository: coopengohub/api-identity-manager
+    # -- api-identity-manager image tag
     tag: coog-2.10.2048
+    # -- api-identity-manager image pull policy
     pullPolicy: Always
 
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
@@ -244,10 +262,14 @@ api_referential:
   replicaCount: 1
 
   image:
+    # -- api_referential image repository
     repository: coopengohub/api-referential
+    # -- api_referential image tag
     tag: coog-2.10.2048
+    # -- api_referential image pull policy
     pullPolicy: Always
 
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
@@ -283,10 +305,14 @@ app_b2c:
   replicaCount: 1
 
   image:
+    # -- app_b2c image repository
     repository: coopengohub/app-b2c
+    # -- app_b2c image tag
     tag: coog-2.10.2048
+    # -- app_b2c image pull policy
     pullPolicy: Always
 
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
@@ -338,10 +364,14 @@ unoconv:
   replicaCount: 1
 
   image:
+    # -- unoconv image repository
     repository: coopengohub/unoconv
+    # -- unoconv image tag
     tag: dgw-0.0.1
+    # -- unoconv image pull policy
     pullPolicy: Always
 
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
@@ -453,10 +483,14 @@ coog:
 
 
   image:
+    # -- coog image repository
     repository: coopengohub/coog
+    # -- coog image tag
     tag: coog-2.10.2048
+    # -- coog image pull policy
     pullPolicy: Always
 
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
@@ -544,10 +578,14 @@ paybox:
   replicaCount: 1
 
   image:
+    # -- paybox image repository
     repository: coopengohub/paybox
+    # -- paybox image tag
     tag: coog-2.10.2048
+    # -- paybox image pull policy
     pullPolicy: Always
 
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
@@ -599,10 +637,14 @@ web:
   replicaCount: 1
 
   image:
+    # -- web image repository
     repository: coopengohub/web
+    # -- web image tag
     tag: coog-2.10.2048
+    # -- web image pull policy
     pullPolicy: Always
 
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
@@ -657,10 +699,14 @@ portal:
   replicaCount: 1
 
   image:
+    # -- portal image repository
     repository: coopengohub/portal
+    # -- portal image tag
     tag: coog-2.10.2048
+    # -- portal image pull policy
     pullPolicy: Always
 
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
@@ -732,10 +778,14 @@ gateway:
     COOG_TOKEN_MODULE: "false"
 
   image:
+    # -- gateway image repository
     repository: coopengohub/gateway
+    # -- gateway image tag
     tag: coog-2.10.2048
+    # -- gateway image pull policy
     pullPolicy: Always
 
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
@@ -786,10 +836,14 @@ static:
   replicaCount: 1
 
   image:
+    # -- static image repository
     repository: coopengohub/static
+    # -- static image tag
     tag: coog-2.10.2048
+    # -- static image pull policy
     pullPolicy: Always
 
+  # -- Specify docker-registry secret names as an array
   imagePullSecrets:
     - name: docker-registry
   nameOverride: ""
