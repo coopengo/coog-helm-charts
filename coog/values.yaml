@@ -291,14 +291,17 @@ app_b2c:
     port: 80
 
   ingress:
+    # -- Enable ingress controller resource for app_b2c containers'
     enabled: false
+    # -- Ingress annotations for app_b2c containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+    # kubernetes.io/tls-acme: "true"
+    # -- Default host for the ingress resource for app_b2c containers'
     hosts:
-      - host: api-b2c.local
+      - host: app-b2c.local
         paths: []
-
+    # -- TLS configuration for app_b2c containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
@@ -458,14 +461,17 @@ coog:
     port: 80
 
   ingress:
+    # -- Enable ingress controller resource for coog containers'
     enabled: false
+    # -- Ingress annotations for coog containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
       # kubernetes.io/tls-acme: "true"
+    # -- Default host for the ingress resource for coog containers'
     hosts:
       - host: coog.local
         paths: []
-
+    # -- TLS configuration for coog containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
@@ -541,14 +547,17 @@ paybox:
     port: 80
 
   ingress:
+    # -- Enable ingress controller resource for paybox containers'
     enabled: false
+    # -- Ingress annotations for paybox containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+    # kubernetes.io/tls-acme: "true"
+    # -- Default host for the ingress resource for paybox containers'
     hosts:
       - host: paybox.local
         paths: []
-
+    # -- TLS configuration for paybox containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
@@ -592,14 +601,17 @@ web:
     port: 80
 
   ingress:
+    # -- Enable ingress controller resource for web containers'
     enabled: false
+    # -- Ingress annotations for web containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+    # kubernetes.io/tls-acme: "true"
+    # -- Default host for the ingress resource for web containers'
     hosts:
       - host: web.local
         paths: []
-
+    # -- TLS configuration for web containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
@@ -646,14 +658,17 @@ portal:
     port: 80
 
   ingress:
+    # -- Enable ingress controller resource for portal containers'
     enabled: false
+    # -- Ingress annotations for portal containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+    # kubernetes.io/tls-acme: "true"
+    # -- Default host for the ingress resource for portal containers'
     hosts:
       - host: portal.local
         paths: []
-
+    # -- TLS configuration for portal containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
@@ -717,14 +732,17 @@ gateway:
     port: 80
 
   ingress:
+    # -- Enable ingress controller resource for gateway containers'
     enabled: false
+    # -- Ingress annotations for gateway containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+    # kubernetes.io/tls-acme: "true"
+    # -- Default host for the ingress resource for gateway containers'
     hosts:
-      - host: gateway.local
+      - host: coog.local
         paths: []
-
+    # -- TLS configuration for gateway containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
@@ -767,14 +785,17 @@ static:
     port: 80
 
   ingress:
+    # -- Enable ingress controller resource for static containers'
     enabled: false
+    # -- Ingress annotations for static containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
+    # kubernetes.io/tls-acme: "true"
+    # -- Default host for the ingress resource for static containers'
     hosts:
       - host: static.local
         paths: []
-
+    # -- TLS configuration for static containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
