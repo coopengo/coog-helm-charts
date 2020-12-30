@@ -110,12 +110,15 @@ api:
       cpu: 200m
       memory: 150Mi
 
-  nodeSelector: {}
-
-  tolerations: []
-
   # -- Affinity for pod assignment
   affinity: {}
+
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
+
 
 
 api_b2b_config:
@@ -144,12 +147,15 @@ api_b2b_config:
       cpu: 100m
       memory: 200Mi
 
-  nodeSelector: {}
-
-  tolerations: []
-
   # -- Affinity for pod assignment
   affinity: {}
+
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
+
 
 
 api_b2c:
@@ -178,12 +184,15 @@ api_b2c:
       cpu: 100m
       memory: 250Mi
 
-  nodeSelector: {}
-
-  tolerations: []
-
   # -- Affinity for pod assignment
   affinity: {}
+
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
+
 
 api_identity_manager:
   enabled: true
@@ -211,12 +220,15 @@ api_identity_manager:
       cpu: 100m
       memory: 250Mi
 
-  nodeSelector: {}
-
-  tolerations: []
-
   # -- Affinity for pod assignment
   affinity: {}
+
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
+
 
 
 api_referential:
@@ -245,12 +257,15 @@ api_referential:
       cpu: 100m
       memory: 250Mi
 
-  nodeSelector: {}
-
-  tolerations: []
-
   # -- Affinity for pod assignment
   affinity: {}
+
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
+
 
 
 app_b2c:
@@ -293,12 +308,14 @@ app_b2c:
       cpu: 100m
       memory: 75Mi
 
-  nodeSelector: {}
-
-  tolerations: []
-
   # -- Affinity for pod assignment
   affinity: {}
+
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
 
 
 unoconv:
@@ -327,12 +344,14 @@ unoconv:
       cpu: 100m
       memory: 350Mi
 
-  nodeSelector: {}
-
-  tolerations: []
-
   # -- Affinity for pod assignment
   affinity: {}
+
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
 
   livenessProbe:
     initialDelaySeconds: 0
@@ -354,9 +373,6 @@ celery:
     enabled: false
   replicaCount: 1
 
-  # -- Affinity for pod assignment
-  affinity: {}
-  nodeSelector: {}
   resources:
     limits:
       cpu: 1
@@ -372,7 +388,16 @@ celery:
       requests:
         cpu: 100m
         memory: 100Mi
+
+  # -- Affinity for pod assignment
+  affinity: {}
+
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
   tolerations: []
+
   livenessProbe:
     initialDelaySeconds: 30
     periodSeconds: 120
@@ -446,8 +471,10 @@ coog:
       cpu: 200m
       memory: 700Mi
 
+  # -- Node labels for pod assignment
   nodeSelector: {}
 
+  # -- Tolerations for pod assignment
   tolerations: []
 
   livenessProbe:
@@ -464,7 +491,6 @@ coog:
 cron:
   enabled: false
   affinity: {}
-  nodeSelector: {}
   resources:
     limits:
       cpu: 1
@@ -472,12 +498,17 @@ cron:
     requests:
       cpu: 400m
       memory: 300Mi
-  tolerations: []
   livenessProbe:
     initialDelaySeconds: 30
     periodSeconds: 120
     timeoutSeconds: 10
   coogCeleryModule: coog_async.coog_celery
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
+
 
 
 paybox:
@@ -520,8 +551,10 @@ paybox:
       cpu: 100m
       memory: 100Mi
 
+  # -- Node labels for pod assignment
   nodeSelector: {}
 
+  # -- Tolerations for pod assignment
   tolerations: []
 
   # -- Affinity for pod assignment
@@ -572,8 +605,10 @@ web:
       cpu: 100m
       memory: 128Mi
 
+  # -- Node labels for pod assignment
   nodeSelector: {}
 
+  # -- Tolerations for pod assignment
   tolerations: []
 
   # -- Affinity for pod assignment
@@ -623,8 +658,10 @@ portal:
       cpu: 100m
       memory: 100Mi
 
+  # -- Node labels for pod assignment
   nodeSelector: {}
 
+  # -- Tolerations for pod assignment
   tolerations: []
 
   # -- Affinity for pod assignment
@@ -687,8 +724,10 @@ gateway:
       cpu: 100m
       memory: 300Mi
 
+  # -- Node labels for pod assignment
   nodeSelector: {}
 
+  # -- Tolerations for pod assignment
   tolerations: []
 
   # -- Affinity for pod assignment
@@ -734,8 +773,10 @@ static:
       cpu: 100m
       memory: 50Mi
 
+  # -- Node labels for pod assignment
   nodeSelector: {}
 
+  # -- Tolerations for pod assignment
   tolerations: []
 
   # -- Affinity for pod assignment
