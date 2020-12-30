@@ -19,7 +19,7 @@ A Helm chart for Coog
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | api.affinity | object | `{}` | Affinity for pod assignment |
-| api.enabled | bool | `true` |  |
+| api.enabled | bool | `true` | Deploy api container(s) |
 | api.fullnameOverride | string | `""` |  |
 | api.image.pullPolicy | string | `"Always"` |  |
 | api.image.repository | string | `"coopengohub/api"` |  |
@@ -34,7 +34,7 @@ A Helm chart for Coog
 | api.service.type | string | `"ClusterIP"` |  |
 | api.tolerations | list | `[]` | Tolerations for pod assignment |
 | api_b2b_config.affinity | object | `{}` | Affinity for pod assignment |
-| api_b2b_config.enabled | bool | `false` |  |
+| api_b2b_config.enabled | bool | `false` | Deploy api_b2b_config container(s) |
 | api_b2b_config.fullnameOverride | string | `""` |  |
 | api_b2b_config.image.pullPolicy | string | `"Always"` |  |
 | api_b2b_config.image.repository | string | `"coopengohub/api-b2b-config"` |  |
@@ -48,7 +48,7 @@ A Helm chart for Coog
 | api_b2b_config.service.type | string | `"ClusterIP"` |  |
 | api_b2b_config.tolerations | list | `[]` | Tolerations for pod assignment |
 | api_b2c.affinity | object | `{}` | Affinity for pod assignment |
-| api_b2c.enabled | bool | `false` |  |
+| api_b2c.enabled | bool | `false` | Deploy api_b2c container(s) |
 | api_b2c.fullnameOverride | string | `""` |  |
 | api_b2c.image.pullPolicy | string | `"Always"` |  |
 | api_b2c.image.repository | string | `"coopengohub/api-b2c"` |  |
@@ -62,7 +62,7 @@ A Helm chart for Coog
 | api_b2c.service.type | string | `"ClusterIP"` |  |
 | api_b2c.tolerations | list | `[]` | Tolerations for pod assignment |
 | api_identity_manager.affinity | object | `{}` | Affinity for pod assignment |
-| api_identity_manager.enabled | bool | `true` |  |
+| api_identity_manager.enabled | bool | `true` | Deploy api_identity_manager container(s) |
 | api_identity_manager.fullnameOverride | string | `""` |  |
 | api_identity_manager.image.pullPolicy | string | `"Always"` |  |
 | api_identity_manager.image.repository | string | `"coopengohub/api-identity-manager"` |  |
@@ -76,7 +76,7 @@ A Helm chart for Coog
 | api_identity_manager.service.type | string | `"ClusterIP"` |  |
 | api_identity_manager.tolerations | list | `[]` | Tolerations for pod assignment |
 | api_referential.affinity | object | `{}` | Affinity for pod assignment |
-| api_referential.enabled | bool | `false` |  |
+| api_referential.enabled | bool | `false` | Deploy api_referential container(s) |
 | api_referential.fullnameOverride | string | `""` |  |
 | api_referential.image.pullPolicy | string | `"Always"` |  |
 | api_referential.image.repository | string | `"coopengohub/api-referential"` |  |
@@ -90,7 +90,7 @@ A Helm chart for Coog
 | api_referential.service.type | string | `"ClusterIP"` |  |
 | api_referential.tolerations | list | `[]` | Tolerations for pod assignment |
 | app_b2c.affinity | object | `{}` | Affinity for pod assignment |
-| app_b2c.enabled | bool | `false` |  |
+| app_b2c.enabled | bool | `false` | Deploy app_b2c container(s) |
 | app_b2c.fullnameOverride | string | `""` |  |
 | app_b2c.image.pullPolicy | string | `"Always"` |  |
 | app_b2c.image.repository | string | `"coopengohub/app-b2c"` |  |
@@ -120,7 +120,7 @@ A Helm chart for Coog
 | batch.migquottosr.schedule | string | `"0 20 * * *"` |  |
 | celery.affinity | object | `{}` | Affinity for pod assignment |
 | celery.cron.resources | object | `{"limits":{"cpu":"200m","memory":"300Mi"},"requests":{"cpu":"100m","memory":"100Mi"}}` | celery cron job containers' resource requests and limits |
-| celery.enabled | bool | `false` |  |
+| celery.enabled | bool | `false` | Deploy celery container(s) |
 | celery.livenessProbe.initialDelaySeconds | int | `30` |  |
 | celery.livenessProbe.periodSeconds | int | `120` |  |
 | celery.livenessProbe.timeoutSeconds | int | `10` |  |
@@ -134,7 +134,7 @@ A Helm chart for Coog
 | coog.cache_record | int | `50000` |  |
 | coog.configurationFiles."batch.conf" | string | `""` |  |
 | coog.configurationFiles."coog.conf" | string | `""` |  |
-| coog.enabled | bool | `true` |  |
+| coog.enabled | bool | `true` | Deploy coog container(s) |
 | coog.external_postgres.enabled | bool | `false` |  |
 | coog.fullnameOverride | string | `""` |  |
 | coog.image.pullPolicy | string | `"Always"` |  |
@@ -174,7 +174,7 @@ A Helm chart for Coog
 | coog.workers | int | `4` |  |
 | cron.affinity | object | `{}` |  |
 | cron.coogCeleryModule | string | `"coog_async.coog_celery"` |  |
-| cron.enabled | bool | `false` |  |
+| cron.enabled | bool | `false` | Deploy cron container(s) |
 | cron.livenessProbe.initialDelaySeconds | int | `30` |  |
 | cron.livenessProbe.periodSeconds | int | `120` |  |
 | cron.livenessProbe.timeoutSeconds | int | `10` |  |
@@ -186,7 +186,7 @@ A Helm chart for Coog
 | flower.enabled | bool | `false` |  |
 | gateway.affinity | object | `{}` | Affinity for pod assignment |
 | gateway.coog_web_token | string | `"changeme"` |  |
-| gateway.enabled | bool | `true` |  |
+| gateway.enabled | bool | `true` | Deploy gateway container(s) |
 | gateway.entrypoint | string | `"/gateway"` |  |
 | gateway.external_mongodb.enabled | bool | `false` |  |
 | gateway.extraEnv.COOG_TOKEN_MODULE | string | `"false"` |  |
@@ -229,7 +229,7 @@ A Helm chart for Coog
 | mongodb.resources.requests.memory | string | `"250Mi"` |  |
 | mongodb.usePassword | bool | `true` |  |
 | paybox.affinity | object | `{}` | Affinity for pod assignment |
-| paybox.enabled | bool | `false` |  |
+| paybox.enabled | bool | `false` | Deploy paybox container(s) |
 | paybox.fullnameOverride | string | `""` |  |
 | paybox.image.pullPolicy | string | `"Always"` |  |
 | paybox.image.repository | string | `"coopengohub/paybox"` |  |
@@ -248,7 +248,7 @@ A Helm chart for Coog
 | paybox.service.type | string | `"ClusterIP"` |  |
 | paybox.tolerations | list | `[]` | Tolerations for pod assignment |
 | portal.affinity | object | `{}` | Affinity for pod assignment |
-| portal.enabled | bool | `false` |  |
+| portal.enabled | bool | `false` | Deploy portal container(s) |
 | portal.fullnameOverride | string | `""` |  |
 | portal.image.pullPolicy | string | `"Always"` |  |
 | portal.image.repository | string | `"coopengohub/portal"` |  |
@@ -290,7 +290,7 @@ A Helm chart for Coog
 | redis.rbac.create | bool | `true` |  |
 | redis.usePassword | bool | `false` |  |
 | static.affinity | object | `{}` | Affinity for pod assignment |
-| static.enabled | bool | `true` |  |
+| static.enabled | bool | `true` | Deploy static container(s) |
 | static.fullnameOverride | string | `""` |  |
 | static.image.pullPolicy | string | `"Always"` |  |
 | static.image.repository | string | `"coopengohub/static"` |  |
@@ -309,7 +309,7 @@ A Helm chart for Coog
 | static.service.type | string | `"ClusterIP"` |  |
 | static.tolerations | list | `[]` | Tolerations for pod assignment |
 | unoconv.affinity | object | `{}` | Affinity for pod assignment |
-| unoconv.enabled | bool | `true` |  |
+| unoconv.enabled | bool | `true` | Deploy unoconv container(s) |
 | unoconv.fullnameOverride | string | `""` |  |
 | unoconv.image.pullPolicy | string | `"Always"` |  |
 | unoconv.image.repository | string | `"coopengohub/unoconv"` |  |
@@ -333,7 +333,7 @@ A Helm chart for Coog
 | unoconv.service.type | string | `"ClusterIP"` |  |
 | unoconv.tolerations | list | `[]` | Tolerations for pod assignment |
 | web.affinity | object | `{}` | Affinity for pod assignment |
-| web.enabled | bool | `true` |  |
+| web.enabled | bool | `true` | Deploy web container(s) |
 | web.fullnameOverride | string | `""` |  |
 | web.image.pullPolicy | string | `"Always"` |  |
 | web.image.repository | string | `"coopengohub/web"` |  |

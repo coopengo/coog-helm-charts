@@ -83,6 +83,7 @@ postgresql:
 
 
 api:
+  # -- Deploy api container(s)
   enabled: true
   replicaCount: 1
 
@@ -123,6 +124,7 @@ api:
 
 
 api_b2b_config:
+  # -- Deploy api_b2b_config container(s)
   enabled: false
   replicaCount: 1
 
@@ -160,6 +162,7 @@ api_b2b_config:
 
 
 api_b2c:
+  # -- Deploy api_b2c container(s)
   enabled: false
   replicaCount: 1
 
@@ -197,6 +200,7 @@ api_b2c:
 
 
 api_identity_manager:
+  # -- Deploy api_identity_manager container(s)
   enabled: true
   replicaCount: 1
 
@@ -235,6 +239,7 @@ api_identity_manager:
 
 
 api_referential:
+  # -- Deploy api_referential container(s)
   enabled: false
   replicaCount: 1
 
@@ -273,6 +278,7 @@ api_referential:
 
 
 app_b2c:
+  # -- Deploy app_b2c container(s)
   enabled: false
   replicaCount: 1
 
@@ -327,6 +333,7 @@ app_b2c:
 
 
 unoconv:
+  # -- Deploy unoconv container(s)
   enabled: true
   replicaCount: 1
 
@@ -376,6 +383,7 @@ unoconv:
     failureThreshold: 3
 
 celery:
+  # -- Deploy celery container(s)
   enabled: false
   workers: 1
   specificBatchConcurrency:
@@ -419,6 +427,7 @@ coog:
   configurationFiles:
     batch.conf: |-
     coog.conf: |-
+  # -- Deploy coog container(s)
   enabled: true
   external_postgres:
     enabled: false
@@ -504,6 +513,7 @@ coog:
 
 
 cron:
+  # -- Deploy cron container(s)
   enabled: false
   affinity: {}
 
@@ -529,6 +539,7 @@ cron:
 
 
 paybox:
+  # -- Deploy paybox container(s)
   enabled: false
   replicaCount: 1
 
@@ -583,6 +594,7 @@ paybox:
 
 
 web:
+  # -- Deploy web container(s)
   enabled: true
   replicaCount: 1
 
@@ -640,6 +652,7 @@ web:
   affinity: {}
 
 portal:
+  # -- Deploy portal container(s)
   enabled: false
   replicaCount: 1
 
@@ -698,6 +711,7 @@ portal:
 
 
 gateway:
+  # -- Deploy gateway container(s)
   enabled: true
   external_mongodb:
     enabled: false
@@ -767,6 +781,7 @@ gateway:
   affinity: {}
 
 static:
+  # -- Deploy static container(s)
   enabled: true
   replicaCount: 1
 
