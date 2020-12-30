@@ -18,7 +18,7 @@ A Helm chart for Coog
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| api.affinity | object | `{}` |  |
+| api.affinity | object | `{}` | Affinity for pod assignment |
 | api.enabled | bool | `true` |  |
 | api.fullnameOverride | string | `""` |  |
 | api.image.pullPolicy | string | `"Always"` |  |
@@ -36,7 +36,7 @@ A Helm chart for Coog
 | api.service.port | int | `80` |  |
 | api.service.type | string | `"ClusterIP"` |  |
 | api.tolerations | list | `[]` |  |
-| api_b2b_config.affinity | object | `{}` |  |
+| api_b2b_config.affinity | object | `{}` | Affinity for pod assignment |
 | api_b2b_config.enabled | bool | `false` |  |
 | api_b2b_config.fullnameOverride | string | `""` |  |
 | api_b2b_config.image.pullPolicy | string | `"Always"` |  |
@@ -53,7 +53,7 @@ A Helm chart for Coog
 | api_b2b_config.service.port | int | `80` |  |
 | api_b2b_config.service.type | string | `"ClusterIP"` |  |
 | api_b2b_config.tolerations | list | `[]` |  |
-| api_b2c.affinity | object | `{}` |  |
+| api_b2c.affinity | object | `{}` | Affinity for pod assignment |
 | api_b2c.enabled | bool | `false` |  |
 | api_b2c.fullnameOverride | string | `""` |  |
 | api_b2c.image.pullPolicy | string | `"Always"` |  |
@@ -70,7 +70,7 @@ A Helm chart for Coog
 | api_b2c.service.port | int | `80` |  |
 | api_b2c.service.type | string | `"ClusterIP"` |  |
 | api_b2c.tolerations | list | `[]` |  |
-| api_identity_manager.affinity | object | `{}` |  |
+| api_identity_manager.affinity | object | `{}` | Affinity for pod assignment |
 | api_identity_manager.enabled | bool | `true` |  |
 | api_identity_manager.fullnameOverride | string | `""` |  |
 | api_identity_manager.image.pullPolicy | string | `"Always"` |  |
@@ -87,7 +87,7 @@ A Helm chart for Coog
 | api_identity_manager.service.port | int | `80` |  |
 | api_identity_manager.service.type | string | `"ClusterIP"` |  |
 | api_identity_manager.tolerations | list | `[]` |  |
-| api_referential.affinity | object | `{}` |  |
+| api_referential.affinity | object | `{}` | Affinity for pod assignment |
 | api_referential.enabled | bool | `false` |  |
 | api_referential.fullnameOverride | string | `""` |  |
 | api_referential.image.pullPolicy | string | `"Always"` |  |
@@ -104,7 +104,7 @@ A Helm chart for Coog
 | api_referential.service.port | int | `80` |  |
 | api_referential.service.type | string | `"ClusterIP"` |  |
 | api_referential.tolerations | list | `[]` |  |
-| app_b2c.affinity | object | `{}` |  |
+| app_b2c.affinity | object | `{}` | Affinity for pod assignment |
 | app_b2c.enabled | bool | `false` |  |
 | app_b2c.fullnameOverride | string | `""` |  |
 | app_b2c.image.pullPolicy | string | `"Always"` |  |
@@ -136,7 +136,7 @@ A Helm chart for Coog
 | batch.migquottosr.resources.requests.cpu | string | `"100m"` |  |
 | batch.migquottosr.resources.requests.memory | string | `"50Mi"` |  |
 | batch.migquottosr.schedule | string | `"0 20 * * *"` |  |
-| celery.affinity | object | `{}` |  |
+| celery.affinity | object | `{}` | Affinity for pod assignment |
 | celery.cron.resources.limits.cpu | string | `"200m"` |  |
 | celery.cron.resources.limits.memory | string | `"300Mi"` |  |
 | celery.cron.resources.requests.cpu | string | `"100m"` |  |
@@ -154,7 +154,7 @@ A Helm chart for Coog
 | celery.specificBatchConcurrency.enabled | bool | `false` |  |
 | celery.tolerations | list | `[]` |  |
 | celery.workers | int | `1` |  |
-| coog.affinity | object | `{}` |  |
+| coog.affinity | object | `{}` | Affinity for pod assignment |
 | coog.cache_record | int | `50000` |  |
 | coog.configurationFiles."batch.conf" | string | `""` |  |
 | coog.configurationFiles."coog.conf" | string | `""` |  |
@@ -214,7 +214,7 @@ A Helm chart for Coog
 | externalRedis.host | string | `"localhost"` |  |
 | externalRedis.port | int | `6379` |  |
 | flower.enabled | bool | `false` |  |
-| gateway.affinity | object | `{}` |  |
+| gateway.affinity | object | `{}` | Affinity for pod assignment |
 | gateway.coog_web_token | string | `"changeme"` |  |
 | gateway.enabled | bool | `true` |  |
 | gateway.entrypoint | string | `"/gateway"` |  |
@@ -261,7 +261,7 @@ A Helm chart for Coog
 | mongodb.resources.requests.cpu | string | `"200m"` |  |
 | mongodb.resources.requests.memory | string | `"250Mi"` |  |
 | mongodb.usePassword | bool | `true` |  |
-| paybox.affinity | object | `{}` |  |
+| paybox.affinity | object | `{}` | Affinity for pod assignment |
 | paybox.enabled | bool | `false` |  |
 | paybox.fullnameOverride | string | `""` |  |
 | paybox.image.pullPolicy | string | `"Always"` |  |
@@ -283,7 +283,7 @@ A Helm chart for Coog
 | paybox.service.port | int | `80` |  |
 | paybox.service.type | string | `"ClusterIP"` |  |
 | paybox.tolerations | list | `[]` |  |
-| portal.affinity | object | `{}` |  |
+| portal.affinity | object | `{}` | Affinity for pod assignment |
 | portal.enabled | bool | `false` |  |
 | portal.fullnameOverride | string | `""` |  |
 | portal.image.pullPolicy | string | `"Always"` |  |
@@ -328,7 +328,7 @@ A Helm chart for Coog
 | redis.port | int | `27017` |  |
 | redis.rbac.create | bool | `true` |  |
 | redis.usePassword | bool | `false` |  |
-| static.affinity | object | `{}` |  |
+| static.affinity | object | `{}` | Affinity for pod assignment |
 | static.enabled | bool | `true` |  |
 | static.fullnameOverride | string | `""` |  |
 | static.image.pullPolicy | string | `"Always"` |  |
@@ -350,7 +350,7 @@ A Helm chart for Coog
 | static.service.port | int | `80` |  |
 | static.service.type | string | `"ClusterIP"` |  |
 | static.tolerations | list | `[]` |  |
-| unoconv.affinity | object | `{}` |  |
+| unoconv.affinity | object | `{}` | Affinity for pod assignment |
 | unoconv.enabled | bool | `true` |  |
 | unoconv.fullnameOverride | string | `""` |  |
 | unoconv.image.pullPolicy | string | `"Always"` |  |
@@ -377,7 +377,7 @@ A Helm chart for Coog
 | unoconv.service.port | int | `5000` |  |
 | unoconv.service.type | string | `"ClusterIP"` |  |
 | unoconv.tolerations | list | `[]` |  |
-| web.affinity | object | `{}` |  |
+| web.affinity | object | `{}` | Affinity for pod assignment |
 | web.enabled | bool | `true` |  |
 | web.fullnameOverride | string | `""` |  |
 | web.image.pullPolicy | string | `"Always"` |  |

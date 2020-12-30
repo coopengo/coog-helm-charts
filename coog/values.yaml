@@ -114,6 +114,7 @@ api:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 
@@ -147,6 +148,7 @@ api_b2b_config:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 
@@ -180,6 +182,7 @@ api_b2c:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 api_identity_manager:
@@ -212,6 +215,7 @@ api_identity_manager:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 
@@ -245,6 +249,7 @@ api_referential:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 
@@ -292,6 +297,7 @@ app_b2c:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 
@@ -325,6 +331,7 @@ unoconv:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
   livenessProbe:
@@ -346,6 +353,8 @@ celery:
   specificBatchConcurrency:
     enabled: false
   replicaCount: 1
+
+  # -- Affinity for pod assignment
   affinity: {}
   nodeSelector: {}
   resources:
@@ -448,6 +457,7 @@ coog:
     periodSeconds: 30
     timeoutSeconds: 30
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 
@@ -514,6 +524,7 @@ paybox:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 
@@ -565,6 +576,7 @@ web:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 portal:
@@ -615,6 +627,7 @@ portal:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 
@@ -678,6 +691,7 @@ gateway:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 static:
@@ -724,6 +738,7 @@ static:
 
   tolerations: []
 
+  # -- Affinity for pod assignment
   affinity: {}
 
 jwt:
