@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.3.4] - 2020-12-30
+
+### Fix
+
+-  Batch configuration available for celery
+-  Update documentation
+
+# Changelog
+
 ## [2.3.2] - 2020-12-01
 
 ### Fix

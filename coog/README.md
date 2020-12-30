@@ -1,6 +1,6 @@
 # coog
 
-![Version: 2.3.2](https://img.shields.io/badge/Version-2.3.2-informational?style=flat-square) ![AppVersion: coog-2.10.2048](https://img.shields.io/badge/AppVersion-coog--2.10.2048-informational?style=flat-square)
+![Version: 2.3.4](https://img.shields.io/badge/Version-2.3.4-informational?style=flat-square) ![AppVersion: coog-2.10.2048](https://img.shields.io/badge/AppVersion-coog--2.10.2048-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -119,6 +119,9 @@ A Helm chart for Coog
 | batch.migquottosr.resources.requests.memory | string | `"50Mi"` |  |
 | batch.migquottosr.schedule | string | `"0 20 * * *"` |  |
 | celery.affinity | object | `{}` | Affinity for pod assignment |
+| celery.batch | object | `{"workDays":4,"workDaysConf":"french_work_days"}` | batch configuration |
+| celery.batch.workDays | int | `4` | Configure batch workDays |
+| celery.batch.workDaysConf | string | `"french_work_days"` | Configure batch workDaysConf |
 | celery.cron.resources | object | `{"limits":{"cpu":"200m","memory":"300Mi"},"requests":{"cpu":"100m","memory":"100Mi"}}` | celery cron job containers' resource requests and limits |
 | celery.enabled | bool | `false` | Deploy celery container(s) |
 | celery.livenessProbe.initialDelaySeconds | int | `30` |  |

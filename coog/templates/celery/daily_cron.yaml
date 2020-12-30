@@ -41,8 +41,8 @@ spec:
               command:
                 - ep
                 - daily
-                - "4"
-                - french_work_days
+                - {{ .Values.celery.batch.workDays | quote }}
+                - {{ .Values.celery.batch.workDaysConf }}
             {{- if .Values.coog.persistentVolume.enabled }}
               volumeMounts:
                 - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}

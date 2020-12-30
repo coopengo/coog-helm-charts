@@ -461,6 +461,13 @@ celery:
     periodSeconds: 120
     timeoutSeconds: 10
 
+  # -- batch configuration
+  batch:
+    # -- Configure batch workDays
+    workDays: 4
+    # -- Configure batch workDaysConf
+    workDaysConf: french_work_days
+
 coog:
   cache_record: 50000
   configurationFiles:
