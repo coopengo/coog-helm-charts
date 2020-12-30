@@ -96,11 +96,11 @@ A Helm chart for Coog
 | app_b2c.image.repository | string | `"coopengohub/app-b2c"` |  |
 | app_b2c.image.tag | string | `"coog-2.10.2048"` |  |
 | app_b2c.imagePullSecrets[0].name | string | `"docker-registry"` |  |
-| app_b2c.ingress.annotations | object | `{}` |  |
-| app_b2c.ingress.enabled | bool | `false` |  |
-| app_b2c.ingress.hosts[0].host | string | `"api-b2c.local"` |  |
+| app_b2c.ingress.annotations | object | `{}` | Ingress annotations for app_b2c containers' |
+| app_b2c.ingress.enabled | bool | `false` | Enable ingress controller resource for app_b2c containers' |
+| app_b2c.ingress.hosts[0].host | string | `"app-b2c.local"` |  |
 | app_b2c.ingress.hosts[0].paths | list | `[]` |  |
-| app_b2c.ingress.tls | list | `[]` |  |
+| app_b2c.ingress.tls | list | `[]` | TLS configuration for app_b2c containers' |
 | app_b2c.nameOverride | string | `""` |  |
 | app_b2c.nodeSelector | object | `{}` | Node labels for pod assignment |
 | app_b2c.replicaCount | int | `1` |  |
@@ -141,11 +141,11 @@ A Helm chart for Coog
 | coog.image.repository | string | `"coopengohub/coog"` |  |
 | coog.image.tag | string | `"coog-2.10.2048"` |  |
 | coog.imagePullSecrets[0].name | string | `"docker-registry"` |  |
-| coog.ingress.annotations | object | `{}` |  |
-| coog.ingress.enabled | bool | `false` |  |
+| coog.ingress.annotations | object | `{}` | Ingress annotations for coog containers' |
+| coog.ingress.enabled | bool | `false` | Enable ingress controller resource for coog containers' |
 | coog.ingress.hosts[0].host | string | `"coog.local"` |  |
 | coog.ingress.hosts[0].paths | list | `[]` |  |
-| coog.ingress.tls | list | `[]` |  |
+| coog.ingress.tls | list | `[]` | TLS configuration for coog containers' |
 | coog.livenessProbe.periodSeconds | int | `60` |  |
 | coog.livenessProbe.timeoutSeconds | int | `30` |  |
 | coog.log_level | string | `"INFO"` |  |
@@ -196,11 +196,11 @@ A Helm chart for Coog
 | gateway.image.repository | string | `"coopengohub/gateway"` |  |
 | gateway.image.tag | string | `"coog-2.10.2048"` |  |
 | gateway.imagePullSecrets[0].name | string | `"docker-registry"` |  |
-| gateway.ingress.annotations | object | `{}` |  |
-| gateway.ingress.enabled | bool | `false` |  |
-| gateway.ingress.hosts[0].host | string | `"gateway.local"` |  |
+| gateway.ingress.annotations | object | `{}` | Ingress annotations for gateway containers' |
+| gateway.ingress.enabled | bool | `false` | Enable ingress controller resource for gateway containers' |
+| gateway.ingress.hosts[0].host | string | `"coog.local"` |  |
 | gateway.ingress.hosts[0].paths | list | `[]` |  |
-| gateway.ingress.tls | list | `[]` |  |
+| gateway.ingress.tls | list | `[]` | TLS configuration for gateway containers' |
 | gateway.jwt.encryption | string | `"secret"` |  |
 | gateway.jwt.expiration | int | `3600` |  |
 | gateway.mongodb.database | string | `"coog-gateway"` |  |
@@ -235,11 +235,11 @@ A Helm chart for Coog
 | paybox.image.repository | string | `"coopengohub/paybox"` |  |
 | paybox.image.tag | string | `"coog-2.10.2048"` |  |
 | paybox.imagePullSecrets[0].name | string | `"docker-registry"` |  |
-| paybox.ingress.annotations | object | `{}` |  |
-| paybox.ingress.enabled | bool | `false` |  |
+| paybox.ingress.annotations | object | `{}` | Ingress annotations for paybox containers' |
+| paybox.ingress.enabled | bool | `false` | Enable ingress controller resource for paybox containers' |
 | paybox.ingress.hosts[0].host | string | `"paybox.local"` |  |
 | paybox.ingress.hosts[0].paths | list | `[]` |  |
-| paybox.ingress.tls | list | `[]` |  |
+| paybox.ingress.tls | list | `[]` | TLS configuration for paybox containers' |
 | paybox.nameOverride | string | `""` |  |
 | paybox.nodeSelector | object | `{}` | Node labels for pod assignment |
 | paybox.replicaCount | int | `1` |  |
@@ -254,11 +254,11 @@ A Helm chart for Coog
 | portal.image.repository | string | `"coopengohub/portal"` |  |
 | portal.image.tag | string | `"coog-2.10.2048"` |  |
 | portal.imagePullSecrets[0].name | string | `"docker-registry"` |  |
-| portal.ingress.annotations | object | `{}` |  |
-| portal.ingress.enabled | bool | `false` |  |
+| portal.ingress.annotations | object | `{}` | Ingress annotations for portal containers' |
+| portal.ingress.enabled | bool | `false` | Enable ingress controller resource for portal containers' |
 | portal.ingress.hosts[0].host | string | `"portal.local"` |  |
 | portal.ingress.hosts[0].paths | list | `[]` |  |
-| portal.ingress.tls | list | `[]` |  |
+| portal.ingress.tls | list | `[]` | TLS configuration for portal containers' |
 | portal.nameOverride | string | `""` |  |
 | portal.nodeSelector | object | `{}` | Node labels for pod assignment |
 | portal.replicaCount | int | `1` |  |
@@ -296,11 +296,11 @@ A Helm chart for Coog
 | static.image.repository | string | `"coopengohub/static"` |  |
 | static.image.tag | string | `"coog-2.10.2048"` |  |
 | static.imagePullSecrets[0].name | string | `"docker-registry"` |  |
-| static.ingress.annotations | object | `{}` |  |
-| static.ingress.enabled | bool | `false` |  |
+| static.ingress.annotations | object | `{}` | Ingress annotations for static containers' |
+| static.ingress.enabled | bool | `false` | Enable ingress controller resource for static containers' |
 | static.ingress.hosts[0].host | string | `"static.local"` |  |
 | static.ingress.hosts[0].paths | list | `[]` |  |
-| static.ingress.tls | list | `[]` |  |
+| static.ingress.tls | list | `[]` | TLS configuration for static containers' |
 | static.nameOverride | string | `""` |  |
 | static.nodeSelector | object | `{}` | Node labels for pod assignment |
 | static.replicaCount | int | `1` |  |
@@ -339,11 +339,11 @@ A Helm chart for Coog
 | web.image.repository | string | `"coopengohub/web"` |  |
 | web.image.tag | string | `"coog-2.10.2048"` |  |
 | web.imagePullSecrets[0].name | string | `"docker-registry"` |  |
-| web.ingress.annotations | object | `{}` |  |
-| web.ingress.enabled | bool | `false` |  |
+| web.ingress.annotations | object | `{}` | Ingress annotations for web containers' |
+| web.ingress.enabled | bool | `false` | Enable ingress controller resource for web containers' |
 | web.ingress.hosts[0].host | string | `"web.local"` |  |
 | web.ingress.hosts[0].paths | list | `[]` |  |
-| web.ingress.tls | list | `[]` |  |
+| web.ingress.tls | list | `[]` | TLS configuration for web containers' |
 | web.livenessProbe.periodSeconds | int | `60` |  |
 | web.livenessProbe.timeoutSeconds | int | `30` |  |
 | web.nameOverride | string | `""` |  |
