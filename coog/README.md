@@ -28,7 +28,7 @@ A Helm chart for Coog
 | api.mongodb.database | string | `"coog-api-v2"` |  |
 | api.nameOverride | string | `""` |  |
 | api.nodeSelector | object | `{}` | Node labels for pod assignment |
-| api.replicaCount | int | `1` |  |
+| api.replicaCount | int | `1` | Number of api Pods to run |
 | api.resources | object | `{"limits":{"cpu":"700m","memory":"300Mi"},"requests":{"cpu":"200m","memory":"150Mi"}}` | api containers' resource requests and limits |
 | api.service.port | int | `80` |  |
 | api.service.type | string | `"ClusterIP"` |  |
@@ -42,7 +42,7 @@ A Helm chart for Coog
 | api_b2b_config.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | api_b2b_config.nameOverride | string | `""` |  |
 | api_b2b_config.nodeSelector | object | `{}` | Node labels for pod assignment |
-| api_b2b_config.replicaCount | int | `1` |  |
+| api_b2b_config.replicaCount | int | `1` | Number of api_b2b_config Pods to run |
 | api_b2b_config.resources | object | `{"limits":{"cpu":"200m","memory":"250Mi"},"requests":{"cpu":"100m","memory":"200Mi"}}` | api_b2b_config containers' resource requests and limits |
 | api_b2b_config.service.port | int | `80` |  |
 | api_b2b_config.service.type | string | `"ClusterIP"` |  |
@@ -56,7 +56,7 @@ A Helm chart for Coog
 | api_b2c.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | api_b2c.nameOverride | string | `""` |  |
 | api_b2c.nodeSelector | object | `{}` | Node labels for pod assignment |
-| api_b2c.replicaCount | int | `1` |  |
+| api_b2c.replicaCount | int | `1` | Number of api_b2c Pods to run |
 | api_b2c.resources | object | `{"limits":{"cpu":"200m","memory":"250Mi"},"requests":{"cpu":"100m","memory":"250Mi"}}` | api_b2c containers' resource requests and limits |
 | api_b2c.service.port | int | `80` |  |
 | api_b2c.service.type | string | `"ClusterIP"` |  |
@@ -70,7 +70,7 @@ A Helm chart for Coog
 | api_identity_manager.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | api_identity_manager.nameOverride | string | `""` |  |
 | api_identity_manager.nodeSelector | object | `{}` | Node labels for pod assignment |
-| api_identity_manager.replicaCount | int | `1` |  |
+| api_identity_manager.replicaCount | int | `1` | Number of api_identity_manager Pods to run |
 | api_identity_manager.resources | object | `{"limits":{"cpu":"200m","memory":"400Mi"},"requests":{"cpu":"100m","memory":"250Mi"}}` | api_identity_manager containers' resource requests and limits |
 | api_identity_manager.service.port | int | `80` |  |
 | api_identity_manager.service.type | string | `"ClusterIP"` |  |
@@ -84,7 +84,7 @@ A Helm chart for Coog
 | api_referential.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | api_referential.nameOverride | string | `""` |  |
 | api_referential.nodeSelector | object | `{}` | Node labels for pod assignment |
-| api_referential.replicaCount | int | `1` |  |
+| api_referential.replicaCount | int | `1` | Number of api_referential Pods to run |
 | api_referential.resources | object | `{"limits":{"cpu":"200m","memory":"400Mi"},"requests":{"cpu":"100m","memory":"250Mi"}}` | api_referential containers' resource requests and limits |
 | api_referential.service.port | int | `80` |  |
 | api_referential.service.type | string | `"ClusterIP"` |  |
@@ -103,7 +103,7 @@ A Helm chart for Coog
 | app_b2c.ingress.tls | list | `[]` | TLS configuration for app_b2c containers' |
 | app_b2c.nameOverride | string | `""` |  |
 | app_b2c.nodeSelector | object | `{}` | Node labels for pod assignment |
-| app_b2c.replicaCount | int | `1` |  |
+| app_b2c.replicaCount | int | `1` | Number of app_b2c Pods to run |
 | app_b2c.resources | object | `{"limits":{"cpu":"200m","memory":"250Mi"},"requests":{"cpu":"100m","memory":"75Mi"}}` | app_b2c containers' resource requests and limits |
 | app_b2c.service.port | int | `80` |  |
 | app_b2c.service.type | string | `"ClusterIP"` |  |
@@ -125,11 +125,11 @@ A Helm chart for Coog
 | celery.livenessProbe.periodSeconds | int | `120` |  |
 | celery.livenessProbe.timeoutSeconds | int | `10` |  |
 | celery.nodeSelector | object | `{}` | Node labels for pod assignment |
-| celery.replicaCount | int | `1` |  |
+| celery.replicaCount | int | `1` | Number of celery Pods to run |
 | celery.resources | object | `{"limits":{"cpu":1,"memory":"1000Mi"},"requests":{"cpu":"400m","memory":"300Mi"}}` | celery containers' resource requests and limits |
 | celery.specificBatchConcurrency.enabled | bool | `false` |  |
 | celery.tolerations | list | `[]` | Tolerations for pod assignment |
-| celery.workers | int | `1` |  |
+| celery.workers | int | `1` | Number of celery workers to run |
 | coog.affinity | object | `{}` | Affinity for pod assignment |
 | coog.cache_record | int | `50000` |  |
 | coog.configurationFiles."batch.conf" | string | `""` |  |
@@ -163,7 +163,7 @@ A Helm chart for Coog
 | coog.postgres.user | string | `"coog"` |  |
 | coog.readinessProbe.periodSeconds | int | `30` |  |
 | coog.readinessProbe.timeoutSeconds | int | `30` |  |
-| coog.replicaCount | int | `1` |  |
+| coog.replicaCount | int | `1` | Number of coog Pods to run |
 | coog.resources | object | `{"limits":{"cpu":"700m","memory":"1000Mi"},"requests":{"cpu":"200m","memory":"700Mi"}}` | coog containers' resource requests and limits |
 | coog.root_dir | string | `"/workspace/io"` |  |
 | coog.securityContext.runAsUser | int | `1000` |  |
@@ -171,7 +171,7 @@ A Helm chart for Coog
 | coog.service.type | string | `"ClusterIP"` |  |
 | coog.timeout | int | `3600` |  |
 | coog.tolerations | list | `[]` | Tolerations for pod assignment |
-| coog.workers | int | `4` |  |
+| coog.workers | int | `4` | Number of coog workers to run |
 | cron.affinity | object | `{}` |  |
 | cron.coogCeleryModule | string | `"coog_async.coog_celery"` |  |
 | cron.enabled | bool | `false` | Deploy cron container(s) |
@@ -209,7 +209,7 @@ A Helm chart for Coog
 | gateway.nameOverride | string | `""` |  |
 | gateway.nodeSelector | object | `{}` | Node labels for pod assignment |
 | gateway.portal_url | string | `"coog.local"` |  |
-| gateway.replicaCount | int | `1` |  |
+| gateway.replicaCount | int | `1` | Number of gateway Pods to run |
 | gateway.resources | object | `{"limits":{"cpu":"500m","memory":"600Mi"},"requests":{"cpu":"100m","memory":"300Mi"}}` | gateway containers' resource requests and limits |
 | gateway.service.port | int | `80` |  |
 | gateway.service.type | string | `"ClusterIP"` |  |
@@ -242,7 +242,7 @@ A Helm chart for Coog
 | paybox.ingress.tls | list | `[]` | TLS configuration for paybox containers' |
 | paybox.nameOverride | string | `""` |  |
 | paybox.nodeSelector | object | `{}` | Node labels for pod assignment |
-| paybox.replicaCount | int | `1` |  |
+| paybox.replicaCount | int | `1` | Number of paybox Pods to run |
 | paybox.resources | object | `{"limits":{"cpu":"300m","memory":"100Mi"},"requests":{"cpu":"100m","memory":"100Mi"}}` | paybox containers' resource requests and limits |
 | paybox.service.port | int | `80` |  |
 | paybox.service.type | string | `"ClusterIP"` |  |
@@ -261,7 +261,7 @@ A Helm chart for Coog
 | portal.ingress.tls | list | `[]` | TLS configuration for portal containers' |
 | portal.nameOverride | string | `""` |  |
 | portal.nodeSelector | object | `{}` | Node labels for pod assignment |
-| portal.replicaCount | int | `1` |  |
+| portal.replicaCount | int | `1` | Number of portal Pods to run |
 | portal.resources | object | `{"limits":{"cpu":"200m","memory":"150Mi"},"requests":{"cpu":"100m","memory":"100Mi"}}` | portal containers' resource requests and limits |
 | portal.service.port | int | `80` |  |
 | portal.service.type | string | `"ClusterIP"` |  |
@@ -303,7 +303,7 @@ A Helm chart for Coog
 | static.ingress.tls | list | `[]` | TLS configuration for static containers' |
 | static.nameOverride | string | `""` |  |
 | static.nodeSelector | object | `{}` | Node labels for pod assignment |
-| static.replicaCount | int | `1` |  |
+| static.replicaCount | int | `1` | Number of static Pods to run |
 | static.resources | object | `{"limits":{"cpu":"200m","memory":"100Mi"},"requests":{"cpu":"100m","memory":"50Mi"}}` | static containers' resource requests and limits |
 | static.service.port | int | `80` |  |
 | static.service.type | string | `"ClusterIP"` |  |
@@ -327,7 +327,7 @@ A Helm chart for Coog
 | unoconv.readinessProbe.periodSeconds | int | `30` |  |
 | unoconv.readinessProbe.successThreshold | int | `1` |  |
 | unoconv.readinessProbe.timeoutSeconds | int | `30` |  |
-| unoconv.replicaCount | int | `1` |  |
+| unoconv.replicaCount | int | `1` | Number of unoconv Pods to run |
 | unoconv.resources | object | `{"limits":{"cpu":"300m","memory":"500Mi"},"requests":{"cpu":"100m","memory":"350Mi"}}` | unoconv containers' resource requests and limits |
 | unoconv.service.port | int | `5000` |  |
 | unoconv.service.type | string | `"ClusterIP"` |  |
@@ -348,7 +348,7 @@ A Helm chart for Coog
 | web.livenessProbe.timeoutSeconds | int | `30` |  |
 | web.nameOverride | string | `""` |  |
 | web.nodeSelector | object | `{}` | Node labels for pod assignment |
-| web.replicaCount | int | `1` |  |
+| web.replicaCount | int | `1` | Number of web Pods to run |
 | web.resources | object | `{"limits":{"cpu":"300m","memory":"512Mi"},"requests":{"cpu":"100m","memory":"128Mi"}}` | web containers' resource requests and limits |
 | web.service.port | int | `80` |  |
 | web.service.type | string | `"ClusterIP"` |  |

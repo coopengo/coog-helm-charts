@@ -85,6 +85,7 @@ postgresql:
 api:
   # -- Deploy api container(s)
   enabled: true
+  # -- 	Number of api Pods to run
   replicaCount: 1
 
   mongodb:
@@ -131,6 +132,7 @@ api:
 api_b2b_config:
   # -- Deploy api_b2b_config container(s)
   enabled: false
+  # -- 	Number of api_b2b_config Pods to run
   replicaCount: 1
 
   image:
@@ -174,6 +176,7 @@ api_b2b_config:
 api_b2c:
   # -- Deploy api_b2c container(s)
   enabled: false
+  # -- 	Number of api_b2c Pods to run
   replicaCount: 1
 
   image:
@@ -216,6 +219,7 @@ api_b2c:
 api_identity_manager:
   # -- Deploy api_identity_manager container(s)
   enabled: true
+  # -- 	Number of api_identity_manager Pods to run
   replicaCount: 1
 
   image:
@@ -259,6 +263,7 @@ api_identity_manager:
 api_referential:
   # -- Deploy api_referential container(s)
   enabled: false
+  # -- 	Number of api_referential Pods to run
   replicaCount: 1
 
   image:
@@ -302,6 +307,7 @@ api_referential:
 app_b2c:
   # -- Deploy app_b2c container(s)
   enabled: false
+  # -- 	Number of app_b2c Pods to run
   replicaCount: 1
 
   image:
@@ -361,6 +367,7 @@ app_b2c:
 unoconv:
   # -- Deploy unoconv container(s)
   enabled: true
+  # -- 	Number of unoconv Pods to run
   replicaCount: 1
 
   image:
@@ -415,9 +422,11 @@ unoconv:
 celery:
   # -- Deploy celery container(s)
   enabled: false
+  # -- 	Number of celery workers to run
   workers: 1
   specificBatchConcurrency:
     enabled: false
+  # -- 	Number of celery Pods to run
   replicaCount: 1
 
   # -- celery containers' resource requests and limits
@@ -466,10 +475,12 @@ coog:
     database: coog
     user: coog
     password: coog
+  # -- 	Number of coog workers to run
   workers: 4
   max_worker_memory: 0
   log_level: INFO
   timeout: 3600
+  # -- 	Number of coog Pods to run
   replicaCount: 1
   persistentVolume:
     enabled: true
@@ -575,6 +586,7 @@ cron:
 paybox:
   # -- Deploy paybox container(s)
   enabled: false
+  # -- 	Number of paybox Pods to run
   replicaCount: 1
 
   image:
@@ -634,6 +646,7 @@ paybox:
 web:
   # -- Deploy web container(s)
   enabled: true
+  # -- 	Number of web Pods to run
   replicaCount: 1
 
   image:
@@ -696,6 +709,7 @@ web:
 portal:
   # -- Deploy portal container(s)
   enabled: false
+  # -- 	Number of portal Pods to run
   replicaCount: 1
 
   image:
@@ -769,6 +783,7 @@ gateway:
     encryption: secret
     expiration: 3600
   whitelist:
+  # -- 	Number of gateway Pods to run
   replicaCount: 1
   coog_web_token: "changeme"
   portal_url: coog.local
@@ -833,6 +848,7 @@ gateway:
 static:
   # -- Deploy static container(s)
   enabled: true
+  # -- 	Number of static Pods to run
   replicaCount: 1
 
   image:
