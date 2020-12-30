@@ -21,10 +21,10 @@ A Helm chart for Coog
 | api.affinity | object | `{}` | Affinity for pod assignment |
 | api.enabled | bool | `true` | Deploy api container(s) |
 | api.fullnameOverride | string | `""` |  |
-| api.image.pullPolicy | string | `"Always"` |  |
-| api.image.repository | string | `"coopengohub/api"` |  |
-| api.image.tag | string | `"coog-2.10.2048"` |  |
-| api.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| api.image.pullPolicy | string | `"Always"` | api image pull policy |
+| api.image.repository | string | `"coopengohub/api"` | api image repository |
+| api.image.tag | string | `"coog-2.10.2048"` | api image tag |
+| api.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | api.mongodb.database | string | `"coog-api-v2"` |  |
 | api.nameOverride | string | `""` |  |
 | api.nodeSelector | object | `{}` | Node labels for pod assignment |
@@ -36,10 +36,10 @@ A Helm chart for Coog
 | api_b2b_config.affinity | object | `{}` | Affinity for pod assignment |
 | api_b2b_config.enabled | bool | `false` | Deploy api_b2b_config container(s) |
 | api_b2b_config.fullnameOverride | string | `""` |  |
-| api_b2b_config.image.pullPolicy | string | `"Always"` |  |
-| api_b2b_config.image.repository | string | `"coopengohub/api-b2b-config"` |  |
-| api_b2b_config.image.tag | string | `"coog-2.10.2048"` |  |
-| api_b2b_config.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| api_b2b_config.image.pullPolicy | string | `"Always"` | api_b2b_config image pull policy |
+| api_b2b_config.image.repository | string | `"coopengohub/api-b2b-config"` | api_b2b_config image repository |
+| api_b2b_config.image.tag | string | `"coog-2.10.2048"` | api_b2b_config image tag |
+| api_b2b_config.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | api_b2b_config.nameOverride | string | `""` |  |
 | api_b2b_config.nodeSelector | object | `{}` | Node labels for pod assignment |
 | api_b2b_config.replicaCount | int | `1` |  |
@@ -50,10 +50,10 @@ A Helm chart for Coog
 | api_b2c.affinity | object | `{}` | Affinity for pod assignment |
 | api_b2c.enabled | bool | `false` | Deploy api_b2c container(s) |
 | api_b2c.fullnameOverride | string | `""` |  |
-| api_b2c.image.pullPolicy | string | `"Always"` |  |
-| api_b2c.image.repository | string | `"coopengohub/api-b2c"` |  |
-| api_b2c.image.tag | string | `"coog-2.10.2048"` |  |
-| api_b2c.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| api_b2c.image.pullPolicy | string | `"Always"` | api_b2c image pull policy |
+| api_b2c.image.repository | string | `"coopengohub/api-b2c"` | api_b2c image repository |
+| api_b2c.image.tag | string | `"coog-2.10.2048"` | api_b2c image tag |
+| api_b2c.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | api_b2c.nameOverride | string | `""` |  |
 | api_b2c.nodeSelector | object | `{}` | Node labels for pod assignment |
 | api_b2c.replicaCount | int | `1` |  |
@@ -64,10 +64,10 @@ A Helm chart for Coog
 | api_identity_manager.affinity | object | `{}` | Affinity for pod assignment |
 | api_identity_manager.enabled | bool | `true` | Deploy api_identity_manager container(s) |
 | api_identity_manager.fullnameOverride | string | `""` |  |
-| api_identity_manager.image.pullPolicy | string | `"Always"` |  |
-| api_identity_manager.image.repository | string | `"coopengohub/api-identity-manager"` |  |
-| api_identity_manager.image.tag | string | `"coog-2.10.2048"` |  |
-| api_identity_manager.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| api_identity_manager.image.pullPolicy | string | `"Always"` | api-identity-manager image pull policy |
+| api_identity_manager.image.repository | string | `"coopengohub/api-identity-manager"` | api-identity-manager image repository |
+| api_identity_manager.image.tag | string | `"coog-2.10.2048"` | api-identity-manager image tag |
+| api_identity_manager.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | api_identity_manager.nameOverride | string | `""` |  |
 | api_identity_manager.nodeSelector | object | `{}` | Node labels for pod assignment |
 | api_identity_manager.replicaCount | int | `1` |  |
@@ -78,10 +78,10 @@ A Helm chart for Coog
 | api_referential.affinity | object | `{}` | Affinity for pod assignment |
 | api_referential.enabled | bool | `false` | Deploy api_referential container(s) |
 | api_referential.fullnameOverride | string | `""` |  |
-| api_referential.image.pullPolicy | string | `"Always"` |  |
-| api_referential.image.repository | string | `"coopengohub/api-referential"` |  |
-| api_referential.image.tag | string | `"coog-2.10.2048"` |  |
-| api_referential.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| api_referential.image.pullPolicy | string | `"Always"` | api_referential image pull policy |
+| api_referential.image.repository | string | `"coopengohub/api-referential"` | api_referential image repository |
+| api_referential.image.tag | string | `"coog-2.10.2048"` | api_referential image tag |
+| api_referential.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | api_referential.nameOverride | string | `""` |  |
 | api_referential.nodeSelector | object | `{}` | Node labels for pod assignment |
 | api_referential.replicaCount | int | `1` |  |
@@ -92,10 +92,10 @@ A Helm chart for Coog
 | app_b2c.affinity | object | `{}` | Affinity for pod assignment |
 | app_b2c.enabled | bool | `false` | Deploy app_b2c container(s) |
 | app_b2c.fullnameOverride | string | `""` |  |
-| app_b2c.image.pullPolicy | string | `"Always"` |  |
-| app_b2c.image.repository | string | `"coopengohub/app-b2c"` |  |
-| app_b2c.image.tag | string | `"coog-2.10.2048"` |  |
-| app_b2c.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| app_b2c.image.pullPolicy | string | `"Always"` | app_b2c image pull policy |
+| app_b2c.image.repository | string | `"coopengohub/app-b2c"` | app_b2c image repository |
+| app_b2c.image.tag | string | `"coog-2.10.2048"` | app_b2c image tag |
+| app_b2c.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | app_b2c.ingress.annotations | object | `{}` | Ingress annotations for app_b2c containers' |
 | app_b2c.ingress.enabled | bool | `false` | Enable ingress controller resource for app_b2c containers' |
 | app_b2c.ingress.hosts[0].host | string | `"app-b2c.local"` |  |
@@ -137,10 +137,10 @@ A Helm chart for Coog
 | coog.enabled | bool | `true` | Deploy coog container(s) |
 | coog.external_postgres.enabled | bool | `false` |  |
 | coog.fullnameOverride | string | `""` |  |
-| coog.image.pullPolicy | string | `"Always"` |  |
-| coog.image.repository | string | `"coopengohub/coog"` |  |
-| coog.image.tag | string | `"coog-2.10.2048"` |  |
-| coog.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| coog.image.pullPolicy | string | `"Always"` | coog image pull policy |
+| coog.image.repository | string | `"coopengohub/coog"` | coog image repository |
+| coog.image.tag | string | `"coog-2.10.2048"` | coog image tag |
+| coog.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | coog.ingress.annotations | object | `{}` | Ingress annotations for coog containers' |
 | coog.ingress.enabled | bool | `false` | Enable ingress controller resource for coog containers' |
 | coog.ingress.hosts[0].host | string | `"coog.local"` |  |
@@ -192,10 +192,10 @@ A Helm chart for Coog
 | gateway.extraEnv.COOG_TOKEN_MODULE | string | `"false"` |  |
 | gateway.fullnameOverride | string | `""` |  |
 | gateway.gateway_url | string | `"coog.local"` |  |
-| gateway.image.pullPolicy | string | `"Always"` |  |
-| gateway.image.repository | string | `"coopengohub/gateway"` |  |
-| gateway.image.tag | string | `"coog-2.10.2048"` |  |
-| gateway.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| gateway.image.pullPolicy | string | `"Always"` | gateway image pull policy |
+| gateway.image.repository | string | `"coopengohub/gateway"` | gateway image repository |
+| gateway.image.tag | string | `"coog-2.10.2048"` | gateway image tag |
+| gateway.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | gateway.ingress.annotations | object | `{}` | Ingress annotations for gateway containers' |
 | gateway.ingress.enabled | bool | `false` | Enable ingress controller resource for gateway containers' |
 | gateway.ingress.hosts[0].host | string | `"coog.local"` |  |
@@ -231,10 +231,10 @@ A Helm chart for Coog
 | paybox.affinity | object | `{}` | Affinity for pod assignment |
 | paybox.enabled | bool | `false` | Deploy paybox container(s) |
 | paybox.fullnameOverride | string | `""` |  |
-| paybox.image.pullPolicy | string | `"Always"` |  |
-| paybox.image.repository | string | `"coopengohub/paybox"` |  |
-| paybox.image.tag | string | `"coog-2.10.2048"` |  |
-| paybox.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| paybox.image.pullPolicy | string | `"Always"` | paybox image pull policy |
+| paybox.image.repository | string | `"coopengohub/paybox"` | paybox image repository |
+| paybox.image.tag | string | `"coog-2.10.2048"` | paybox image tag |
+| paybox.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | paybox.ingress.annotations | object | `{}` | Ingress annotations for paybox containers' |
 | paybox.ingress.enabled | bool | `false` | Enable ingress controller resource for paybox containers' |
 | paybox.ingress.hosts[0].host | string | `"paybox.local"` |  |
@@ -250,10 +250,10 @@ A Helm chart for Coog
 | portal.affinity | object | `{}` | Affinity for pod assignment |
 | portal.enabled | bool | `false` | Deploy portal container(s) |
 | portal.fullnameOverride | string | `""` |  |
-| portal.image.pullPolicy | string | `"Always"` |  |
-| portal.image.repository | string | `"coopengohub/portal"` |  |
-| portal.image.tag | string | `"coog-2.10.2048"` |  |
-| portal.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| portal.image.pullPolicy | string | `"Always"` | portal image pull policy |
+| portal.image.repository | string | `"coopengohub/portal"` | portal image repository |
+| portal.image.tag | string | `"coog-2.10.2048"` | portal image tag |
+| portal.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | portal.ingress.annotations | object | `{}` | Ingress annotations for portal containers' |
 | portal.ingress.enabled | bool | `false` | Enable ingress controller resource for portal containers' |
 | portal.ingress.hosts[0].host | string | `"portal.local"` |  |
@@ -292,10 +292,10 @@ A Helm chart for Coog
 | static.affinity | object | `{}` | Affinity for pod assignment |
 | static.enabled | bool | `true` | Deploy static container(s) |
 | static.fullnameOverride | string | `""` |  |
-| static.image.pullPolicy | string | `"Always"` |  |
-| static.image.repository | string | `"coopengohub/static"` |  |
-| static.image.tag | string | `"coog-2.10.2048"` |  |
-| static.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| static.image.pullPolicy | string | `"Always"` | static image pull policy |
+| static.image.repository | string | `"coopengohub/static"` | static image repository |
+| static.image.tag | string | `"coog-2.10.2048"` | static image tag |
+| static.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | static.ingress.annotations | object | `{}` | Ingress annotations for static containers' |
 | static.ingress.enabled | bool | `false` | Enable ingress controller resource for static containers' |
 | static.ingress.hosts[0].host | string | `"static.local"` |  |
@@ -311,10 +311,10 @@ A Helm chart for Coog
 | unoconv.affinity | object | `{}` | Affinity for pod assignment |
 | unoconv.enabled | bool | `true` | Deploy unoconv container(s) |
 | unoconv.fullnameOverride | string | `""` |  |
-| unoconv.image.pullPolicy | string | `"Always"` |  |
-| unoconv.image.repository | string | `"coopengohub/unoconv"` |  |
-| unoconv.image.tag | string | `"dgw-0.0.1"` |  |
-| unoconv.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| unoconv.image.pullPolicy | string | `"Always"` | unoconv image pull policy |
+| unoconv.image.repository | string | `"coopengohub/unoconv"` | unoconv image repository |
+| unoconv.image.tag | string | `"dgw-0.0.1"` | unoconv image tag |
+| unoconv.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | unoconv.livenessProbe.failureThreshold | int | `1` |  |
 | unoconv.livenessProbe.initialDelaySeconds | int | `0` |  |
 | unoconv.livenessProbe.periodSeconds | int | `60` |  |
@@ -335,10 +335,10 @@ A Helm chart for Coog
 | web.affinity | object | `{}` | Affinity for pod assignment |
 | web.enabled | bool | `true` | Deploy web container(s) |
 | web.fullnameOverride | string | `""` |  |
-| web.image.pullPolicy | string | `"Always"` |  |
-| web.image.repository | string | `"coopengohub/web"` |  |
-| web.image.tag | string | `"coog-2.10.2048"` |  |
-| web.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| web.image.pullPolicy | string | `"Always"` | web image pull policy |
+| web.image.repository | string | `"coopengohub/web"` | web image repository |
+| web.image.tag | string | `"coog-2.10.2048"` | web image tag |
+| web.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
 | web.ingress.annotations | object | `{}` | Ingress annotations for web containers' |
 | web.ingress.enabled | bool | `false` | Enable ingress controller resource for web containers' |
 | web.ingress.hosts[0].host | string | `"web.local"` |  |
