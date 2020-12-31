@@ -149,14 +149,14 @@ spec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "PYTHONPATH=/workspace/coog/bin/lib celery -A {{ .Values.cron.coogCeleryModule }} status"
+                - "celery inspect ping -A {{ .Values.cron.coogCeleryModule }} celery@$HOSTNAME"
               {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
           readinessProbe:
             exec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "PYTHONPATH=/workspace/coog/bin/lib celery -A {{ .Values.cron.coogCeleryModule }} status"
+                - "celery inspect ping -A {{ .Values.cron.coogCeleryModule }} celery@$HOSTNAME"
           resources:
             {{- toYaml .Values.cron.resources | nindent 12 }}
       {{- with .Values.cron.nodeSelector }}

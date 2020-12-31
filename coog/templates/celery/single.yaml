@@ -164,25 +164,25 @@ spec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "celery -A {{ .Values.cron.coogCeleryModule }} status"
+                - "celery inspect ping -A {{ .Values.cron.coogCeleryModule }} celery@$HOSTNAME"
             {{- toYaml .Values.celery.livenessProbe | nindent 12 }}
           readinessProbe:
             exec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "celery -A {{ .Values.cron.coogCeleryModule }} status"
+                - "celery inspect ping -A {{ .Values.cron.coogCeleryModule }} celery@$HOSTNAME"
           resources:
-            {{- toYaml .Values.celery.resources | nindent 12 }}
-      {{- with .Values.celery.nodeSelector }}
+            {{- toYaml .Values.celery.specificBatchConcurrency.resources | nindent 12 }}
+      {{- with .Values.celery.specificBatchConcurrency.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.celery.affinity }}
+    {{- with .Values.celery.specificBatchConcurrency.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.celery.tolerations }}
+    {{- with .Values.celery.specificBatchConcurrency.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}

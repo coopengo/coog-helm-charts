@@ -1,6 +1,6 @@
 # coog
 
-![Version: 2.3.4](https://img.shields.io/badge/Version-2.3.4-informational?style=flat-square) ![AppVersion: coog-2.10.2048](https://img.shields.io/badge/AppVersion-coog--2.10.2048-informational?style=flat-square)
+![Version: 2.3.6](https://img.shields.io/badge/Version-2.3.6-informational?style=flat-square) ![AppVersion: coog-2.10.2048](https://img.shields.io/badge/AppVersion-coog--2.10.2048-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -130,7 +130,17 @@ A Helm chart for Coog
 | celery.nodeSelector | object | `{}` | Node labels for pod assignment |
 | celery.replicaCount | int | `1` | Number of celery Pods to run |
 | celery.resources | object | `{"limits":{"cpu":1,"memory":"1000Mi"},"requests":{"cpu":"400m","memory":"300Mi"}}` | celery containers' resource requests and limits |
+| celery.specificBatchConcurrency.affinity | object | `{}` | Affinity for pod assignment |
 | celery.specificBatchConcurrency.enabled | bool | `false` |  |
+| celery.specificBatchConcurrency.livenessProbe.initialDelaySeconds | int | `30` |  |
+| celery.specificBatchConcurrency.livenessProbe.periodSeconds | int | `120` |  |
+| celery.specificBatchConcurrency.livenessProbe.timeoutSeconds | int | `10` |  |
+| celery.specificBatchConcurrency.nodeSelector | object | `{}` | Node labels for pod assignment |
+| celery.specificBatchConcurrency.resources.limits.cpu | string | `"200m"` |  |
+| celery.specificBatchConcurrency.resources.limits.memory | string | `"300Mi"` |  |
+| celery.specificBatchConcurrency.resources.requests.cpu | string | `"100m"` |  |
+| celery.specificBatchConcurrency.resources.requests.memory | string | `"100Mi"` |  |
+| celery.specificBatchConcurrency.tolerations | list | `[]` | Tolerations for pod assignment |
 | celery.tolerations | list | `[]` | Tolerations for pod assignment |
 | celery.workers | int | `1` | Number of celery workers to run |
 | coog.affinity | object | `{}` | Affinity for pod assignment |

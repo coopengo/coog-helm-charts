@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.6] - 2020-12-30
+
+### Changed
+
+-  Celery liveness/readiness optimisation
+-  Resources configuration available for specificBatchConcurrency
+
 ## [2.3.4] - 2020-12-30
 
 ### Fix

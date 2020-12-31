@@ -426,6 +426,27 @@ celery:
   workers: 1
   specificBatchConcurrency:
     enabled: false
+    resources:
+      limits:
+        cpu: 200m
+        memory: 300Mi
+      requests:
+        cpu: 100m
+        memory: 100Mi
+    # -- Affinity for pod assignment
+    affinity: {}
+
+    # -- Node labels for pod assignment
+    nodeSelector: {}
+
+    # -- Tolerations for pod assignment
+    tolerations: []
+
+    livenessProbe:
+      initialDelaySeconds: 30
+      periodSeconds: 120
+      timeoutSeconds: 10
+
   # -- 	Number of celery Pods to run
   replicaCount: 1
 
