@@ -149,14 +149,14 @@ spec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "celery inspect ping -A {{ .Values.cron.coogCeleryModule }} celery@$HOSTNAME"
+                - "celery inspect ping -A {{ .Values.cron.coogCeleryModule }} -d celery@$HOSTNAME"
               {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
           readinessProbe:
             exec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "celery inspect ping -A {{ .Values.cron.coogCeleryModule }} celery@$HOSTNAME"
+                - "celery inspect ping -A {{ .Values.cron.coogCeleryModule }} -d celery@$HOSTNAME"
           resources:
             {{- toYaml .Values.cron.resources | nindent 12 }}
       {{- with .Values.cron.nodeSelector }}

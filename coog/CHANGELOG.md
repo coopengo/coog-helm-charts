@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.7] - 2020-12-30
+
+### Changed
+
+- Fix Celery liveness/readiness arguments
+
 ## [2.3.6] - 2020-12-30
 
 ### Changed
