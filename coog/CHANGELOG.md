@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.3.8] - 2021-01-19
+
+### Changed
+
+- Fix Web extraEnv pattern
+
 ## [2.3.7] - 2020-12-30
 
 ### Changed
