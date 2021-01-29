@@ -1,6 +1,6 @@
 # coog
 
-![Version: 2.3.8](https://img.shields.io/badge/Version-2.3.8-informational?style=flat-square) ![AppVersion: coog-2.10.2048](https://img.shields.io/badge/AppVersion-coog--2.10.2048-informational?style=flat-square)
+![Version: 2.4.0](https://img.shields.io/badge/Version-2.4.0-informational?style=flat-square) ![AppVersion: coog-2.10.2048](https://img.shields.io/badge/AppVersion-coog--2.10.2048-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -147,6 +147,7 @@ A Helm chart for Coog
 | coog.cache_record | int | `50000` |  |
 | coog.configurationFiles."batch.conf" | string | `""` |  |
 | coog.configurationFiles."coog.conf" | string | `""` |  |
+| coog.database_uri | string | `"postgresql://coog:coog@postgresql:5432/coog"` |  |
 | coog.enabled | bool | `true` | Deploy coog container(s) |
 | coog.external_postgres.enabled | bool | `false` |  |
 | coog.fullnameOverride | string | `""` |  |

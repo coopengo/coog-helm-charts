@@ -1,5 +1,11 @@
 # Changelog
 
+## [2.4.0] - 2021-01-19
+
+### Changed
+
+- trytond database uri variable available.
+
 ## [2.3.8] - 2021-01-19
 
 ### Changed

@@ -499,6 +499,7 @@ coog:
   external_postgres:
     enabled: false
   root_dir: /workspace/io
+  database_uri: postgresql://coog:coog@postgresql:5432/coog
   postgres:
     database: coog
     user: coog
