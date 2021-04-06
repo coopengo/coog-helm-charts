@@ -38,6 +38,22 @@ spec:
             - ep
             - server
           env:
+            - name: COOG_API_MONGO_HOST
+            {{- if not .Values.gateway.external_mongodb.enabled }}
+              value: "{{ .Release.Name }}-mongodb"
+            {{ else }}
+              value: "{{ .Values.gateway.external_mongodb.host }}"
+            {{- end }}
+            - name: COOG_API_MONGO_PORT
+            {{- if not .Values.gateway.external_mongodb.enabled }}
+              value: "{{ .Values.mongodb.service.port }}"
+            {{ else }}
+              value: "{{ .Values.gateway.external_mongodb.port }}"
+            {{- end }}
+            - name: COOG_API_MONGO_USER
+              value: "{{ .Values.gateway.mongodb_user }}"
+            - name: COOG_API_MONGO_PASSWORD
+              value: "{{ .Values.gateway.mongodb_root_password }}"
             - name: COOG_API_REDIS_URL
               {{- if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}"
