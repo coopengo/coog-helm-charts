@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.4.1] - 2021-01-19
+
+### Changed
+
+- web: Change database from redis to mongo
+- flower: Restore command to run flower service properly
+
 ## [2.4.0] - 2021-01-19
 
 ### Changed
