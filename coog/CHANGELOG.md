@@ -1,3 +1,5 @@
+- celery: Fix health check command to comply with Celery 5.0
+
 # Changelog
 
 ## [2.4.1] - 2021-01-19
