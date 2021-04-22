@@ -1,3 +1,5 @@
+- Remove unused duplicated environment variable from templates
+
 # Changelog
 
 ## [2.4.2] - 2021-01-22
