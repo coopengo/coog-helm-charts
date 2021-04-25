@@ -6,7 +6,7 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   version: 7.6.8
 - name: redis
-  repository: https://kubernetes-charts.storage.googleapis.com/
+  repository: https://charts.bitnami.com/bitnami
   version: 10.5.0
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
@@ -14,5 +14,5 @@ dependencies:
 - name: flower
   repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
   version: 0.2.0
-digest: sha256:3cc515534825c6de3c9dd8be280b160c8bcc8fcdba19d841ed7eb6d4fc90d502
-generated: "2020-11-29T11:41:42.340178533+01:00"
+digest: sha256:3b39fb3aa402453dcfc34818931f0fc5f680b34f377924bdc469735e23905395
+generated: "2021-04-25T21:51:30.471980061+02:00"
