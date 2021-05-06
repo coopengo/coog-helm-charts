@@ -117,10 +117,10 @@ spec:
               value: "trytond.cache.MemoryCache"
             - name:  TRYTOND_DATABASE__URI
               value: "{{ .Values.coog.database_uri }}"
-            - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
-              value: "True"
             - name: TRYTOND_DATABASE__LANGUAGE
               value: fr
+            - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
+              value: "True"
           ports:
             - name: http
               containerPort: 8000
