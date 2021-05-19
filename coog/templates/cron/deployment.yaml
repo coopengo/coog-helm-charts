@@ -41,8 +41,10 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           command:
-            - ep
-            - cron
+            - "ep"
+            - "cron"
+            - "-d"
+            - "{{ .Values.coog.postgres.database}}"
         {{- if .Values.coog.persistentVolume.enabled }}
           volumeMounts:
             - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
