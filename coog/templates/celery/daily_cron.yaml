@@ -8,7 +8,7 @@ metadata:
 spec:
   concurrencyPolicy: Forbid
   schedule: {{ .Values.celery.batch.schedule }}
-  failedJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 5
   jobTemplate:
     spec:
       backoffLimit: 0
