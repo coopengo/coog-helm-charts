@@ -1,3 +1,5 @@
+- daily: Fix#20143 - Increase number of failed job history
+
 # Changelog
 
 ## [2.4.2] - 2021-01-22
