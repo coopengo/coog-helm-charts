@@ -123,6 +123,8 @@ spec:
             {{ end }}
             - name: TRYTOND_DATABASE__LANGUAGE
               value: fr
+            - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
+              value: "True"
           ports:
             - name: http
               containerPort: 8000
