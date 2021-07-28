@@ -94,7 +94,7 @@ spec:
             - name:  COOG_DB_NAME
               value: "{{ .Values.coog.postgres.database }}"
             - name:  COOG_GATEWAY_PORT
-              value: 8000
+              value: "8000"
             {{- if .Values.gateway.extraEnv }}
             {{- range $key, $value := .Values.gateway.extraEnv }}
             - name:  {{ $key }}
