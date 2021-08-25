@@ -1,3 +1,8 @@
+# Changelog
+
+## [2.13.2133] - 2021-08-25
+
+- coog: Fix TRYTOND_CACHE__CLASS
 - coog: Disable syntax analysis in init container
 - daily: Fix#20143 - Increase number of failed job history
 
