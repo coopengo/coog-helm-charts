@@ -40,9 +40,13 @@ spec:
                 runAsUser: {{ .Values.coog.securityContext.runAsUser }}
               command:
                 - ep
+                {{- if .Values.celery.cron.backend_configuration -}}
+                - daily_v2
+                {{- else }}
                 - daily
                 - {{ .Values.celery.batch.workDays | quote }}
                 - {{ .Values.celery.batch.workDaysConf }}
+                {{- end }}
             {{- if .Values.coog.persistentVolume.enabled }}
               volumeMounts:
                 - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}

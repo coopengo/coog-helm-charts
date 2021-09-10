@@ -463,6 +463,7 @@ celery:
       memory: 300Mi
   cron:
     # -- celery cron job containers' resource requests and limits
+    backend_configuration: true
     resources:
       limits:
         cpu: 200m
