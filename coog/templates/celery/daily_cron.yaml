@@ -39,10 +39,11 @@ spec:
                 runAsNonRoot: true
                 runAsUser: {{ .Values.coog.securityContext.runAsUser }}
               command:
-                - ep
                 {{- if .Values.celery.cron.backend_configuration -}}
+                - ep
                 - daily_v2
                 {{- else }}
+                - ep
                 - daily
                 - {{ .Values.celery.batch.workDays | quote }}
                 - {{ .Values.celery.batch.workDaysConf }}
