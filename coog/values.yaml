@@ -77,6 +77,7 @@ mongodb:
       cpu: 200m
       memory: 250Mi
   volumePermissions:
+    enabled: true
     resources:
       limits:
         cpu: 500m
@@ -591,10 +592,10 @@ coog:
   initContainers:
     resources:
       limits:
-        cpu: 700
+        cpu: 1
         memory: 1500Mi
       requests:
-        cpu: 1
+        cpu: 500m
         memory: 700Mi
 
   # -- Node labels for pod assignment
