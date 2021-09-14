@@ -13,10 +13,10 @@ rabbitmq:
   resources:
     limits:
       cpu: 300m
-      memory: 600Mi
+      memory: 400Mi
     requests:
       cpu: 100m
-      memory: 350Mi
+      memory: 100Mi
 
 ##
 ## Redis chart configuration
@@ -72,19 +72,19 @@ mongodb:
   resources:
     limits:
       cpu: 100m
-      memory: 400Mi
+      memory: 300Mi
     requests:
       cpu: 50m
-      memory: 250Mi
+      memory: 150Mi
   volumePermissions:
     enabled: true
     resources:
       limits:
         cpu: 100m
-        memory: 400Mi
+        memory: 300Mi
       requests:
         cpu: 50m
-        memory: 250Mi
+        memory: 150Mi
 
 postgresql:
   enabled: true
@@ -132,10 +132,10 @@ api:
   resources:
     limits:
       cpu: 100m
-      memory: 300Mi
+      memory: 100Mi
     requests:
       cpu: 50m
-      memory: 150Mi
+      memory: 50Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -177,10 +177,10 @@ api_b2b_config:
   resources:
     limits:
       cpu: 50m
-      memory: 100Mi
+      memory: 80Mi
     requests:
       cpu: 30m
-      memory: 50Mi
+      memory: 40Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -220,10 +220,10 @@ api_b2c:
   resources:
     limits:
       cpu: 50m
-      memory: 100Mi
+      memory: 50Mi
     requests:
       cpu: 20m
-      memory: 50Mi
+      memory: 25i
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -263,10 +263,10 @@ api_identity_manager:
   resources:
     limits:
       cpu: 50m
-      memory: 100Mi
+      memory: 70Mi
     requests:
       cpu: 10m
-      memory: 50Mi
+      memory: 30Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -368,10 +368,10 @@ app_b2c:
   resources:
     limits:
       cpu: 50m
-      memory: 100Mi
+      memory: 50Mi
     requests:
       cpu: 10m
-      memory: 50Mi
+      memory: 30Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -411,7 +411,7 @@ unoconv:
   resources:
     limits:
       cpu: 100m
-      memory: 300Mi
+      memory: 200Mi
     requests:
       cpu: 50m
       memory: 50Mi
@@ -447,8 +447,8 @@ celery:
     enabled: false
     resources:
       limits:
-        cpu: 400m
-        memory: 1000Mi
+        cpu: 200m
+        memory: 700Mi
       requests:
         cpu: 100m
         memory: 300Mi
@@ -584,7 +584,7 @@ coog:
   resources:
     limits:
       cpu: 400m
-      memory: 1000Mi
+      memory: 700Mi
     requests:
       cpu: 200m
       memory: 300Mi
@@ -593,7 +593,7 @@ coog:
     resources:
       limits:
         cpu: 400m
-        memory: 500Mi
+        memory: 400Mi
       requests:
         cpu: 200m
         memory: 300Mi
@@ -623,10 +623,10 @@ cron:
   # -- cron containers' resource requests and limits
   resources:
     limits:
-      cpu: 1
-      memory: 1000Mi
+      cpu: 200m
+      memory: 500Mi
     requests:
-      cpu: 400m
+      cpu: 100m
       memory: 300Mi
   livenessProbe:
     initialDelaySeconds: 30
@@ -750,10 +750,10 @@ web:
   resources:
     limits:
       cpu: 100m
-      memory: 200Mi
+      memory: 80Mi
     requests:
       cpu: 30m
-      memory: 50Mi
+      memory: 30Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -813,10 +813,10 @@ portal:
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
       cpu: 20m
-      memory: 100Mi
+      memory: 50Mi
     requests:
       cpu: 10m
-      memory: 50Mi
+      memory: 25Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -889,10 +889,10 @@ gateway:
   resources:
     limits:
       cpu: 100m
-      memory: 300Mi
+      memory: 100Mi
     requests:
       cpu: 50m
-      memory: 100Mi
+      memory: 50Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -948,10 +948,10 @@ static:
   resources:
     limits:
       cpu: 20m
-      memory: 100Mi
+      memory: 50Mi
     requests:
       cpu: 10m
-      memory: 30Mi
+      memory: 20Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
