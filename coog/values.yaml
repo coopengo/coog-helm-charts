@@ -71,19 +71,19 @@ mongodb:
   mongodbRootPassword: "admin"
   resources:
     limits:
-      cpu: 500m
-      memory: 500Mi
+      cpu: 100m
+      memory: 400Mi
     requests:
-      cpu: 200m
+      cpu: 50m
       memory: 250Mi
   volumePermissions:
     enabled: true
     resources:
       limits:
-        cpu: 500m
-        memory: 500Mi
+        cpu: 100m
+        memory: 400Mi
       requests:
-        cpu: 200m
+        cpu: 50m
         memory: 250Mi
 
 postgresql:
@@ -131,10 +131,10 @@ api:
   # -- api containers' resource requests and limits
   resources:
     limits:
-      cpu: 700m
+      cpu: 100m
       memory: 300Mi
     requests:
-      cpu: 200m
+      cpu: 50m
       memory: 150Mi
 
   # -- Affinity for pod assignment
@@ -176,10 +176,10 @@ api_b2b_config:
   # -- api_b2b_config containers' resource requests and limits
   resources:
     limits:
-      cpu: 200m
-      memory: 250Mi
+      cpu: 50m
+      memory: 100Mi
     requests:
-      cpu: 100m
+      cpu: 30m
       memory: 200Mi
 
   # -- Affinity for pod assignment
@@ -219,11 +219,11 @@ api_b2c:
   # -- api_b2c containers' resource requests and limits
   resources:
     limits:
-      cpu: 200m
-      memory: 250Mi
+      cpu: 50m
+      memory: 100Mi
     requests:
-      cpu: 100m
-      memory: 250Mi
+      cpu: 20m
+      memory: 50Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -262,11 +262,11 @@ api_identity_manager:
   # -- api_identity_manager containers' resource requests and limits
   resources:
     limits:
-      cpu: 200m
-      memory: 400Mi
+      cpu: 50m
+      memory: 100Mi
     requests:
-      cpu: 100m
-      memory: 250Mi
+      cpu: 10m
+      memory: 50Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -367,11 +367,11 @@ app_b2c:
   # -- app_b2c containers' resource requests and limits
   resources:
     limits:
-      cpu: 200m
-      memory: 250Mi
+      cpu: 50m
+      memory: 100Mi
     requests:
-      cpu: 100m
-      memory: 75Mi
+      cpu: 10m
+      memory: 50Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -410,11 +410,11 @@ unoconv:
   # -- unoconv containers' resource requests and limits
   resources:
     limits:
-      cpu: 300m
-      memory: 500Mi
-    requests:
       cpu: 100m
-      memory: 350Mi
+      memory: 300Mi
+    requests:
+      cpu: 50m
+      memory: 50Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -447,8 +447,8 @@ celery:
     enabled: false
     resources:
       limits:
-        cpu: 1
-        memory: 1500Mi
+        cpu: 400m
+        memory: 1000Mi
       requests:
         cpu: 100m
         memory: 300Mi
@@ -472,10 +472,10 @@ celery:
   # -- celery containers' resource requests and limits
   resources:
     limits:
-      cpu: 1
-      memory: 2000Mi
-    requests:
       cpu: 400m
+      memory: 1000Mi
+    requests:
+      cpu: 100m
       memory: 300Mi
   cron:
     # -- celery cron job containers' resource requests and limits
@@ -583,20 +583,20 @@ coog:
   # -- coog containers' resource requests and limits
   resources:
     limits:
-      cpu: 700m
-      memory: 1500Mi
+      cpu: 400m
+      memory: 1000Mi
     requests:
       cpu: 200m
-      memory: 700Mi
+      memory: 300Mi
 
   initContainers:
     resources:
       limits:
-        cpu: 1
-        memory: 1500Mi
+        cpu: 400m
+        memory: 500Mi
       requests:
-        cpu: 500m
-        memory: 700Mi
+        cpu: 200m
+        memory: 300Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -685,11 +685,11 @@ paybox:
   # -- paybox containers' resource requests and limits
   resources:
     limits:
-      cpu: 300m
-      memory: 100Mi
-    requests:
       cpu: 100m
       memory: 100Mi
+    requests:
+      cpu: 50m
+      memory: 50Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -749,11 +749,11 @@ web:
   # -- web containers' resource requests and limits
   resources:
     limits:
-      cpu: 300m
-      memory: 512Mi
-    requests:
       cpu: 100m
-      memory: 128Mi
+      memory: 200Mi
+    requests:
+      cpu: 30m
+      memory: 50Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -812,11 +812,11 @@ portal:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 200m
-      memory: 150Mi
-    requests:
-      cpu: 100m
+      cpu: 20m
       memory: 100Mi
+    requests:
+      cpu: 10m
+      memory: 50Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -888,11 +888,11 @@ gateway:
   # -- gateway containers' resource requests and limits
   resources:
     limits:
-      cpu: 500m
-      memory: 600Mi
-    requests:
       cpu: 100m
       memory: 300Mi
+    requests:
+      cpu: 50m
+      memory: 100Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -947,11 +947,11 @@ static:
   # -- static containers' resource requests and limits
   resources:
     limits:
-      cpu: 200m
+      cpu: 20m
       memory: 100Mi
     requests:
-      cpu: 100m
-      memory: 50Mi
+      cpu: 10m
+      memory: 30Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
