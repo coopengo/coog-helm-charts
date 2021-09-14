@@ -180,7 +180,7 @@ api_b2b_config:
       memory: 100Mi
     requests:
       cpu: 30m
-      memory: 200Mi
+      memory: 50Mi
 
   # -- Affinity for pod assignment
   affinity: {}
