@@ -223,7 +223,7 @@ api_b2c:
       memory: 50Mi
     requests:
       cpu: 20m
-      memory: 25i
+      memory: 25Mi
 
   # -- Affinity for pod assignment
   affinity: {}
