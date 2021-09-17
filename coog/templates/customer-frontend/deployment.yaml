@@ -1,0 +1,81 @@
+{{- if .Values.customer_frontend.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "full_name" . }}
+  labels:
+{{ include "chart_labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.customer_frontend.replicaCount }}
+{{- if not .Values.quota.rolling_update }}
+  strategy:
+    type: Recreate
+{{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "short_name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "short_name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.customer_frontend.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.customer_frontend.image.repository }}:{{ .Values.customer_frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.customer_frontend.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          {{- if .Values.customer_frontend.extraEnv }}
+          env:
+            {{- range $key, $value := .Values.customer_frontend.extraEnv }}
+            - name:  {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.customer_frontend.resources | nindent 12 }}
+      {{- with .Values.customer_frontend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.customer_frontend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.customer_frontend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- if .Values.customer_frontend.dnsPolicy }}
+      dnsPolicy: {{ .Values.customer_frontend.dnsPolicy }}
+{{- end }}
+{{- if .Values.customer_frontend.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.customer_frontend.dnsConfig | indent 8 }}
+{{- end }}
+{{- end }}

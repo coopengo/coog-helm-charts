@@ -1,0 +1,108 @@
+{{- if .Values.customer_backend.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "full_name" . }}
+  labels:
+{{ include "chart_labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.customer_backend.replicaCount }}
+{{- if not .Values.quota.rolling_update }}
+  strategy:
+    type: Recreate
+{{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "short_name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "short_name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.customer_backend.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.customer_backend.image.repository }}:{{ .Values.customer_backend.image.tag }}"
+          imagePullPolicy: {{ .Values.customer_backend.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          env:
+            - name:  BACKEND_PORT
+              value: 1337
+            - name:  DATABASE_HOST
+            {{- if not .Values.coog.external_postgres.enabled }}
+              value: "{{ .Release.Name }}-postgresql"
+            {{ else }}
+              value: "{{ .Values.coog.external_postgres.host }}"
+            {{- end }}
+            - name:  DATABASE_PORT
+            {{- if not .Values.coog.external_postgres.enabled }}
+              value: "{{ .Values.postgresql.service.port }}"
+            {{ else }}
+              value: "{{ .Values.coog.external_postgres.port }}"
+            - name:  POSTGRES_DB
+              value: "{{ .Values.customer_backend.postgres_db }}"
+            - name:  POSTGRES_USER
+              value: "{{ .Values.coog.postgres.user }}"
+            - name:  POSTGRES_PASSWORD
+              value: "{{ .Values.coog.postgres.password }}"
+            - name: COOG_GATEWAY_URL
+              value: "{{ .Values.gateway.gateway_url }}{{ .Values.gateway.entrypoint }}"
+            - name: COOG_WEB_TOKEN
+            {{- if not .Values.customer_backend.coog_web_token }}
+              value: "{{ .Values.customer_backend.coog_web_token }}"
+            {{- else }}
+              value: "{{ .Values.gateway.coog_web_token }}"
+            {{- end }}
+            {{- if .Values.customer_backend.extraEnv }}
+            {{- range $key, $value := .Values.customer_backend.extraEnv }}
+            - name:  {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 1337
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.customer_backend.resources | nindent 12 }}
+      {{- with .Values.customer_backend.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.customer_backend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.customer_backend.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+{{- if .Values.customer_backend.dnsPolicy }}
+      dnsPolicy: {{ .Values.customer_backend.dnsPolicy }}
+{{- end }}
+{{- if .Values.customer_backend.dnsConfig }}
+      dnsConfig:
+{{ toYaml .Values.customer_backend.dnsConfig | indent 8 }}
+{{- end }}
+{{- end }}
