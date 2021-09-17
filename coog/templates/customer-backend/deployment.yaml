@@ -63,9 +63,9 @@ spec:
               value: "{{ .Values.gateway.gateway_url }}{{ .Values.gateway.entrypoint }}"
             - name: COOG_WEB_TOKEN
             {{- if not .Values.customer_backend.coog_web_token }}
-              value: "{{ .Values.customer_backend.coog_web_token }}"
-            {{- else }}
               value: "{{ .Values.gateway.coog_web_token }}"
+            {{- else }}
+              value: "{{ .Values.customer_backend.coog_web_token }}"
             {{- end }}
             {{- if .Values.customer_backend.extraEnv }}
             {{- range $key, $value := .Values.customer_backend.extraEnv }}
