@@ -39,8 +39,8 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
           command:
-            - serve
-            - :/workdir/public/
+            - yarn
+            - start
           env:
             - name:  BACKEND_PORT
               value: "1337"
