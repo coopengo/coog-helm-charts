@@ -53,11 +53,11 @@ spec:
             {{ else }}
               value: "{{ .Values.coog.external_postgres.port }}"
             {{- end }}
-            - name:  POSTGRES_DB
+            - name:  DATABASE_NAME
               value: "{{ .Values.customer_backend.postgres_db }}"
-            - name:  POSTGRES_USER
+            - name:  DATABASE_USER
               value: "{{ .Values.coog.postgres.user }}"
-            - name:  POSTGRES_PASSWORD
+            - name:  DATABASE_PASSWORD
               value: "{{ .Values.coog.postgres.password }}"
             - name: COOG_GATEWAY_URL
               value: "{{ .Values.gateway.gateway_url }}{{ .Values.gateway.entrypoint }}"
