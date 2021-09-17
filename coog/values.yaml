@@ -4,6 +4,7 @@
 
 quota:
   enabled: false
+  rolling_update: false
 
 flower:
   enabled: false
@@ -17,6 +18,7 @@ rabbitmq:
     requests:
       cpu: 100m
       memory: 100Mi
+  updateStrategyType: Recreate
 
 ##
 ## Redis chart configuration
@@ -60,6 +62,7 @@ externalRedis:
 
 mongodb:
   enabled: true
+  strategyType: Recreate
   image:
     tag: "4.0.10-debian-9-r39"
   replicaSet:
@@ -99,7 +102,8 @@ postgresql:
   initdbScripts:
     db-init.sql: |
       CREATE ROLE coog WITH LOGIN PASSWORD 'coog';
-
+  updateStrategy:
+    type: Recreate
 
 api:
   # -- Deploy api container(s)
@@ -824,7 +828,6 @@ portal:
 
   # -- Affinity for pod assignment
   affinity: {}
-
 
 gateway:
   # -- Deploy gateway container(s)
