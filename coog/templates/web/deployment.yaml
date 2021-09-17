@@ -7,6 +7,10 @@ metadata:
 {{ include "chart_labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.web.replicaCount }}
+{{- if not .Values.quota.rolling_update }}
+  strategy:
+    type: Recreate
+{{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "short_name" . }}
