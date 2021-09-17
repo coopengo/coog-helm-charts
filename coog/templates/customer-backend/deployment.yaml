@@ -38,6 +38,9 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: 1000
+          command:
+            - serve
+            - :/workdir/public/
           env:
             - name:  BACKEND_PORT
               value: "1337"

@@ -38,6 +38,9 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: 1000
+          command:
+            - yarn
+            - start
           {{- if .Values.customer_frontend.extraEnv }}
           env:
             {{- range $key, $value := .Values.customer_frontend.extraEnv }}
