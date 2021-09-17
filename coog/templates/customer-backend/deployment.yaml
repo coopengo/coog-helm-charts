@@ -52,6 +52,7 @@ spec:
               value: "{{ .Values.postgresql.service.port }}"
             {{ else }}
               value: "{{ .Values.coog.external_postgres.port }}"
+            {{- end }}
             - name:  POSTGRES_DB
               value: "{{ .Values.customer_backend.postgres_db }}"
             - name:  POSTGRES_USER
