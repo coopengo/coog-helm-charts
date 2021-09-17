@@ -58,7 +58,7 @@ spec:
             {{- end }}
             - name:  DATABASE_NAME
               value: "{{ .Values.customer_backend.postgres_db }}"
-            - name:  DATABASE_USER
+            - name:  DATABASE_USERNAME
               value: "{{ .Values.coog.postgres.user }}"
             - name:  DATABASE_PASSWORD
               value: "{{ .Values.coog.postgres.password }}"
