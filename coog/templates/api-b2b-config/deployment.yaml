@@ -6,6 +6,10 @@ metadata:
   labels:
 {{ include "chart_labels" . | indent 4 }}
 spec:
+{{- if not .Values.quota.rolling_update }}
+  strategy:
+    type: Recreate
+{{- end }}
   replicas: {{ .Values.api_b2b_config.replicaCount }}
   selector:
     matchLabels:
