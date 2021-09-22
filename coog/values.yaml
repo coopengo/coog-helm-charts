@@ -62,7 +62,7 @@ externalRedis:
 
 mongodb:
   enabled: true
-  strategyType: Recreate
+  strategyType: OnDelete
   image:
     tag: "4.0.10-debian-9-r39"
   replicaSet:
