@@ -62,16 +62,13 @@ externalRedis:
 
 mongodb:
   enabled: true
-  strategyType: OnDelete
+  strategyType: Recreate
   image:
     tag: "4.0.10-debian-9-r39"
   replicaSet:
     enabled: false
   usePassword: true
-  mongodbUsername: "root"
-  mongodbPassword: "admin"
   mongodbDatabase: coog-gateway
-  mongodbRootPassword: "admin"
   resources:
     limits:
       cpu: 100m
@@ -95,10 +92,7 @@ postgresql:
     enabled: false
   image:
     debug: true
-  initdbUsername: coog
-  initdbPassword:	coog
   postgresqlDatabase: coog
-  postgresqlPassword: coog
   initdbScripts:
     db-init.sql: |
       CREATE ROLE coog WITH LOGIN PASSWORD 'coog';
@@ -523,11 +517,6 @@ coog:
   external_postgres:
     enabled: false
   root_dir: /workspace/io
-  database_uri: postgresql://coog:coog@postgresql:5432/coog
-  postgres:
-    database: coog
-    user: coog
-    password: coog
   # -- 	Number of coog workers to run
   workers: 4
   max_worker_memory: 0
@@ -838,15 +827,9 @@ gateway:
     enabled: false
   mongodb:
     database: coog-gateway
-  mongodb_user: root
-  mongodb_root_password: admin
-  jwt:
-    encryption: secret
-    expiration: 3600
   whitelist:
   # -- 	Number of gateway Pods to run
   replicaCount: 1
-  coog_web_token: "changeme"
   portal_url: coog.local
   gateway_url: coog.local
   entrypoint: "/gateway"
@@ -1055,7 +1038,6 @@ customer_backend:
   enabled: false
   # -- 	Number of portal Pods to run
   replicaCount: 1
-  coog_web_token: ''
   postgres_db: 'strapi'
 
   image:

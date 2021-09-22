@@ -59,16 +59,28 @@ spec:
             - name:  DATABASE_NAME
               value: "{{ .Values.customer_backend.postgres_db }}"
             - name:  DATABASE_USERNAME
-              value: "{{ .Values.coog.postgres.user }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-postgres-secret
+                  key: USER
             - name:  DATABASE_PASSWORD
-              value: "{{ .Values.coog.postgres.password }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-postgres-secret
+                  key: PASSWORD
             - name: COOG_GATEWAY_URL
               value: "{{ .Values.gateway.gateway_url }}{{ .Values.gateway.entrypoint }}"
             - name: COOG_WEB_TOKEN
             {{- if not .Values.customer_backend.coog_web_token }}
-              value: "{{ .Values.gateway.coog_web_token }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-coog-web-secret
+                  key: GATEWAY_TOKEN
             {{- else }}
-              value: "{{ .Values.customer_backend.coog_web_token }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-coog-web-secret
+                  key: CUSTOMER_BACKEND_TOKEN
             {{- end }}
             {{- if .Values.customer_backend.extraEnv }}
             {{- range $key, $value := .Values.customer_backend.extraEnv }}

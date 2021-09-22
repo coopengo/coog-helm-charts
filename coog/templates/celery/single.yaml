@@ -100,9 +100,15 @@ spec:
             - name:  COOG_DB_NAME
               value: "{{ .Values.coog.postgres.database }}"
             - name:  COOG_DB_USER
-              value: "{{ .Values.coog.postgres.user }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-postgres-secret
+                  key: USER
             - name:  COOG_DB_PASSWORD
-              value: "{{ .Values.coog.postgres.password }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-postgres-secret
+                  key: PASSWORD
             {{- if .Values.coog.extraEnv }}
             {{- range $key, $value := .Values.coog.extraEnv }}
             - name:  {{ $key }}
@@ -130,13 +136,21 @@ spec:
             - name:  TRYTOND_CACHE__CLEAN_TIMEOUT
               value: "0"
             - name:  TRYTOND_DATABASE__URI
-              value: "{{ .Values.coog.database_uri }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-trytond-secret
+                  key: DB_URI
             - name:  TRYTOND_DEBUG__VIEWS
               value: "False"
             - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
               value: "True"
+            {{- if .Values.coog.email_uri }}
             - name: TRYTOND_EMAIL__URI
-              value: "{{ .Values.coog.email_uri }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-trytond-secret
+                  key: EMAIL_URI
+            {{- end }}
             - name: TRYTOND_EMAIL__FROM
               value: "{{ .Values.coog.email_from }}"
             - name: TRYTOND_REPORT__API
