@@ -68,10 +68,7 @@ mongodb:
   replicaSet:
     enabled: false
   usePassword: true
-  mongodbUsername: "root"
-  mongodbPassword: "admin"
   mongodbDatabase: coog-gateway
-  mongodbRootPassword: "admin"
   resources:
     limits:
       cpu: 100m
@@ -95,10 +92,7 @@ postgresql:
     enabled: false
   image:
     debug: true
-  initdbUsername: coog
-  initdbPassword:	coog
   postgresqlDatabase: coog
-  postgresqlPassword: coog
   initdbScripts:
     db-init.sql: |
       CREATE ROLE coog WITH LOGIN PASSWORD 'coog';
@@ -514,18 +508,6 @@ celery:
     workDaysConf: french_work_days
 
 coog:
-  # -- sensitive trytond
-  batch_report__uri: "changeme"
-  cryptolog__password: "changeme"
-  document_api__document_token_secret: "changeme"
-  migration__password: "changeme"
-  paybox__secret: "changeme"
-  prest_ij__access_key:  "changeme"
-  primotexto__key: "changeme"
-  reset_password_api__password_token_secret: "changeme"
-  session_passphrase: "changeme"
-  email_uri: "changme"
-  # --
   cache_record: 50000
   configurationFiles:
     batch.conf: |-
@@ -535,11 +517,6 @@ coog:
   external_postgres:
     enabled: false
   root_dir: /workspace/io
-  database_uri: "postgresql://coog:coog@postgresql:5432/coog"
-  postgres:
-    database: coog
-    user: coog
-    password: coog
   # -- 	Number of coog workers to run
   workers: 4
   max_worker_memory: 0
@@ -850,20 +827,12 @@ gateway:
     enabled: false
   mongodb:
     database: coog-gateway
-  mongodb_user: root
-  mongodb_root_password: admin
-  jwt:
-    encryption: secret
-    expiration: 3600
   whitelist:
   # -- 	Number of gateway Pods to run
   replicaCount: 1
-  coog_web_token: "changeme"
   portal_url: coog.local
   gateway_url: coog.local
   entrypoint: "/gateway"
-  forcedotcom_client_id: "changeme"
-  forcedotcom_client_secret: "changeme"
   extraEnv:
     COOG_TOKEN_MODULE: "false"
 
@@ -1069,7 +1038,6 @@ customer_backend:
   enabled: false
   # -- 	Number of portal Pods to run
   replicaCount: 1
-  coog_web_token: ''
   postgres_db: 'strapi'
 
   image:
