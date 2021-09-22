@@ -146,17 +146,12 @@ spec:
               value: "False"
             - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
               value: "True"
+            {{- if .Values.coog.email_uri }}
             - name: TRYTOND_EMAIL__URI
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
                   key: EMAIL_URI
-            {{- if .Values.coog.session_passphrase }}
-            - name: SESSION_PASSPHRASE
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "full_name" . }}-trytond-secret
-                  key: SESSION_PASSPHRASE
             {{- end }}
             {{- if .Values.coog.reset_password_api__password_token_secret }}
             - name: RESET_PASSWORD_API__PASSWORD_TOKEN_SECRET
