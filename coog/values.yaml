@@ -62,7 +62,7 @@ externalRedis:
 
 mongodb:
   enabled: true
-  strategyType: OnDelete
+  strategyType: Recreate
   image:
     tag: "4.0.10-debian-9-r39"
   replicaSet:
@@ -514,6 +514,18 @@ celery:
     workDaysConf: french_work_days
 
 coog:
+  # -- sensitive trytond
+  batch_report__uri: "changeme"
+  cryptolog__password: "changeme"
+  document_api__document_token_secret: "changeme"
+  migration__password: "changeme"
+  paybox__secret: "changeme"
+  prest_ij__access_key:  "changeme"
+  primotexto__key: "changeme"
+  reset_password_api__password_token_secret: "changeme"
+  session_passphrase: "changeme"
+  email_uri: "changme"
+  # --
   cache_record: 50000
   configurationFiles:
     batch.conf: |-
@@ -523,7 +535,7 @@ coog:
   external_postgres:
     enabled: false
   root_dir: /workspace/io
-  database_uri: postgresql://coog:coog@postgresql:5432/coog
+  database_uri: "postgresql://coog:coog@postgresql:5432/coog"
   postgres:
     database: coog
     user: coog
@@ -850,6 +862,8 @@ gateway:
   portal_url: coog.local
   gateway_url: coog.local
   entrypoint: "/gateway"
+  forcedotcom_client_id: "changeme"
+  forcedotcom_client_secret: "changeme"
   extraEnv:
     COOG_TOKEN_MODULE: "false"
 
