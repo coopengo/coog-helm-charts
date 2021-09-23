@@ -44,13 +44,13 @@ spec:
             - name:  MONGO_HOST
             {{- if not .Values.gateway.external_mongodb.enabled }}
               value: "{{ .Release.Name }}-mongodb"
-            {{ else }}
+            {{- else }}
               value: "{{ .Values.gateway.external_mongodb.host }}"
             {{- end }}
             - name:  MONGO_PORT
             {{- if not .Values.gateway.external_mongodb.enabled }}
               value: "{{ .Values.mongodb.service.port }}"
-            {{ else }}
+            {{- else }}
               value: "{{ .Values.gateway.external_mongodb.port }}"
             {{- end }}
             - name:  MONGO_DB_NAME

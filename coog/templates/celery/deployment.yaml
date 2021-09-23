@@ -133,13 +133,15 @@ spec:
               {{- else }}
               value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}/1"
               {{- end }}
+            - name:  TRYTOND_CACHE__CLASS
+              value: "trytond.cache.SerializableMemoryCache"
             - name:  TRYTOND_CACHE__CLEAN_TIMEOUT
               value: "0"
             - name:  TRYTOND_DATABASE__URI
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: DB_URI
+                  key: TRYTOND_DATABASE__URI
             - name:  TRYTOND_DEBUG__VIEWS
               value: "False"
             - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
@@ -149,63 +151,63 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: EMAIL_URI
+                  key: TRYTOND_EMAIL__URI
             {{- end }}
-            {{- if .Values.coog.reset_password_api__password_token_secret }}
-            - name: RESET_PASSWORD_API__PASSWORD_TOKEN_SECRET
+            {{- if .Values.coog.trytond_reset_password_api__password_token_secret }}
+            - name: TRYTOND_RESET_PASSWORD_API__PASSWORD_TOKEN_SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: RESET_PASSWORD_API__PASSWORD_TOKEN_SECRET
+                  key: TRYTOND_RESET_PASSWORD_API__PASSWORD_TOKEN_SECRET
             {{- end }}
-            {{- if .Values.coog.prest_ij__access_key }}
-            - name: PREST_IJ__ACCESS_KEY
+            {{- if .Values.coog.trytond_prest_ij__access_key }}
+            - name: TRYTOND_PREST_IJ__ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: PREST_IJ__ACCESS_KEY
+                  key: TRYTOND_PREST_IJ__ACCESS_KEY
             {{- end }}
-            {{- if .Values.coog.document_api__document_token_secret }}
-            - name: DOCUMENT_API__DOCUMENT_TOKEN_SECRET
+            {{- if .Values.coog.trytond_document_api__document_token_secret }}
+            - name: TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: DOCUMENT_API__DOCUMENT_TOKEN_SECRET
+                  key: TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET
             {{- end }}
-            {{- if .Values.coog.batch_report__uri }}
-            - name: BATCH_REPORT__URI
+            {{- if .Values.coog.trytond_batch_report__uri }}
+            - name: TRYTOND_BATCH_REPORT__URI
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: BATCH_REPORT__URI
+                  key: TRYTOND_BATCH_REPORT__URI
             {{- end }}
-            {{- if .Values.coog.cryptolog__password }}
-            - name: CRYPTOLOG__PASSWORD
+            {{- if .Values.coog.trytond_cryptolog__password }}
+            - name: TRYTOND_CRYPTOLOG__PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: CRYPTOLOG__PASSWORD
+                  key: TRYTOND_CRYPTOLOG__PASSWORD
             {{- end }}
-            {{- if .Values.coog.paybox__secret }}
-            - name: PAYBOX__SECRET
+            {{- if .Values.coog.trytond_paybox__secret }}
+            - name: TRYTOND_PAYBOX__SECRET
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: PAYBOX__SECRET
+                  key: TRYTOND_PAYBOX__SECRET
             {{- end }}
-            {{- if .Values.coog.primotexto__key }}
-            - name: PRIMOTEXTO__KEY
+            {{- if .Values.coog.trytond_primotexto__key }}
+            - name: TRYTOND_PRIMOTEXTO__KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: PRIMOTEXTO__KEY
+                  key: TRYTOND_PRIMOTEXTO__KEY
             {{- end }}
-            {{- if .Values.coog.migration__password }}
-            - name: MIGRATION__PASSWORD
+            {{- if .Values.coog.trytond_migration__password }}
+            - name: TRYTOND_MIGRATION__PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: MIGRATION__PASSWORD
+                  key: TRYTOND_MIGRATION__PASSWORD
             {{- end }}
             - name: TRYTOND_EMAIL__FROM
               value: "{{ .Values.coog.email_from }}"
