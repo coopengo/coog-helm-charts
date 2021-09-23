@@ -125,8 +125,6 @@ spec:
               {{- else }}
               value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}/1"
               {{- end }}
-            - name:  TRYTOND_CACHE__CLASS
-              value: "trytond.cache.MemoryCache"
             - name:  TRYTOND_DATABASE__URI
               valueFrom:
                 secretKeyRef:
@@ -243,8 +241,6 @@ spec:
               {{- else }}
               value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}/1"
               {{- end }}
-            - name:  TRYTOND_CACHE__CLASS
-              value: "trytond.cache.MemoryCache"
             - name:  TRYTOND_CACHE__CLEAN_TIMEOUT
               value: "0"
             - name:  TRYTOND_DATABASE__URI
