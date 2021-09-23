@@ -141,7 +141,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: DB_URI
+                  key: TRYTOND_DATABASE__URI
             - name:  TRYTOND_DEBUG__VIEWS
               value: "False"
             - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
@@ -151,7 +151,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: EMAIL_URI
+                  key: TRYTOND_EMAIL__URI
             {{- end }}
             - name: TRYTOND_EMAIL__FROM
               value: "{{ .Values.coog.email_from }}"
