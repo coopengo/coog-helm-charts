@@ -1,0 +1,1305 @@
+commit 199d985d8b08c90b85b5b48efd150963966ea2db
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 24 15:43:21 2021 +0200
+
+    Upgrade default coog memory limit value to 800mb
+
+commit 301ab541da1c6226e1c626d3d0007578d5e5e734
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Wed Sep 22 11:18:48 2021 +0200
+
+    coog-helm-charts: re-packaging coog-2.12.2137
+
+commit 9d09166b5957e2c618b7fdb7a6f9f18bb0d6e986
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Wed Sep 22 11:14:48 2021 +0200
+
+    Fix MongoDB update strategy for stateful set
+
+commit af8d94a37832d2c91e014de0b7c069376bfb6541
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 17 13:44:18 2021 +0200
+
+    coog-helm-charts: re-Packaging coog-2.12.2137
+
+commit 56e78fc44f66de048815d9bb1c8906f7fe90e49d
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 17 13:43:27 2021 +0200
+
+    Fix rabbitMQ update strategy for stateful set
+
+commit 81e368fd56a5edfe7a4aa98eb2606844708896ec
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 17 11:27:01 2021 +0200
+
+    coog-helm-charts: Packaging coog-2.12.2137
+
+commit d45a953f469036f5deb8bc33be70fe7c352f5ee2
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 17 11:02:25 2021 +0200
+
+    coog-helm-charts: Change default update strategy to Recreate
+
+commit 949956feb242825865c742e61b4ec3835b386f03
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Wed Sep 15 17:23:31 2021 +0200
+
+    coog-helm-charts: re-Packaging coog-2.12.2136
+
+commit 21f827664d48693630d91f5e557ed8b0232e3183
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Wed Sep 15 17:21:45 2021 +0200
+
+     Values: Rework minimalist values - fix typo
+
+commit 2ca02ae56fa463969b0a3dbae2a2be26e8b95ab6
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Tue Sep 14 19:07:19 2021 +0200
+
+    Values: Reword minimalist values for coog - lower again
+
+commit 73e69e12a51c89b69bc9d97a1125d143c7d3be6c
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Tue Sep 14 18:07:40 2021 +0200
+
+    Values: Reword minimalist values for coog - hotfix typo
+
+commit 456b6dc3d8c090521bfd27f301327c0480f320c3
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Tue Sep 14 17:32:23 2021 +0200
+
+    Values: Reword minimalist values for coog
+
+commit 3bf93a79872e2bb6cf3760de64c626316ecf6673
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Mon Sep 13 11:09:26 2021 +0200
+
+    coog-helm-charts: re-packaging coog-2.12.2136
+
+commit 2da1ce3b46e658cd09535d7a539f1e8b2a6a37ab
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Mon Sep 13 09:29:53 2021 +0200
+
+    coog-helm-charts: Fix coog-2.13.2136.2
+
+commit 1188a4fce452be11068030a7843aa152a56d3447
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 10 17:44:09 2021 +0200
+
+    coog-helm-charts: re-packaging coog-2.13.2136
+
+commit d08c252fd1437b6b1a51456fc2d53076ca379c07
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 10 17:41:43 2021 +0200
+
+    coog-helm-charts: Fix daily_v2 cron execution
+
+commit 5c8ef99d956f3c1fedf5dbea5484b6e94eb614d1
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 10 16:54:15 2021 +0200
+
+    coog-helm-charts: packaging coog-2.12.2136
+
+commit 92aa1dccfdc6592f1a323b005520ca517e6e27b6
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 10 16:19:30 2021 +0200
+
+    coog-helm-charts: Linter OK
+
+commit f211dfdba71c4513899c3d4e3561666df28a4d86
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 10 15:54:14 2021 +0200
+
+    values: Defaulted quotas review
+
+commit cdd33ec57c8ab080645479d3bc3ce7d623cb7535
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 10 14:57:13 2021 +0200
+
+    Add default mongoDB volumePermissions Sidecar quotas
+
+commit 9b6a6e372febdb6a3c2d25bd4603a927eef8a584
+Author: Adrien BEN-DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 10 13:56:51 2021 +0200
+
+    Allow resources quota initcontainer (#17)
+
+commit 1df8066696a83560ad9daf328a5a256a067b3358
+Author: Jeremy Mousset <jeremy.mousset@coopengo.com>
+Date:   Fri Sep 10 12:34:03 2021 +0200
+
+    daily: switch daily command to daily_v2 (#15)
+    
+    * switch daily command to daily_v2
+    
+    * Allow daily backend configuration switch by values
+    
+    Co-authored-by: Adrien BEN DUC <adrien.benduc@coopengo.com>
+
+commit 84acc37b396f3e6198362482ea1327d086cf1d7e
+Author: Adrien BEN-DUC <adrien.benduc@coopengo.com>
+Date:   Fri Sep 10 12:29:40 2021 +0200
+
+    chart: Handle quota in charts (#16)
+    
+    * chart: Handle quota in charts
+    
+    * Add default quota disabled
+
+commit 130f2ce484bd171c27308e99b7702463a44f6a9b
+Author: Jean-Pierre YUNG <jean-pierre.yung@coopengo.com>
+Date:   Wed Jul 28 11:39:10 2021 +0200
+
+    Coog packaging 2.12.2129
+
+commit 2c60887faf516c2a164b67cf3d5fcb82af6fb772
+Author: Jean Cavallo <jean.cavallo@hotmail.fr>
+Date:   Wed Jul 28 11:13:29 2021 +0200
+
+    [2.12] Update charts to remove usage of raw integers in environment
+
+commit af379c0ebef2f4cf5ff4b35ad2ddd0fae12dfd64
+Author: Jean-Pierre YUNG <jean-pierre.yung@coopengo.com>
+Date:   Thu Jul 15 15:32:21 2021 +0200
+
+    Coog packaging 2.12.2127
+
+commit 2be173abcc1d0158a882ef928b6cb74338a023bf
+Author: Pierre Kunkel <pkunkel@sfR.fr>
+Date:   Fri Jun 18 19:39:35 2021 +0200
+
+    gateway: [2.12] fix default port (#9)
+    (cherry-pick)
+
+commit eafdd44a90b2a75fd1526ddb46badf182a0b1b69
+Author: Jean-Pierre YUNG <jean-pierre.yung@coopengo.com>
+Date:   Mon May 31 19:17:40 2021 +0200
+
+    coog: [2.12] Disable syntax analysis in init (#12)
+    (cherry-pick)
+    Fix #19675
+
+commit 57bea06d73851e68d7ea241360a717bceed25e56
+Author: Adrien BEN-DUC <adrien.benduc@coopengo.com>
+Date:   Mon May 31 16:42:18 2021 +0200
+
+    daily: [2.12] Increase number of failed jobs history count (#14)
+    (cherry-pick)
+    
+    Fix #20143
+
+commit ace7d366d8e5638112ef0f28ceee5172870da2b7
+Author: Adrien BEN-DUC <adrien.benduc@coopengo.com>
+Date:   Wed May 19 13:31:45 2021 +0200
+
+    CRON: Fix POD deployment command (add database) (#13)
+    
+    Fix #20054
+
+commit 16076a39b2a46ceb8be788838624122d054e5673
+Author: chok <maxime.picaud@harchibald.com>
+Date:   Sun Apr 25 21:12:13 2021 +0200
+
+    [coog-2.12] 2116
+
+commit 614b2500199aa8580d6a1c86959efab4624c8b8b
+Author: chok <maxime.picaud@harchibald.com>
+Date:   Sun Apr 25 20:34:35 2021 +0200
+
+    [coog-2.12] coog-2.12.2116
+
+commit c970e63f8a0a4b67f3b54b69ce9176b9a9e25d0c
+Author: chok <maxime.picaud@harchibald.com>
+Date:   Sun Apr 25 19:33:44 2021 +0200
+
+    Flower packaging
+
+commit 475869f224daee4d2da5b064f33d8d94ea064e6b
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Thu Apr 22 13:43:12 2021 +0200
+
+    Coog packaging - 2.4.2
+
+commit 098724916c91ba400a93eb3d110d0c1194b57c63
+Author: Jean-Pierre YUNG <jean-pierre.yung@coopengo.com>
+Date:   Wed Apr 21 19:00:03 2021 +0200
+
+    celery: fix health check for celery 5.0 (#10)
+    
+    Fix #19814
+
+commit 63dccf26a69b6588030e53f43d363b6aeeb3523a
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Mon Apr 19 10:34:08 2021 +0200
+
+    Coog packaging - 2.4.1 & Flower - 0.2.1
+
+commit a089ed58e8b2759a553d732cf2f758639d1eb467
+Author: Pierre Kunkel <pkunkel@sfR.fr>
+Date:   Thu Apr 15 16:58:28 2021 +0200
+
+    web: Change database from redis to mongo (#8)
+
+commit d2ca892d1e46ba94a4d7a37e815339449a18f871
+Author: Jean-Pierre YUNG <jean-pierre.yung@coopengo.com>
+Date:   Fri Apr 2 18:16:36 2021 +0200
+
+    Flower packaging
+
+commit e4365d668e736e9801fc06bcada10eac16d1a886
+Author: Adrien BEN-DUC <adrien.benduc@coopengo.com>
+Date:   Thu Feb 11 09:22:17 2021 +0100
+
+    flower: Restore command to run flower service properly (#7)
+    
+    Fix #19091
+
+commit b696d932264102e8f84416b0a4834f947d67f269
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Fri Jan 29 14:56:02 2021 +0100
+
+    Coog packaging
+
+commit 0b34873c65d9987fd77b2de857aa9040b7794496
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue Jan 19 12:05:03 2021 +0100
+
+    Coog packaging
+
+commit 9890e2aa53b62638ab4e79c65ffea847b0b3c81b
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Dec 31 12:42:32 2020 +0100
+
+    Coog packaging
+
+commit 374cc8982b3f40977d320cdd3549532fdd76ae73
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Dec 31 10:49:19 2020 +0100
+
+    Coog packaging
+
+commit 9853ad24f2c331f563d0d26c63a283bf1ecf91a0
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Dec 30 12:57:03 2020 +0100
+
+    Coog packaging
+
+commit 133273cb167a0b24cafc833fd571023d4a6c8eca
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Dec 30 10:49:40 2020 +0100
+
+    Update replicacount doc
+
+commit 8a1568eff98e404765deecf8f6cb5e87f5f05a95
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Dec 30 10:30:55 2020 +0100
+
+    Update image docs
+
+commit 165ac82c79b40eb1ebbb441f66256d1e1f1aedfe
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Dec 30 10:14:24 2020 +0100
+
+    update image docs
+
+commit 6d14d522629c11878f7fde4508501c80945434de
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Dec 30 10:04:27 2020 +0100
+
+    Docs update : enable service
+
+commit eff4a343c5bc7e41dee282c3f8cf8b3dc3b6af50
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Dec 30 10:00:21 2020 +0100
+
+    Docs update
+
+commit d0b231f8ec154ebad368c91c439a78c6a28c710d
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Dec 30 09:59:46 2020 +0100
+
+    Docs for ingress
+
+commit 80c18599214e2e78fd62c421775305953a5d12db
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Dec 30 09:45:48 2020 +0100
+
+    Update doc for resources
+
+commit 8e06118dd653186ff04d9a13c9969befac8c10c1
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Dec 30 09:40:59 2020 +0100
+
+    Update doc for teoleration / nodeselector
+
+commit 403a623edc6d5360bcc377e0481763c0eb4f6422
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Dec 30 09:37:03 2020 +0100
+
+    Update doc for affinity
+
+commit 78b6cf4de4046ed8e97bc398d185ce82f5c20211
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Dec 30 09:32:18 2020 +0100
+
+    Update docs
+
+commit 038edf81d46ffbd272b344e8383ae23616e54b06
+Author: juliencoopengo <55384345+juliencoopengo@users.noreply.github.com>
+Date:   Thu Dec 10 18:56:51 2020 +0100
+
+    Update README.md
+
+commit bd59fba0694c9ad5cb89b57851849574eeaa86e9
+Author: juliencoopengo <55384345+juliencoopengo@users.noreply.github.com>
+Date:   Thu Dec 10 18:53:45 2020 +0100
+
+    Update README.md
+
+commit ce29fcd2afe71ade97fcf0a6ca905a4fbb6ea410
+Author: juliencoopengo <55384345+juliencoopengo@users.noreply.github.com>
+Date:   Thu Dec 10 18:53:25 2020 +0100
+
+    Update README.md
+
+commit f0531dbd2d034a03db404d20f27a7dfc69b1b987
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue Dec 1 17:44:41 2020 +0100
+
+    Coog packaging
+
+commit a419e4e7804f35820090841a55b957dd60d1eb74
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue Dec 1 17:41:22 2020 +0100
+
+    Coog packaging
+
+commit c251b324523c637bcb7ed94c34ed13cc59f3c85f
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue Dec 1 17:30:20 2020 +0100
+
+    Coog packaging
+
+commit 03be5c924bbe9aa5e4b301d7a9adb3bcc9fa612d
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sun Nov 29 11:52:09 2020 +0100
+
+    Coog packaging
+
+commit f213a566e0c6d43a97d9bc3c49a8a3e9887587ce
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sun Nov 29 11:42:01 2020 +0100
+
+    Coog packaging
+
+commit f6e9a233cdc77f2b0ed2a422216724fdb41bc74b
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sun Nov 29 11:41:21 2020 +0100
+
+    Flower packaging
+
+commit 438eda46b847c9adcbf7a369a88053b838f7cf1f
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sun Nov 29 11:29:14 2020 +0100
+
+    Coog packaging
+
+commit f2a59c8c50e771cac98b449a31c3e1cb60ce02a5
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sun Nov 29 11:28:36 2020 +0100
+
+    Flower packaging
+
+commit 9d7802a3c6960a8e697943da88cfc4321d588c56
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue Nov 17 11:15:54 2020 +0100
+
+    Coog packaging
+
+commit 84c6930e69d0c4308bbd5e2848f4314f802538cd
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue Nov 17 10:33:55 2020 +0100
+
+    Coog packaging
+
+commit 19212186c37249c609b4b88b3ba45f951326b209
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue Nov 17 10:26:31 2020 +0100
+
+    Coog packaging
+
+commit bc5a18c49c83d90c5a858b2916ab8a683d090168
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Nov 12 18:42:55 2020 +0100
+
+    Coog packaging
+
+commit 7b5bad9848a51439ecf3a1e2771185cec0a04802
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Nov 12 17:55:02 2020 +0100
+
+    Coog packaging
+
+commit e0a5cd7c4c8a3205f40c8e6389327923abe1b7c0
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Nov 12 17:32:21 2020 +0100
+
+    Coog packaging
+
+commit 2b7d6f6dc3ca86dd0baf87f35053e0b9786c6dee
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Nov 12 17:21:52 2020 +0100
+
+    Coog packaging
+
+commit 13aeca8a1ed8f4fe97e4ad0e93258e20b90f84c6
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Nov 12 16:43:20 2020 +0100
+
+    Coog packaging
+
+commit 3f6e25b71c976e460e6a5e1bc63e659201c9c57a
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Nov 12 16:00:16 2020 +0100
+
+    Coog packaging
+
+commit db0f5b9edd4650af545099048553e9ae8df3ee7c
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Nov 5 14:08:23 2020 +0100
+
+    Coog packaging
+
+commit 2ebf1fdd2692503efb929b489e84381ba3c3bc06
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Oct 29 17:03:07 2020 +0100
+
+    Coog packaging
+
+commit 47e0baec1710626cf6df14c83e295cb39efbf1eb
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Oct 29 16:54:13 2020 +0100
+
+    Coog packaging
+
+commit 8e425764ded8c474548e79ad441007273a895705
+Author: Frederic Langevin <frederic.langevin@coopengo.com>
+Date:   Tue Oct 20 19:41:36 2020 +0200
+
+    Update index using helm 3
+
+commit 7378bc38c7730b9618adf932a5b83c84818621d5
+Author: Frederic Langevin <frederic.langevin@coopengo.com>
+Date:   Tue Oct 20 19:33:18 2020 +0200
+
+    coog-2.0.2 integration: Fix broker celery declaration replace by coog_celery
+
+commit 356e85bab66892c0be3664a342764d6199beadd3
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Oct 19 13:36:44 2020 +0200
+
+    Coog packaging
+
+commit 78ab84127aa3fe38eca9217fd36952d9e12337f0
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Oct 19 13:34:46 2020 +0200
+
+    Fix rabbitmq condition
+
+commit a9504fb609be862857b0295c5991b9a92a2d8ba7
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Oct 19 09:11:38 2020 +0200
+
+    Update changelog
+
+commit df1f969da2757f16505963d1cef9b62ae23cb2e8
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Oct 19 09:09:34 2020 +0200
+
+    Update changelog
+
+commit 260faf6233742297a24651d388fc975545812385
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Oct 19 09:08:06 2020 +0200
+
+    Coog packaging
+
+commit 3d2fa4c1ca8a133a028a7e7b0daa83e08d02c673
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Oct 19 09:02:36 2020 +0200
+
+    Update precommit hook
+
+commit 4413cdd3372bc5302fd299d2c57d5e8b7f161812
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Oct 19 09:01:08 2020 +0200
+
+    Update TO coog-2.10.2042
+
+commit 15f4b3e14d460b368fefbd8ce6cba0548c1e1ee5
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue Oct 13 10:50:15 2020 +0200
+
+    rabbitmq install by default
+
+commit 722d3ff71961c8b5bf6b3589047f034cdd30215c
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue Sep 15 12:51:22 2020 +0200
+
+    Coog packaging
+
+commit e4d4fbd019f2de31d6f9b9e5109d9f7cd9642fd9
+Author: juliencoopengo <55384345+juliencoopengo@users.noreply.github.com>
+Date:   Tue Sep 15 12:42:16 2020 +0200
+
+    Update daily_cron.yaml
+
+commit b4335d0821564aedcbeaa4c277df2b06d3ca485c
+Author: juliencoopengo <55384345+juliencoopengo@users.noreply.github.com>
+Date:   Tue Sep 15 12:25:15 2020 +0200
+
+    Update deployment.yaml
+
+commit 2e8af5a5198e3c7d97c183f0de136adfb56c031a
+Author: juliencoopengo <55384345+juliencoopengo@users.noreply.github.com>
+Date:   Tue Sep 15 12:24:20 2020 +0200
+
+    Update single.yaml
+
+commit 2da333ceaa6c1185b99ab9dbd3e642d0a98bc683
+Author: Jean Cavallo <jean.cavallo@hotmail.fr>
+Date:   Fri Sep 4 09:34:38 2020 +0200
+
+    celery: Add max-memory-per-child management (#6)
+    
+    Fix #17098
+
+commit 905a4ae1242e3987fe9105bc16e83fc683dceac3
+Author: jgourmelen <jgourmelen@gmail.com>
+Date:   Fri Aug 14 17:27:33 2020 +0200
+
+    Update CHANGELOG.md (#5)
+
+commit 0f5d17db0d928d133e93c8f7ad70fe80abc57c6e
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Fri Aug 14 17:14:58 2020 +0200
+
+    coog-1.6.3
+
+commit d5ee99eaa8b804df9bdb93c5839b267286ba5b8d
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Jul 15 13:12:08 2020 +0200
+
+    Charts to 1.6.0 : Add migquot
+
+commit 7ab6f346908a87107e88f664f03797145010a625
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Jul 9 11:25:03 2020 +0200
+
+    Update readme Security Nginx information
+
+commit 13fbf8b8eab53bbacab80ad98b4fa47b909a12f5
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Wed Jul 1 08:07:05 2020 +0200
+
+    Coog Packaging: unoconv tfk version
+
+commit 33c036012c1f29aaf4b4a87c5f66b0c28d94936f
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Fri Jun 26 15:33:30 2020 +0200
+
+    update docs
+
+commit 6bb61a1a1453d856cfa755f019d9326c23b4afd0
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Fri Jun 26 15:06:44 2020 +0200
+
+    Coog packaging 1.4.8 : module update with check
+
+commit 23eaf44b3089f2db7a8061ed305fdf29d26e48fe
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Fri Jun 12 18:49:40 2020 +0200
+
+    Disable check update initcontainer
+
+commit a94d4e75f723e37350f451af128fd216900d90ff
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu May 28 10:36:14 2020 +0200
+
+    Coog packaging
+
+commit 45b63bd5a8a5a99daad4ccbfb00967441b75767e
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu May 28 10:31:10 2020 +0200
+
+    package flower to 0.1.5
+
+commit f82242d9bc0abc4634122aff41a48d599952efc5
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu May 28 10:29:05 2020 +0200
+
+    AAdd args to flower + fix coog init container
+
+commit 4518b9ea57d6aae1a8324da7a6adcc297be3bc35
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Mon May 25 15:26:42 2020 +0200
+
+    Fix external redis port var
+
+commit 781127d9318d826da0524145f71d311eafe82255
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Fri May 22 11:19:56 2020 +0200
+
+    dep to flower 0.1.4
+
+commit 33d905637e37304c6c65a0956fe8c1c77eb16eaa
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Fri May 22 10:50:17 2020 +0200
+
+    flower default value for broker
+
+commit dd884669cb9053751b290a68584ab4c6cf4232c3
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Fri May 22 10:16:28 2020 +0200
+
+    configmap name with release name
+
+commit 688003eb8080f4d6cbe2a09097adb30699c0fc02
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Fri May 22 10:08:04 2020 +0200
+
+    Fix configmap name + external redis
+
+commit 0927af0d644727b12609b15b758bdebe77ca3d57
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed May 20 10:26:28 2020 +0200
+
+    Dep to flower 0.1.3
+
+commit 4853d2a48c7080614a971726f69f55ffc9f5475c
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed May 20 10:19:39 2020 +0200
+
+    flower 0.1.3 - update url to /flower
+
+commit d100071ba4871e6ed1b3106db38b58fc475ec459
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sat May 16 12:54:32 2020 +0200
+
+    coog-1.3.1.tgz flower-0.1.2.tgz
+
+commit 027ec95b2adcbb84dc66156f2a67c4686a63e892
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sat May 16 12:54:04 2020 +0200
+
+    coog-1.3.1.tgz flower-0.1.2.tgz
+
+commit 52a2b298c2f7f37d53ae33070a8e0f1d766ef228
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sat May 16 12:52:43 2020 +0200
+
+    Dependencies update
+
+commit cfa7f53f60d9dd0a1f018a69dab23a99a5ddb76b
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sat May 16 12:49:30 2020 +0200
+
+    flower to 0.1.2
+
+commit 61fbcd8a6ebf6cce1bf7c6a17a4c9ec791fa65d3
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sat May 16 12:24:45 2020 +0200
+
+    package coog & flower
+
+commit c0fa4d6c7b8fffb12a7f5a5681e20a2523a42841
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sat May 16 12:21:19 2020 +0200
+
+    flower servicePort http
+
+commit 856b21d056b647809592d03bd8ab14eeee742c61
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sat May 16 12:08:20 2020 +0200
+
+    Fix port Ingress for flower
+
+commit da4815ff73c2d2009f48bbf76001766b1e797f0f
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sat May 16 11:56:11 2020 +0200
+
+    fix indentation for configmap labels
+
+commit bb0c0309bd96fa6cbc39babda39021ceedbe33b7
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sat May 16 11:35:54 2020 +0200
+
+    flower dependency + configmap
+
+commit 238150aa173e95aa0909bf074871179db6bd6b8d
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Sat May 16 11:23:52 2020 +0200
+
+    Add flower charts v1
+
+commit e69ecac244dfaa6b3b56ed494734112a56fc07aa
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed May 13 09:33:48 2020 +0200
+
+    Add dependencies
+
+commit 18e2672d22421c0fe4b5d5ebf2a574609ba25f70
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed May 13 09:31:51 2020 +0200
+
+    Documentation + requirement + version  of coog
+
+commit 6a66297da33f79dc0df737f0032859660d30c4ca
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue May 12 19:30:16 2020 +0200
+
+    MongoDB version upgrade
+
+commit 429ef41967542e9203e75a65745c20f82c86e8b8
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue May 12 18:10:38 2020 +0200
+
+    Refacto README
+
+commit f5e4eb588dcfc1faf492dfdc67c7bf8c911080a5
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue May 12 18:09:04 2020 +0200
+
+    Requirement for installation
+
+commit 6945b82f4266d8cedbf87154e19a39d33d9bd112
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue May 12 17:53:27 2020 +0200
+
+    Generate Readme
+
+commit 8ac7be926dc3220341702aab8a86e4f86e0ca90c
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Tue May 12 17:47:04 2020 +0200
+
+    Fix linter for README
+
+commit 886b62a0e8676d2ff7cf6943d2bc099189a709cb
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Mon Apr 27 16:04:33 2020 +0200
+
+    package 1.1.2
+
+commit 02759115738a2604cb992dc8184c6be51804f852
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Mon Apr 27 16:04:03 2020 +0200
+
+    Update readiness for coog
+
+commit 661be58ece10fcc3385e02bc77b67f7ac3df3493
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Mon Apr 27 11:40:24 2020 +0200
+
+    Update README
+
+commit b9e0f8f643c93881dbf6621ab7724dd9737072a0
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Mon Apr 27 11:16:23 2020 +0200
+
+    Package 1.1.1
+
+commit 7e2b3c5107a7a45f53f062518fa69a7c13595178
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Mon Apr 27 11:16:03 2020 +0200
+
+    Update charts to 1.1.1
+
+commit 5669d010acb80b66e59c03cb950ef8e4054a095f
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Mon Apr 27 11:07:18 2020 +0200
+
+    remove
+
+commit a5c0cad36d8be030288504d19086c0cb4fde53b9
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Mon Apr 27 11:06:20 2020 +0200
+
+    Add gitignore
+
+commit 7a94bff2f3e94614c61b327fe2498ed5dd3b64da
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Mon Apr 27 10:43:42 2020 +0200
+
+    Update charts to 1.1.0
+
+commit 3daf3035f1bb547cd4ecaa9a564a4a2a34c41fd6
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Wed Apr 22 15:05:57 2020 +0200
+
+    Disable cron by default
+
+commit 348dd2eca4deb84fe235c8d531eddc38e4dc8840
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Mon Apr 20 18:20:07 2020 +0200
+
+    Update charts to 1.0.18
+
+commit 2473118ed50d22905db8064a2def807549a6fc9c
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Fri Apr 17 10:40:08 2020 +0200
+
+    Add tarball
+
+commit 05ae7db2c5493ec8b3255135a68a307b7699eb9c
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Fri Apr 17 10:32:51 2020 +0200
+
+    Charts to 1.0.17
+
+commit 63f3371933dabb9f97f4edcfb20907627de35f16
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Apr 16 18:16:49 2020 +0200
+
+    Charts to 1.0.16
+
+commit 731938f4412ce63a070653f4f04ea05260141f91
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Apr 16 18:13:08 2020 +0200
+
+    Change app b2c entrypoint
+
+commit 7b0c6e79dd44e442c76e75dd533ca774419d72ca
+Author: Julien Gourmelen <jgourmelen@gmail.com>
+Date:   Thu Apr 16 12:12:46 2020 +0200
+
+    Improve gateway ingress
+
+commit 9f04b5720d7fd63aff95b2a3cd81ca4659c866b2
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Mar 2 14:45:48 2020 +0100
+
+    Update chart to 1.0.15
+
+commit afce0b4e00292575cedde2666fe620f5f7a181b7
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Mar 2 14:45:14 2020 +0100
+
+    Fix template end files
+
+commit b99a7df3a3814fc5136a129e10980768a53388f1
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Mar 2 14:36:56 2020 +0100
+
+    Update chart to 1.0.15 : update for MGEFI & fix coreye daily_cron
+
+commit 32bf386edac1886dc5a31edaceb2fedd23ad68bb
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Wed Feb 26 16:09:39 2020 +0100
+
+    Add default cache record to 50000
+
+commit cd49b85a45dccea38a756313c6779f7a65cac676
+Author: Adrien BEN DUC <adrien.benduc@coopengo.com>
+Date:   Tue Feb 25 16:54:53 2020 +0100
+
+    coog/deployment.yml: Connect check update in init container
+    
+    Fix #00000
+
+commit 7fe86e3cac64e9ba103b2cf499c23fb430c8babf
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Tue Feb 25 15:58:12 2020 +0100
+
+    Update daily cron imagePullPolicy
+
+commit c17ac5ba0c42714784e1047815c8c8937349389d
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Tue Feb 25 15:57:55 2020 +0100
+
+    Update daily cron imagePullPolicy
+
+commit 2a672f184870525a52ed7e46c88c9b574f9b25e4
+Author: julien <jgourmelen@gmail.com>
+Date:   Thu Feb 20 07:42:56 2020 +0100
+
+    Update unoconv ressources limits
+
+commit e557907d9cfa71713caed7418b92b8a3429e4842
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Tue Feb 18 17:05:08 2020 +0100
+
+    Chart 1.0.12
+
+commit f6915bc9a606447f68f9f335e778010d5c00ceba
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Tue Feb 18 17:04:01 2020 +0100
+
+    fix cpu/memory limit default value for redis
+
+commit 209c00e86c19726febd44c7770951b304748e6d9
+Author: julien <jgourmelen@gmail.com>
+Date:   Fri Feb 14 17:31:55 2020 +0100
+
+    Chart 1.0.11 - Fix fir coreye (default redis value)
+
+commit 5470b68c44a0ac7013915ffd26275419c2ebcf53
+Author: julien <jgourmelen@gmail.com>
+Date:   Fri Feb 14 07:42:11 2020 +0100
+
+    Add celerey var env (emil uri) + version 2.7.12 + Charts 1.0.10
+
+commit da070fa74ac7e1ab7a682bf4103b3beecd43baa8
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Feb 13 19:02:07 2020 +0100
+
+    update 1.0.9
+
+commit 2e29024c250089065fdf6cf040121831e97a3595
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Feb 13 18:58:56 2020 +0100
+
+    Fix celery
+
+commit 9c85f48c68f30a479a993b75473281e5801b1b86
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Feb 13 18:39:36 2020 +0100
+
+    1.0.9 : fix temporary var env celery async
+
+commit dfe8403db1041af67b4161c38801eab9d9f2229d
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Feb 13 13:05:57 2020 +0100
+
+    Charts to 1.0.9 => var env fix TRYTOND_ASYNC__CELERY
+
+commit 0d257b7269d014a16cc3165c62cba315f72e2473
+Author: julien <jgourmelen@gmail.com>
+Date:   Wed Feb 12 17:43:21 2020 +0100
+
+    Update Redis Charts - up to 1.0.8
+
+commit ce8c420ccb18b4a4cffc2b85444b883d29d5f00a
+Author: julien <jgourmelen@gmail.com>
+Date:   Mon Feb 10 17:56:49 2020 +0100
+
+    Update charts to 1.0.7
+
+commit 6fff1479148df037ab0d92747945ea3e2cbdc5c7
+Author: julien <jgourmelen@gmail.com>
+Date:   Mon Feb 10 14:55:44 2020 +0100
+
+    Update to 1.0.6
+
+commit 30f8178025cb72efc7d696294a75af0f2a7d005e
+Author: julien <jgourmelen@gmail.com>
+Date:   Mon Feb 10 09:59:07 2020 +0100
+
+    prepare helm3 release
+
+commit 7d3921a77f2effe5d0b72cc4131395f350e87b69
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Tue Feb 4 12:33:36 2020 +0100
+
+    packages 1.0.4
+
+commit 074a4388a22c2e6deab22e4859ec27ba528ebca7
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Tue Feb 4 12:32:45 2020 +0100
+
+    Update to 1.0.4
+
+commit 3e23bccf826b47ab5f317574258d95235f331956
+Author: PierreCookie <pkunkel@sfR.fr>
+Date:   Tue Feb 4 11:59:39 2020 +0100
+
+    Update deployment.yaml (#2)
+
+commit c2eebfa8532f85b68c616490bd3a3addf9a27655
+Author: julien <jgourmelen@gmail.com>
+Date:   Tue Feb 4 08:23:54 2020 +0100
+
+    Add readme for coog
+
+commit 68131622c1279f236dc28d191f7fe244686a6017
+Author: julien <jgourmelen@gmail.com>
+Date:   Fri Jan 31 16:56:06 2020 +0100
+
+    1.0.3 : add icon
+
+commit 667c847210ec0454f868da0ada0da8de35d47177
+Author: julien <jgourmelen@gmail.com>
+Date:   Fri Jan 31 16:54:41 2020 +0100
+
+    add icon coog
+
+commit c371b4804e942939b8e20965774c0288af9d8625
+Author: julien <jgourmelen@gmail.com>
+Date:   Fri Jan 31 16:46:17 2020 +0100
+
+    Charts to 1.0.2
+
+commit 43cc4c7e1a24b7a4bbc2ffc0e06b24d31bf968ec
+Author: julien <jgourmelen@gmail.com>
+Date:   Fri Jan 31 16:45:14 2020 +0100
+
+    Coog release 2.7.9
+
+commit 63de3e3ff52455188e5f7fa49cefbf61c0f37ab1
+Author: julien <jgourmelen@gmail.com>
+Date:   Fri Jan 31 11:56:05 2020 +0100
+
+    Update coog version
+
+commit f81f1f16c61b5f332cc4d095b7104f032080fb0b
+Author: julien <jgourmelen@gmail.com>
+Date:   Fri Jan 31 10:56:41 2020 +0100
+
+    update default values + api-identity-manager
+
+commit 79ac24d650ea96554ba74759b7771b6dc49b7988
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Jan 30 18:04:58 2020 +0100
+
+    update Charts with api identity
+
+commit 483833255b4db06de28d82f7b2973412d985fa5a
+Author: julien <jgourmelen@gmail.com>
+Date:   Mon Jan 27 07:54:38 2020 +0100
+
+    Prepare coog default install
+
+commit fbdb97ffd426832d18fa2e479999193bc400af3f
+Author: julien <jgourmelen@gmail.com>
+Date:   Fri Jan 24 09:39:33 2020 +0100
+
+    Version 1.0.0
+
+commit e6d7792b9b38d8db5383039e3003d75a7daa2a86
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Tue Jan 21 09:34:18 2020 +0100
+
+    Update celery limit
+
+commit 1d9fbed287b134009beaea83238c1650d8fc6558
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Jan 20 14:26:24 2020 +0100
+
+    Update gateway Probe + ExtraEnv
+
+commit 114ed40b8db197e38e74afbd8eecb9987b93117d
+Author: julien <jgourmelen@gmail.com>
+Date:   Sun Jan 19 06:30:34 2020 +0100
+
+    Update chart 0.1.28 - allow redis flush command
+
+commit d7c6a7d74bb50263d48412e15dbf7ad75bc29c70
+Author: jgourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Dec 2 18:43:15 2019 +0100
+
+    add 0.1.27
+
+commit 05312c31e901ac1da45901baf8ac0a926f597483
+Author: jgourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Dec 2 18:42:29 2019 +0100
+
+    upgrade ressources limit
+
+commit 706ff794ce26a51995eaa34d193e752474f2bac5
+Author: jgourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Dec 2 18:38:10 2019 +0100
+
+    update to 0.1.26
+
+commit f93efb6678ce3480c769244247e95f45fc03cfb1
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Fri Nov 22 10:17:24 2019 +0100
+
+    add api-referential
+
+commit 994f00e7339c8b740513190d77482dadbc403caa
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 21 09:58:37 2019 +0100
+
+    Add api-referential
+
+commit 301fc95e6bef9dbc3e57de9431b9cc638cd4e103
+Author: jgourmelen <julien.gourmelen@coopengo.com>
+Date:   Sat Nov 16 22:20:46 2019 +0100
+
+    update ressources limit
+
+commit 7de954ac21f895438429d97705b492e8205ad371
+Author: jgourmelen <julien.gourmelen@coopengo.com>
+Date:   Wed Nov 13 15:17:35 2019 +0100
+
+    Up celery limits to 1 CPU
+
+commit 8217217a2fd560d41054be0a9c8f6cce433f5ab1
+Author: jgourmelen <julien.gourmelen@coopengo.com>
+Date:   Fri Nov 8 14:31:23 2019 +0100
+
+    update README
+
+commit ca028cbcd516be6139d660b30be0211a33faea88
+Author: jgourmelen <julien.gourmelen@coopengo.com>
+Date:   Fri Nov 8 14:17:37 2019 +0100
+
+    update install modop
+
+commit d3bac1a812a1af490318bf0339827040eb65f758
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 7 14:16:48 2019 +0100
+
+    Add env var to cron deployement
+
+commit 618eb01ea670a7eae050adecf4fc6ce46e4aacb3
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 7 13:48:33 2019 +0100
+
+    add 0.1.23
+
+commit ad0ce2952f21752df933f2440e826699a5ec42f3
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 7 13:46:53 2019 +0100
+
+    fix memory limit
+
+commit 288f539f1419f65587be7c1ec4f3568059e0a25f
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 7 13:17:25 2019 +0100
+
+    update index & package 0.1.23
+
+commit 171ae6ba24ee7d276ceac21f5df37573b9b02457
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 7 13:16:59 2019 +0100
+
+    Fix unonconv default value ressources limit
+
+commit d70e360a0fd944f48f43ffff3a7f2294260b39c9
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 7 13:14:46 2019 +0100
+
+    update index & package 0.1.23
+
+commit 98a2d2867c69e485d53cd307bdbb63db3aba07dc
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 7 13:13:53 2019 +0100
+
+    update index & package 0.1.23
+
+commit f4def6725bd90aeda932ea0a970f78917748fb38
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 7 13:10:03 2019 +0100
+
+    update index & package 0.1.23
+
+commit d07dfe122ae5035ba1833840458338944adfed86
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 7 13:07:05 2019 +0100
+
+    update index & package 0.1.23
+
+commit a613d3d2fc29a35b4a15e0da9b729aac23af5c3a
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 7 13:06:25 2019 +0100
+
+    fix celery deployement
+
+commit 8c2926085840b8e53b7d7adf3e918de51a88c73e
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Thu Nov 7 12:50:49 2019 +0100
+
+    Fix celery, cron liveness value
+
+commit b08f64d732595a26c05ecd29862ad573325b1d09
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Wed Nov 6 15:06:11 2019 +0100
+
+    Default value for ressources limit
+
+commit 9075a53f11d22f2310719bd5b0210c80ba63b60e
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Wed Nov 6 14:05:22 2019 +0100
+
+    Add 0.1.22 charts
+
+commit 87f68cceb2680696c1377a6df37f9ecbbe0d58b5
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Wed Nov 6 14:03:50 2019 +0100
+
+    Add celery and cron limits ressources
+
+commit fed097d84d69d72e35e5c3e2c55742d9d22dfeea
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Tue Nov 5 16:05:56 2019 +0100
+
+    Fix 0.1.21
+
+commit c029981afe85c32558e70332c7547d54e6f5bc90
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Tue Nov 5 15:37:30 2019 +0100
+
+    fix api-b2c & app-b2c
+
+commit 5dbd133311e61de0b0df4f586456f9021e756caf
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Tue Nov 5 11:09:22 2019 +0100
+
+    package 0
+
+commit 02e85e4b4c67a57cde22d0d955d5c9f3b6e392bb
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Tue Nov 5 11:07:04 2019 +0100
+
+    Add conf app-b2c and api-b2c
+
+commit cb8b4c80b9d3260f1613bd609d8075d61ee15326
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Oct 28 15:24:20 2019 +0100
+
+    remove test file
+
+commit 57609018b792b1c40e754a0d3e376137d439a485
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Sun Oct 27 09:03:41 2019 +0100
+
+    Update index.yaml
+
+commit 72d92b3f0281aa0a5a629f92f83ef47ffb991801
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Sun Oct 27 08:57:34 2019 +0100
+
+    Package coog 0.1.20
+
+commit 406a1628f2d56af884c1db55e56335a942b2d771
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Sun Oct 27 08:53:11 2019 +0100
+
+    first coog Helm Charts
+
+commit 46f358a9880759b1e50c968bf349f8b792f098f5
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Sun Oct 27 08:43:23 2019 +0100
+
+    Init coog helm project
+
+commit 04a5061deb32757cf50341e81ff05c3f3640202e
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Fri Oct 25 16:08:49 2019 +0200
+
+    Revert "First commit of coog helm Charts 0.1.20 (#1)"
+    
+    This reverts commit 1585e62284835faf469b837878ad6d76bf43cb2c.
+
+commit 1585e62284835faf469b837878ad6d76bf43cb2c
+Author: jgourmelen <55384345+jgourmelen@users.noreply.github.com>
+Date:   Wed Oct 23 16:44:51 2019 +0200
+
+    First commit of coog helm Charts 0.1.20 (#1)
+
+commit 7f2e94e58c939e3b3d20b4979523c74f55340397
+Author: Julien Gourmelen <julien.gourmelen@coopengo.com>
+Date:   Mon Oct 21 17:44:57 2019 +0200
+
+    first commit
