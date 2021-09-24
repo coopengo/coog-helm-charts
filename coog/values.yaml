@@ -586,7 +586,7 @@ coog:
   resources:
     limits:
       cpu: 400m
-      memory: 700Mi
+      memory: 800Mi
     requests:
       cpu: 200m
       memory: 700Mi
