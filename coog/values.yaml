@@ -96,7 +96,7 @@ postgresql:
   image:
     debug: true
   initdbUsername: coog
-  initdbPassword:	coog
+  initdbPassword: coog
   postgresqlDatabase: coog
   postgresqlPassword: coog
   initdbScripts:
@@ -476,10 +476,10 @@ celery:
   # -- celery containers' resource requests and limits
   resources:
     limits:
-      cpu: 1
-      memory: 2000Mi
-    requests:
       cpu: 400m
+      memory: 1000Mi
+    requests:
+      cpu: 100m
       memory: 300Mi
   cron:
     # -- celery cron job containers' resource requests and limits
@@ -589,7 +589,7 @@ coog:
       memory: 800Mi
     requests:
       cpu: 200m
-      memory: 700Mi
+      memory: 300Mi
 
   initContainers:
     resources:
@@ -687,11 +687,11 @@ paybox:
   # -- paybox containers' resource requests and limits
   resources:
     limits:
-      cpu: 300m
-      memory: 100Mi
-    requests:
       cpu: 100m
       memory: 100Mi
+    requests:
+      cpu: 50m
+      memory: 50Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
