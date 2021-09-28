@@ -7,6 +7,10 @@ metadata:
 {{ include "chart_labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.coog.replicaCount }}
+{{- if not .Values.quota.rolling_update }}
+  strategy:
+    type: Recreate
+{{- end }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "short_name" . }}
@@ -43,6 +47,8 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+          resources:
+            {{- toYaml .Values.coog.initContainers.resources | nindent 12 }}
           command: ['sh', '-c', 'ep admin -d {{ .Values.coog.postgres.database }} -cu ir res --activate-dependencies']
           env:
             - name:  COOG_SERVER_WORKERS
