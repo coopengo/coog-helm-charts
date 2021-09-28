@@ -417,8 +417,8 @@ unoconv:
       cpu: 100m
       memory: 200Mi
     requests:
-      cpu: 100m
-      memory: 350Mi
+      cpu: 50m
+      memory: 50Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -889,9 +889,6 @@ gateway:
   # -- gateway containers' resource requests and limits
   resources:
     limits:
-      cpu: 500m
-      memory: 600Mi
-    requests:
       cpu: 100m
       memory: 100Mi
     requests:
