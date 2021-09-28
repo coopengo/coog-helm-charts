@@ -585,11 +585,11 @@ coog:
   initContainers:
     resources:
       limits:
+        cpu: 500m
+        memory: 800Mi
+      requests:
         cpu: 400m
         memory: 400Mi
-      requests:
-        cpu: 200m
-        memory: 300Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
