@@ -318,6 +318,20 @@ spec:
                   name: {{ include "full_name" . }}-trytond-secret
                   key: TRYTOND_MIGRATION__PASSWORD
             {{- end }}
+            {{- if .Values.coog.trytond_strapi__admin_password }}
+            - name: TRYTOND_STRAPI__ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-trytond-secret
+                  key: TRYTOND_STRAPI__ADMIN_PASSWORD
+            {{- end }}
+            {{- if .Values.coog.trytond_strapi__admin_email }}
+            - name: TRYTOND_STRAPI__ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-trytond-secret
+                  key: TRYTOND_STRAPI__ADMIN_EMAIL
+            {{- end }}
             - name: TRYTOND_EMAIL__FROM
               value: "{{ .Values.coog.email_from }}"
             - name: TRYTOND_REPORT__UNOCONV
