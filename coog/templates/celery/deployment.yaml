@@ -151,7 +151,7 @@ spec:
               value: "{{ .Values.coog.postgres.database }}"
             - name: TRYTOND_BATCH_CONTRACT_INVOICE_BULK___SET___NUMBER__JOB_SIZE
               value: "1"
-            {{- if .Values.celery.specificBatchConcurrency.enabled -}}
+            {{- if .Values.celery.specificBatchConcurrency.enabled }}
             - name: TRYTOND_CONCURRENCY_CONTRACT_INVOICE_BULK___SET___NUMBER
               value: "1"
             {{- end }}
