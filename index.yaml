@@ -62,7 +62,7 @@ entries:
     name: coog
     urls:
     - coog-2.13.2140.1.tgz
-    version: 2.13.2140
+    version: 2.13.2140.1
   - apiVersion: v1
     appVersion: coog-2.13
     created: "2021-10-12T16:55:07.696244911+02:00"
