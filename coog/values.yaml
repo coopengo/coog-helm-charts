@@ -743,7 +743,7 @@ web:
   resources:
     limits:
       cpu: 100m
-      memory: 80Mi
+      memory: 150Mi
     requests:
       cpu: 30m
       memory: 30Mi
