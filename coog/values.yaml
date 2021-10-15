@@ -754,7 +754,7 @@ web:
   resources:
     limits:
       cpu: 100m
-      memory: 80Mi
+      memory: 200Mi
     requests:
       cpu: 30m
       memory: 30Mi
@@ -950,8 +950,8 @@ static:
   # -- static containers' resource requests and limits
   resources:
     limits:
-      cpu: 20m
-      memory: 50Mi
+      cpu: 50m
+      memory: 80Mi
     requests:
       cpu: 10m
       memory: 20Mi
