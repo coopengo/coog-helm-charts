@@ -43,20 +43,28 @@ spec:
                 {{- end }}
                 - name: REDIS_DB
                   value: "7"
+                {{- if .Values.gateway.enabled }}
                 - name: MONGO_URL
                   {{- if not .Values.gateway.external_mongodb.enabled }}
                   value: "{{ .Release.Name }}-mongodb"
                   {{ else }}
                   value: "{{ .Values.gateway.external_mongodb.host }}"
                 {{- end }}
-                - name: MONGO_USER
-                  value: "{{ .Values.gateway.mongodb_user }}"
-                - name: MONGO_PASSWORD
-                  value: "{{ .Values.gateway.mongodb_root_password }}"
+                - name:  MONGO_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "full_name" . }}-mongo-db-secret
+                      key: USER
+                - name:  MONGO_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: {{ include "full_name" . }}-mongo-db-secret
+                      key: PASSWORD
                 - name: MONGO_API_DB
                   value: "{{ .Values.api.mongodb.database }}"
                 - name: MONGO_IDENTITY_DB
                   value: "{{ .Values.api.mongodb.database }}"
+                {{- end }}
               resources:
 {{ toYaml .Values.batch.migquottosr.resources | indent 16 }}
 {{- end }}

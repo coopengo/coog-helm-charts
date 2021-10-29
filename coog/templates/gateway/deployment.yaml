@@ -78,7 +78,10 @@ spec:
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-api-identity-manager"
             {{- end }}
             - name:  COOG_WEB_TOKEN
-              value: "{{ .Values.gateway.coog_web_token }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-coog-web-secret
+                  key: GATEWAY_TOKEN
             - name:  COOG_MODULE
               value: "true"
             - name:  GOOGLE_MODULE
@@ -86,9 +89,15 @@ spec:
             - name:  FACEBOOK_MODULE
               value: "false"
             - name:  MONGO_USER
-              value: "{{ .Values.gateway.mongodb_user }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-mongo-db-secret
+                  key: USER
             - name:  MONGO_PASSWORD
-              value: "{{ .Values.gateway.mongodb_root_password }}"
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-mongo-db-secret
+                  key: PASSWORD
             - name:  COOG_GATEWAY_URL
               value: "{{ .Values.gateway.gateway_url }}"
             - name:  COOG_GATEWAY_BASE_PATH
@@ -97,6 +106,20 @@ spec:
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
             - name:  COOG_DB_NAME
               value: "{{ .Values.coog.postgres.database }}"
+            {{- if .Values.gateway.forcedotcom_client_id }}
+            - name:  FORCEDOTCOM_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-coog-web-secret
+                  key: FORCEDOTCOM_CLIENT_ID
+            {{- end }}
+            {{- if .Values.gateway.forcedotcom_client_secret }}
+            - name:  FORCEDOTCOM_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-coog-web-secret
+                  key: FORCEDOTCOM_CLIENT_SECRET
+            {{- end }}
             {{- if .Values.gateway.extraEnv }}
             {{- range $key, $value := .Values.gateway.extraEnv }}
             - name:  {{ $key }}
