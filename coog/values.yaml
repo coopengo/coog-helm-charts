@@ -135,7 +135,7 @@ api:
   # -- api containers' resource requests and limits
   resources:
     limits:
-      cpu: 100m
+      cpu: 500m
       memory: 100Mi
     requests:
       cpu: 50m
@@ -585,7 +585,7 @@ coog:
   # -- coog containers' resource requests and limits
   resources:
     limits:
-      cpu: 400m
+      cpu: 1500m
       memory: 800Mi
     requests:
       cpu: 200m
@@ -751,7 +751,7 @@ web:
   # -- web containers' resource requests and limits
   resources:
     limits:
-      cpu: 100m
+      cpu: 500m
       memory: 200Mi
     requests:
       cpu: 30m
@@ -814,7 +814,7 @@ portal:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 20m
+      cpu: 250m
       memory: 50Mi
     requests:
       cpu: 10m
