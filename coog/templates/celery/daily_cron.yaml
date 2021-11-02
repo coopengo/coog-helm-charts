@@ -102,7 +102,6 @@ spec:
                     secretKeyRef:
                       name: {{ include "full_name" . }}-postgres-secret
                       key: PASSWORD
-                  value: "{{ .Values.coog.postgres.password }}"
                 {{- if .Values.coog.extraEnv }}
                 {{- range $key, $value := .Values.coog.extraEnv }}
                 - name:  {{ $key }}

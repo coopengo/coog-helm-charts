@@ -84,7 +84,6 @@ spec:
               value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}/0"
               {{- end }}
             {{- end }}
-            {{- if .Values.coog.enabled }}
             - name:  COOG_POSTGRES_HOST
             {{- if not .Values.coog.external_postgres.enabled }}
               value: "{{ .Release.Name }}-postgresql"
@@ -109,7 +108,6 @@ spec:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-postgres-secret
                   key: PASSWORD
-            {{- end }}
             {{- if .Values.coog.extraEnv }}
             {{- range $key, $value := .Values.coog.extraEnv }}
             - name:  {{ $key }}
@@ -142,7 +140,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-trytond-secret
-                  key: TRYTOND_DATABASE__URI"
+                  key: TRYTOND_DATABASE__URI
             - name:  TRYTOND_DEBUG__VIEWS
               value: "False"
             - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
