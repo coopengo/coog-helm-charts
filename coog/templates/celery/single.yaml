@@ -160,6 +160,8 @@ spec:
               containerPort: 8000
               protocol: TCP
           livenessProbe:
+            periodSeconds: 30
+            timeoutSeconds: 10
             exec:
               command:
                 - "/bin/bash"
@@ -167,6 +169,8 @@ spec:
                 - "celery -A {{ .Values.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
             {{- toYaml .Values.celery.livenessProbe | nindent 12 }}
           readinessProbe:
+            periodSeconds: 30
+            timeoutSeconds: 10
             exec:
               command:
                 - "/bin/bash"
