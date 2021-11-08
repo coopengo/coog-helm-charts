@@ -54,12 +54,12 @@ spec:
             {{ else }}
               value: "{{ .Values.gateway.external_mongodb.port }}"
             {{- end }}
-            - name:  MONGO_USER
+            - name:  COOG_API_MONGO_USER
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-mongo-db-secret
                   key: USER
-            - name:  MONGO_PASSWORD
+            - name:  COOG_API_MONGO_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ include "full_name" . }}-mongo-db-secret
