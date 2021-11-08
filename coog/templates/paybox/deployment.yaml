@@ -47,10 +47,16 @@ spec:
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
             - name: PAYBOX_TRYTON_DB
               value: "{{ .Values.coog.postgres.database }}"
-            - name: PAYBOX_TRYTON_USERNAME
-              value: "{{ .Values.paybox.coog_username }}"
-            - name: PAYBOX_TRYTON_PASSWORD
-              value: "{{ .Values.paybox.coog_password }}"
+            - name:  PAYBOX_TRYTON_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-paybox-secret
+                  key: PAYBOX_TRYTON_USERNAME
+            - name:  PAYBOX_TRYTON_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-paybox-secret
+                  key: PAYBOX_TRYTON_PASSWORD
           livenessProbe:
             tcpSocket:
               port: 3000
