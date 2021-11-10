@@ -296,13 +296,6 @@ spec:
                   name: {{ include "full_name" . }}-trytond-secret
                   key: TRYTOND_BATCH_REPORT__URI
             {{- end }}
-            {{- if .Values.coog.trytond_cryptolog__password }}
-            - name: TRYTOND_CRYPTOLOG__PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "full_name" . }}-trytond-secret
-                  key: TRYTOND_CRYPTOLOG__PASSWORD
-            {{- end }}
             {{- if .Values.coog.trytond_paybox__secret }}
             - name: TRYTOND_PAYBOX__SECRET
               valueFrom:
