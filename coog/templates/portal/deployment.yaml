@@ -38,9 +38,6 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
-          command:
-            - ep
-            - server
           ports:
             - name: http
               containerPort: 5000
