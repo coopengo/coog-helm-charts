@@ -38,9 +38,7 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: 1000
-          command:
-            - serve
-            - /workdir/public/
+          command: ['serve', '-l 5000', '/workdir/public/']
           {{- if .Values.customer_frontend.extraEnv }}
           env:
             {{- range $key, $value := .Values.customer_frontend.extraEnv }}
