@@ -38,9 +38,6 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
-          command:
-            - ep
-            - server
           env:
             - name: COOG_API_MONGO_HOST
             {{- if not .Values.gateway.external_mongodb.enabled }}

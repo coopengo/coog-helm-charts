@@ -38,9 +38,6 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: 1000
-          command:
-            - yarn
-            - start
           env:
             - name:  BACKEND_PORT
               value: "1337"
