@@ -3,7 +3,38 @@ entries:
   coog:
   - apiVersion: v1
     appVersion: coog-2.14
-    created: "2021-11-17T11:16:13.520413722+01:00"
+    created: "2021-11-22T17:28:28.267358261+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: d7d124296af83b75c87487a1221167facc92bcc2a2e385177374d5c018a0fb60
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.14.2146.tgz
+    version: 2.14.2146
+  - apiVersion: v1
+    appVersion: coog-2.14
+    created: "2021-11-22T17:28:28.253875857+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -34,7 +65,7 @@ entries:
     version: 2.14.2145
   - apiVersion: v1
     appVersion: coog-2.14
-    created: "2021-11-17T11:16:13.496196726+01:00"
+    created: "2021-11-22T17:28:28.240727813+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -65,7 +96,7 @@ entries:
     version: 2.14.2144
   - apiVersion: v1
     appVersion: coog-2.14
-    created: "2021-11-17T11:16:13.473662868+01:00"
+    created: "2021-11-22T17:28:28.226787508+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -96,7 +127,7 @@ entries:
     version: 2.14.2144-5
   - apiVersion: v1
     appVersion: coog-2.14
-    created: "2021-11-17T11:16:13.453947007+01:00"
+    created: "2021-11-22T17:28:28.211872086+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -127,7 +158,7 @@ entries:
     version: 2.14.2144-4
   - apiVersion: v1
     appVersion: coog-2.14
-    created: "2021-11-17T11:16:13.436076576+01:00"
+    created: "2021-11-22T17:28:28.195361109+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -158,7 +189,7 @@ entries:
     version: 2.14.2144-3
   - apiVersion: v1
     appVersion: coog-2.14
-    created: "2021-11-17T11:16:13.413028814+01:00"
+    created: "2021-11-22T17:28:28.178706046+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -189,7 +220,7 @@ entries:
     version: 2.14.2143
   - apiVersion: v1
     appVersion: coog-2.14
-    created: "2021-11-17T11:16:13.39546295+01:00"
+    created: "2021-11-22T17:28:28.161978508+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -220,7 +251,7 @@ entries:
     version: 2.14.2141
   - apiVersion: v1
     appVersion: coog-2.14
-    created: "2021-11-17T11:16:13.375905056+01:00"
+    created: "2021-11-22T17:28:28.145470223+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -251,7 +282,7 @@ entries:
     version: 2.14.2140
   - apiVersion: v1
     appVersion: coog-2.13
-    created: "2021-11-17T11:16:13.351177017+01:00"
+    created: "2021-11-22T17:28:28.130820675+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -282,7 +313,7 @@ entries:
     version: 2.13.2140
   - apiVersion: v1
     appVersion: coog-2.13
-    created: "2021-11-17T11:16:13.329266877+01:00"
+    created: "2021-11-22T17:28:28.11536731+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -313,7 +344,7 @@ entries:
     version: 2.13.2139
   - apiVersion: v1
     appVersion: coog-2.13
-    created: "2021-11-17T11:16:13.298459728+01:00"
+    created: "2021-11-22T17:28:28.104935059+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -344,7 +375,7 @@ entries:
     version: 2.13.2138
   - apiVersion: v1
     appVersion: coog-2.13
-    created: "2021-11-17T11:16:13.273334782+01:00"
+    created: "2021-11-22T17:28:28.094501255+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -375,7 +406,7 @@ entries:
     version: 2.13.2137
   - apiVersion: v1
     appVersion: coog-2.13
-    created: "2021-11-17T11:16:13.240361889+01:00"
+    created: "2021-11-22T17:28:28.078527541+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -406,7 +437,7 @@ entries:
     version: 2.13.2136
   - apiVersion: v1
     appVersion: coog-2.13
-    created: "2021-11-17T11:16:13.157546282+01:00"
+    created: "2021-11-22T17:28:28.044385575+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -437,7 +468,7 @@ entries:
     version: 2.13.2133
   - apiVersion: v1
     appVersion: coog-2.12.2116
-    created: "2021-11-17T11:16:13.770047579+01:00"
+    created: "2021-11-22T17:28:28.445464578+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -468,7 +499,7 @@ entries:
     version: 2.4.2
   - apiVersion: v1
     appVersion: coog-2.10.2048
-    created: "2021-11-17T11:16:13.750796344+01:00"
+    created: "2021-11-22T17:28:28.430835222+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -499,7 +530,7 @@ entries:
     version: 2.4.1
   - apiVersion: v1
     appVersion: coog-2.10.2048
-    created: "2021-11-17T11:16:13.732879524+01:00"
+    created: "2021-11-22T17:28:28.416528515+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -530,7 +561,7 @@ entries:
     version: 2.4.0
   - apiVersion: v1
     appVersion: coog-2.10.2048
-    created: "2021-11-17T11:16:13.712936218+01:00"
+    created: "2021-11-22T17:28:28.403051587+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -561,7 +592,7 @@ entries:
     version: 2.3.8
   - apiVersion: v1
     appVersion: coog-2.10.2048
-    created: "2021-11-17T11:16:13.690855883+01:00"
+    created: "2021-11-22T17:28:28.387476251+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -592,7 +623,7 @@ entries:
     version: 2.3.7
   - apiVersion: v1
     appVersion: coog-2.10.2048
-    created: "2021-11-17T11:16:13.675647556+01:00"
+    created: "2021-11-22T17:28:28.373405015+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -623,7 +654,7 @@ entries:
     version: 2.3.6
   - apiVersion: v1
     appVersion: coog-2.10.2048
-    created: "2021-11-17T11:16:13.656165862+01:00"
+    created: "2021-11-22T17:28:28.358930927+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -654,7 +685,7 @@ entries:
     version: 2.3.4
   - apiVersion: v1
     appVersion: coog-2.10.2048
-    created: "2021-11-17T11:16:13.63406728+01:00"
+    created: "2021-11-22T17:28:28.345432474+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -685,7 +716,7 @@ entries:
     version: 2.3.2
   - apiVersion: v1
     appVersion: coog-2.10.2048
-    created: "2021-11-17T11:16:13.61817426+01:00"
+    created: "2021-11-22T17:28:28.331404208+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -716,7 +747,7 @@ entries:
     version: 2.3.1
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:13.599690805+01:00"
+    created: "2021-11-22T17:28:28.319079264+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -747,7 +778,7 @@ entries:
     version: 2.3.0
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:13.57900635+01:00"
+    created: "2021-11-22T17:28:28.306385266+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -778,7 +809,7 @@ entries:
     version: 2.2.2
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:13.56238526+01:00"
+    created: "2021-11-22T17:28:28.29277702+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -809,7 +840,7 @@ entries:
     version: 2.2.1
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:13.54174128+01:00"
+    created: "2021-11-22T17:28:28.279547543+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -840,7 +871,7 @@ entries:
     version: 2.2.0
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:13.119500182+01:00"
+    created: "2021-11-22T17:28:28.028467931+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -871,7 +902,7 @@ entries:
     version: 2.1.4
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:13.094476497+01:00"
+    created: "2021-11-22T17:28:28.018111247+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -902,7 +933,7 @@ entries:
     version: 2.1.3
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:13.07542826+01:00"
+    created: "2021-11-22T17:28:28.008444368+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -933,7 +964,7 @@ entries:
     version: 2.1.2
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:13.034056022+01:00"
+    created: "2021-11-22T17:28:27.998367332+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -964,7 +995,7 @@ entries:
     version: 2.1.1
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:12.998937595+01:00"
+    created: "2021-11-22T17:28:27.988973541+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -995,7 +1026,7 @@ entries:
     version: 2.1.0
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:12.951859404+01:00"
+    created: "2021-11-22T17:28:27.979487395+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1026,7 +1057,7 @@ entries:
     version: 2.0.5
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:12.933417112+01:00"
+    created: "2021-11-22T17:28:27.970557057+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1057,7 +1088,7 @@ entries:
     version: 2.0.4
   - apiVersion: v1
     appVersion: coog-2.10.2043
-    created: "2021-11-17T11:16:12.915916486+01:00"
+    created: "2021-11-22T17:28:27.961492462+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1088,7 +1119,7 @@ entries:
     version: 2.0.3
   - apiVersion: v1
     appVersion: coog-2.10.2042
-    created: "2021-11-17T11:16:12.892764201+01:00"
+    created: "2021-11-22T17:28:27.952444407+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1119,7 +1150,7 @@ entries:
     version: 2.0.2
   - apiVersion: v1
     appVersion: coog-2.10.2042
-    created: "2021-11-17T11:16:12.866937686+01:00"
+    created: "2021-11-22T17:28:27.943380873+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1150,7 +1181,7 @@ entries:
     version: 2.0.1
   - apiVersion: v1
     appVersion: coog-2.10.2042
-    created: "2021-11-17T11:16:12.841702604+01:00"
+    created: "2021-11-22T17:28:27.933995991+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1181,7 +1212,7 @@ entries:
     version: 2.0.0
   - apiVersion: v1
     appVersion: coog-2.8.16
-    created: "2021-11-17T11:16:12.815949469+01:00"
+    created: "2021-11-22T17:28:27.924239324+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1208,7 +1239,7 @@ entries:
     version: 1.6.4
   - apiVersion: v1
     appVersion: coog-2.8.16
-    created: "2021-11-17T11:16:12.789236269+01:00"
+    created: "2021-11-22T17:28:27.913957533+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1235,7 +1266,7 @@ entries:
     version: 1.6.3
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.755030457+01:00"
+    created: "2021-11-22T17:28:27.907260518+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1262,7 +1293,7 @@ entries:
     version: 1.6.0
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.72611958+01:00"
+    created: "2021-11-22T17:28:27.899571706+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1289,7 +1320,7 @@ entries:
     version: 1.5.1
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.697056882+01:00"
+    created: "2021-11-22T17:28:27.893051437+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1316,7 +1347,7 @@ entries:
     version: 1.5.0
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.672162931+01:00"
+    created: "2021-11-22T17:28:27.882631529+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1343,7 +1374,7 @@ entries:
     version: 1.4.8
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.647571691+01:00"
+    created: "2021-11-22T17:28:27.872705491+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1370,7 +1401,7 @@ entries:
     version: 1.4.7
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.613618024+01:00"
+    created: "2021-11-22T17:28:27.864419631+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1397,7 +1428,7 @@ entries:
     version: 1.4.6
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.590827093+01:00"
+    created: "2021-11-22T17:28:27.856777209+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1424,7 +1455,7 @@ entries:
     version: 1.4.4
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.566118013+01:00"
+    created: "2021-11-22T17:28:27.8481638+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1451,7 +1482,7 @@ entries:
     version: 1.4.3
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.540145435+01:00"
+    created: "2021-11-22T17:28:27.839263704+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1478,7 +1509,7 @@ entries:
     version: 1.4.2
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.500059622+01:00"
+    created: "2021-11-22T17:28:27.831624259+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1505,7 +1536,7 @@ entries:
     version: 1.4.1
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.476428792+01:00"
+    created: "2021-11-22T17:28:27.822935974+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1532,7 +1563,7 @@ entries:
     version: 1.4.0
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.446272507+01:00"
+    created: "2021-11-22T17:28:27.815409725+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1559,7 +1590,7 @@ entries:
     version: 1.3.2
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.416715569+01:00"
+    created: "2021-11-22T17:28:27.807208399+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1586,7 +1617,7 @@ entries:
     version: 1.3.1
   - apiVersion: v1
     appVersion: coog-2.8.2
-    created: "2021-11-17T11:16:12.394140564+01:00"
+    created: "2021-11-22T17:28:27.798396315+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1613,7 +1644,7 @@ entries:
     version: 1.3.0
   - apiVersion: v1
     appVersion: coog-2.7.32
-    created: "2021-11-17T11:16:12.371102104+01:00"
+    created: "2021-11-22T17:28:27.790847313+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1636,7 +1667,7 @@ entries:
     version: 1.1.2
   - apiVersion: v1
     appVersion: coog-2.7.32
-    created: "2021-11-17T11:16:12.350969884+01:00"
+    created: "2021-11-22T17:28:27.782882508+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1659,7 +1690,7 @@ entries:
     version: 1.1.1
   - apiVersion: v1
     appVersion: coog-2.7.32
-    created: "2021-11-17T11:16:12.32420597+01:00"
+    created: "2021-11-22T17:28:27.775699838+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1682,7 +1713,7 @@ entries:
     version: 1.1.0
   - apiVersion: v1
     appVersion: coog-2.7.30
-    created: "2021-11-17T11:16:12.068282642+01:00"
+    created: "2021-11-22T17:28:27.70553266+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1705,7 +1736,7 @@ entries:
     version: 1.0.18
   - apiVersion: v1
     appVersion: coog-2.7.30
-    created: "2021-11-17T11:16:12.033376967+01:00"
+    created: "2021-11-22T17:28:27.696764227+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1728,7 +1759,7 @@ entries:
     version: 1.0.17
   - apiVersion: v1
     appVersion: coog-2.7.30
-    created: "2021-11-17T11:16:12.011293892+01:00"
+    created: "2021-11-22T17:28:27.687532875+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1751,7 +1782,7 @@ entries:
     version: 1.0.16
   - apiVersion: v1
     appVersion: coog-2.7.12
-    created: "2021-11-17T11:16:11.988104825+01:00"
+    created: "2021-11-22T17:28:27.678454046+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1774,7 +1805,7 @@ entries:
     version: 1.0.15
   - apiVersion: v1
     appVersion: coog-2.7.12
-    created: "2021-11-17T11:16:11.969979571+01:00"
+    created: "2021-11-22T17:28:27.670203033+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1797,7 +1828,7 @@ entries:
     version: 1.0.14
   - apiVersion: v1
     appVersion: coog-2.7.12
-    created: "2021-11-17T11:16:11.939776199+01:00"
+    created: "2021-11-22T17:28:27.661262412+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1820,7 +1851,7 @@ entries:
     version: 1.0.13
   - apiVersion: v1
     appVersion: coog-2.7.12
-    created: "2021-11-17T11:16:11.91351567+01:00"
+    created: "2021-11-22T17:28:27.653364584+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1843,7 +1874,7 @@ entries:
     version: 1.0.12
   - apiVersion: v1
     appVersion: coog-2.7.12
-    created: "2021-11-17T11:16:11.897342136+01:00"
+    created: "2021-11-22T17:28:27.643716378+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1866,7 +1897,7 @@ entries:
     version: 1.0.11
   - apiVersion: v1
     appVersion: coog-2.7.12
-    created: "2021-11-17T11:16:11.873044366+01:00"
+    created: "2021-11-22T17:28:27.63524662+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1889,7 +1920,7 @@ entries:
     version: 1.0.10
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2021-11-17T11:16:12.301819192+01:00"
+    created: "2021-11-22T17:28:27.768944909+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1912,7 +1943,7 @@ entries:
     version: 1.0.9
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2021-11-17T11:16:12.271786684+01:00"
+    created: "2021-11-22T17:28:27.761645309+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1935,7 +1966,7 @@ entries:
     version: 1.0.8
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2021-11-17T11:16:12.241915786+01:00"
+    created: "2021-11-22T17:28:27.75445304+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1958,7 +1989,7 @@ entries:
     version: 1.0.7
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2021-11-17T11:16:12.218521301+01:00"
+    created: "2021-11-22T17:28:27.746835001+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -1981,7 +2012,7 @@ entries:
     version: 1.0.6
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2021-11-17T11:16:12.182193279+01:00"
+    created: "2021-11-22T17:28:27.739397964+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2004,7 +2035,7 @@ entries:
     version: 1.0.5
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2021-11-17T11:16:12.138512235+01:00"
+    created: "2021-11-22T17:28:27.731564509+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2027,7 +2058,7 @@ entries:
     version: 1.0.4
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2021-11-17T11:16:12.106630985+01:00"
+    created: "2021-11-22T17:28:27.723117601+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2050,7 +2081,7 @@ entries:
     version: 1.0.3
   - apiVersion: v1
     appVersion: coog-2.7.9
-    created: "2021-11-17T11:16:12.08760259+01:00"
+    created: "2021-11-22T17:28:27.713654896+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2072,7 +2103,7 @@ entries:
     version: 1.0.2
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-11-17T11:16:11.856475647+01:00"
+    created: "2021-11-22T17:28:27.627231703+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2094,7 +2125,7 @@ entries:
     version: 1.0.0
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-11-17T11:16:11.834359473+01:00"
+    created: "2021-11-22T17:28:27.620643255+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2116,7 +2147,7 @@ entries:
     version: 0.1.29
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-11-17T11:16:11.811213898+01:00"
+    created: "2021-11-22T17:28:27.613060134+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2138,7 +2169,7 @@ entries:
     version: 0.1.28
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-11-17T11:16:11.79095318+01:00"
+    created: "2021-11-22T17:28:27.604982405+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2160,7 +2191,7 @@ entries:
     version: 0.1.27
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-11-17T11:16:11.763513817+01:00"
+    created: "2021-11-22T17:28:27.594821068+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2182,7 +2213,7 @@ entries:
     version: 0.1.26
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-11-17T11:16:11.742953961+01:00"
+    created: "2021-11-22T17:28:27.585046637+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2204,7 +2235,7 @@ entries:
     version: 0.1.25
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-11-17T11:16:11.72903676+01:00"
+    created: "2021-11-22T17:28:27.577390552+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2226,7 +2257,7 @@ entries:
     version: 0.1.24
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-11-17T11:16:11.716416017+01:00"
+    created: "2021-11-22T17:28:27.569896092+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2248,7 +2279,7 @@ entries:
     version: 0.1.23
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-11-17T11:16:11.703120434+01:00"
+    created: "2021-11-22T17:28:27.559499206+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2270,7 +2301,7 @@ entries:
     version: 0.1.22
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-11-17T11:16:11.685600667+01:00"
+    created: "2021-11-22T17:28:27.550816682+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2292,7 +2323,7 @@ entries:
     version: 0.1.21
   - apiVersion: v1
     appVersion: "1.0"
-    created: "2021-11-17T11:16:11.668889329+01:00"
+    created: "2021-11-22T17:28:27.542418984+01:00"
     dependencies:
     - condition: mongodb.enabled
       name: mongodb
@@ -2315,7 +2346,7 @@ entries:
   flower:
   - apiVersion: v1
     appVersion: 0.9.5
-    created: "2021-11-17T11:16:13.774640915+01:00"
+    created: "2021-11-22T17:28:28.448975845+01:00"
     description: Flower Helm chart for Kubernetes
     digest: e62d4523817c45a26c988ef74b0a3a8758ebf021c6e42efab620ae1012dcde6e
     name: flower
@@ -2324,7 +2355,7 @@ entries:
     version: 0.2.1
   - apiVersion: v1
     appVersion: 0.9.5
-    created: "2021-11-17T11:16:13.774064471+01:00"
+    created: "2021-11-22T17:28:28.448444277+01:00"
     description: Flower Helm chart for Kubernetes
     digest: 0c75eb6083be4cc718f030957076fb0e3fd2afebbff0cdf29d890093463b4777
     name: flower
@@ -2333,7 +2364,7 @@ entries:
     version: 0.2.0
   - apiVersion: v1
     appVersion: 0.9.2
-    created: "2021-11-17T11:16:13.773500483+01:00"
+    created: "2021-11-22T17:28:28.44778756+01:00"
     description: Flower Helm chart for Kubernetes
     digest: bc9c09c7822370fa8981b0d1ae14aeda75902293d209f9fa03fec6c6dc7f2d34
     name: flower
@@ -2342,7 +2373,7 @@ entries:
     version: 0.1.5
   - apiVersion: v1
     appVersion: 0.9.2
-    created: "2021-11-17T11:16:13.772866243+01:00"
+    created: "2021-11-22T17:28:28.447338062+01:00"
     description: Flower Helm chart for Kubernetes
     digest: 739cb0bf200aee04f093fb2f0954ef37d7b5b68e20382176929cb20fde158419
     name: flower
@@ -2351,7 +2382,7 @@ entries:
     version: 0.1.4
   - apiVersion: v1
     appVersion: 0.9.2
-    created: "2021-11-17T11:16:13.77228858+01:00"
+    created: "2021-11-22T17:28:28.446951453+01:00"
     description: Flower Helm chart for Kubernetes
     digest: ba4f2945d2768a8a9b0d85165194e20fd0f2082670d2c9bb9a4b13c67744ed2d
     name: flower
@@ -2360,7 +2391,7 @@ entries:
     version: 0.1.3
   - apiVersion: v1
     appVersion: 0.9.2
-    created: "2021-11-17T11:16:13.771722741+01:00"
+    created: "2021-11-22T17:28:28.446586935+01:00"
     description: Flower Helm chart for Kubernetes
     digest: 134142a1832a523e6f1290ac970e68f4af2bd865e8473eacc3d02a7a84cd5323
     name: flower
@@ -2369,7 +2400,7 @@ entries:
     version: 0.1.2
   - apiVersion: v1
     appVersion: 0.9.2
-    created: "2021-11-17T11:16:13.771179941+01:00"
+    created: "2021-11-22T17:28:28.446209236+01:00"
     description: Flower Helm chart for Kubernetes
     digest: 7e6900b83ee0cf272a454994a4fa4ab632d64860da3f65cbba5fd438cab60083
     name: flower
@@ -2378,11 +2409,11 @@ entries:
     version: 0.1.1
   - apiVersion: v1
     appVersion: 0.9.2
-    created: "2021-11-17T11:16:13.770636334+01:00"
+    created: "2021-11-22T17:28:28.445852266+01:00"
     description: Flower Helm chart for Kubernetes
     digest: 120b4742ddf18bf106be4efa03f74fad2e053517e873026d8e553fbc0a678686
     name: flower
     urls:
     - flower-0.1.0.tgz
     version: 0.1.0
-generated: "2021-11-17T11:16:11.653121209+01:00"
+generated: "2021-11-22T17:28:27.531566849+01:00"
