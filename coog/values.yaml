@@ -518,7 +518,7 @@ coog:
     enabled: false
   root_dir: /workspace/io
   # -- 	Number of coog workers to run
-  workers: 4
+  workers: 2
   max_worker_memory: 0
   log_level: INFO
   timeout: 3600
