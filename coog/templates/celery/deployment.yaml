@@ -153,6 +153,13 @@ spec:
                   name: {{ include "full_name" . }}-trytond-secret
                   key: TRYTOND_EMAIL__URI
             {{- end }}
+            {{- if .Values.coog.trytond_session__passphrase }}
+            - name: TRYTOND_SESSION__PASSPHRASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "full_name" . }}-trytond-secret
+                  key: TRYTOND_SESSION__PASSPHRASE
+            {{- end }}
             {{- if .Values.coog.trytond_reset_password_api__password_token_secret }}
             - name: TRYTOND_RESET_PASSWORD_API__PASSWORD_TOKEN_SECRET
               valueFrom:
