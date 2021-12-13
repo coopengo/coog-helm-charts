@@ -47,7 +47,7 @@ spec:
             - name: COOG_DOCUMENT_TOKEN_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-trytond-secret
+                  name: coog-trytond-secret
                   key: TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET
             {{- end }}
             - name:  JWT_INTERNAL_ENCRYPTION

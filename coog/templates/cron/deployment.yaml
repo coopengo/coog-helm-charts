@@ -101,12 +101,12 @@ spec:
             - name:  COOG_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-postgres-secret
+                  name: coog-mongo-db-secret
                   key: USER
             - name:  COOG_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-postgres-secret
+                  name: coog-mongo-db-secret
                   key: PASSWORD
             {{- if .Values.coog.extraEnv }}
             {{- range $key, $value := .Values.coog.extraEnv }}
@@ -139,7 +139,7 @@ spec:
             - name:  TRYTOND_DATABASE__URI
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-trytond-secret
+                  name: coog-trytond-secret
                   key: TRYTOND_DATABASE__URI
             - name:  TRYTOND_DEBUG__VIEWS
               value: "False"
