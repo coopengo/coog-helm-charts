@@ -50,12 +50,12 @@ spec:
             - name:  PAYBOX_TRYTON_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-paybox-secret
+                  name: coog-paybox-secret
                   key: PAYBOX_TRYTON_USERNAME
             - name:  PAYBOX_TRYTON_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-paybox-secret
+                  name: coog-paybox-secret
                   key: PAYBOX_TRYTON_PASSWORD
           livenessProbe:
             tcpSocket:
