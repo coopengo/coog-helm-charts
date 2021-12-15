@@ -92,9 +92,15 @@ spec:
             - name:  COOG_DB_NAME
               value: "{{ .Values.coog.postgres.database}}"
             - name:  COOG_DB_USER
-              value: "{{ .Values.coog.postgres.user }}"
+              valueFrom:
+                secretKeyRef:
+                  name: coog-postgres-db-secret
+                  key: USER
             - name:  COOG_DB_PASSWORD
-              value: "{{ .Values.coog.postgres.password }}"
+              valueFrom:
+                secretKeyRef:
+                  name: coog-postgres-db-secret
+                  key: PASSWORD
             {{- if .Values.coog.extraEnv }}
             {{- range $key, $value := .Values.coog.extraEnv }}
             - name:  {{ $key }}
