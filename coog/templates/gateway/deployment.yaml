@@ -106,14 +106,14 @@ spec:
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
             - name:  COOG_DB_NAME
               value: "{{ .Values.coog.postgres.database }}"
-            {{- if .Values.gateway.forcedotcom_client_id }}
+            {{- if .Values.secrets.gateway.forcedotcom_client_id }}
             - name:  FORCEDOTCOM_CLIENT_ID
               valueFrom:
                 secretKeyRef:
                   name: coog-gateway-web-secret
                   key: FORCEDOTCOM_CLIENT_ID
             {{- end }}
-            {{- if .Values.gateway.forcedotcom_client_secret }}
+            {{- if .Values.secrets.gateway.forcedotcom_client_secret }}
             - name:  FORCEDOTCOM_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:

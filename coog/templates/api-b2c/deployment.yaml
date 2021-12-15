@@ -43,7 +43,7 @@ spec:
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
             - name: COOG_DB_NAME
               value: "{{ .Values.coog.postgres.database }}"
-            {{- if .Values.coog.trytond_document_api__document_token_secret }}
+            {{- if .Values.secrets.coog.trytond_document_api__document_token_secret }}
             - name: COOG_DOCUMENT_TOKEN_SECRET
               valueFrom:
                 secretKeyRef:
