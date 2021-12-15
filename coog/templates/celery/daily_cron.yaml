@@ -95,12 +95,12 @@ spec:
                 - name:  COOG_DB_USER
                   valueFrom:
                     secretKeyRef:
-                      name: coog-mongo-db-secret
+                      name: coog-postgres-db-secret
                       key: USER
                 - name:  COOG_DB_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: coog-mongo-db-secret
+                      name: coog-postgres-db-secret
                       key: PASSWORD
                 {{- if .Values.coog.extraEnv }}
                 {{- range $key, $value := .Values.coog.extraEnv }}
