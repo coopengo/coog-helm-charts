@@ -827,6 +827,9 @@ gateway:
     enabled: false
   mongodb:
     database: coog-gateway
+  jwt:
+    encryption: secret
+    expiration: 3600
   whitelist:
   # -- 	Number of gateway Pods to run
   replicaCount: 1

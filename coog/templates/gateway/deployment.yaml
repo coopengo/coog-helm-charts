@@ -80,7 +80,7 @@ spec:
             - name:  COOG_WEB_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-coog-web-secret
+                  name: coog-gateway-web-secret
                   key: GATEWAY_TOKEN
             - name:  COOG_MODULE
               value: "true"
@@ -91,12 +91,12 @@ spec:
             - name:  MONGO_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-mongo-db-secret
+                  name: coog-gateway-mongo-db-secret
                   key: USER
             - name:  MONGO_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-mongo-db-secret
+                  name: coog-gateway-mongo-db-secret
                   key: PASSWORD
             - name:  COOG_GATEWAY_URL
               value: "{{ .Values.gateway.gateway_url }}"
@@ -105,21 +105,21 @@ spec:
             - name:  COOG_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
             - name:  COOG_DB_NAME
-              value: "{{ .Values.coog.postgres.database }}"
+              value: "{{ .Values.secrets.coog.postgres.database }}"
             - name:  COOG_GATEWAY_PORT
               value: "8000"
-            {{- if .Values.gateway.forcedotcom_client_id }}
+            {{- if .Values.secrets.gateway.forcedotcom_client_id }}
             - name:  FORCEDOTCOM_CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-coog-web-secret
+                  name: coog-gateway-web-secret
                   key: FORCEDOTCOM_CLIENT_ID
             {{- end }}
-            {{- if .Values.gateway.forcedotcom_client_secret }}
+            {{- if .Values.secrets.gateway.forcedotcom_client_secret }}
             - name:  FORCEDOTCOM_CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-coog-web-secret
+                  name: coog-gateway-web-secret
                   key: FORCEDOTCOM_CLIENT_SECRET
             {{- end }}
             {{- if .Values.gateway.extraEnv }}

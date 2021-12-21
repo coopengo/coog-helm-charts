@@ -48,7 +48,7 @@ spec:
             - "ep"
             - "cron"
             - "-d"
-            - "{{ .Values.coog.postgres.database}}"
+            - "{{ .Values.secrets.coog.postgres.database}}"
         {{- if .Values.coog.persistentVolume.enabled }}
           volumeMounts:
             - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
@@ -97,16 +97,16 @@ spec:
               value: "{{ .Values.coog.external_postgres.port }}"
             {{- end }}
             - name:  COOG_DB_NAME
-              value: "{{ .Values.coog.postgres.database}}"
+              value: "{{ .Values.secrets.coog.postgres.database}}"
             - name:  COOG_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-postgres-secret
+                  name: coog-postgres-db-secret
                   key: USER
             - name:  COOG_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-postgres-secret
+                  name: coog-postgres-db-secret
                   key: PASSWORD
             {{- if .Values.coog.extraEnv }}
             {{- range $key, $value := .Values.coog.extraEnv }}
@@ -137,7 +137,7 @@ spec:
             - name:  TRYTOND_DATABASE__URI
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-trytond-secret
+                  name: coog-trytond-secret
                   key: TRYTOND_DATABASE__URI
             - name:  TRYTOND_DEBUG__VIEWS
               value: "False"
