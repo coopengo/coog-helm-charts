@@ -34,7 +34,7 @@ spec:
                 runAsUser: {{ .Values.coog.securityContext.runAsUser }}
               env:
                 - name: COOG_DB_NAME
-                  value: "{{ .Values.coog.postgres.database }}"
+                  value: "{{ .Values.secrets.coog.postgres.database }}"
                 - name:  REDIS_URL
                   {{- if .Values.redis.enabled }}
                   value: "{{ .Release.Name }}-redis-master"
@@ -52,12 +52,12 @@ spec:
                 - name:  MONGO_USER
                   valueFrom:
                     secretKeyRef:
-                      name: {{ include "full_name" . }}-mongo-db-secret
+                      name: coog-gateway-mongo-db-secret
                       key: USER
                 - name:  MONGO_PASSWORD
                   valueFrom:
                     secretKeyRef:
-                      name: {{ include "full_name" . }}-mongo-db-secret
+                      name: coog-gateway-mongo-db-secret
                       key: PASSWORD
                 - name: MONGO_API_DB
                   value: "{{ .Values.api.mongodb.database }}"
