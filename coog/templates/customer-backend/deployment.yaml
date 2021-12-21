@@ -58,12 +58,12 @@ spec:
             - name:  DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-postgres-secret
+                  name: coog-postgres-db-secret
                   key: USER
             - name:  DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-postgres-secret
+                  name: coog-postgres-db-secret
                   key: PASSWORD
             - name: COOG_GATEWAY_URL
               value: "{{ .Values.gateway.gateway_url }}{{ .Values.gateway.entrypoint }}"
@@ -71,12 +71,12 @@ spec:
             {{- if not .Values.customer_backend.coog_web_token }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-coog-web-secret
+                  name: coog-gateway-web-secret
                   key: GATEWAY_TOKEN
             {{- else }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-coog-web-secret
+                  name: coog-gateway-web-secret
                   key: CUSTOMER_BACKEND_TOKEN
             {{- end }}
             {{- if .Values.customer_backend.extraEnv }}
