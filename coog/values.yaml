@@ -838,8 +838,6 @@ gateway:
     enabled: false
   mongodb:
     database: coog-gateway
-  mongodb_user: root
-  mongodb_root_password: admin
   jwt:
     encryption: secret
     expiration: 3600
