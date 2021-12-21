@@ -50,11 +50,23 @@ spec:
             - name: COOG_API_COOG_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog:{{ .Values.coog.service.port }}"
             - name: COOG_API_COOG_DB
-              value: "{{ .Values.coog.postgres.database }}"
+              value: "{{ .Values.secrets.coog.postgres.database }}"
             - name: COOG_API_API_PATH
               value: "/web/api"
             - name: COOG_API_APP_PATH
               value: "/web"
+            {{- if .Values.gateway.enabled }}
+            - name:  COOG_API_MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: coog-gateway-mongo-db-secret
+                  key: USER
+            - name:  COOG_API_MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: coog-gateway-mongo-db-secret
+                  key: PASSWORD
+            {{- end }}
             {{- if .Values.web.extraEnv }}
             {{- range $key, $value := .Values.web.extraEnv }}
             - name:  {{ $key }}
