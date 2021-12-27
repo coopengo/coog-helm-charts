@@ -54,12 +54,12 @@ spec:
             - name:  COOG_API_MONGO_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-mongo-db-secret
+                  name: coog-gateway-mongo-db-secret
                   key: USER
             - name:  COOG_API_MONGO_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ include "full_name" . }}-mongo-db-secret
+                  name: coog-gateway-mongo-db-secret
                   key: PASSWORD
             - name: COOG_API_REDIS_URL
               {{- if .Values.redis.enabled }}
