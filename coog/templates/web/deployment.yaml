@@ -51,16 +51,6 @@ spec:
             {{ else }}
               value: "{{ .Values.gateway.external_mongodb.port }}"
             {{- end }}
-            - name:  COOG_API_MONGO_USER
-              valueFrom:
-                secretKeyRef:
-                  name: coog-gateway-mongo-db-secret
-                  key: USER
-            - name:  COOG_API_MONGO_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: coog-gateway-mongo-db-secret
-                  key: PASSWORD
             - name: COOG_API_REDIS_URL
               {{- if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}"
