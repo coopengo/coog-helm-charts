@@ -58,7 +58,7 @@ synchronize:pipeline:
 
 upload:helm-chart:
   stage: upload
-  image: boxboat/helm
+  image: boxboat/helm:3.7.2
   variables:
     REPOSITORY_SSH_KEY: "${SSH_KEY}"
   before_script:
