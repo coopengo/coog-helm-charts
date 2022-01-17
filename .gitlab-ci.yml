@@ -35,15 +35,10 @@ synchronize:pipeline:
     REPOSITORY_SSH_KEY: "${SSH_KEY}"
     REPOSITORY_COOPENGO_URL: "git@${CI_SERVER_URL}"
   before_script:
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
     - ssh-keyscan -H "${CI_SERVER_HOST}" >>~/.ssh/known_hosts
-    - echo "${REPOSITORY_SSH_KEY}" >~/.ssh/id_rsa
-    - chmod 400 ~/.ssh/id_rsa
-    - ssh-keygen -y -f ~/.ssh/id_rsa >~/.ssh/id_rsa.pub
     - git config --global user.email "${GITLAB_USER_EMAIL}"
     - git config --global user.name "🤖 GitLab CI/CD 🤖"
-    - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git 
+    - git remote set-url origin https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git 
     - git fetch --all
   script:
     - |-
