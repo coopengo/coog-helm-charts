@@ -35,6 +35,8 @@ synchronize:pipeline:
     REPOSITORY_SSH_KEY: "${SSH_KEY}"
     REPOSITORY_COOPENGO_URL: "git@${CI_SERVER_URL}"
   before_script:
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
     - ssh-keyscan -H "${CI_SERVER_HOST}" >>~/.ssh/known_hosts
     - git config --global user.email "${GITLAB_USER_EMAIL}"
     - git config --global user.name "🤖 GitLab CI/CD 🤖"
