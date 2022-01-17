@@ -48,7 +48,7 @@ Il faut créer un fichier client_values.yml (standard helm) si l'on souhaite app
 ## INSTALLATION DE COOG
 
 ```bash
-helm repo add coopengo https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+helm repo add coopengo helm repo add coog https://gitlab.com/api/v4/projects/coopengo%2Fcoog1%2Fdevops%2Fcoog-helm-charts/packages/helm/stable
 helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
 ```
 
