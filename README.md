@@ -3,8 +3,8 @@
 
 ## Prérequis :
 - Créer un compte sur https://hub.docker.com/ et demander des accès aux conteneurs à Coopengo
-- Kubernetes en version 1.15
-- Installer helm 2 : voir sur https://helm.sh/
+- Kubernetes en version 1.21
+- Installer helm 3 : voir sur https://helm.sh/
 - Installer un Controller Ingress :
    - Nginx Ingress Controller est conseillé : https://kubernetes.github.io/ingress-nginx/deploy/
 - Configurer des PersistentVolumes pour la persistence des données (indispensable en production)
@@ -57,19 +57,6 @@ helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
 ```bash
 helm install stable/nginx-ingress
 ```
-
-## Mise à jour des version des Charts
-
-```bash
-helm3 repo update
-helm3 package flower && helm3 repo index .
-# git add . && git commit -m 'Flower packaging' && git push
-helm3 repo update
-helm3 dependency update coog
-helm3 package coog && helm3 repo index .
-# git add . && git commit -m 'Coog packaging' && git push 
-```
-
 
 ## Initialisation de la base de donnée 
 ```yaml
