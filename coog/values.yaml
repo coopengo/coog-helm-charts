@@ -700,6 +700,8 @@ web:
   # -- 	Number of web Pods to run
   replicaCount: 1
 
+  mongodb:
+    database: coog-api-v1
   image:
     # -- web image repository
     repository: coopengohub/web
