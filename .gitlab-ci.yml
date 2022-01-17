@@ -48,7 +48,7 @@ synchronize:pipeline:
       do
         git checkout "${BRANCH}"
         git checkout "${CI_COMMIT_SHORT_SHA}" .gitlab-ci.yml
-        git commit -m "Merge .gitlab-ci.yml from \"${CI_DEFAULT_BRANCH}\""
+        git commit -m "Merge .gitlab-ci.yml from \"${CI_COMMIT_SHORT_SHA}\""
       done
       git push --all
   rules:
@@ -58,7 +58,7 @@ synchronize:pipeline:
 
 upload:helm-chart:
   stage: upload
-  image: boxboat/helm:3.7.1
+  image: alpine/helm:3.6.3
   variables:
     REPOSITORY_SSH_KEY: "${SSH_KEY}"
   before_script:
