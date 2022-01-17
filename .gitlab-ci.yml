@@ -58,7 +58,9 @@ synchronize:pipeline:
 
 upload:helm-chart:
   stage: upload
-  image: alpine/helm:3.6.3
+  image: 
+    name: alpine/helm
+    entrypoint: [""] # avoid error message on start : Error: unknown command "sh" for "helm"
   variables:
     REPOSITORY_SSH_KEY: "${SSH_KEY}"
   before_script:
