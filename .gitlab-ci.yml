@@ -30,13 +30,17 @@ stages:
 synchronize:pipeline:
   stage: synchronize
   image: bitnami/git:latest
+  variables:
+    REPOSITORY_SSH_KEY: "${SSH_KEY}"
   before_script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan -H "${CI_SERVER_HOST}" >>~/.ssh/known_hosts
+    - echo "${REPOSITORY_SSH_KEY}" >~/.ssh/id_rsa
+    - chmod 400 ~/.ssh/id_rsa
     - git config --global user.email "${GITLAB_USER_EMAIL}"
     - git config --global user.name "🤖 GitLab CI/CD 🤖"
-    - git remote set-url origin https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/${CI_PROJECT_PATH}.git 
+    - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git 
     - git fetch --all
   script:
     - |-
@@ -44,7 +48,7 @@ synchronize:pipeline:
       do
         git checkout "${BRANCH}"
         git checkout "${CI_COMMIT_SHORT_SHA}" .gitlab-ci.yml
-        git commit -m "Merge .gitlab-ci.yml from \"${CI_COMMIT_SHORT_SHA}\""
+        git commit -m "Merge .gitlab-ci.yml from \"${CI_DEFAULT_BRANCH}\""
       done
       git push --all
   rules:
