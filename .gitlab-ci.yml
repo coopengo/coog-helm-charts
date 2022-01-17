@@ -30,10 +30,6 @@ stages:
 synchronize:pipeline:
   stage: synchronize
   image: bitnami/git:latest
-  variables:
-    GIT_STRATEGY: none
-    REPOSITORY_SSH_KEY: "${SSH_KEY}"
-    REPOSITORY_COOPENGO_URL: "git@${CI_SERVER_URL}"
   before_script:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
