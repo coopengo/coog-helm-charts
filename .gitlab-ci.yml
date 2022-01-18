@@ -89,7 +89,7 @@ upload:helm-chart:
             else
               git tag -a ${HELM_PROJECT}-${HELM_PROJECT_VERSION} -m "Create TAG ${HELM_PROJECT}-${HELM_PROJECT_VERSION}"
               git push --tags
-              helm dependency update ${HELM_PROJECT}
+              helm dependency update ${HELM_PROJECT} || true
               helm package ${HELM_PROJECT}
               helm repo index --url "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/stable" .
             curl -s --fail --request POST --user gitlab-ci-token:${CI_JOB_TOKEN} --form "chart=@${HELM_PROJECT}-${HELM_PROJECT_VERSION}.tgz" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/stable/charts"
