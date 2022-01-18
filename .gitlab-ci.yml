@@ -103,3 +103,4 @@ upload:helm-chart:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"'
       changes:
         - "**/Chart.yaml"
+    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_PROTECTED == "true"'
