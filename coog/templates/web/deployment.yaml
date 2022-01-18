@@ -51,7 +51,7 @@ spec:
             {{ else }}
               value: "{{ .Values.gateway.external_mongodb.port }}"
             {{- end }}
-            - name:  MONGO_DB_NAME
+            - name:  COOG_API_MONGO_DB
               value: "{{ .Values.web.mongodb.database }}"
             - name: COOG_API_REDIS_URL
               {{- if .Values.redis.enabled }}
