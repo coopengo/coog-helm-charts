@@ -1,4 +1,4 @@
-<h1 align="center">coog-helm-charts</center>
+coog-helm-charts
 
 
 ## Prérequis :
@@ -8,7 +8,7 @@
 - Installer un Controller Ingress :
    - [Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/) (recommandé)
    - [Traefik](https://doc.traefik.io/traefik/getting-started/install-traefik/)
-- Configurer des [PersistentVolumes](https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/) pour la persistence des données - <span style="color:red">Indispensable en production </span>
+- Configurer des [PersistentVolumes](https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/) pour la persistence des données - Indispensable en production
 
 ***
 ## Injecter les secrets pour loader les images de dockerhub (login/password)
