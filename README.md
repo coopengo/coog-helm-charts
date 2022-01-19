@@ -19,7 +19,7 @@ En ligne de commande :
 kubectl create secret docker-registry docker-registry --docker-server="https://index.docker.io/v1/" --docker-username=login --docker-password=password --docker-email=email
 ```
 
-Dans un fichier de configuration au format YAML (recommandé) : <br><br>
+Dans un fichier de configuration au format YAML (recommandé) :
 
 1. Mettre en forme les identifiants ainsi que le json au format base64
 ```bash
@@ -30,7 +30,7 @@ $ echo '{"auths": {"docker.io": { "auth": "PGxvZ2luPjo8cGFzc3dvcmQ+Cg==" }}}' | 
 eyJhdXRocyI6IHsiZG9ja2VyLmlvIjogeyAiYXV0aCI6ICJQR3h2WjJsdVBqbzhjR0Z6YzNkdmNt
 UStDZz09IiB9fX0K # Résultat de la commande à mettre à la place de "monsecretenbase64" dans le bloc suivant.
 ```
-<br>
+
 
 2. Récupérer le résultat de la derniere ligne de commande de l'étape précente pour la mettre à la place de "monsecretenbase64"
 ```yaml
@@ -43,7 +43,7 @@ metadata:
   # namespace: coog-client
 type: kubernetes.io/dockerconfigjson
 ```
-<br>
+
 
 3. Appliquer la configuration dans Kubernetes
 ```bash
