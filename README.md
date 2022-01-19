@@ -1,3 +1,12 @@
+
+## Since version 2.XX.2150-1, this repository has been migrated on [Gitlab](https://gitlab.com/coopengo/coog1/devops/coog-helm-charts).
+<br />
+
+## This repository is kept for history.
+<br />
+<br />
+
+-------
 # coog-helm-charts
 
 
