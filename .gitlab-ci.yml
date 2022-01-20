@@ -121,12 +121,12 @@ upload:helm-chart:
 
 upload:readme:
   stage: upload
-  image: golang:bullseye
+  image: golang:alpine
   variables:
     GO111MODULE: "on"
     REPOSITORY_SSH_KEY: "${SSH_KEY}"
   before_script:
-    - apt update && apt install --no-install-recommends --no-install-suggests -y python3 git openssh-client
+    - apk add --no-cache -y python3 py3-pip git openssh-client
     - go install github.com/norwoodj/helm-docs/cmd/helm-docs@latest
     - pip3 install pre-commit
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
