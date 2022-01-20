@@ -127,7 +127,7 @@ upload:readme:
     REPOSITORY_SSH_KEY: "${SSH_KEY}"
   before_script:
     - apk add --no-cache python3 git openssh-client
-    - go install github.com/norwoodj/helm-docs/cmd/helm-docs
+    - go install github.com/norwoodj/helm-docs/cmd/helm-docs@latest
     - pip install pre-commit
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
     - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
