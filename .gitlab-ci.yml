@@ -137,7 +137,7 @@ upload:readme:
       git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
   script:
     - helm-docs
-    - git status | awk '/modified/{print $3}' | grep README.md | xargs git add
+    - git status | awk '/modified/{print $2}' | grep README.md | xargs git add
     - git commit -m "Generate README for charts with helm-docs"
     - git push
   rules:
