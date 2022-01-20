@@ -50,7 +50,7 @@ type: kubernetes.io/dockerconfigjson
 kubectl apply -f docker-registry.yml
 ```
 
-Vous pourrez trouver plus d'informations sur [le lien suivant](https://kubernetes.io/fr/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials)
+Vous pourrez trouver plus d'informations sur [la documentation Kubernetes](https://kubernetes.io/fr/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials).
 
 
 ## optionnel : Configuration specifique clients
