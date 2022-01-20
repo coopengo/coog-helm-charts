@@ -139,7 +139,7 @@ upload:readme:
     - helm-docs
     - git status | awk '/modified/{print $2}' | grep README.md | xargs git add
     - git commit -m "Generate README for charts with helm-docs"
-    - git push
+    - git push origin HEAD:${CI_COMMIT_REF_NAME}
   rules:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"'
       changes:
