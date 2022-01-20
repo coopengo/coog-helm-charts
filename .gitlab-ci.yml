@@ -126,6 +126,11 @@ upload:readme:
     GO111MODULE: "on"
     REPOSITORY_SSH_KEY: "${SSH_KEY}"
   before_script:
+    - |-
+      if [ "$HELM_NEW_CHART" != "true" ]; then
+        echo "Charts didn't change, nothing to update"
+        exit 0
+      fi
     - apk add --no-cache git openssh-client
     - go install github.com/norwoodj/helm-docs/cmd/helm-docs@latest
     - mkdir -p ~/.ssh && chmod 700 ~/.ssh
