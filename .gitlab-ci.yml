@@ -156,7 +156,7 @@ coreye:synchronize:coog:
     - git config --global user.email "${GITLAB_USER_EMAIL}" &&
       git config --global user.name "🤖 GitLab CI/CD 🤖"
   script:
-    - git clone --single-branch --branch "${$CI_COMMIT_REF_NAME}" https://${COREYE_REPO_USER}:${COREYE_REPO_TOKEN}@git.coreye.fr/coopengo/artifacts/coopengo_helm_charts.git
+    - git clone --single-branch --branch "${CI_COMMIT_REF_NAME}" https://${COREYE_REPO_USER}:${COREYE_REPO_TOKEN}@git.coreye.fr/coopengo/artifacts/coopengo_helm_charts.git
     - cd coopengo_helm_charts
     - git remote set-url origin https://${COREYE_REPO_USER}:${COREYE_REPO_TOKEN}@git.coreye.fr/coopengo/artifacts/coopengo_helm_charts.git
     - rm -rf coopengo_helm_charts/charts/coog
@@ -168,7 +168,7 @@ coreye:synchronize:coog:
     - |-
       curl -X POST \
         -F token=${COREYE_TRIGGER_TOKEN} \
-        -F ref=${$CI_COMMIT_REF_NAME} \
+        -F ref=${CI_COMMIT_REF_NAME} \
         -F "variables[IMAGE_TAG]=${HELM_PROJECT_VERSION}" \
         -F "variables[SERVICE]=coog" \
         https://git.coreye.fr/api/v4/projects/434/trigger/pipeline
