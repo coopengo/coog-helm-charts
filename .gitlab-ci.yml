@@ -134,6 +134,7 @@ update:readme:
     - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_PROTECTED == "true"'
   needs:
     - package:helm-chart
+  allow_failure: true
 
 coreye:synchronize:coog:
   stage: coreye
