@@ -1,5 +1,6 @@
 stages:
   - synchronize
+  - lint
   - package
   - update
   - coreye
@@ -21,7 +22,7 @@ synchronize:pipeline:
     - git fetch --all
   script:
     - |-
-      for BRANCH in $(git ls-remote --refs -h origin -l "coog-*" | cut -s -d '/' -f3 | grep -E "^(coog-[[:digit:]]{1}).([[:digit:]]{1,}(([r][c])([[:digit:]]{1,}))?)$" )
+      for BRANCH in $(git ls-remote --refs -h origin -l "coog-*" | cut -s -d '/' -f3 | grep -E "^(coog-[[:digit:]]{1,2}).([[:digit:]]{1,2})$" )
       do
         git checkout "${BRANCH}"
         git checkout "${CI_COMMIT_SHORT_SHA}" .gitlab-ci.yml
@@ -32,6 +33,29 @@ synchronize:pipeline:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
       changes:
         - ".gitlab-ci.yml"
+
+lint:helm-chart:
+  stage: lint
+  image:
+    name: alpine/helm
+    entrypoint: [""] # avoid error message on start : Error: unknown command "sh" for "helm"
+  script:
+    - |-
+      for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".git" -exec basename {} \;)
+      do
+        helm dependency update ${HELM_PROJECT} || true
+        if [[ -e "${HELM_PROJECT}/values_secrets.yaml" ]]; then
+          helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/values.yaml" -f "${HELM_PROJECT}/values_secrets.yaml"
+          helm template -f "${HELM_PROJECT}/values.yaml" -f "${HELM_PROJECT}/values_secrets.yaml" "${HELM_PROJECT}" > "${HELM_PROJECT}.template"
+        else
+          helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/values.yaml"
+          helm template -f "${HELM_PROJECT}/values.yaml" "${HELM_PROJECT}" > "${HELM_PROJECT}.template"
+        fi
+      done
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH'
+      changes:
+        - "**/*.yaml"
 
 package:helm-chart:
   stage: package
@@ -64,6 +88,7 @@ package:helm-chart:
             then
               echo "TAG ${HELM_PROJECT}-${HELM_PROJECT_VERSION} already exists"
             else
+              helm dependency update ${HELM_PROJECT} || true
               if [[ -e "${HELM_PROJECT}/values_secrets.yaml" ]]; then
                 helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/values.yaml" -f "${HELM_PROJECT}/values_secrets.yaml"
                 helm template -f "${HELM_PROJECT}/values.yaml" -f "${HELM_PROJECT}/values_secrets.yaml" "${HELM_PROJECT}" > "${HELM_PROJECT}.template"
@@ -73,7 +98,6 @@ package:helm-chart:
               fi
               git tag -a ${HELM_PROJECT}-${HELM_PROJECT_VERSION} -m "Create TAG ${HELM_PROJECT}-${HELM_PROJECT_VERSION}"
               git push --tags
-              helm dependency update ${HELM_PROJECT} || true
               helm package ${HELM_PROJECT}
               helm repo index --url "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/stable" .
               echo "HELM_NEW_CHART=true" > upload.env
@@ -92,7 +116,7 @@ package:helm-chart:
     reports:
       dotenv: upload.env
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true" && $CI_MERGE_REQUEST_ID == ""'
       changes:
         - "**/Chart.yaml"
     - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_PROTECTED == "true"'
@@ -128,7 +152,7 @@ update:readme:
     paths:
       - "**/README.md"
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true" && $CI_MERGE_REQUEST_ID == ""'
       changes:
         - "**/Chart.yaml"
     - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_PROTECTED == "true"'
@@ -174,7 +198,7 @@ coreye:synchronize:coog:
         -F "variables[SERVICE]=coog" \
         https://git.coreye.fr/api/v4/projects/434/trigger/pipeline
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true" && $CI_MERGE_REQUEST_ID == ""'
       changes:
         - "**/Chart.yaml"
     - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_PROTECTED == "true"'
