@@ -84,7 +84,7 @@ package:helm-chart:
           then
             echo "Helm package ${HELM_PROJECT}-${HELM_PROJECT_VERSION} already exists."
           else
-            if [[ -n $(git ls-remote --tags origin -l "${HELM_PROJECT}-${HELM_PROJECT_VERSION}") ]]
+            if [ "$(git ls-remote --tags origin -l "${HELM_PROJECT}-${HELM_PROJECT_VERSION}")" ]
             then
               echo "TAG ${HELM_PROJECT}-${HELM_PROJECT_VERSION} already exists"
             else
