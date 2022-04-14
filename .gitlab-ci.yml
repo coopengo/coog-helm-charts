@@ -201,7 +201,8 @@ coreye:synchronize:coog:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"'
       changes:
         - "**/Chart.yaml"
-    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_NAME =~ /^(${CI_DEFAULT_BRANCH}|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_NAME =~ /^coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2}))$/'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
   needs:
     - package:helm-chart
     - update:readme
