@@ -1,6 +1,6 @@
 # coog
 
-![Version: 2.12.2204](https://img.shields.io/badge/Version-2.12.2204-informational?style=flat-square) ![AppVersion: coog-2.12](https://img.shields.io/badge/AppVersion-coog--2.12-informational?style=flat-square)
+![Version: 2.12.2213-RMQRollingUpdate](https://img.shields.io/badge/Version-2.12.2213--RMQRollingUpdate-informational?style=flat-square) ![AppVersion: coog-2.12](https://img.shields.io/badge/AppVersion-coog--2.12-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -299,11 +299,13 @@ A Helm chart for Coog
 | quota.enabled | bool | `false` |  |
 | quota.rolling_update | bool | `false` |  |
 | rabbitmq.enabled | bool | `true` |  |
-| rabbitmq.resources.limits.cpu | string | `"300m"` |  |
+| rabbitmq.extraConfiguration | string | `"consumer_timeout = 172800000\nloopback_users.guest = false"` |  |
+| rabbitmq.livenessProbe.initialDelaySeconds | int | `240` |  |
+| rabbitmq.resources.limits.cpu | string | `"600m"` |  |
 | rabbitmq.resources.limits.memory | string | `"400Mi"` |  |
 | rabbitmq.resources.requests.cpu | string | `"100m"` |  |
 | rabbitmq.resources.requests.memory | string | `"100Mi"` |  |
-| rabbitmq.updateStrategyType | string | `"OnDelete"` |  |
+| rabbitmq.updateStrategyType | string | `"RollingUpdate"` |  |
 | redis.cluster.enabled | bool | `false` |  |
 | redis.enabled | bool | `true` |  |
 | redis.master.disableCommands | list | `[]` |  |
