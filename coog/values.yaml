@@ -610,7 +610,7 @@ coog:
 
 cron:
   # -- Deploy cron container(s)
-  enabled: false
+  enabled: true
   affinity: {}
 
   # -- cron containers' resource requests and limits
@@ -625,6 +625,14 @@ cron:
     initialDelaySeconds: 30
     periodSeconds: 120
     timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 2
+  readinessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 120
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 2
   coogCeleryModule: coog_async.coog_celery
   # -- Node labels for pod assignment
   nodeSelector: {}

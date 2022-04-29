@@ -47,8 +47,6 @@ spec:
           command:
             - "ep"
             - "cron"
-            - "-d"
-            - "{{ .Values.secrets.coog.postgres.database}}"
         {{- if .Values.coog.persistentVolume.enabled }}
           volumeMounts:
             - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
@@ -154,18 +152,18 @@ spec:
               containerPort: 8000
               protocol: TCP
           livenessProbe:
+          livenessProbe:
+            httpGet:
+              path: /cron_liveness
+              port: http
             exec:
-              command:
-                - "/bin/bash"
-                - "-c"
-                - "celery -A {{ .Values.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
               {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
           readinessProbe:
+            httpGet:
+              path: /cron_readiness
+              port: http
             exec:
-              command:
-                - "/bin/bash"
-                - "-c"
-                - "celery -A {{ .Values.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
+              {{- toYaml .Values.cron.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.cron.resources | nindent 12 }}
       {{- with .Values.cron.nodeSelector }}
