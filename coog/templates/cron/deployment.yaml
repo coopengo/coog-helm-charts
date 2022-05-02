@@ -152,7 +152,6 @@ spec:
               containerPort: 8000
               protocol: TCP
           livenessProbe:
-          livenessProbe:
             httpGet:
               path: /cron_liveness
               port: http
