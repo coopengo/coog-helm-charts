@@ -49,7 +49,7 @@ spec:
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           resources:
             {{- toYaml .Values.coog.initContainers.resources | nindent 12 }}
-          command: ['sh', '-c', 'ep admin -d {{ .Values.secrets.coog.postgres.database }} -cu ir res --activate-dependencies']
+          command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies']
           env:
             - name:  COOG_SERVER_WORKERS
               value: "{{ .Values.coog.workers }}"
