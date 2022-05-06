@@ -20,8 +20,8 @@ dependencies:
   condition: postgresql.enabled
 
 - name: flower
-  version: 0.2.1
-  repository: https://gitlab.com/api/v4/projects/32901462/packages/helm/stable
+  version: 0.2.0
+  repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
   condition: flower.enabled
 
   #- name: nginx

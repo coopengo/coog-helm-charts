@@ -1,0 +1,2414 @@
+apiVersion: v1
+entries:
+  coog:
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.332123736+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 5cf6e0699d750230f5e2d8c6861704de52a1b40eea65742ef2b92341857870e5
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2150.tgz
+    version: 2.8.2150
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.323083446+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 4402db3e9b1b853f56bff823a4fe726cba7fb2e6b1631ba105604d2357f936d4
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2150-1.tgz
+    version: 2.8.2150-1
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.31301022+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 8c32a2cebe7be9b08ccbc694d2154ba59a110cfa2addc988a3a7312c7ba79677
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2146.tgz
+    version: 2.8.2146
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.303986629+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: efb582c5b52c9ef82f84c7e6fb4dcde6d2d7dcbd1822d486a26bbc14be8c5d9f
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2146-5.tgz
+    version: 2.8.2146-5
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.295298786+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: f6ff74c83b94571865cda79678cd96ec59598f70fb2342989d31968de426ea65
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2146-4.tgz
+    version: 2.8.2146-4
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.286293185+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 4d902f658e00f77253fa134733d7833c39b3b464cd9f37b180444289791734c5
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2146-3.tgz
+    version: 2.8.2146-3
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.277164216+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: f359aec4146b8029a5c94088f5f0c0f3a5b1792176ceb103764ccfbeba112440
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2146-2.tgz
+    version: 2.8.2146-2
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.268151988+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 0057daaf7651915bd9f96d520a227d0d90fac42760f6be23eb0c24157d19b6b3
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2146-1.tgz
+    version: 2.8.2146-1
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.258724839+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: ba7a5f8d761925c0fb13a1cfb049ff8243effb5ec52894544aafc0564ce0a33e
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2145.tgz
+    version: 2.8.2145
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.249980354+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 2f2dc98c19a4c8c9a79b7aa8d18cc4f0cffd62070bb8ea19bf977891cd897b40
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2144.tgz
+    version: 2.8.2144
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.240990243+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 15668548268d7a4ceeef1ca04293d40b62bd5dea994045d4a214570cacae5dec
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2144-5.tgz
+    version: 2.8.2144-5
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.232038774+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: b9333a2cba0aefc52a71df14b5ec03ba71e08952493c83b0e175179d2049c30d
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2144-4.tgz
+    version: 2.8.2144-4
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.222070827+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 7899362ee95394d9ff729dd5d1614a717c75bd40d9a5053f07f61409473321dc
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2144-3.tgz
+    version: 2.8.2144-3
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.212100279+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: b78cb21095404cb3631563277468e7c9050006d2450e4db3ed95ea1c9068e190
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2144-1.tgz
+    version: 2.8.2144-1
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.203179499+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 3c6a108559a459750694b4411030f6ca9418b4690bc21fe3eec8c8fffe67c5d2
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2143.tgz
+    version: 2.8.2143
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.194134377+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 616e7f6eb78521765c32807c82ba57096a79d1875cf676e1601b257f4490eee8
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2141.tgz
+    version: 2.8.2141
+  - apiVersion: v1
+    appVersion: coog-2.8
+    created: "2022-01-11T08:59:04.185100361+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: c47effdd9ee3e31b394482037878bc5575c54f8cc7781cb1c537e06aeb5dac7d
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2138.tgz
+    version: 2.8.2138
+  - apiVersion: v1
+    appVersion: coog-2.8.2129
+    created: "2022-01-11T08:59:04.176000079+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 737c40c1a05344730a6ce81fa0a35ca495501fbc7f4b0c317a692aa5d883862a
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2129.tgz
+    version: 2.8.2129
+  - apiVersion: v1
+    appVersion: coog-2.8.16
+    created: "2022-01-11T08:59:04.166423109+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 470eaa2604e6063ed7d53330983ae6ac05ca686eea437e4002a6a516c91294f8
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.8.2116.tgz
+    version: 2.8.2116
+  - apiVersion: v1
+    appVersion: coog-2.10.2048
+    created: "2022-01-11T08:59:04.15716763+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 834508485c57740c72541452b5a6d6202b5027fb57903590dacfc5e330f564f2
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.3.8.tgz
+    version: 2.3.8
+  - apiVersion: v1
+    appVersion: coog-2.10.2048
+    created: "2022-01-11T08:59:04.145728845+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: fd70720115b482e49be510ee17193abbb573dd94ae2abfb3b27249266cdd70f8
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.3.7.tgz
+    version: 2.3.7
+  - apiVersion: v1
+    appVersion: coog-2.10.2048
+    created: "2022-01-11T08:59:04.136688202+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 4dcdfd99bfaf6053efc554df7000ed90d0c3a395a2c2a91562a1fd8fa085dab9
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.3.6.tgz
+    version: 2.3.6
+  - apiVersion: v1
+    appVersion: coog-2.10.2048
+    created: "2022-01-11T08:59:04.12740385+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 38ebfc199e62c7da6bdcd1c4d2ce328d1652627061bca81b14dddaf136b2c9a2
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.3.4.tgz
+    version: 2.3.4
+  - apiVersion: v1
+    appVersion: coog-2.10.2048
+    created: "2022-01-11T08:59:04.116032028+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 9823fa61442c79752934f34f8a476c4805218172caf154c6aab76bcc25a46f90
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.3.2.tgz
+    version: 2.3.2
+  - apiVersion: v1
+    appVersion: coog-2.10.2048
+    created: "2022-01-11T08:59:04.101367852+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 7ef0cf49028d51ea0fd49f4fe5d892184493bd5e2147b63a9bf7cb00cd849202
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.3.1.tgz
+    version: 2.3.1
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:04.086557107+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.2.0
+    description: A Helm chart for Coog
+    digest: 27d3142f32bc74c6bc695482e03a5f092dfcc6b9b60108f41d581cc231900e66
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.3.0.tgz
+    version: 2.3.0
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:04.06987028+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: adb03bd0fdebd88b4b04ccc895e3eeec8b52bfe03d2ee68e368c0311e6c89332
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.2.2.tgz
+    version: 2.2.2
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:04.057319796+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 9dbd14f55218bc70ce36531d130c1376219e4c711746daa00436e7728750b461
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.2.1.tgz
+    version: 2.2.1
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:04.04821336+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 70d0e2cce58740319aa96b380c1ff31e63e3f45b104dbe1f3a7dc49b80eeba5a
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.2.0.tgz
+    version: 2.2.0
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:04.03954743+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: e37679d51df992c0b6bbb4186440e0aee2cb39a9547e5a19135f9bacc64582ec
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.1.4.tgz
+    version: 2.1.4
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:04.030517535+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 76b95c95e29f8f42a0c49779acb081ac68ad53895c02bdf4622673b793d814ed
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.1.3.tgz
+    version: 2.1.3
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:04.012530549+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 383972c01f62e76177c8514a21625b8d2c6b818ffe049aa35563a8c525bb88f5
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.1.2.tgz
+    version: 2.1.2
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:04.000795507+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: b9fc75178fcbc94e2c060dde057c9893b09fd21588546585a3d6bfd58fa5f781
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.1.1.tgz
+    version: 2.1.1
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:03.990650344+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 24e4f710d6f9e30a4a22d0bb110dcadd0cd3d5b4fe955d2ca03d44edc16e8bc2
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.1.0.tgz
+    version: 2.1.0
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:03.981882919+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 4e895c7df3a2ac60e2b8cb109b9094e291bae4e967b6e15f16048cfa60dd5cb1
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.0.5.tgz
+    version: 2.0.5
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:03.972134234+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: a53683d2726eca637ceed5ad64277af59a994ef6793ce600057edef63b66a581
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.0.4.tgz
+    version: 2.0.4
+  - apiVersion: v1
+    appVersion: coog-2.10.2043
+    created: "2022-01-11T08:59:03.962886008+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 2a6ba7eff7d83ce40ad77f0b1492878e4d85b8bb1f81b54c70d55b997c158a76
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.0.3.tgz
+    version: 2.0.3
+  - apiVersion: v1
+    appVersion: coog-2.10.2042
+    created: "2022-01-11T08:59:03.952939283+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 93cb7cd5348849678bcc252a82482c442662b18d19637109d419a694fb26dee6
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.0.2.tgz
+    version: 2.0.2
+  - apiVersion: v1
+    appVersion: coog-2.10.2042
+    created: "2022-01-11T08:59:03.943881881+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: rabbitmq.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 3a2a933c25952478919397a805a23aa8145a54b07269a39e77ebf15eabee6989
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.0.1.tgz
+    version: 2.0.1
+  - apiVersion: v1
+    appVersion: coog-2.10.2042
+    created: "2022-01-11T08:59:03.935076041+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: rabbitmq
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.8
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 536a452338fb8a8e0a689f451bedfb3d53aea837a945c6211a4e5610b8621813
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-2.0.0.tgz
+    version: 2.0.0
+  - apiVersion: v1
+    appVersion: coog-2.8.16
+    created: "2022-01-11T08:59:03.925862935+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 5f131e11eceb1314e17b1171c5266e891cb13fa5170c985e1e2dd6291108d915
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.6.4.tgz
+    version: 1.6.4
+  - apiVersion: v1
+    appVersion: coog-2.8.16
+    created: "2022-01-11T08:59:03.917869418+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 1298efabe2477f4dd3256b702a34906f4478359677b8a4c1734b5af8ea022aa1
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.6.3.tgz
+    version: 1.6.3
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.909606664+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: a6e7082d6df265314950866a74e5f50ed36a9fbe1e9d5511a0d29f9dbb0a6082
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.6.0.tgz
+    version: 1.6.0
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.901998917+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 143ddd92c872cdbd227820fcf78e6690eade8a2656df1d4d217af11bf04369b6
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.5.0.tgz
+    version: 1.5.0
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.895819646+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 3c4163f5fffec49c1097d608e1349198e8d9e9190f536f761806a69ab67a0645
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.4.8.tgz
+    version: 1.4.8
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.888648957+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 9faa5e9bcd486b19bf590ba89d4357ed901ce428ad3bdd9a2223abe7dcdf163e
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.4.7.tgz
+    version: 1.4.7
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.87887543+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.5
+    description: A Helm chart for Coog
+    digest: 4c6592fc48ad997d8b3662fcc8c42d1d54590088c684c197afe7b09659936bdc
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.4.6.tgz
+    version: 1.4.6
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.869667408+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.4
+    description: A Helm chart for Coog
+    digest: 9f2be1b01e5e08a933cc7c5353b1cc6810ef5338ef0da6e8569c05c15441517f
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.4.4.tgz
+    version: 1.4.4
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.862385269+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.4
+    description: A Helm chart for Coog
+    digest: 9ec243a43fe7f84e87080deafa5f9402f9c31200403155eae826524ee06372ea
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.4.3.tgz
+    version: 1.4.3
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.855204485+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.4
+    description: A Helm chart for Coog
+    digest: 93188732ae7b179e9f81e3c08ad8eaff1310d6e2f9bbd59a65752244d1644e37
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.4.2.tgz
+    version: 1.4.2
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.847599422+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.3
+    description: A Helm chart for Coog
+    digest: 6d6fb50e28bda0c81ecada2fc7f6c9719783105f89c46499a12b6446f346d3a5
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.4.1.tgz
+    version: 1.4.1
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.840777901+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.3
+    description: A Helm chart for Coog
+    digest: ea2753f3414fe7307b5aa8f0fde8a272adec388b0277728fcdc0d44f8c546a51
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.4.0.tgz
+    version: 1.4.0
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.832743791+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.3
+    description: A Helm chart for Coog
+    digest: be9fecf48eadc93e6bd3fe07119b07e4e440b410292ef3f377b254304b347926
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.3.2.tgz
+    version: 1.3.2
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.82602724+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.2
+    description: A Helm chart for Coog
+    digest: 364e8de6903d5efa8c9b986fd2724312e9a9b497c8ac796f8b00c72d81a6f5ce
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.3.1.tgz
+    version: 1.3.1
+  - apiVersion: v1
+    appVersion: coog-2.8.2
+    created: "2022-01-11T08:59:03.819354506+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.14.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.9.6
+    - condition: flower.enabled
+      name: flower
+      repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+      version: 0.1.0
+    description: A Helm chart for Coog
+    digest: bd5c3dd73986ef7cd7c9c0f330ebbcc5bdc83d97dc7817750e87fe243660bec8
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.3.0.tgz
+    version: 1.3.0
+  - apiVersion: v1
+    appVersion: coog-2.7.32
+    created: "2022-01-11T08:59:03.812490424+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: fd5981f50ecc0fb1e82c38f2f22101a12b4e3a02928f902834f8c0cc4bc50651
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.1.2.tgz
+    version: 1.1.2
+  - apiVersion: v1
+    appVersion: coog-2.7.32
+    created: "2022-01-11T08:59:03.799632518+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: fe1a03f2621e41a71393447e03d31f43ee4320539515b0a7807edd55deaa5eca
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.1.1.tgz
+    version: 1.1.1
+  - apiVersion: v1
+    appVersion: coog-2.7.32
+    created: "2022-01-11T08:59:03.794135261+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: b0a5bf894e503825bd8df720fdaaf8db296394466e910c4d788a671e477d3fe5
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v1
+    appVersion: coog-2.7.30
+    created: "2022-01-11T08:59:03.731621308+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: 808050270d204150a31530d9bfcc1e395da20ed821c6c901b5eb82f33e53e323
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.18.tgz
+    version: 1.0.18
+  - apiVersion: v1
+    appVersion: coog-2.7.30
+    created: "2022-01-11T08:59:03.72515662+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: d64c1b0279c702faca773ffb63b4d5f0bc488b79c6e9e7dad27840f4c89a49b0
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.17.tgz
+    version: 1.0.17
+  - apiVersion: v1
+    appVersion: coog-2.7.30
+    created: "2022-01-11T08:59:03.718866605+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: 41a80819c4b0ffbc0aa21676b920bb63016611f154dcbb4c3a1441100b47390f
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.16.tgz
+    version: 1.0.16
+  - apiVersion: v1
+    appVersion: coog-2.7.12
+    created: "2022-01-11T08:59:03.71276939+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: cd3c232d07023b85f2f0029a917394bf6dbe87868cc8cac5c48cc1cf7724e77e
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.15.tgz
+    version: 1.0.15
+  - apiVersion: v1
+    appVersion: coog-2.7.12
+    created: "2022-01-11T08:59:03.706356371+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: c1b081766a6e0ee9ef2f373c788d8fee4b597a2d17c951a61878188e631d87bb
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.14.tgz
+    version: 1.0.14
+  - apiVersion: v1
+    appVersion: coog-2.7.12
+    created: "2022-01-11T08:59:03.700121315+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: 8f677b0561490b59ec69d2193dd5f606500afb4f518497593ee25f22add84328
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.13.tgz
+    version: 1.0.13
+  - apiVersion: v1
+    appVersion: coog-2.7.12
+    created: "2022-01-11T08:59:03.693889633+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: dd6f86d46645898e64229f040cdca0f14b8ea9a9bb04cb7fdee22ec207313622
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.12.tgz
+    version: 1.0.12
+  - apiVersion: v1
+    appVersion: coog-2.7.12
+    created: "2022-01-11T08:59:03.687993194+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: 3a45aa9acf163b6749973b86260d1acc4f1d6701dba11801abcbff7acac548e0
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.11.tgz
+    version: 1.0.11
+  - apiVersion: v1
+    appVersion: coog-2.7.12
+    created: "2022-01-11T08:59:03.681694428+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: 89c8c6abc3d9d30e734fd974bba8ac2d7230865ab046766c5c19f99ac062f6ed
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.10.tgz
+    version: 1.0.10
+  - apiVersion: v1
+    appVersion: coog-2.7.9
+    created: "2022-01-11T08:59:03.787385804+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: 879bef77e314d292ef191b23d34df5c2dc18636ddcc89f5c73bd88865d25aaa7
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.9.tgz
+    version: 1.0.9
+  - apiVersion: v1
+    appVersion: coog-2.7.9
+    created: "2022-01-11T08:59:03.778122028+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 10.5.0
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: f2148069b0bed39bbefb4037f30626bc8e2f77ef6cb3cd8bd0093c62610fadd7
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.8.tgz
+    version: 1.0.8
+  - apiVersion: v1
+    appVersion: coog-2.7.9
+    created: "2022-01-11T08:59:03.768578488+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: 17d997f51b616c1606b33b43a36c8ada20b013aa45b70573d7220a22f9c6bde1
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.7.tgz
+    version: 1.0.7
+  - apiVersion: v1
+    appVersion: coog-2.7.9
+    created: "2022-01-11T08:59:03.761612104+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: d5de93705638ee9c8966af3775f82b89c8b3a9bb008bddf76b692fd2d12f8b69
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v1
+    appVersion: coog-2.7.9
+    created: "2022-01-11T08:59:03.755769688+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: 011c423003c7f2101c608982c3a6fba8b4126a17ec82fee373588431fa2e8638
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.5.tgz
+    version: 1.0.5
+  - apiVersion: v1
+    appVersion: coog-2.7.9
+    created: "2022-01-11T08:59:03.749671419+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: 2fd9ae2a6dfd81a99ad5e793ef9f1dbb10e14d2e4cdb013a1416d89309f75d1e
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.4.tgz
+    version: 1.0.4
+  - apiVersion: v1
+    appVersion: coog-2.7.9
+    created: "2022-01-11T08:59:03.743460269+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: 9e23c6f68c735575f8c3db9979081a614ed1d3507e0c1e33ab5fc0127411c167
+    icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
+    name: coog
+    urls:
+    - coog-1.0.3.tgz
+    version: 1.0.3
+  - apiVersion: v1
+    appVersion: coog-2.7.9
+    created: "2022-01-11T08:59:03.737616348+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.2.0
+    description: A Helm chart for Coog
+    digest: 2caf64c905bd3f9b47761e659d2e8b97d3c79d86f079b8214f421c48cbd1c3ed
+    name: coog
+    urls:
+    - coog-1.0.2.tgz
+    version: 1.0.2
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-01-11T08:59:03.675631181+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.3.12
+    description: A Helm chart for Coog
+    digest: 5df04d6a643b82d99f8f9660aeac27f56be804e7eb3581f55d567632f2d6b601
+    name: coog
+    urls:
+    - coog-1.0.0.tgz
+    version: 1.0.0
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-01-11T08:59:03.669449183+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.3.12
+    description: A Helm chart for Coog
+    digest: 14df1ecc94c45e166951f7da18759595ea337de19d50aba6c7f6b9e666c68299
+    name: coog
+    urls:
+    - coog-0.1.29.tgz
+    version: 0.1.29
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-01-11T08:59:03.663442987+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.3.12
+    description: A Helm chart for Coog
+    digest: f73cfbe816a8d55f0547cca595974b7e2bc34b0fc826afcc27183d3f2d749a6a
+    name: coog
+    urls:
+    - coog-0.1.28.tgz
+    version: 0.1.28
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-01-11T08:59:03.657462885+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.3.12
+    description: A Helm chart for Coog
+    digest: ae312368c0c64e440fa995165a7d718c21ce6733d43da44c0e24dcfc249ce6a3
+    name: coog
+    urls:
+    - coog-0.1.27.tgz
+    version: 0.1.27
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-01-11T08:59:03.651003099+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.3.12
+    description: A Helm chart for Coog
+    digest: d967b30a7291e63705e8a8a8c3feb5f0bcf8aeb117d7bdde43e2cfc122627e77
+    name: coog
+    urls:
+    - coog-0.1.26.tgz
+    version: 0.1.26
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-01-11T08:59:03.645050691+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.3.12
+    description: A Helm chart for Coog
+    digest: a7d192183c56236b47bbfacfc570428683c49e03d9377fd21f7950b56b6f0f00
+    name: coog
+    urls:
+    - coog-0.1.25.tgz
+    version: 0.1.25
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-01-11T08:59:03.640413899+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.3.12
+    description: A Helm chart for Coog
+    digest: 1d4328fb7ae08d01c9f68f0ad5f91cc4ed5181d1c79c28cda8fa834202b12662
+    name: coog
+    urls:
+    - coog-0.1.24.tgz
+    version: 0.1.24
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-01-11T08:59:03.635094763+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.3.12
+    description: A Helm chart for Coog
+    digest: c331e59aed6ad2b2ebb8f48ed8b598b8bfe24af67e18d2ee5d6663361f6d3f44
+    name: coog
+    urls:
+    - coog-0.1.23.tgz
+    version: 0.1.23
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-01-11T08:59:03.629646918+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.3.12
+    description: A Helm chart for Coog
+    digest: afc84bfbb6d0c51ab46b6f375c0f2998da6bd58324e2f734a35f8cfe1c3cfed3
+    name: coog
+    urls:
+    - coog-0.1.22.tgz
+    version: 0.1.22
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-01-11T08:59:03.624282176+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.3.12
+    description: A Helm chart for Coog
+    digest: a58b3a201d80631c008c78095b1068693a65f3d48366a3201b10a16245fa6a43
+    name: coog
+    urls:
+    - coog-0.1.21.tgz
+    version: 0.1.21
+  - apiVersion: v1
+    appVersion: "1.0"
+    created: "2022-01-11T08:59:03.619562283+01:00"
+    dependencies:
+    - condition: mongodb.enabled
+      name: mongodb
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 6.1.1
+    - condition: redis.enabled
+      name: redis
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 8.1.2
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://kubernetes-charts.storage.googleapis.com/
+      version: 5.3.12
+    description: A Helm chart for Coog
+    digest: 77a0ec3c0381d27846c08ee0fd9c60a91cd399478ada5b95c6ae3040fcd267c5
+    name: coog
+    urls:
+    - coog-0.1.20.tgz
+    version: 0.1.20
+  flower:
+  - apiVersion: v1
+    appVersion: 0.9.5
+    created: "2022-01-11T08:59:04.334869922+01:00"
+    description: Flower Helm chart for Kubernetes
+    digest: b1335fb9b0646176c8228c47cbfc87a0fb1acc6e31da0f1b4c8865e62fa05f54
+    name: flower
+    urls:
+    - flower-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v1
+    appVersion: 0.9.2
+    created: "2022-01-11T08:59:04.334380847+01:00"
+    description: Flower Helm chart for Kubernetes
+    digest: bc9c09c7822370fa8981b0d1ae14aeda75902293d209f9fa03fec6c6dc7f2d34
+    name: flower
+    urls:
+    - flower-0.1.5.tgz
+    version: 0.1.5
+  - apiVersion: v1
+    appVersion: 0.9.2
+    created: "2022-01-11T08:59:04.333947393+01:00"
+    description: Flower Helm chart for Kubernetes
+    digest: 739cb0bf200aee04f093fb2f0954ef37d7b5b68e20382176929cb20fde158419
+    name: flower
+    urls:
+    - flower-0.1.4.tgz
+    version: 0.1.4
+  - apiVersion: v1
+    appVersion: 0.9.2
+    created: "2022-01-11T08:59:04.33362714+01:00"
+    description: Flower Helm chart for Kubernetes
+    digest: ba4f2945d2768a8a9b0d85165194e20fd0f2082670d2c9bb9a4b13c67744ed2d
+    name: flower
+    urls:
+    - flower-0.1.3.tgz
+    version: 0.1.3
+  - apiVersion: v1
+    appVersion: 0.9.2
+    created: "2022-01-11T08:59:04.333263918+01:00"
+    description: Flower Helm chart for Kubernetes
+    digest: 134142a1832a523e6f1290ac970e68f4af2bd865e8473eacc3d02a7a84cd5323
+    name: flower
+    urls:
+    - flower-0.1.2.tgz
+    version: 0.1.2
+  - apiVersion: v1
+    appVersion: 0.9.2
+    created: "2022-01-11T08:59:04.332952194+01:00"
+    description: Flower Helm chart for Kubernetes
+    digest: 7e6900b83ee0cf272a454994a4fa4ab632d64860da3f65cbba5fd438cab60083
+    name: flower
+    urls:
+    - flower-0.1.1.tgz
+    version: 0.1.1
+  - apiVersion: v1
+    appVersion: 0.9.2
+    created: "2022-01-11T08:59:04.332570957+01:00"
+    description: Flower Helm chart for Kubernetes
+    digest: 120b4742ddf18bf106be4efa03f74fad2e053517e873026d8e553fbc0a678686
+    name: flower
+    urls:
+    - flower-0.1.0.tgz
+    version: 0.1.0
+generated: "2022-01-11T08:59:03.607336041+01:00"

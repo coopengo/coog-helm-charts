@@ -13,17 +13,12 @@ rabbitmq:
   enabled: true
   resources:
     limits:
-      cpu: 600m
+      cpu: 300m
       memory: 400Mi
     requests:
       cpu: 100m
       memory: 100Mi
-  updateStrategyType: RollingUpdate
-  extraConfiguration: |-
-    consumer_timeout = 172800000
-    loopback_users.guest = false
-  livenessProbe:
-    initialDelaySeconds: 240
+  updateStrategyType: OnDelete
 
 ##
 ## Redis chart configuration
