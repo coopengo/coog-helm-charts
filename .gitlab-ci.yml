@@ -116,7 +116,7 @@ package:helm-chart:
     reports:
       dotenv: upload.env
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -152,7 +152,7 @@ update:readme:
     paths:
       - "**/README.md"
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -198,11 +198,10 @@ coreye:synchronize:coog:
         -F "variables[SERVICE]=coog" \
         https://git.coreye.fr/api/v4/projects/434/trigger/pipeline
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
-    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_NAME =~ /^coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2}))$/'
-    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
   needs:
     - package:helm-chart
     - update:readme
