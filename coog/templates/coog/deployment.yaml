@@ -146,7 +146,7 @@ spec:
               containerPort: 8000
               protocol: TCP
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "short_name" . }}
           image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
           imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
           securityContext:
