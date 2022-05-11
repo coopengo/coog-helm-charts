@@ -29,7 +29,7 @@ spec:
         paths:
         {{- range .paths }}
         - path: {{ . }}
-          pathType: {{ default "Prefix" .pathType }}
+          pathType: Prefix
           backend:
             service:
               name: {{ $fullName }}
