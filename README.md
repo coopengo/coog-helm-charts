@@ -2,27 +2,37 @@
 
 
 ## Prérequis :
-- Créer un compte sur https://hub.docker.com/ et demander des accès aux conteneurs à Coopengo
-- Kubernetes en version 1.15
-- Installer helm 2 : voir sur https://helm.sh/
+- Créer un compte sur [DockerHub](https://hub.docker.com/) et demander des accès aux conteneurs à Coopengo
+- Kubernetes en version 1.21
+- Installer [helm 3](https://helm.sh/)
 - Installer un Controller Ingress :
-   - Nginx Ingress Controller est conseillé : https://kubernetes.github.io/ingress-nginx/deploy/
-- Configurer des PersistentVolumes pour la persistence des données (indispensable en production)
-   - https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/
+   - [Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/) (recommandé)
+   - [Traefik](https://doc.traefik.io/traefik/getting-started/install-traefik/)
+- Configurer des [PersistentVolumes](https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/) pour la persistence des données - Indispensable en production
 
-## INJECTER LES SECRETS POUR LOADER LES IMAGES DE DOCKERHUB (login/password)
+
+## Injecter les secrets pour loader les images de dockerhub (login/password)
+
+En ligne de commande :
 
 ```bash
 kubectl create secret docker-registry docker-registry --docker-server="https://index.docker.io/v1/" --docker-username=login --docker-password=password --docker-email=email
 ```
-ou
 
+Dans un fichier de configuration au format YAML (recommandé) :
+
+1. Mettre en forme les identifiants ainsi que le json au format base64
 ```bash
-kubectl apply -f docker-registry.yml
+$ echo "<login>:<password>" | base64
+PGxvZ2luPjo8cGFzc3dvcmQ+Cg==
+
+$ echo '{"auths": {"docker.io": { "auth": "PGxvZ2luPjo8cGFzc3dvcmQ+Cg==" }}}' | base64
+eyJhdXRocyI6IHsiZG9ja2VyLmlvIjogeyAiYXV0aCI6ICJQR3h2WjJsdVBqbzhjR0Z6YzNkdmNt
+UStDZz09IiB9fX0K # Résultat de la commande à mettre à la place de "monsecretenbase64" dans le bloc suivant.
 ```
 
-Exemple de fichiers docker-registry.yml
 
+2. Récupérer le résultat de la derniere ligne de commande de l'étape précente pour la mettre à la place de "monsecretenbase64"
 ```yaml
 apiVersion: v1
 data:
@@ -34,44 +44,35 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 ```
 
-La valeur de monsecretenbase64 doit correspondre au résultat de la commande.
 
-A consulter : https://kubernetes.io/fr/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials
-
+3. Appliquer la configuration dans Kubernetes
 ```bash
-echo '{"auths": {"docker.io": { "auth": "login:pass ==> base64" }}}'|base64
+kubectl apply -f docker-registry.yml
 ```
 
-## OPTIONNEL : CONFIGURATION SPECIFIQUE CLIENTS
+Vous pourrez trouver plus d'informations sur [la documentation Kubernetes](https://kubernetes.io/fr/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials).
+
+
+## optionnel : Configuration specifique clients
 Il faut créer un fichier client_values.yml (standard helm) si l'on souhaite apporter des configurations spécifiques liées à l'environnement.
 
-## INSTALLATION DE COOG
+
+## Installation de Coog
 
 ```bash
-helm repo add coopengo https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
+helm repo add coopengo https://gitlab.com/api/v4/projects/35933718/packages/helm/stable
 helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
 ```
 
-## INSTALLATION DE NGINX INGRESS VIA HELM
+## Installation de nginx ingress via helm
 
 ```bash
 helm install stable/nginx-ingress
 ```
 
-## Mise à jour des version des Charts
 
-```bash
-helm3 repo update
-helm3 package flower && helm3 repo index .
-# git add . && git commit -m 'Flower packaging' && git push
-helm3 repo update
-helm3 dependency update coog
-helm3 package coog && helm3 repo index .
-# git add . && git commit -m 'Coog packaging' && git push 
-```
+## Router les erreurs vers sentry
 
+  Il faut ajouter la variable d'environnement au niveau du conteneur coog :
 
-## Initialisation de la base de donnée 
-```yaml
-command: ['sh', '-c', 'ep admin -d {{ .Values.coog.postgres.database }} -u ir res']
-```
+  TRYTOND_SENTRY_DSN : The dsn to a sentry instance that can be used to handle errors
