@@ -1,0 +1,36 @@
+{{- if .Values.maintenance_mode.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "full_name" . }}
+  labels:
+{{ include "chart_labels" . | indent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "short_name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "short_name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.maintenance_mode.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.maintenance_mode.image.repository }}:{{ .Values.maintenance_mode.image.tag }}"
+          imagePullPolicy: {{ .Values.maintenance_mode.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+{{- end }}

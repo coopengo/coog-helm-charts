@@ -6,6 +6,19 @@ quota:
   enabled: false
   rolling_update: false
 
+maintenance_mode:
+  enabled: false
+  imagePullSecrets:
+    - name: docker-registry
+  image:
+    repository: nginx
+    tag: alpine
+    pullPolicy: Always
+  ingress:
+    annotations:
+      nginx.ingress.kubernetes.io/custom-http-errors: "403"
+      nginx.ingress.kubernetes.io/whitelist-source-range: ""
+
 flower:
   enabled: false
 
