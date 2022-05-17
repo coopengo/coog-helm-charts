@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.17.2217](https://img.shields.io/badge/Version-22.17.2217-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 22.18.2219-maintenance](https://img.shields.io/badge/Version-22.18.2219--maintenance-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -190,11 +190,18 @@ A Helm chart for Coog
 | coog.workers | int | `2` | Number of coog workers to run |
 | cron.affinity | object | `{}` |  |
 | cron.coogCeleryModule | string | `"coog_async.coog_celery"` |  |
-| cron.enabled | bool | `false` | Deploy cron container(s) |
+| cron.enabled | bool | `true` | Deploy cron container(s) |
+| cron.livenessProbe.failureThreshold | int | `2` |  |
 | cron.livenessProbe.initialDelaySeconds | int | `30` |  |
 | cron.livenessProbe.periodSeconds | int | `120` |  |
+| cron.livenessProbe.successThreshold | int | `1` |  |
 | cron.livenessProbe.timeoutSeconds | int | `10` |  |
 | cron.nodeSelector | object | `{}` | Node labels for pod assignment |
+| cron.readinessProbe.failureThreshold | int | `2` |  |
+| cron.readinessProbe.initialDelaySeconds | int | `30` |  |
+| cron.readinessProbe.periodSeconds | int | `120` |  |
+| cron.readinessProbe.successThreshold | int | `1` |  |
+| cron.readinessProbe.timeoutSeconds | int | `10` |  |
 | cron.resources | object | `{"limits":{"cpu":"200m","memory":"500Mi"},"requests":{"cpu":"100m","memory":"300Mi"}}` | cron containers' resource requests and limits |
 | cron.tolerations | list | `[]` | Tolerations for pod assignment |
 | customer_backend.affinity | object | `{}` | Affinity for pod assignment |
@@ -265,6 +272,13 @@ A Helm chart for Coog
 | gateway.tolerations | list | `[]` | Tolerations for pod assignment |
 | gateway.whitelist | string | `nil` |  |
 | jwt.internal.encryption | string | `"changeme"` |  |
+| maintenance_mode.enabled | bool | `false` |  |
+| maintenance_mode.image.pullPolicy | string | `"Always"` |  |
+| maintenance_mode.image.repository | string | `"nginx"` |  |
+| maintenance_mode.image.tag | string | `"alpine"` |  |
+| maintenance_mode.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| maintenance_mode.ingress.annotations."nginx.ingress.kubernetes.io/custom-http-errors" | string | `"403"` |  |
+| maintenance_mode.ingress.annotations."nginx.ingress.kubernetes.io/whitelist-source-range" | string | `""` |  |
 | mongodb.enabled | bool | `true` |  |
 | mongodb.image.tag | string | `"4.0.10-debian-9-r39"` |  |
 | mongodb.mongodbDatabase | string | `"coog-gateway"` |  |
