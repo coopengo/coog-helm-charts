@@ -11,8 +11,8 @@ maintenance_mode:
   imagePullSecrets:
     - name: docker-registry
   image:
-    repository: nginx
-    tag: alpine
+    repository: coog-nginx-error-pages
+    tag: latest
     pullPolicy: Always
   ingress:
     annotations:
