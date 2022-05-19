@@ -14,6 +14,19 @@ maintenance_mode:
     repository: cooghub/coog-nginx-error-pages
     tag: latest
     pullPolicy: Always
+  env:
+    TEMPLATE_NAME: "lost-in-space"
+    DEFAULT_ERROR_PAGE: 404
+    DEFAULT_HTTP_CODE: 404
+    SHOW_DETAILS: false
+    DISABLE_L10N: false
+  resources:
+    limits:
+      cpu: 100m
+      memory: 400Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi
   ingress:
     annotations:
       nginx.ingress.kubernetes.io/custom-http-errors: "403"

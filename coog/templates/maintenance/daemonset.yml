@@ -1,6 +1,6 @@
 {{- if .Values.maintenance_mode.enabled -}}
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: {{ include "full_name" . }}
   labels:
@@ -31,6 +31,15 @@ spec:
             - name: http
               containerPort: 8080
               protocol: TCP
+          env:
+            {{- if .Values.maintenance_mode.env }}
+            {{- range $key, $value := .Values.maintenance_mode.env }}
+            - name:  {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
+          resources:
+            {{- toYaml .Values.maintenance_mode.resources | nindent 12 }}
       {{- with .Values.maintenance_mode.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
