@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.18.2219-maintenance](https://img.shields.io/badge/Version-22.18.2219--maintenance-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 22.19.2219-maintenance](https://img.shields.io/badge/Version-22.19.2219--maintenance-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -274,8 +274,8 @@ A Helm chart for Coog
 | jwt.internal.encryption | string | `"changeme"` |  |
 | maintenance_mode.enabled | bool | `false` |  |
 | maintenance_mode.image.pullPolicy | string | `"Always"` |  |
-| maintenance_mode.image.repository | string | `"nginx"` |  |
-| maintenance_mode.image.tag | string | `"alpine"` |  |
+| maintenance_mode.image.repository | string | `"coog-nginx-error-pages"` |  |
+| maintenance_mode.image.tag | string | `"latest"` |  |
 | maintenance_mode.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | maintenance_mode.ingress.annotations."nginx.ingress.kubernetes.io/custom-http-errors" | string | `"403"` |  |
 | maintenance_mode.ingress.annotations."nginx.ingress.kubernetes.io/whitelist-source-range" | string | `""` |  |
