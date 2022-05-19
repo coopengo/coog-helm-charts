@@ -18,6 +18,7 @@ maintenance_mode:
     annotations:
       nginx.ingress.kubernetes.io/custom-http-errors: "403"
       nginx.ingress.kubernetes.io/whitelist-source-range: ""
+  nodeSelector: {}
 
 flower:
   enabled: false
