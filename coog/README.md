@@ -279,6 +279,7 @@ A Helm chart for Coog
 | maintenance_mode.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | maintenance_mode.ingress.annotations."nginx.ingress.kubernetes.io/custom-http-errors" | string | `"403"` |  |
 | maintenance_mode.ingress.annotations."nginx.ingress.kubernetes.io/whitelist-source-range" | string | `""` |  |
+| maintenance_mode.nodeSelector | object | `{}` |  |
 | mongodb.enabled | bool | `true` |  |
 | mongodb.image.tag | string | `"4.0.10-debian-9-r39"` |  |
 | mongodb.mongodbDatabase | string | `"coog-gateway"` |  |
