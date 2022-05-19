@@ -9,8 +9,13 @@ metadata:
 {{ include "chart_labels" . | indent 4 }}
   {{- with .Values.web.ingress.annotations }}
   annotations:
+  {{- if $.Values.maintenance_mode.enabled }}
+    {{- toYaml $.Values.maintenance_mode.ingress.annotations | nindent 4 }}
+    nginx.ingress.kubernetes.io/default-backend: "{{ $.Release.Name }}-{{ $.Chart.Name }}-maintenance"
+  {{- else }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- end }}}
 spec:
 {{- if .Values.web.ingress.tls }}
   tls:
