@@ -274,7 +274,7 @@ A Helm chart for Coog
 | jwt.internal.encryption | string | `"changeme"` |  |
 | maintenance_mode.enabled | bool | `false` |  |
 | maintenance_mode.image.pullPolicy | string | `"Always"` |  |
-| maintenance_mode.image.repository | string | `"coog-nginx-error-pages"` |  |
+| maintenance_mode.image.repository | string | `"cooghub/coog-nginx-error-pages"` |  |
 | maintenance_mode.image.tag | string | `"latest"` |  |
 | maintenance_mode.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | maintenance_mode.ingress.annotations."nginx.ingress.kubernetes.io/custom-http-errors" | string | `"403"` |  |
