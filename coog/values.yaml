@@ -23,10 +23,10 @@ maintenance_mode:
   resources:
     limits:
       cpu: 100m
-      memory: 400Mi
-    requests:
-      cpu: 100m
       memory: 100Mi
+    requests:
+      cpu: 50m
+      memory: 50Mi
   ingress:
     annotations:
       nginx.ingress.kubernetes.io/custom-http-errors: "403"
@@ -910,6 +910,8 @@ gateway:
         paths: []
     # -- TLS configuration for gateway containers'
     tls: []
+    nginx:
+      rewritetarget: '/$2'
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
