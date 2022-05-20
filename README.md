@@ -60,7 +60,7 @@ Il faut créer un fichier client_values.yml (standard helm) si l'on souhaite app
 ## Installation de Coog
 
 ```bash
-helm repo add coopengo https://gitlab.com/api/v4/projects/32901462/packages/helm/stable
+helm repo add coopengo https://gitlab.com/api/v4/projects/35933718/packages/helm/stable
 helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
 ```
 
