@@ -42,7 +42,7 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
           resources:
-            {{- toYaml .Values.coog.initContainers.resources | nindent 12 }}
+            {{- toYaml .Values.customer_frontend.initContainers.resources | nindent 12 }}
           command: ['yarn', 'build', '--prefix-paths']
           volumeMounts:
             - name: builddir
