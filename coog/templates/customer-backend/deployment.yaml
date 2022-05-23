@@ -48,8 +48,6 @@ spec:
             - name: builddir
               mountPath: "/workdir/build"
           env:
-            - name:  PORT
-              value: "1337"
             - name:  DATABASE_HOST
             {{- if not .Values.coog.external_postgres.enabled }}
               value: "{{ .Release.Name }}-postgresql"
@@ -98,8 +96,6 @@ spec:
             - name: builddir
               mountPath: "/workdir/build"
           env:
-            - name:  PORT
-              value: "1337"
             - name:  DATABASE_HOST
             {{- if not .Values.coog.external_postgres.enabled }}
               value: "{{ .Release.Name }}-postgresql"
