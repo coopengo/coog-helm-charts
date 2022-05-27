@@ -1,7 +1,7 @@
 {{- if .Values.web.enabled -}}
 {{- if .Values.web.ingress.enabled -}}
 {{- $fullName := include "full_name" . -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -41,10 +41,13 @@ spec:
       http:
         paths:
         {{- range .paths }}
-          - path: {{ . }}
-            backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
+        - path: {{ . }}
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ $fullName }}
+              port:
+                name: http
         {{- end }}
   {{- end }}
 {{- end }}
