@@ -8,10 +8,14 @@ metadata:
   labels:
 {{ include "chart_labels" . | indent 4 }}
   annotations:
+  {{- if .Values.gateway.ingress.nginx.rewritetarget }}
     nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.gateway.ingress.nginx.rewritetarget | quote }}
-  {{- if $.Values.maintenance_mode.enabled }}
-    {{- toYaml $.Values.maintenance_mode.ingress.annotations | nindent 4 }}
-    nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.maintenance_mode.nginx.customhttperrors | quote }}
+  {{- end }}
+  {{- if .Values.maintenance_mode.enabled }}
+  {{- range $key, $value := $.Values.maintenance_mode.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+    nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.maintenance_mode.ingress.nginx.customhttperrors | quote }}
     nginx.ingress.kubernetes.io/default-backend: "{{ $.Release.Name }}-{{ $.Chart.Name }}-maintenance"
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ .Values.maintenance_mode.ingress.nginx.whitelistsourcerange | quote }}
   {{- else }}

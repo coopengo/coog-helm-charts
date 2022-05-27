@@ -7,7 +7,7 @@ quota:
   rolling_update: false
 
 maintenance_mode:
-  enabled: false
+  enabled: true
   imagePullSecrets:
     - name: docker-registry
   image:
@@ -28,9 +28,10 @@ maintenance_mode:
       cpu: 50m
       memory: 50Mi
   ingress:
-    annotations:
-      nginx.ingress.kubernetes.io/custom-http-errors: "403"
-      nginx.ingress.kubernetes.io/whitelist-source-range: ""
+    nginx:
+      customhttperrors: '403'
+      whitelistsourcerange: '127.0.0.1/32'
+    annotations: {}
   nodeSelector: {}
 
 flower:
@@ -604,6 +605,8 @@ coog:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+    nginx:
+      whitelistsourcerange: '127.0.0.1/32'
 
   # -- coog containers' resource requests and limits
   resources:
@@ -774,6 +777,9 @@ web:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+    nginx:
+      rewritetarget: '/$2'
+      whitelistsourcerange: '127.0.0.1/32'
 
   livenessProbe:
     periodSeconds: 60
@@ -910,11 +916,12 @@ gateway:
         paths: []
     # -- TLS configuration for gateway containers'
     tls: []
-    nginx:
-      rewritetarget: '/$2'
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+    nginx:
+      rewritetarget: '/$2'
+      whitelistsourcerange: '127.0.0.1/32'
 
   # -- gateway containers' resource requests and limits
   resources:
@@ -974,6 +981,8 @@ static:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+    nginx:
+      whitelistsourcerange: '127.0.0.1/32'
 
   # -- static containers' resource requests and limits
   resources:
