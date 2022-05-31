@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.19.2219-ingress](https://img.shields.io/badge/Version-22.19.2219--ingress-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 22.21.2221-cron-liveness](https://img.shields.io/badge/Version-22.21.2221--cron--liveness-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -196,12 +196,14 @@ A Helm chart for Coog
 | cron.livenessProbe.periodSeconds | int | `120` |  |
 | cron.livenessProbe.successThreshold | int | `1` |  |
 | cron.livenessProbe.timeoutSeconds | int | `10` |  |
+| cron.livenessProbe_enabled | bool | `true` |  |
 | cron.nodeSelector | object | `{}` | Node labels for pod assignment |
 | cron.readinessProbe.failureThreshold | int | `2` |  |
 | cron.readinessProbe.initialDelaySeconds | int | `30` |  |
 | cron.readinessProbe.periodSeconds | int | `120` |  |
 | cron.readinessProbe.successThreshold | int | `1` |  |
 | cron.readinessProbe.timeoutSeconds | int | `10` |  |
+| cron.readinessProbe_enabled | bool | `true` |  |
 | cron.resources | object | `{"limits":{"cpu":"200m","memory":"500Mi"},"requests":{"cpu":"100m","memory":"300Mi"}}` | cron containers' resource requests and limits |
 | cron.tolerations | list | `[]` | Tolerations for pod assignment |
 | customer_backend.affinity | object | `{}` | Affinity for pod assignment |
