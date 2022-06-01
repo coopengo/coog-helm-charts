@@ -47,11 +47,13 @@ spec:
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/public"
+          {{- if .Values.customer_frontend.env }}
           env:
-            {{- range $key, $value := .Values.customer_frontend.extraEnv }}
+            {{- range $key, $value := .Values.customer_frontend.env }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
+          {{- end }}
           {{- end }}
       containers:
         - name: {{ .Chart.Name }}
