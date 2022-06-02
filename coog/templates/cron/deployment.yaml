@@ -152,17 +152,19 @@ spec:
               containerPort: 8000
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /cron_liveness
-              port: http
             exec:
-              {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
+              command:
+                - "ep"
+                - "cron"
+                - "--check"
+            {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
           readinessProbe:
-            httpGet:
-              path: /cron_readiness
-              port: http
             exec:
-              {{- toYaml .Values.cron.readinessProbe | nindent 12 }}
+              command:
+                - "ep"
+                - "cron"
+                - "--check"
+            {{- toYaml .Values.cron.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.cron.resources | nindent 12 }}
       {{- with .Values.cron.nodeSelector }}
