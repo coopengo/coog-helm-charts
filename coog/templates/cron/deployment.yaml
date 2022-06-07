@@ -154,16 +154,16 @@ spec:
           livenessProbe:
             exec:
               command:
-                - "ep"
-                - "cron"
-                - "--check"
+                - "/bin/bash"
+                - "-c"
+                - "ep cron --check"
             {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
           readinessProbe:
             exec:
               command:
-                - "ep"
-                - "cron"
-                - "--check"
+                - "/bin/bash"
+                - "-c"
+                - "ep cron --check"
             {{- toYaml .Values.cron.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.cron.resources | nindent 12 }}
