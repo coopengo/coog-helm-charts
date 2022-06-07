@@ -91,7 +91,6 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: 1000
-          command: ['yarn', 'start']
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/build"
