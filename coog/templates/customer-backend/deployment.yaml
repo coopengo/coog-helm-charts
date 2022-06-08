@@ -40,10 +40,10 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           resources:
             {{- toYaml .Values.customer_backend.initContainers.resources | nindent 12 }}
-          command: ['yarn', 'build', '--no-optimization']
+          command: ['sh', '-c', 'yarn', 'build', '--no-optimization']
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/build"
@@ -90,7 +90,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/build"
