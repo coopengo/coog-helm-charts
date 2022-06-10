@@ -114,7 +114,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: coog-trytond-secret
-                  key: TRYTOND_ASYNC_CELERY
+                  key: TRYTOND_ASYNC__CELERY
+            - name:  TRYTOND_ASYNC__CELERY
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_ASYNC__CELERY
             {{- end }}
             - name:  TRYTOND_DATABASE__URI
               valueFrom:
@@ -228,7 +233,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: coog-trytond-secret
-                  key: TRYTOND_ASYNC_CELERY
+                  key: TRYTOND_ASYNC__CELERY
+            - name:  TRYTOND_ASYNC__CELERY
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_ASYNC__CELERY
             {{- end }}
             - name:  TRYTOND_CACHE__CLEAN_TIMEOUT
               value: "0"
