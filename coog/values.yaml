@@ -843,6 +843,8 @@ portal:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+    nginx:
+      whitelistsourcerange: '127.0.0.1/32'
 
   # -- portal containers' resource requests and limits
   resources:
