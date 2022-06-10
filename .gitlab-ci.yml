@@ -117,7 +117,7 @@ package:helm-chart:
     reports:
       dotenv: upload.env
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
+    - if: '$CI_PIPELINE_SOURCE == "push"'
       changes:
         - "**/Chart.yaml"
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -156,7 +156,6 @@ update:readme:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
-    - if: '$CI_PIPELINE_SOURCE == "web"'
   needs:
     - package:helm-chart
   allow_failure: true
