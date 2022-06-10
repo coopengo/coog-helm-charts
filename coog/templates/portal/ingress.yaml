@@ -7,7 +7,6 @@ metadata:
   name: {{ $fullName }}
   labels:
 {{ include "chart_labels" . | indent 4 }}
-  {{- with .Values.portal.ingress.annotations }}
   annotations:
   {{- if $.Values.maintenance_mode.enabled }}
   {{- range $key, $value := $.Values.maintenance_mode.ingress.annotations }}
