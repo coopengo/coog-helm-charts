@@ -110,12 +110,12 @@ spec:
             - name: TRYTOND_CACHE__RECORD
               value: "{{ .Values.coog.cache_record }}"
             {{- if .Values.rabbitmq.enabled }}
-            - name:  TRYTOND_ASYNC_CELERY
+            - name:  TRYTOND_ASYNC__CELERY
               valueFrom:
                 secretKeyRef:
                   name: coog-trytond-secret
                   key: TRYTOND_ASYNC__CELERY
-            - name:  TRYTOND_ASYNC__CELERY
+            - name:  TRYTOND_ASYNC_CELERY
               valueFrom:
                 secretKeyRef:
                   name: coog-trytond-secret
@@ -229,12 +229,12 @@ spec:
             {{- end }}
             {{- end }}
             {{- if .Values.rabbitmq.enabled }}
-            - name:  TRYTOND_ASYNC_CELERY
+            - name:  TRYTOND_ASYNC__CELERY
               valueFrom:
                 secretKeyRef:
                   name: coog-trytond-secret
                   key: TRYTOND_ASYNC__CELERY
-            - name:  TRYTOND_ASYNC__CELERY
+            - name:  TRYTOND_ASYNC_CELERY
               valueFrom:
                 secretKeyRef:
                   name: coog-trytond-secret
