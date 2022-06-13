@@ -151,13 +151,6 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
-          livenessProbe:
-            exec:
-              command:
-                - "/bin/bash"
-                - "-c"
-                - "ep cron --check"
-            {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
           readinessProbe:
             exec:
               command:
