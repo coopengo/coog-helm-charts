@@ -151,13 +151,13 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
-          readinessProbe:
+          livenessProbe:
             exec:
               command:
                 - "/bin/bash"
                 - "-c"
                 - "ep cron --check"
-            {{- toYaml .Values.cron.readinessProbe | nindent 12 }}
+            {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.cron.resources | nindent 12 }}
       {{- with .Values.cron.nodeSelector }}
