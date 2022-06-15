@@ -160,13 +160,14 @@ spec:
                 - "-c"
                 - "ep cron --check"
             {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
-          readinessProbe:
+          startupProbe:
             exec:
               command:
                 - "/bin/bash"
                 - "-c"
                 - "ep cron --check"
-            {{- toYaml .Values.cron.readinessProbe | nindent 12 }}
+            failureThreshold: 12
+            periodSeconds: 10
           resources:
             {{- toYaml .Values.cron.resources | nindent 12 }}
       {{- with .Values.cron.nodeSelector }}
