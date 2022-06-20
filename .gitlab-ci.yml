@@ -78,7 +78,7 @@ package:automatic-generation:
   stage: package
   image: bitnami/git
   before_script:
-    - !reference [.git:debian, before_script]
+    - !reference [.git_with_ssh:debian, before_script]
     - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
     - |-
       if [[ ${CI_COMMIT_BRANCH} == "${CI_DEFAULT_BRANCH}" ]]; then
