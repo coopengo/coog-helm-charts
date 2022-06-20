@@ -1,6 +1,7 @@
 stages:
   - synchronize
   - lint
+  - trigger
   - package
   - update
   - coreye
@@ -58,7 +59,7 @@ lint:helm-chart:
         - "**/*.yaml"
 
 trigger:automatic-generation:
-  stage: package
+  stage: trigger
   image: bitnami/git
   script:
     - |-
@@ -93,11 +94,11 @@ package:automatic-generation:
         then
           sed -i "/version: /c\version: \'${VERSION}\'" "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml"
           git commit -am "Packaging ${VERSION}" || echo "Nothing to commit"
-          git push
+          git push origin "${CI_COMMIT_BRANCH}"
         fi
       done
   rules:
-    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger)$/ && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
+    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger)$/'
 
 package:helm-chart:
   stage: package
