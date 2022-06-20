@@ -58,7 +58,7 @@ lint:helm-chart:
       changes:
         - "**/*.yaml"
 
-trigger:security:test:
+trigger:automatic-generation:
   stage: package
   image: bitnami/git
   script:
@@ -76,7 +76,7 @@ trigger:security:test:
 
 package:automatic-generation:
   stage: package
-  image: alpine
+  image: bitnami/git
   before_script:
     - |-
       if [[ ${CI_COMMIT_BRANCH} == "${CI_DEFAULT_BRANCH}" ]]; then
