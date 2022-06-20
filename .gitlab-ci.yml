@@ -92,9 +92,10 @@ package:automatic-generation:
       do
         if [ -f "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml" ]
         then
+          git checkout ${CI_COMMIT_BRANCH}
           sed -i "/version: /c\version: \'${VERSION}\'" "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml"
           git commit -am "Packaging ${VERSION}" || echo "Nothing to commit"
-          git push origin "${CI_COMMIT_BRANCH}"
+          git push
         fi
       done
   rules:
