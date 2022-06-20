@@ -5,19 +5,18 @@ stages:
   - update
   - coreye
 
+include:
+  - project: 'coopengo/devops/gitlab-ci-template'
+    ref: master
+    file: 
+      - '/Jobs/reference.debian.gitlab-ci.yml'
+      - '/Jobs/reference.alpine.gitlab-ci.yml'
+
 synchronize:pipeline:
   stage: synchronize
-  image: bitnami/git:latest
-  variables:
-    REPOSITORY_SSH_KEY: "${SSH_KEY}"
+  image: bitnami/git
   before_script:
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - ssh-keyscan -H "${CI_SERVER_HOST}" >>~/.ssh/known_hosts
-    - echo "${REPOSITORY_SSH_KEY}" >~/.ssh/id_rsa
-    - chmod 400 ~/.ssh/id_rsa
-    - git config --global user.email "${GITLAB_USER_EMAIL}"
-    - git config --global user.name "🤖 GitLab CI/CD 🤖"
+    - !reference [.git_with_ssh:debian, before_script]
     - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
     - git fetch --all
   script:
@@ -58,7 +57,7 @@ lint:helm-chart:
       changes:
         - "**/*.yaml"
 
-trigger:security:test:
+trigger:automatic-generation:
   stage: package
   image: bitnami/git
   script:
@@ -76,8 +75,10 @@ trigger:security:test:
 
 package:automatic-generation:
   stage: package
-  image: alpine
+  image: bitnami/git
   before_script:
+    - !reference [.git:debian, before_script]
+    - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
     - |-
       if [[ ${CI_COMMIT_BRANCH} == "${CI_DEFAULT_BRANCH}" ]]; then
         VERSION=$(date +%y.%V.%y%V)
@@ -104,16 +105,10 @@ package:helm-chart:
     name: alpine/helm
     entrypoint: [""] # avoid error message on start : Error: unknown command "sh" for "helm"
   variables:
-    REPOSITORY_SSH_KEY: "${SSH_KEY}"
+    INSTALL_ADDITIONAL_PACKAGES: curl yq jq
   before_script:
-    - apk add --no-cache curl yq jq git openssh-client
-    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-    - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
-    - echo "${REPOSITORY_SSH_KEY}" > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
-    - ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
-    - git config --global user.email "${GITLAB_USER_EMAIL}" &&
-      git config --global user.name "🤖 GitLab CI/CD 🤖" &&
-      git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
+    - !reference [.git_with_ssh:alpine, before_script]
+    - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
   script:
     - |-
       for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".git" -exec basename {} \;)
@@ -167,22 +162,15 @@ update:readme:
   image: golang:alpine
   variables:
     GO111MODULE: "on"
-    REPOSITORY_SSH_KEY: "${SSH_KEY}"
   before_script:
     - |-
       if [ "$HELM_NEW_CHART" != "true" ]; then
         echo "Charts didn't change, nothing to update"
         exit 0
       fi
-    - apk add --no-cache git openssh-client
+    - !reference [.git_with_ssh:alpine, before_script]
     - go install github.com/norwoodj/helm-docs/cmd/helm-docs@latest
-    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-    - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
-    - echo "${REPOSITORY_SSH_KEY}" > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
-    - ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
-    - git config --global user.email "${GITLAB_USER_EMAIL}" &&
-      git config --global user.name "🤖 GitLab CI/CD 🤖" &&
-      git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
+    - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
   script:
     - helm-docs
     - git status | awk '/modified/{print $2}' | grep README.md | xargs git add
@@ -205,21 +193,14 @@ coreye:synchronize:coog:
   image: bitnami/git
   variables:
     REPOSITORY_SSH_KEY: "${SSH_KEY}"
+    INSTALL_ADDITIONAL_PACKAGES: curl
   before_script:
     - |-
       if [ "$HELM_NEW_CHART" != "true" ]; then
         echo "Charts didn't change, nothing to update"
         exit 0
       fi
-    - apt update &&
-      apt install --no-install-recommends --no-install-suggests -y openssh-client curl
-    - mkdir -p ~/.ssh && chmod 700 ~/.ssh
-    - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
-    - ssh-keyscan -H 'git.coreye.fr' >> ~/.ssh/known_hosts
-    - echo "${REPOSITORY_SSH_KEY}" > ~/.ssh/id_rsa && chmod 400 ~/.ssh/id_rsa
-    - ssh-keygen -y -f ~/.ssh/id_rsa > ~/.ssh/id_rsa.pub
-    - git config --global user.email "${GITLAB_USER_EMAIL}" &&
-      git config --global user.name "🤖 GitLab CI/CD 🤖"
+    - !reference [.git_with_ssh:debian, before_script]
   script:
     - git clone --single-branch --branch "${CI_COMMIT_REF_NAME}" https://${COREYE_REPO_USER}:${COREYE_REPO_TOKEN}@git.coreye.fr/coopengo/artifacts/coopengo_helm_charts.git
     - cd coopengo_helm_charts
