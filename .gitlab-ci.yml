@@ -98,7 +98,7 @@ package:automatic-generation:
         fi
       done
   rules:
-    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger)$/'
+    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger|pipeline)$/'
 
 package:helm-chart:
   stage: package
