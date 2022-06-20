@@ -1,6 +1,6 @@
 # coog
 
-![Version: 2.14.2220](https://img.shields.io/badge/Version-2.14.2220-informational?style=flat-square) ![AppVersion: coog-2.14](https://img.shields.io/badge/AppVersion-coog--2.14-informational?style=flat-square)
+![Version: 2.14.2225](https://img.shields.io/badge/Version-2.14.2225-informational?style=flat-square) ![AppVersion: coog-2.14](https://img.shields.io/badge/AppVersion-coog--2.14-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -329,6 +329,7 @@ A Helm chart for Coog
 | portal.ingress.annotations | object | `{}` | Ingress annotations for portal containers' |
 | portal.ingress.enabled | bool | `false` | Enable ingress controller resource for portal containers' |
 | portal.ingress.hosts | list | `[{"host":"portal.local","paths":[]}]` | Default host for the ingress resource for portal containers' |
+| portal.ingress.nginx.whitelistsourcerange | string | `"127.0.0.1/32"` |  |
 | portal.ingress.tls | list | `[]` | TLS configuration for portal containers' |
 | portal.nameOverride | string | `""` |  |
 | portal.nodeSelector | object | `{}` | Node labels for pod assignment |
