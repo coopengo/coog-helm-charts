@@ -11,7 +11,7 @@ maintenance_mode:
   imagePullSecrets:
     - name: docker-registry
   image:
-    repository: cooghub/coog-nginx-error-pages
+    repository: cooghub/nginx-custom-error-pages
     tag: latest
     pullPolicy: Always
   # Possible variables :
