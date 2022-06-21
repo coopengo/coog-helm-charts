@@ -30,9 +30,7 @@ synchronize:pipeline:
       done
       git push --all
   rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
       changes:
         - ".gitlab-ci.yml"
         - "README.md"
@@ -56,9 +54,7 @@ lint:helm-chart:
         fi
       done
   rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/*.yaml"
 
@@ -76,9 +72,7 @@ trigger:automatic-generation:
           https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       done
   rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: '$CI_PIPELINE_SOURCE =~ /^(web|schedule)$/ && $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
+    - if: '$CI_PIPELINE_SOURCE =~ /^(web|schedule)$/ && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 package:automatic-generation:
   stage: package
@@ -105,9 +99,7 @@ package:automatic-generation:
         fi
       done
   rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger|pipeline)$/'
+    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger|pipeline)$/ && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
 
 package:helm-chart:
   stage: package
@@ -162,9 +154,7 @@ package:helm-chart:
     reports:
       dotenv: upload.env
   rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
     - if: '$CI_PIPELINE_SOURCE == "web"'
@@ -187,17 +177,17 @@ update:readme:
     - helm-docs
     - git status | awk '/modified/{print $2}' | grep README.md | xargs git add
     - git commit -m "Generate README for charts with helm-docs"
-    - git push origin HEAD:${CI_COMMIT_REF_NAME}
+    - git push origin HEAD:${CI_COMMIT_BRANCH}
   artifacts:
     expire_in: 2 hours
     paths:
       - "**/README.md"
   rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+
   needs:
     - package:helm-chart
   allow_failure: true
@@ -233,12 +223,10 @@ coreye:synchronize:coog:
         -F "variables[SERVICE]=coog" \
         https://git.coreye.fr/api/v4/projects/434/trigger/pipeline
   rules:
-    - if: $CI_COMMIT_TAG
-      when: never
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
-    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
   needs:
     - package:helm-chart
     - update:readme
