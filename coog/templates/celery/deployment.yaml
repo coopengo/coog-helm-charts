@@ -211,10 +211,6 @@ spec:
               value: "{{ .Values.secrets.coog.postgres.database }}"
             - name: TRYTOND_BATCH_CONTRACT_INVOICE_BULK___SET___NUMBER__JOB_SIZE
               value: "1"
-            {{- if .Values.celery.specificBatchConcurrency.enabled }}
-            - name: TRYTOND_CONCURRENCY_CONTRACT_INVOICE_BULK___SET___NUMBER
-              value: "1"
-            {{- end }}
             {{- if .Values.celery.batchConfig }}
             {{- range $key, $value := .Values.celery.batchConfig }}
             - name:  {{ $key }}
