@@ -7,7 +7,7 @@ quota:
   rolling_update: false
 
 maintenance_mode:
-  enabled: true
+  enabled: false
   imagePullSecrets:
     - name: docker-registry
   image:
