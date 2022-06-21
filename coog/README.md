@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.21.2221-maintenance](https://img.shields.io/badge/Version-22.21.2221--maintenance-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 22.25.2225](https://img.shields.io/badge/Version-22.25.2225-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -12,7 +12,7 @@ A Helm chart for Coog
 | https://charts.bitnami.com/bitnami | postgresql | 8.9.6 |
 | https://charts.bitnami.com/bitnami | rabbitmq | 7.6.8 |
 | https://charts.bitnami.com/bitnami | redis | 10.5.0 |
-| https://gitlab.com/api/v4/projects/32901462/packages/helm/stable | flower | 0.2.1 |
+| https://gitlab.com/api/v4/projects/35933718/packages/helm/stable | flower | 0.2.1 |
 
 ## Values
 
@@ -336,6 +336,7 @@ A Helm chart for Coog
 | portal.ingress.annotations | object | `{}` | Ingress annotations for portal containers' |
 | portal.ingress.enabled | bool | `false` | Enable ingress controller resource for portal containers' |
 | portal.ingress.hosts | list | `[{"host":"portal.local","paths":[]}]` | Default host for the ingress resource for portal containers' |
+| portal.ingress.nginx.whitelistsourcerange | string | `"127.0.0.1/32"` |  |
 | portal.ingress.tls | list | `[]` | TLS configuration for portal containers' |
 | portal.nameOverride | string | `""` |  |
 | portal.nodeSelector | object | `{}` | Node labels for pod assignment |
