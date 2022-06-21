@@ -1,6 +1,7 @@
 stages:
   - synchronize
   - lint
+  - trigger
   - package
   - update
   - coreye
@@ -29,6 +30,8 @@ synchronize:pipeline:
       done
       git push --all
   rules:
+    - if: $CI_COMMIT_TAG
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
       changes:
         - ".gitlab-ci.yml"
@@ -53,12 +56,14 @@ lint:helm-chart:
         fi
       done
   rules:
+    - if: $CI_COMMIT_TAG
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "push"'
       changes:
         - "**/*.yaml"
 
 trigger:automatic-generation:
-  stage: package
+  stage: trigger
   image: bitnami/git
   script:
     - |-
@@ -71,13 +76,15 @@ trigger:automatic-generation:
           https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       done
   rules:
+    - if: $CI_COMMIT_TAG
+      when: never
     - if: '$CI_PIPELINE_SOURCE =~ /^(web|schedule)$/ && $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH'
 
 package:automatic-generation:
   stage: package
   image: bitnami/git
   before_script:
-    - !reference [.git:debian, before_script]
+    - !reference [.git_with_ssh:debian, before_script]
     - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
     - |-
       if [[ ${CI_COMMIT_BRANCH} == "${CI_DEFAULT_BRANCH}" ]]; then
@@ -91,13 +98,16 @@ package:automatic-generation:
       do
         if [ -f "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml" ]
         then
+          git checkout ${CI_COMMIT_BRANCH}
           sed -i "/version: /c\version: \'${VERSION}\'" "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml"
           git commit -am "Packaging ${VERSION}" || echo "Nothing to commit"
           git push
         fi
       done
   rules:
-    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger)$/ && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
+    - if: $CI_COMMIT_TAG
+      when: never
+    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger|pipeline)$/'
 
 package:helm-chart:
   stage: package
@@ -152,6 +162,8 @@ package:helm-chart:
     reports:
       dotenv: upload.env
   rules:
+    - if: $CI_COMMIT_TAG
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "push"'
       changes:
         - "**/Chart.yaml"
@@ -181,6 +193,8 @@ update:readme:
     paths:
       - "**/README.md"
   rules:
+    - if: $CI_COMMIT_TAG
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
@@ -219,6 +233,8 @@ coreye:synchronize:coog:
         -F "variables[SERVICE]=coog" \
         https://git.coreye.fr/api/v4/projects/434/trigger/pipeline
   rules:
+    - if: $CI_COMMIT_TAG
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
