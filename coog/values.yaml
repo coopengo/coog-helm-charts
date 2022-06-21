@@ -14,12 +14,13 @@ maintenance_mode:
     repository: cooghub/coog-nginx-error-pages
     tag: latest
     pullPolicy: Always
-  env:
-    TEMPLATE_NAME: "lost-in-space"
-    DEFAULT_ERROR_PAGE: 404
-    DEFAULT_HTTP_CODE: 404
-    SHOW_DETAILS: false
-    DISABLE_L10N: false
+  # Possible variables :
+  # env:
+  #   TEMPLATE_NAME: "coopengo"
+  #   DEFAULT_ERROR_PAGE: 404
+  #   DEFAULT_HTTP_CODE: 404
+  #   SHOW_DETAILS: false
+  #   DISABLE_L10N: false
   resources:
     limits:
       cpu: 100m
