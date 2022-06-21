@@ -21,7 +21,7 @@ dependencies:
 
 - name: flower
   version: 0.2.1
-  repository: https://gitlab.com/api/v4/projects/32901462/packages/helm/stable
+  repository: https://gitlab.com/api/v4/projects/35933718/packages/helm/stable
   condition: flower.enabled
 
   #- name: nginx
