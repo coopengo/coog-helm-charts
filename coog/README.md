@@ -133,17 +133,6 @@ A Helm chart for Coog
 | celery.nodeSelector | object | `{}` | Node labels for pod assignment |
 | celery.replicaCount | int | `1` | Number of celery Pods to run |
 | celery.resources | object | `{"limits":{"cpu":"400m","memory":"1000Mi"},"requests":{"cpu":"100m","memory":"300Mi"}}` | celery containers' resource requests and limits |
-| celery.specificBatchConcurrency.affinity | object | `{}` | Affinity for pod assignment |
-| celery.specificBatchConcurrency.enabled | bool | `false` |  |
-| celery.specificBatchConcurrency.livenessProbe.initialDelaySeconds | int | `30` |  |
-| celery.specificBatchConcurrency.livenessProbe.periodSeconds | int | `120` |  |
-| celery.specificBatchConcurrency.livenessProbe.timeoutSeconds | int | `10` |  |
-| celery.specificBatchConcurrency.nodeSelector | object | `{}` | Node labels for pod assignment |
-| celery.specificBatchConcurrency.resources.limits.cpu | string | `"200m"` |  |
-| celery.specificBatchConcurrency.resources.limits.memory | string | `"700Mi"` |  |
-| celery.specificBatchConcurrency.resources.requests.cpu | string | `"100m"` |  |
-| celery.specificBatchConcurrency.resources.requests.memory | string | `"300Mi"` |  |
-| celery.specificBatchConcurrency.tolerations | list | `[]` | Tolerations for pod assignment |
 | celery.tolerations | list | `[]` | Tolerations for pod assignment |
 | celery.workers | int | `1` | Number of celery workers to run |
 | coog.affinity | object | `{}` | Affinity for pod assignment |
