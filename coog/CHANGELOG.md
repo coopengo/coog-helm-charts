@@ -1,5 +1,11 @@
 # Changelog
 
+## [22.14.2225] - 2022-06-21
+
+- coog: Remove celery single from 22.14 onward
+
+# Changelog
+
 ## [2.13.2133] - 2021-08-25
 
 - coog: Fix TRYTOND_CACHE__CLASS

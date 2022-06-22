@@ -107,6 +107,8 @@ spec:
               value: {{ $value | quote }}
             {{- end }}
             {{- end }}
+            - name: TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING
+              value: "1"
             - name: TRYTOND_CACHE__RECORD
               value: "{{ .Values.coog.cache_record }}"
             {{- if .Values.rabbitmq.enabled }}
