@@ -54,7 +54,7 @@ lint:helm-chart:
         fi
       done
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH'
       changes:
         - "**/*.yaml"
 
