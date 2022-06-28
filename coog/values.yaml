@@ -1027,6 +1027,7 @@ batch:
         cpu: 100m
         memory: 50Mi
 
+# B2C Frontend
 customer_frontend:
   # -- Deploy portal container(s)
   enabled: false
@@ -1099,6 +1100,7 @@ customer_frontend:
   # -- Affinity for pod assignment
   affinity: {}
 
+# B2C Backend
 customer_backend:
   # -- Deploy portal container(s)
   enabled: false
