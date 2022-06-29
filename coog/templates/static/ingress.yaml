@@ -43,7 +43,7 @@ spec:
       http:
         paths:
         {{- range .paths }}
-        {{- if semverCompare ">=1.19-0" $kubeVersion -}}
+        {{- if semverCompare ">=1.19-0" $kubeVersion }}
         - path: {{ . }}
           pathType: Prefix
           backend:
