@@ -107,7 +107,7 @@ package:helm-chart:
     name: alpine/helm
     entrypoint: [""] # avoid error message on start : Error: unknown command "sh" for "helm"
   variables:
-    INSTALL_ADDITIONAL_PACKAGES: curl yq jq
+    INSTALL_ADDITIONAL_PACKAGES: curl yq jq bash
   before_script:
     - !reference [.git_with_ssh:alpine, before_script]
     - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
