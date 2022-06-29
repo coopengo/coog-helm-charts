@@ -34,6 +34,7 @@ synchronize:pipeline:
       changes:
         - ".gitlab-ci.yml"
         - "README.md"
+        - ".gitlab/**/*"
 
 lint:helm-chart:
   stage: lint
