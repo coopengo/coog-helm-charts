@@ -1,14 +1,10 @@
-flower
-======
+# flower
+
+![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![AppVersion: 0.9.2](https://img.shields.io/badge/AppVersion-0.9.2-informational?style=flat-square)
+
 Flower Helm chart for Kubernetes
 
-Current chart version is `0.1.5`
-
-
-
-
-
-## Chart Values
+## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -39,3 +35,4 @@ Current chart version is `0.1.5`
 | serviceAccount.name | string | `nil` |  |
 | tolerations | list | `[]` |  |
 | urlPrefix | string | `"flower"` |  |
+

@@ -1,21 +1,19 @@
-coog
-====
+# coog
+
+![Version: 2.6.2116](https://img.shields.io/badge/Version-2.6.2116-informational?style=flat-square) ![AppVersion: coog-2.6.2112](https://img.shields.io/badge/AppVersion-coog--2.6.2112-informational?style=flat-square)
+
 A Helm chart for Coog
 
-Current chart version is `1.5.0`
-
-
-
-## Chart Requirements
+## Requirements
 
 | Repository | Name | Version |
 |------------|------|---------|
 | https://charts.bitnami.com/bitnami | mongodb | 7.14.1 |
 | https://charts.bitnami.com/bitnami | postgresql | 8.9.6 |
-| https://kubernetes-charts.storage.googleapis.com/ | redis | 10.5.0 |
+| https://charts.bitnami.com/bitnami | redis | 10.5.0 |
 | https://raw.githubusercontent.com/coopengo/coog-helm-charts/master | flower | 0.1.5 |
 
-## Chart Values
+## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -378,3 +376,4 @@ Current chart version is `1.5.0`
 | web.service.port | int | `80` |  |
 | web.service.type | string | `"ClusterIP"` |  |
 | web.tolerations | list | `[]` |  |
+
