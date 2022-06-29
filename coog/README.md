@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.25.2225](https://img.shields.io/badge/Version-22.25.2225-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 22.25.2225-ingress](https://img.shields.io/badge/Version-22.25.2225--ingress-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -133,6 +133,17 @@ A Helm chart for Coog
 | celery.nodeSelector | object | `{}` | Node labels for pod assignment |
 | celery.replicaCount | int | `1` | Number of celery Pods to run |
 | celery.resources | object | `{"limits":{"cpu":"400m","memory":"1000Mi"},"requests":{"cpu":"100m","memory":"300Mi"}}` | celery containers' resource requests and limits |
+| celery.specificBatchConcurrency.affinity | object | `{}` | Affinity for pod assignment |
+| celery.specificBatchConcurrency.enabled | bool | `false` |  |
+| celery.specificBatchConcurrency.livenessProbe.initialDelaySeconds | int | `30` |  |
+| celery.specificBatchConcurrency.livenessProbe.periodSeconds | int | `120` |  |
+| celery.specificBatchConcurrency.livenessProbe.timeoutSeconds | int | `10` |  |
+| celery.specificBatchConcurrency.nodeSelector | object | `{}` | Node labels for pod assignment |
+| celery.specificBatchConcurrency.resources.limits.cpu | string | `"200m"` |  |
+| celery.specificBatchConcurrency.resources.limits.memory | string | `"700Mi"` |  |
+| celery.specificBatchConcurrency.resources.requests.cpu | string | `"100m"` |  |
+| celery.specificBatchConcurrency.resources.requests.memory | string | `"300Mi"` |  |
+| celery.specificBatchConcurrency.tolerations | list | `[]` | Tolerations for pod assignment |
 | celery.tolerations | list | `[]` | Tolerations for pod assignment |
 | celery.workers | int | `1` | Number of celery workers to run |
 | coog.affinity | object | `{}` | Affinity for pod assignment |
@@ -264,14 +275,9 @@ A Helm chart for Coog
 | gateway.tolerations | list | `[]` | Tolerations for pod assignment |
 | gateway.whitelist | string | `nil` |  |
 | jwt.internal.encryption | string | `"changeme"` |  |
-| maintenance_mode.enabled | bool | `true` |  |
-| maintenance_mode.env.DEFAULT_ERROR_PAGE | int | `404` |  |
-| maintenance_mode.env.DEFAULT_HTTP_CODE | int | `404` |  |
-| maintenance_mode.env.DISABLE_L10N | bool | `false` |  |
-| maintenance_mode.env.SHOW_DETAILS | bool | `false` |  |
-| maintenance_mode.env.TEMPLATE_NAME | string | `"lost-in-space"` |  |
+| maintenance_mode.enabled | bool | `false` |  |
 | maintenance_mode.image.pullPolicy | string | `"Always"` |  |
-| maintenance_mode.image.repository | string | `"cooghub/coog-nginx-error-pages"` |  |
+| maintenance_mode.image.repository | string | `"cooghub/nginx-custom-error-pages"` |  |
 | maintenance_mode.image.tag | string | `"latest"` |  |
 | maintenance_mode.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | maintenance_mode.ingress.annotations | object | `{}` |  |
@@ -403,7 +409,7 @@ A Helm chart for Coog
 | unoconv.readinessProbe.successThreshold | int | `1` |  |
 | unoconv.readinessProbe.timeoutSeconds | int | `30` |  |
 | unoconv.replicaCount | int | `1` | Number of unoconv Pods to run |
-| unoconv.resources | object | `{"limits":{"cpu":"100m","memory":"300Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | unoconv containers' resource requests and limits |
+| unoconv.resources | object | `{"limits":{"cpu":"300m","memory":"300Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | unoconv containers' resource requests and limits |
 | unoconv.service.port | int | `5000` |  |
 | unoconv.service.type | string | `"ClusterIP"` |  |
 | unoconv.tolerations | list | `[]` | Tolerations for pod assignment |
