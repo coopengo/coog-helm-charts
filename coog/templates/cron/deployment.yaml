@@ -143,6 +143,12 @@ spec:
               value: "1"
             - name: TRYTOND_DATABASE__LANGUAGE
               value: fr
+            {{- if .Values.celery.batchConfig }}
+            {{- range $key, $value := .Values.celery.batchConfig }}
+            - name:  {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 8000
