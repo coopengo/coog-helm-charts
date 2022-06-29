@@ -113,7 +113,7 @@ package:helm-chart:
     - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
   script:
     - |-
-      set -x
+      bash -c 
       while IFS= read -r -d '' HELM_PROJECT; do
         HELM_PROJECT_VERSION="$(yq e '.version' "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml")"
         export HELM_PROJECT_VERSION
