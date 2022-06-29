@@ -1,4 +1,12 @@
 # Changelog
+## [22.25.2225] - 2022-06-29
+
+### Added
+
+- Manage apiVersion for Ingress. Depend on Kubernetes Cluster version
+- Added mode maintenance to redirect traffic to a maintenance web page
+
+# Changelog
 
 ## [22.14.2225] - 2022-06-21
 
