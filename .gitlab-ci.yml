@@ -45,7 +45,7 @@ lint:helm-chart:
     - |-
       for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".git" -exec basename {} \;)
       do
-        if [ -f "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml" ]; then
+        if [ -e "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml" ]; then
           helm dependency update ${HELM_PROJECT} || true
           if [[ -e "${HELM_PROJECT}/values_secrets.yaml" ]]; then
             helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/values.yaml" -f "${HELM_PROJECT}/values_secrets.yaml"
