@@ -1,4 +1,4 @@
-{{- if .Values.pods_auto_update.enabled -}}
+{{- if .Values.deployment_restart.enabled -}}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -9,8 +9,10 @@ rules:
   - apiGroups:
     - ""
     resources:
-    - pods
+    - deployments
     verbs:
+    - get
+    - watch
     - list
-    - delete
+    - patch
 {{- end }}

@@ -1,0 +1,32 @@
+{{- if .Values.deployment_restart.enabled -}}
+{{- $kubeVersion := .Capabilities.KubeVersion.Version -}}
+{{- if semverCompare ">=1.19-0" $kubeVersion -}}
+apiVersion: batch/v1
+{{- else -}}
+apiVersion: batch/v1beta1
+{{- end }}
+kind: CronJob
+metadata:
+  name: {{ include "full_name" . }}
+spec:
+  concurrencyPolicy: {{ .Values.deployment_restart.concurrencyPolicy }}
+  schedule: {{ .Values.deployment_restart.schedule | quote }}
+  jobTemplate:
+    spec:
+      backoffLimit: {{ .Values.deployment_restart.backoffLimit }}
+      activeDeadlineSeconds: {{ .Values.deployment_restart.activeDeadlineSeconds }}
+      template:
+        spec:
+          serviceAccountName: {{ include "full_name" . }}
+          restartPolicy: {{ .Values.deployment_restart.restartPolicy }}
+          containers:
+            - name: {{ include "short_name" . }}
+              image: "{{ .Values.deployment_restart.image.repository }}:{{ .Values.deployment_restart.image.tag }}"
+              imagePullPolicy: {{ .Values.deployment_restart.image.PullPolicy }}
+              command:
+                - 'kubectl'
+                - '--namespace={{ .Release.Namespace }}'
+                - 'rollout'    
+                - 'restart'
+                - 'deployment'
+{{- end }}

@@ -35,7 +35,7 @@ maintenance_mode:
     annotations: {}
   nodeSelector: {}
 
-pods_auto_update:
+deployment_restart:
   enabled: false
   image:
     repository: bitnami/kubectl
