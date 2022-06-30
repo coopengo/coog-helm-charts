@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.19.2219-name](https://img.shields.io/badge/Version-22.19.2219--name-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 22.25.2225](https://img.shields.io/badge/Version-22.25.2225-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -12,7 +12,7 @@ A Helm chart for Coog
 | https://charts.bitnami.com/bitnami | postgresql | 8.9.6 |
 | https://charts.bitnami.com/bitnami | rabbitmq | 7.6.8 |
 | https://charts.bitnami.com/bitnami | redis | 10.5.0 |
-| https://gitlab.com/api/v4/projects/32901462/packages/helm/stable | flower | 0.2.1 |
+| https://gitlab.com/api/v4/projects/35933718/packages/helm/stable | flower | 0.2.1 |
 
 ## Values
 
@@ -275,14 +275,9 @@ A Helm chart for Coog
 | gateway.tolerations | list | `[]` | Tolerations for pod assignment |
 | gateway.whitelist | string | `nil` |  |
 | jwt.internal.encryption | string | `"changeme"` |  |
-| maintenance_mode.enabled | bool | `true` |  |
-| maintenance_mode.env.DEFAULT_ERROR_PAGE | int | `404` |  |
-| maintenance_mode.env.DEFAULT_HTTP_CODE | int | `404` |  |
-| maintenance_mode.env.DISABLE_L10N | bool | `false` |  |
-| maintenance_mode.env.SHOW_DETAILS | bool | `false` |  |
-| maintenance_mode.env.TEMPLATE_NAME | string | `"lost-in-space"` |  |
+| maintenance_mode.enabled | bool | `false` |  |
 | maintenance_mode.image.pullPolicy | string | `"Always"` |  |
-| maintenance_mode.image.repository | string | `"cooghub/coog-nginx-error-pages"` |  |
+| maintenance_mode.image.repository | string | `"cooghub/nginx-custom-error-pages"` |  |
 | maintenance_mode.image.tag | string | `"latest"` |  |
 | maintenance_mode.imagePullSecrets[0].name | string | `"docker-registry"` |  |
 | maintenance_mode.ingress.annotations | object | `{}` |  |
@@ -336,6 +331,7 @@ A Helm chart for Coog
 | portal.ingress.annotations | object | `{}` | Ingress annotations for portal containers' |
 | portal.ingress.enabled | bool | `false` | Enable ingress controller resource for portal containers' |
 | portal.ingress.hosts | list | `[{"host":"portal.local","paths":[]}]` | Default host for the ingress resource for portal containers' |
+| portal.ingress.nginx.whitelistsourcerange | string | `"127.0.0.1/32"` |  |
 | portal.ingress.tls | list | `[]` | TLS configuration for portal containers' |
 | portal.nameOverride | string | `""` |  |
 | portal.nodeSelector | object | `{}` | Node labels for pod assignment |
@@ -413,7 +409,7 @@ A Helm chart for Coog
 | unoconv.readinessProbe.successThreshold | int | `1` |  |
 | unoconv.readinessProbe.timeoutSeconds | int | `30` |  |
 | unoconv.replicaCount | int | `1` | Number of unoconv Pods to run |
-| unoconv.resources | object | `{"limits":{"cpu":"100m","memory":"300Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | unoconv containers' resource requests and limits |
+| unoconv.resources | object | `{"limits":{"cpu":"300m","memory":"300Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | unoconv containers' resource requests and limits |
 | unoconv.service.port | int | `5000` |  |
 | unoconv.service.type | string | `"ClusterIP"` |  |
 | unoconv.tolerations | list | `[]` | Tolerations for pod assignment |

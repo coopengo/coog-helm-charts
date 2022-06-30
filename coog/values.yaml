@@ -7,19 +7,20 @@ quota:
   rolling_update: false
 
 maintenance_mode:
-  enabled: true
+  enabled: false
   imagePullSecrets:
     - name: docker-registry
   image:
-    repository: cooghub/coog-nginx-error-pages
+    repository: cooghub/nginx-custom-error-pages
     tag: latest
     pullPolicy: Always
-  env:
-    TEMPLATE_NAME: "lost-in-space"
-    DEFAULT_ERROR_PAGE: 404
-    DEFAULT_HTTP_CODE: 404
-    SHOW_DETAILS: false
-    DISABLE_L10N: false
+  # Possible variables :
+  # env:
+  #   TEMPLATE_NAME: "coopengo"
+  #   DEFAULT_ERROR_PAGE: 404
+  #   DEFAULT_HTTP_CODE: 404
+  #   SHOW_DETAILS: false
+  #   DISABLE_L10N: false
   resources:
     limits:
       cpu: 100m
@@ -441,7 +442,7 @@ unoconv:
   # -- unoconv containers' resource requests and limits
   resources:
     limits:
-      cpu: 100m
+      cpu: 300m
       memory: 300Mi
     requests:
       cpu: 50m
