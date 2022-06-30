@@ -12,7 +12,7 @@ A Helm chart for Coog
 | https://charts.bitnami.com/bitnami | postgresql | 8.9.6 |
 | https://charts.bitnami.com/bitnami | rabbitmq | 7.6.8 |
 | https://charts.bitnami.com/bitnami | redis | 10.5.0 |
-| https://gitlab.com/api/v4/projects/32901462/packages/helm/stable | flower | 0.2.1 |
+| https://gitlab.com/api/v4/projects/35933718/packages/helm/stable | flower | 0.2.1 |
 
 ## Values
 
@@ -402,7 +402,7 @@ A Helm chart for Coog
 | unoconv.readinessProbe.successThreshold | int | `1` |  |
 | unoconv.readinessProbe.timeoutSeconds | int | `30` |  |
 | unoconv.replicaCount | int | `1` | Number of unoconv Pods to run |
-| unoconv.resources | object | `{"limits":{"cpu":"300m","memory":"300Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | unoconv containers' resource requests and limits |
+| unoconv.resources | object | `{"limits":{"cpu":"100m","memory":"300Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | unoconv containers' resource requests and limits |
 | unoconv.service.port | int | `5000` |  |
 | unoconv.service.type | string | `"ClusterIP"` |  |
 | unoconv.tolerations | list | `[]` | Tolerations for pod assignment |
