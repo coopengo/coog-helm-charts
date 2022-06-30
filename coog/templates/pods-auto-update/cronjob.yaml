@@ -1,0 +1,32 @@
+{{- if .Values.pods_auto_update.enabled -}}
+{{- $kubeVersion := .Capabilities.KubeVersion.Version -}}
+{{- if semverCompare ">=1.19-0" $kubeVersion -}}
+apiVersion: batch/v1
+{{- else -}}
+apiVersion: batch/v1beta1
+{{- end }}
+kind: CronJob
+metadata:
+  name: {{ include "full_name" . }}
+spec:
+  concurrencyPolicy: {{ .Values.pods_auto_update.concurrencyPolicy }}
+  schedule: {{ .Values.pods_auto_update.schedule | quote }}
+  jobTemplate:
+    spec:
+      backoffLimit: {{ .Values.pods_auto_update.backoffLimit }}
+      activeDeadlineSeconds: {{ .Values.pods_auto_update.activeDeadlineSeconds }}
+      template:
+        spec:
+          serviceAccountName: {{ include "full_name" . }}
+          restartPolicy: {{ .Values.pods_auto_update.restartPolicy }}
+          containers:
+            - name: {{ include "short_name" . }}
+              image: "{{ .Values.pods_auto_update.image.repository }}:{{ .Values.pods_auto_update.image.tag }}"
+              imagePullPolicy: {{ .Values.pods_auto_update.image.PullPolicy }}
+              command:
+                - 'kubectl'
+                - 'delete'
+                - '--all'
+                - 'pods'
+                - '--namespace={{ .Release.Namespace }}'
+{{- end }}

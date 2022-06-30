@@ -35,6 +35,18 @@ maintenance_mode:
     annotations: {}
   nodeSelector: {}
 
+pods_auto_update:
+  enabled: false
+  image:
+    repository: bitnami/kubectl
+    tag: "1.22"
+    PullPolicy: Always
+  schedule: "0 7 * * mon"
+  restartPolicy: Never
+  activeDeadlineSeconds: 300
+  backoffLimit: 2
+  concurrencyPolicy: Forbid
+
 rabbitmq:
   enabled: true
   resources:
