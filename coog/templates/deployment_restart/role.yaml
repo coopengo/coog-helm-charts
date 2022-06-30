@@ -1,0 +1,18 @@
+{{- if .Values.deployment_restart.enabled -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "full_name" . }}
+  labels:
+{{ include "chart_labels" . | indent 4 }}
+rules:
+  - apiGroups:
+    - ""
+    resources:
+    - deployments
+    verbs:
+    - get
+    - watch
+    - list
+    - patch
+{{- end }}
