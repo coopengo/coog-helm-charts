@@ -1,4 +1,11 @@
 # Changelog
+## [2.10.2226] - 2022-06-30
+
+### Changed
+
+- Update containers name to match with 'service name'
+
+# Changelog
 ## [2.10.2225] - 2022-06-29
 
 ### Added
