@@ -32,7 +32,7 @@ spec:
             claimName: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
     {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "short_name" . }}
           image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
           imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
           securityContext:
