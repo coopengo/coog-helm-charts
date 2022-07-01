@@ -1,4 +1,12 @@
 # Changelog
+## [22.26.2226] - 2022-06-30
+
+### Changed
+
+- flower Chart has been removed
+- Update containers name to match with 'service name'
+
+# Changelog
 ## [22.25.2225] - 2022-06-29
 
 ### Added
