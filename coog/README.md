@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.25.2225](https://img.shields.io/badge/Version-22.25.2225-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 22.26.2226](https://img.shields.io/badge/Version-22.26.2226-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -12,7 +12,6 @@ A Helm chart for Coog
 | https://charts.bitnami.com/bitnami | postgresql | 8.9.6 |
 | https://charts.bitnami.com/bitnami | rabbitmq | 7.6.8 |
 | https://charts.bitnami.com/bitnami | redis | 10.5.0 |
-| https://gitlab.com/api/v4/projects/35933718/packages/helm/stable | flower | 0.2.1 |
 
 ## Values
 
@@ -244,7 +243,6 @@ A Helm chart for Coog
 | customer_frontend.tolerations | list | `[]` | Tolerations for pod assignment |
 | externalRedis.host | string | `"localhost"` |  |
 | externalRedis.port | int | `6379` |  |
-| flower.enabled | bool | `false` |  |
 | gateway.affinity | object | `{}` | Affinity for pod assignment |
 | gateway.enabled | bool | `true` | Deploy gateway container(s) |
 | gateway.entrypoint | string | `"/gateway"` |  |
