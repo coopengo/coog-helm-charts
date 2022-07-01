@@ -26,7 +26,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "short_name" . }}
           image: "{{ .Values.unoconv.image.repository }}:{{ .Values.unoconv.image.tag }}"
           imagePullPolicy: {{ .Values.unoconv.image.pullPolicy }}
           securityContext:
