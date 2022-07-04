@@ -25,8 +25,8 @@ synchronize:pipeline:
       for BRANCH in $(git ls-remote --refs -h origin -l "coog-*" | cut -s -d '/' -f3 | grep -E "^(coog-[[:digit:]]{1,2}).([[:digit:]]{1,2})$" )
       do
         git checkout "${BRANCH}"
-        git checkout "${CI_COMMIT_SHORT_SHA}" .gitlab-ci.yml README.md
-        git commit -m "Merge .gitlab-ci.yml REAMDME.md from \"${CI_COMMIT_SHORT_SHA}\""
+        git checkout "${CI_COMMIT_SHORT_SHA}" .gitlab-ci.yml README.md .gitlab/
+        git commit -m "Merge .gitlab-ci.yml, REAMDME.md and .gitlab/ from \"${CI_COMMIT_SHORT_SHA}\""
       done
       git push --all
   rules:
@@ -34,6 +34,7 @@ synchronize:pipeline:
       changes:
         - ".gitlab-ci.yml"
         - "README.md"
+        - ".gitlab/**/*"
 
 lint:helm-chart:
   stage: lint
@@ -44,13 +45,15 @@ lint:helm-chart:
     - |-
       for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".git" -exec basename {} \;)
       do
-        helm dependency update ${HELM_PROJECT} || true
-        if [[ -e "${HELM_PROJECT}/values_secrets.yaml" ]]; then
-          helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/values.yaml" -f "${HELM_PROJECT}/values_secrets.yaml"
-          helm template -f "${HELM_PROJECT}/values.yaml" -f "${HELM_PROJECT}/values_secrets.yaml" "${HELM_PROJECT}" > "${HELM_PROJECT}.template"
-        else
-          helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/values.yaml"
-          helm template -f "${HELM_PROJECT}/values.yaml" "${HELM_PROJECT}" > "${HELM_PROJECT}.template"
+        if [ -e "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml" ]; then
+          helm dependency update ${HELM_PROJECT} || true
+          if [[ -e "${HELM_PROJECT}/values_secrets.yaml" ]]; then
+            helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/values.yaml" -f "${HELM_PROJECT}/values_secrets.yaml"
+            helm template -f "${HELM_PROJECT}/values.yaml" -f "${HELM_PROJECT}/values_secrets.yaml" "${HELM_PROJECT}" > "${HELM_PROJECT}.template"
+          else
+            helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/values.yaml"
+            helm template -f "${HELM_PROJECT}/values.yaml" "${HELM_PROJECT}" > "${HELM_PROJECT}.template"
+          fi
         fi
       done
   rules:
@@ -107,46 +110,13 @@ package:helm-chart:
     name: alpine/helm
     entrypoint: [""] # avoid error message on start : Error: unknown command "sh" for "helm"
   variables:
-    INSTALL_ADDITIONAL_PACKAGES: curl yq jq
+    INSTALL_ADDITIONAL_PACKAGES: curl yq jq bash
   before_script:
     - !reference [.git_with_ssh:alpine, before_script]
     - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
+    - chmod u+x .gitlab/scripts/bash/package_helm_chart.bash
   script:
-    - |-
-      for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".git" -exec basename {} \;)
-      do
-        export HELM_PROJECT_VERSION="$(yq e '.version' "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml")"
-        if [ -f "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml" ]
-        then
-          if [[ $(curl -s --fail --header --request GET --user gitlab-ci-token:${CI_JOB_TOKEN} "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages?package_type=helm&package_name=${HELM_PROJECT}" | jq -r --arg JQVERSION "${HELM_PROJECT_VERSION}" '.[] | select( .version == $JQVERSION ) | .version') ]]
-          then
-            echo "Helm package ${HELM_PROJECT}-${HELM_PROJECT_VERSION} already exists."
-          else
-            if [ "$(git ls-remote --tags origin -l "${HELM_PROJECT}-${HELM_PROJECT_VERSION}")" ]
-            then
-              echo "TAG ${HELM_PROJECT}-${HELM_PROJECT_VERSION} already exists"
-            else
-              helm dependency update ${HELM_PROJECT} || true
-              if [[ -e "${HELM_PROJECT}/values_secrets.yaml" ]]; then
-                helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/values.yaml" -f "${HELM_PROJECT}/values_secrets.yaml"
-                helm template -f "${HELM_PROJECT}/values.yaml" -f "${HELM_PROJECT}/values_secrets.yaml" "${HELM_PROJECT}" > "${HELM_PROJECT}.template"
-              else
-                helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/values.yaml"
-                helm template -f "${HELM_PROJECT}/values.yaml" "${HELM_PROJECT}" > "${HELM_PROJECT}.template"
-              fi
-              git tag -a ${HELM_PROJECT}-${HELM_PROJECT_VERSION} -m "Create TAG ${HELM_PROJECT}-${HELM_PROJECT_VERSION}"
-              git push --tags
-              helm package ${HELM_PROJECT}
-              helm repo index --url "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/stable" .
-              echo "HELM_NEW_CHART=true" > upload.env
-              echo "HELM_PROJECT_VERSION=${HELM_PROJECT_VERSION}" >> upload.env
-            curl -s --fail --request POST --user gitlab-ci-token:${CI_JOB_TOKEN} --form "chart=@${HELM_PROJECT}-${HELM_PROJECT_VERSION}.tgz" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/stable/charts"
-            fi
-          fi
-        else
-          echo "Directory ${HELM_PROJECT} doesn't have Chart.yaml"
-        fi
-      done
+    - .gitlab/scripts/bash/package_helm_chart.bash
   artifacts:
     expire_in: 5 days
     paths:

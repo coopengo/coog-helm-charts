@@ -79,7 +79,7 @@ spec:
             {{- end }}
             {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "short_name" . }}
           image: "{{ .Values.customer_backend.image.repository }}:{{ .Values.customer_backend.image.tag }}"
           imagePullPolicy: {{ .Values.customer_backend.image.pullPolicy }}
           securityContext:

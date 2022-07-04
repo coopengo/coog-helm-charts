@@ -35,9 +35,6 @@ maintenance_mode:
     annotations: {}
   nodeSelector: {}
 
-flower:
-  enabled: false
-
 rabbitmq:
   enabled: true
   resources:

@@ -56,7 +56,7 @@ spec:
           {{- end }}
           {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "short_name" . }}
           image: "{{ .Values.customer_frontend.image.repository }}:{{ .Values.customer_frontend.image.tag }}"
           imagePullPolicy: {{ .Values.customer_frontend.image.pullPolicy }}
           securityContext:
