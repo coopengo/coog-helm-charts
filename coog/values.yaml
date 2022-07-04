@@ -984,6 +984,7 @@ batch:
         cpu: 100m
         memory: 50Mi
 
+# B2C Frontend
 customer_frontend:
   # -- Deploy portal container(s)
   enabled: false
@@ -1032,11 +1033,20 @@ customer_frontend:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
       cpu: 50m
       memory: 50Mi
-    requests:
-      cpu: 10m
-      memory: 25Mi
+
+  initContainers:
+    resources:
+      limits:
+        cpu: 400m
+        memory: 2000Mi
+      requests:
+        cpu: 200m
+        memory: 1500Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -1047,6 +1057,7 @@ customer_frontend:
   # -- Affinity for pod assignment
   affinity: {}
 
+# B2C Backend
 customer_backend:
   # -- Deploy portal container(s)
   enabled: false
@@ -1097,10 +1108,19 @@ customer_backend:
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
       cpu: 400m
-      memory: 500Mi
+      memory: 300Mi
     requests:
       cpu: 100m
-      memory: 250Mi
+      memory: 150Mi
+
+  initContainers:
+    resources:
+      limits:
+        cpu: 400m
+        memory: 500Mi
+      requests:
+        cpu: 200m
+        memory: 250Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
