@@ -77,6 +77,7 @@ spec:
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
+            {{- end }}
       containers:
         - name: {{ include "short_name" . }}
           image: "{{ .Values.customer_backend.image.repository }}:{{ .Values.customer_backend.image.tag }}"
