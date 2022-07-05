@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.17.2217](https://img.shields.io/badge/Version-22.17.2217-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 22.26.2226](https://img.shields.io/badge/Version-22.26.2226-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -12,7 +12,6 @@ A Helm chart for Coog
 | https://charts.bitnami.com/bitnami | postgresql | 8.9.6 |
 | https://charts.bitnami.com/bitnami | rabbitmq | 7.6.8 |
 | https://charts.bitnami.com/bitnami | redis | 10.5.0 |
-| https://gitlab.com/api/v4/projects/32901462/packages/helm/stable | flower | 0.2.1 |
 
 ## Values
 
@@ -160,6 +159,7 @@ A Helm chart for Coog
 | coog.ingress.annotations | object | `{}` | Ingress annotations for coog containers' |
 | coog.ingress.enabled | bool | `false` | Enable ingress controller resource for coog containers' |
 | coog.ingress.hosts | list | `[{"host":"coog.local","paths":[]}]` | Default host for the ingress resource for coog containers' |
+| coog.ingress.nginx.whitelistsourcerange | string | `"127.0.0.1/32"` |  |
 | coog.ingress.tls | list | `[]` | TLS configuration for coog containers' |
 | coog.initContainers.resources.limits.cpu | string | `"500m"` |  |
 | coog.initContainers.resources.limits.memory | string | `"800Mi"` |  |
@@ -190,11 +190,18 @@ A Helm chart for Coog
 | coog.workers | int | `2` | Number of coog workers to run |
 | cron.affinity | object | `{}` |  |
 | cron.coogCeleryModule | string | `"coog_async.coog_celery"` |  |
-| cron.enabled | bool | `false` | Deploy cron container(s) |
+| cron.enabled | bool | `true` | Deploy cron container(s) |
+| cron.livenessProbe.failureThreshold | int | `2` |  |
 | cron.livenessProbe.initialDelaySeconds | int | `30` |  |
 | cron.livenessProbe.periodSeconds | int | `120` |  |
+| cron.livenessProbe.successThreshold | int | `1` |  |
 | cron.livenessProbe.timeoutSeconds | int | `10` |  |
 | cron.nodeSelector | object | `{}` | Node labels for pod assignment |
+| cron.readinessProbe.failureThreshold | int | `2` |  |
+| cron.readinessProbe.initialDelaySeconds | int | `30` |  |
+| cron.readinessProbe.periodSeconds | int | `120` |  |
+| cron.readinessProbe.successThreshold | int | `1` |  |
+| cron.readinessProbe.timeoutSeconds | int | `10` |  |
 | cron.resources | object | `{"limits":{"cpu":"200m","memory":"500Mi"},"requests":{"cpu":"100m","memory":"300Mi"}}` | cron containers' resource requests and limits |
 | cron.tolerations | list | `[]` | Tolerations for pod assignment |
 | customer_backend.affinity | object | `{}` | Affinity for pod assignment |
@@ -236,7 +243,6 @@ A Helm chart for Coog
 | customer_frontend.tolerations | list | `[]` | Tolerations for pod assignment |
 | externalRedis.host | string | `"localhost"` |  |
 | externalRedis.port | int | `6379` |  |
-| flower.enabled | bool | `false` |  |
 | gateway.affinity | object | `{}` | Affinity for pod assignment |
 | gateway.enabled | bool | `true` | Deploy gateway container(s) |
 | gateway.entrypoint | string | `"/gateway"` |  |
@@ -251,6 +257,8 @@ A Helm chart for Coog
 | gateway.ingress.annotations | object | `{}` | Ingress annotations for gateway containers' |
 | gateway.ingress.enabled | bool | `false` | Enable ingress controller resource for gateway containers' |
 | gateway.ingress.hosts | list | `[{"host":"coog.local","paths":[]}]` | Default host for the ingress resource for gateway containers' |
+| gateway.ingress.nginx.rewritetarget | string | `"/$2"` |  |
+| gateway.ingress.nginx.whitelistsourcerange | string | `"127.0.0.1/32"` |  |
 | gateway.ingress.tls | list | `[]` | TLS configuration for gateway containers' |
 | gateway.jwt.encryption | string | `"secret"` |  |
 | gateway.jwt.expiration | int | `3600` |  |
@@ -265,6 +273,19 @@ A Helm chart for Coog
 | gateway.tolerations | list | `[]` | Tolerations for pod assignment |
 | gateway.whitelist | string | `nil` |  |
 | jwt.internal.encryption | string | `"changeme"` |  |
+| maintenance_mode.enabled | bool | `false` |  |
+| maintenance_mode.image.pullPolicy | string | `"Always"` |  |
+| maintenance_mode.image.repository | string | `"cooghub/nginx-custom-error-pages"` |  |
+| maintenance_mode.image.tag | string | `"latest"` |  |
+| maintenance_mode.imagePullSecrets[0].name | string | `"docker-registry"` |  |
+| maintenance_mode.ingress.annotations | object | `{}` |  |
+| maintenance_mode.ingress.nginx.customhttperrors | string | `"403"` |  |
+| maintenance_mode.ingress.nginx.whitelistsourcerange | string | `"127.0.0.1/32"` |  |
+| maintenance_mode.nodeSelector | object | `{}` |  |
+| maintenance_mode.resources.limits.cpu | string | `"100m"` |  |
+| maintenance_mode.resources.limits.memory | string | `"100Mi"` |  |
+| maintenance_mode.resources.requests.cpu | string | `"50m"` |  |
+| maintenance_mode.resources.requests.memory | string | `"50Mi"` |  |
 | mongodb.enabled | bool | `true` |  |
 | mongodb.image.tag | string | `"4.0.10-debian-9-r39"` |  |
 | mongodb.mongodbDatabase | string | `"coog-gateway"` |  |
@@ -308,6 +329,7 @@ A Helm chart for Coog
 | portal.ingress.annotations | object | `{}` | Ingress annotations for portal containers' |
 | portal.ingress.enabled | bool | `false` | Enable ingress controller resource for portal containers' |
 | portal.ingress.hosts | list | `[{"host":"portal.local","paths":[]}]` | Default host for the ingress resource for portal containers' |
+| portal.ingress.nginx.whitelistsourcerange | string | `"127.0.0.1/32"` |  |
 | portal.ingress.tls | list | `[]` | TLS configuration for portal containers' |
 | portal.nameOverride | string | `""` |  |
 | portal.nodeSelector | object | `{}` | Node labels for pod assignment |
@@ -356,6 +378,7 @@ A Helm chart for Coog
 | static.ingress.annotations | object | `{}` | Ingress annotations for static containers' |
 | static.ingress.enabled | bool | `false` | Enable ingress controller resource for static containers' |
 | static.ingress.hosts | list | `[{"host":"static.local","paths":[]}]` | Default host for the ingress resource for static containers' |
+| static.ingress.nginx.whitelistsourcerange | string | `"127.0.0.1/32"` |  |
 | static.ingress.tls | list | `[]` | TLS configuration for static containers' |
 | static.nameOverride | string | `""` |  |
 | static.nodeSelector | object | `{}` | Node labels for pod assignment |
@@ -384,7 +407,7 @@ A Helm chart for Coog
 | unoconv.readinessProbe.successThreshold | int | `1` |  |
 | unoconv.readinessProbe.timeoutSeconds | int | `30` |  |
 | unoconv.replicaCount | int | `1` | Number of unoconv Pods to run |
-| unoconv.resources | object | `{"limits":{"cpu":"100m","memory":"300Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | unoconv containers' resource requests and limits |
+| unoconv.resources | object | `{"limits":{"cpu":"300m","memory":"300Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | unoconv containers' resource requests and limits |
 | unoconv.service.port | int | `5000` |  |
 | unoconv.service.type | string | `"ClusterIP"` |  |
 | unoconv.tolerations | list | `[]` | Tolerations for pod assignment |
@@ -398,6 +421,8 @@ A Helm chart for Coog
 | web.ingress.annotations | object | `{}` | Ingress annotations for web containers' |
 | web.ingress.enabled | bool | `false` | Enable ingress controller resource for web containers' |
 | web.ingress.hosts | list | `[{"host":"web.local","paths":[]}]` | Default host for the ingress resource for web containers' |
+| web.ingress.nginx.rewritetarget | string | `"/$2"` |  |
+| web.ingress.nginx.whitelistsourcerange | string | `"127.0.0.1/32"` |  |
 | web.ingress.tls | list | `[]` | TLS configuration for web containers' |
 | web.livenessProbe.periodSeconds | int | `60` |  |
 | web.livenessProbe.timeoutSeconds | int | `30` |  |

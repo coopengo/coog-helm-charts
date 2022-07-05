@@ -13,3 +13,8 @@ dependencies:
   version: 10.16.1
   repository: https://charts.bitnami.com/bitnami
   condition: postgresql.enabled
+
+  #- name: nginx
+  #version: 5.1.6
+  #repository: https://charts.bitnami.com/bitnami
+  #condition: nginx.enabled

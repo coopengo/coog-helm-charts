@@ -32,7 +32,7 @@ spec:
             claimName: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
     {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "short_name" . }}
           image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
           imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
           securityContext:
@@ -96,9 +96,15 @@ spec:
               value: "{{ .Values.coog.cache_record }}"
             {{- if .Values.rabbitmq.enabled }}
             - name:  TRYTOND_ASYNC__CELERY
-              value: "amqp://{{ .Values.rabbitmq.auth.username }}:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq:{{ .Values.rabbitmq.service.port }}"
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_ASYNC__CELERY
             - name:  TRYTOND_ASYNC_CELERY
-              value: "amqp://{{ .Values.rabbitmq.auth.username }}:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq:{{ .Values.rabbitmq.service.port }}"
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_ASYNC__CELERY
             {{- end }}
             - name:  TRYTOND_CACHE__CLEAN_TIMEOUT
               value: "0"
@@ -117,22 +123,31 @@ spec:
               value: "1"
             - name: TRYTOND_DATABASE__LANGUAGE
               value: fr
+            {{- if .Values.celery.batchConfig }}
+            {{- range $key, $value := .Values.celery.batchConfig }}
+            - name:  {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 8000
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /cron_liveness
-              port: http
             exec:
-              {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
-          readinessProbe:
-            httpGet:
-              path: /cron_readiness
-              port: http
+              command:
+                - "/bin/bash"
+                - "-c"
+                - "ep cron --check"
+            {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
+          startupProbe:
             exec:
-              {{- toYaml .Values.cron.readinessProbe | nindent 12 }}
+              command:
+                - "/bin/bash"
+                - "-c"
+                - "ep cron --check"
+            failureThreshold: 12
+            periodSeconds: 10
           resources:
             {{- toYaml .Values.cron.resources | nindent 12 }}
       {{- with .Values.cron.nodeSelector }}

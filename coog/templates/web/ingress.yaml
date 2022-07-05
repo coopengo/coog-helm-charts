@@ -1,15 +1,33 @@
 {{- if .Values.web.enabled -}}
 {{- if .Values.web.ingress.enabled -}}
 {{- $fullName := include "full_name" . -}}
+{{- $kubeVersion := .Capabilities.KubeVersion.Version -}}
+{{- if semverCompare ">=1.19-0" $kubeVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else -}}
 apiVersion: extensions/v1beta1
+{{- end }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
 {{ include "chart_labels" . | indent 4 }}
-  {{- with .Values.web.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+  {{- if .Values.web.ingress.nginx.rewritetarget }}
+    nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.web.ingress.nginx.rewritetarget | quote }}
+  {{- end }}
+  {{- if .Values.maintenance_mode.enabled }}
+  {{- range $key, $value := $.Values.maintenance_mode.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+    nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.maintenance_mode.ingress.nginx.customhttperrors | quote }}
+    nginx.ingress.kubernetes.io/default-backend: "{{ $.Release.Name }}-{{ $.Chart.Name }}-maintenance"
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ .Values.maintenance_mode.ingress.nginx.whitelistsourcerange | quote }}
+  {{- else }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ .Values.web.ingress.nginx.whitelistsourcerange | quote }}
+  {{- end }}
+  {{- range $key, $value := .Values.web.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
 {{- if .Values.web.ingress.tls }}
@@ -28,10 +46,20 @@ spec:
       http:
         paths:
         {{- range .paths }}
-          - path: {{ . }}
-            backend:
-              serviceName: {{ $fullName }}
-              servicePort: http
+        {{- if semverCompare ">=1.19-0" $kubeVersion }}
+        - path: {{ . }}
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ $fullName }}
+              port:
+                name: http
+        {{- else -}}
+        - path: {{ . }}
+          backend:
+            serviceName: {{ $fullName }}
+            servicePort: http
+        {{- end }}
         {{- end }}
   {{- end }}
 {{- end }}

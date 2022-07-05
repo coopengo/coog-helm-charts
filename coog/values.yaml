@@ -6,6 +6,35 @@ quota:
   enabled: false
   rolling_update: false
 
+maintenance_mode:
+  enabled: false
+  imagePullSecrets:
+    - name: docker-registry
+  image:
+    repository: cooghub/nginx-custom-error-pages
+    tag: latest
+    pullPolicy: Always
+  # Possible variables :
+  # env:
+  #   TEMPLATE_NAME: "coopengo"
+  #   DEFAULT_ERROR_PAGE: 404
+  #   DEFAULT_HTTP_CODE: 404
+  #   SHOW_DETAILS: false
+  #   DISABLE_L10N: false
+  resources:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 50m
+      memory: 50Mi
+  ingress:
+    nginx:
+      customhttperrors: '403'
+      whitelistsourcerange: '127.0.0.1/32'
+    annotations: {}
+  nodeSelector: {}
+
 rabbitmq:
   enabled: true
   resources:
@@ -366,7 +395,7 @@ unoconv:
   # -- unoconv containers' resource requests and limits
   resources:
     limits:
-      cpu: 100m
+      cpu: 300m
       memory: 300Mi
     requests:
       cpu: 50m
@@ -530,6 +559,8 @@ coog:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+    nginx:
+      whitelistsourcerange: '127.0.0.1/32'
 
   # -- coog containers' resource requests and limits
   resources:
@@ -700,6 +731,9 @@ web:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+    nginx:
+      rewritetarget: '/$2'
+      whitelistsourcerange: '127.0.0.1/32'
 
   livenessProbe:
     periodSeconds: 60
@@ -763,6 +797,8 @@ portal:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+    nginx:
+      whitelistsourcerange: '127.0.0.1/32'
 
   # -- portal containers' resource requests and limits
   resources:
@@ -839,6 +875,9 @@ gateway:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+    nginx:
+      rewritetarget: '/$2'
+      whitelistsourcerange: '127.0.0.1/32'
 
   # -- gateway containers' resource requests and limits
   resources:
@@ -898,6 +937,8 @@ static:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
+    nginx:
+      whitelistsourcerange: '127.0.0.1/32'
 
   # -- static containers' resource requests and limits
   resources:
@@ -939,6 +980,7 @@ batch:
         cpu: 100m
         memory: 50Mi
 
+# B2C Frontend
 customer_frontend:
   # -- Deploy portal container(s)
   enabled: false
@@ -987,11 +1029,20 @@ customer_frontend:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
       cpu: 50m
       memory: 50Mi
-    requests:
-      cpu: 10m
-      memory: 25Mi
+
+  initContainers:
+    resources:
+      limits:
+        cpu: 400m
+        memory: 2000Mi
+      requests:
+        cpu: 200m
+        memory: 1500Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -1002,6 +1053,7 @@ customer_frontend:
   # -- Affinity for pod assignment
   affinity: {}
 
+# B2C Backend
 customer_backend:
   # -- Deploy portal container(s)
   enabled: false
@@ -1052,10 +1104,19 @@ customer_backend:
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
       cpu: 400m
-      memory: 500Mi
+      memory: 300Mi
     requests:
       cpu: 100m
-      memory: 250Mi
+      memory: 150Mi
+
+  initContainers:
+    resources:
+      limits:
+        cpu: 400m
+        memory: 500Mi
+      requests:
+        cpu: 200m
+        memory: 250Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}

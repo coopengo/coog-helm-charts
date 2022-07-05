@@ -87,13 +87,21 @@ spec:
               value: {{ $value | quote }}
             {{- end }}
             {{- end }}
+            - name: TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING
+              value: "1"
             - name: TRYTOND_CACHE__RECORD
               value: "{{ .Values.coog.cache_record }}"
             {{- if .Values.rabbitmq.enabled }}
             - name:  TRYTOND_ASYNC__CELERY
-              value: "{{ .Values.rabbitmq.auth.username }}:{{ .Values.rabbitmq.auth.password }}@amqp://{{ .Release.Name }}-rabbitmq:{{ .Values.rabbitmq.service.port }}"
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_ASYNC__CELERY
             - name:  TRYTOND_ASYNC_CELERY
-              value: "{{ .Values.rabbitmq.auth.username }}:{{ .Values.rabbitmq.auth.password }}@amqp://{{ .Release.Name }}-rabbitmq:{{ .Values.rabbitmq.service.port }}"
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_ASYNC__CELERY
             {{- end }}
             - name:  TRYTOND_DATABASE__URI
               valueFrom:
@@ -116,7 +124,7 @@ spec:
               containerPort: 8000
               protocol: TCP
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "short_name" . }}
           image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
           imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
           securityContext:
@@ -184,9 +192,15 @@ spec:
             {{- end }}
             {{- if .Values.rabbitmq.enabled }}
             - name:  TRYTOND_ASYNC__CELERY
-              value: "amqp://{{ .Values.rabbitmq.auth.username }}:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq:{{ .Values.rabbitmq.service.port }}"
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_ASYNC__CELERY
             - name:  TRYTOND_ASYNC_CELERY
-              value: "amqp://{{ .Values.rabbitmq.auth.username }}:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq:{{ .Values.rabbitmq.service.port }}"
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_ASYNC__CELERY
             {{- end }}
             - name:  TRYTOND_CACHE__CLEAN_TIMEOUT
               value: "0"

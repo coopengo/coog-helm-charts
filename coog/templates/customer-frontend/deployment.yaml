@@ -25,8 +25,11 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      containers:
-        - name: {{ .Chart.Name }}
+      volumes:
+        - name: builddir
+          emptyDir: {}
+      initContainers:
+        - name: "{{ .Chart.Name }}-build"
           image: "{{ .Values.customer_frontend.image.repository }}:{{ .Values.customer_frontend.image.tag }}"
           imagePullPolicy: {{ .Values.customer_frontend.image.pullPolicy }}
           securityContext:
@@ -37,7 +40,36 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+          resources:
+            {{- toYaml .Values.customer_frontend.initContainers.resources | nindent 12 }}
+          command: ['sh', '-c', 'yarn', 'build', '--prefix-paths']
+          volumeMounts:
+            - name: builddir
+              mountPath: "/workdir/public"
+          {{- if .Values.customer_frontend.env }}
+          env:
+            {{- range $key, $value := .Values.customer_frontend.env }}
+            - name:  {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
+      containers:
+        - name: {{ include "short_name" . }}
+          image: "{{ .Values.customer_frontend.image.repository }}:{{ .Values.customer_frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.customer_frontend.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+          volumeMounts:
+            - name: builddir
+              mountPath: "/workdir/public"
           {{- if .Values.customer_frontend.extraEnv }}
           env:
             {{- range $key, $value := .Values.customer_frontend.extraEnv }}

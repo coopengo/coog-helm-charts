@@ -25,8 +25,11 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-      containers:
-        - name: {{ .Chart.Name }}
+      volumes:
+        - name: builddir
+          emptyDir: {}
+      initContainers:
+        - name: "{{ .Chart.Name }}-build"
           image: "{{ .Values.customer_backend.image.repository }}:{{ .Values.customer_backend.image.tag }}"
           imagePullPolicy: {{ .Values.customer_backend.image.pullPolicy }}
           securityContext:
@@ -37,10 +40,14 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+          resources:
+            {{- toYaml .Values.customer_backend.initContainers.resources | nindent 12 }}
+          command: ['sh', '-c', 'yarn', 'build', '--no-optimization']
+          volumeMounts:
+            - name: builddir
+              mountPath: "/workdir/build"
           env:
-            - name:  BACKEND_PORT
-              value: "1337"
             - name:  DATABASE_HOST
             {{- if not .Values.coog.external_postgres.enabled }}
               value: "{{ .Release.Name }}-postgresql"
@@ -65,20 +72,53 @@ spec:
                 secretKeyRef:
                   name: coog-postgres-db-secret
                   key: PASSWORD
-            - name: COOG_GATEWAY_URL
-              value: "{{ .Values.gateway.gateway_url }}{{ .Values.gateway.entrypoint }}"
-            - name: COOG_WEB_TOKEN
-            {{- if not .Values.customer_backend.coog_web_token }}
-              valueFrom:
-                secretKeyRef:
-                  name: coog-gateway-web-secret
-                  key: GATEWAY_TOKEN
-            {{- else }}
-              valueFrom:
-                secretKeyRef:
-                  name: coog-gateway-web-secret
-                  key: CUSTOMER_BACKEND_TOKEN
+            {{- if .Values.customer_backend.extraEnv }}
+            {{- range $key, $value := .Values.customer_backend.extraEnv }}
+            - name:  {{ $key }}
+              value: {{ $value | quote }}
             {{- end }}
+            {{- end }}
+      containers:
+        - name: {{ include "short_name" . }}
+          image: "{{ .Values.customer_backend.image.repository }}:{{ .Values.customer_backend.image.tag }}"
+          imagePullPolicy: {{ .Values.customer_backend.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+          volumeMounts:
+            - name: builddir
+              mountPath: "/workdir/build"
+          env:
+            - name:  DATABASE_HOST
+            {{- if not .Values.coog.external_postgres.enabled }}
+              value: "{{ .Release.Name }}-postgresql"
+            {{ else }}
+              value: "{{ .Values.coog.external_postgres.host }}"
+            {{- end }}
+            - name:  DATABASE_PORT
+            {{- if not .Values.coog.external_postgres.enabled }}
+              value: "{{ .Values.postgresql.service.port }}"
+            {{ else }}
+              value: "{{ .Values.coog.external_postgres.port }}"
+            {{- end }}
+            - name:  DATABASE_NAME
+              value: "{{ .Values.customer_backend.postgres_db }}"
+            - name:  DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: coog-postgres-db-secret
+                  key: USER
+            - name:  DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: coog-postgres-db-secret
+                  key: PASSWORD
             {{- if .Values.customer_backend.extraEnv }}
             {{- range $key, $value := .Values.customer_backend.extraEnv }}
             - name:  {{ $key }}

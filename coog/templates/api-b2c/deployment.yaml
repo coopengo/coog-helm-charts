@@ -26,7 +26,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "short_name" . }}
           image: "{{ .Values.api_b2c.image.repository }}:{{ .Values.api_b2c.image.tag }}"
           imagePullPolicy: {{ .Values.api_b2c.image.pullPolicy }}
           securityContext:
