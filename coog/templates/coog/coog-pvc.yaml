@@ -1,4 +1,3 @@
-{{- if .Values.coog.enabled -}}
 {{- if .Values.coog.persistentVolume.enabled -}}
 {{- if not .Values.coog.persistentVolume.existingClaim -}}
 apiVersion: v1
@@ -22,4 +21,3 @@ spec:
 
 {{- end -}}
 {{- end -}}
-{{- end }}

@@ -1,12 +1,7 @@
 {{- if .Values.customer_frontend.enabled -}}
 {{- if .Values.customer_frontend.ingress.enabled -}}
 {{- $fullName := include "full_name" . -}}
-{{- $kubeVersion := .Capabilities.KubeVersion.Version -}}
-{{- if semverCompare ">=1.19-0" $kubeVersion -}}
-apiVersion: networking.k8s.io/v1
-{{- else -}}
-apiVersion: extensions/v1beta1
-{{- end }}
+apiVersion: {{ include "coog.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ $fullName }}
@@ -33,7 +28,7 @@ spec:
       http:
         paths:
         {{- range .paths }}
-        {{- if semverCompare ">=1.19-0" $kubeVersion }}
+        {{- if eq (include "coog.ingress.apiVersion" $) "networking.k8s.io/v1" }}
         - path: {{ . }}
           pathType: Prefix
           backend:
