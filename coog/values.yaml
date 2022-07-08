@@ -117,19 +117,6 @@ mongodb:
         cpu: 50m
         memory: 150Mi
 
-postgresql:
-  enabled: true
-  persistence:
-    enabled: false
-  image:
-    debug: true
-  postgresqlDatabase: coog
-  initdbScripts:
-    db-init.sql: |
-      CREATE ROLE coog WITH LOGIN PASSWORD 'coog';
-  updateStrategy:
-    type: Recreate
-
 api:
   # -- Deploy api container(s)
   enabled: true
@@ -538,22 +525,32 @@ celery:
     # -- Configure batch workDaysConf
     workDaysConf: french_work_days
 
+postgres:
+  host: "" # Mandatory
+  port: "" # Mandatory
+
 coog:
-  cache_record: 50000
-  configurationFiles:
-    batch.conf: |-
-    coog.conf: |-
+  config:
+    COOG_SERVER_WORKERS: 2
+    COOG_TIMEOUT: 3600
+    LOG_LEVEL: INFO
+    TRYTOND_CACHE__CLEAN_TIMEOUT: 0
+    TRYTOND_CACHE__RECORD: 50000
+    TRYTOND_DATABASE__LANGUAGE: fr
+    TRYTOND_EMAIL__FROM: to_define
+    TRYTOND_REPORT__UNOCONV: true
+    TRYTOND_DEBUG__VIEWS: false
+    TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
+    TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: 1
+    COOG_IWC: 1
+  # configurationFiles:
+  #   batch.conf: |-
+
   # -- Deploy coog container(s)
   enabled: true
-  external_postgres:
-    enabled: false
   root_dir: /workspace/io
-  # -- 	Number of coog workers to run
-  workers: 2
+
   max_worker_memory: 0
-  log_level: INFO
-  timeout: 3600
-  # -- 	Number of coog Pods to run
   replicaCount: 1
   persistentVolume:
     enabled: true

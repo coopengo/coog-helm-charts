@@ -1,4 +1,3 @@
-{{- if .Values.coog.configurationFiles }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -6,8 +5,11 @@ metadata:
   labels:
 {{ include "chart_labels" . | indent 4 }}
 data:
-  {{- range $key, $val := .Values.coog.configurationFiles }}
-    {{ $key }}: |-
-    {{ $val | indent 4}}
-  {{- end }}
-{{- end -}}
+  config.conf: |-
+    TRYTOND_REPORT__API = http://{{ .Release.Name }}-{{ .Chart.Name }}-unoconv:5000/unoconv/{oext}
+    COOG_POSTGRES_HOST = {{ .Values.postgres.host }}
+    COOG_POSTGRES_PORT = {{ .Values.postgres.port }}
+    COOG_DB_NAME = {{ .Values.secrets.coog.postgres.database }}
+    {{- range $key, $val := .Values.coog.config }}
+    {{ $key }} = {{ $val }}
+    {{- end }}
