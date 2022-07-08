@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.14.2226](https://img.shields.io/badge/Version-22.14.2226-informational?style=flat-square) ![AppVersion: coog-22.14](https://img.shields.io/badge/AppVersion-coog--22.14-informational?style=flat-square)
+![Version: 22.14.2227](https://img.shields.io/badge/Version-22.14.2227-informational?style=flat-square) ![AppVersion: coog-22.14](https://img.shields.io/badge/AppVersion-coog--22.14-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -197,12 +197,12 @@ A Helm chart for Coog
 | cron.livenessProbe.successThreshold | int | `1` |  |
 | cron.livenessProbe.timeoutSeconds | int | `10` |  |
 | cron.nodeSelector | object | `{}` | Node labels for pod assignment |
-| cron.readinessProbe.failureThreshold | int | `2` |  |
-| cron.readinessProbe.initialDelaySeconds | int | `30` |  |
-| cron.readinessProbe.periodSeconds | int | `120` |  |
-| cron.readinessProbe.successThreshold | int | `1` |  |
-| cron.readinessProbe.timeoutSeconds | int | `10` |  |
 | cron.resources | object | `{"limits":{"cpu":"200m","memory":"500Mi"},"requests":{"cpu":"100m","memory":"300Mi"}}` | cron containers' resource requests and limits |
+| cron.startupProbe.failureThreshold | int | `2` |  |
+| cron.startupProbe.initialDelaySeconds | int | `30` |  |
+| cron.startupProbe.periodSeconds | int | `120` |  |
+| cron.startupProbe.successThreshold | int | `1` |  |
+| cron.startupProbe.timeoutSeconds | int | `10` |  |
 | cron.tolerations | list | `[]` | Tolerations for pod assignment |
 | customer_backend.affinity | object | `{}` | Affinity for pod assignment |
 | customer_backend.enabled | bool | `false` | Deploy portal container(s) |
