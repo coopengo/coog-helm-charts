@@ -166,8 +166,7 @@ spec:
                 - "/bin/bash"
                 - "-c"
                 - "ep cron --check"
-            failureThreshold: 12
-            periodSeconds: 10
+            {{- toYaml .Values.cron.startupProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.cron.resources | nindent 12 }}
       {{- with .Values.cron.nodeSelector }}

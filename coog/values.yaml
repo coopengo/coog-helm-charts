@@ -660,7 +660,7 @@ cron:
     timeoutSeconds: 10
     successThreshold: 1
     failureThreshold: 2
-  readinessProbe:
+  startupProbe:
     initialDelaySeconds: 30
     periodSeconds: 120
     timeoutSeconds: 10
