@@ -51,51 +51,11 @@ rabbitmq:
   livenessProbe:
     initialDelaySeconds: 240
 
-##
-## Redis chart configuration
-##
-redis:
-  enabled: true
-  usePassword: false
-  cluster:
-    enabled: false
-  rbac:
-    create: true
-  master:
-    persistence:
-      enabled: false
-    disableCommands: []
-    resources:
-      limits:
-        cpu: 200m
-        memory: 250Mi
-      requests:
-        cpu: 100m
-        memory: 150Mi
-  port: 27017
-  podSecurityPolicy:
-    create: false
-  metrics:
-    enabled: false
-    prometheusRule:
-      enabled: false
-
-externalRedis:
-  ## All of these values are only used when redis.enabled is set to false
-  ## Redis host
-  ##
-  host: localhost
-  ## Redis port number
-  ##
-  port: 6379
-  ## Redis password
-  ##
-
 mongodb:
   enabled: true
   strategyType: Recreate
   image:
-    tag: "4.0.10-debian-9-r39"
+    tag: "4.4.12"
   replicaSet:
     enabled: false
   usePassword: true
@@ -176,7 +136,6 @@ api:
   tolerations: []
 
 
-
 api_b2b_config:
   # -- Deploy api_b2b_config container(s)
   enabled: false
@@ -219,7 +178,6 @@ api_b2b_config:
 
   # -- Tolerations for pod assignment
   tolerations: []
-
 
 api_b2c:
   # -- Deploy api_b2c container(s)
@@ -307,7 +265,6 @@ api_identity_manager:
   tolerations: []
 
 
-
 api_referential:
   # -- Deploy api_referential container(s)
   enabled: false
@@ -349,7 +306,6 @@ api_referential:
 
   # -- Tolerations for pod assignment
   tolerations: []
-
 
 
 app_b2c:

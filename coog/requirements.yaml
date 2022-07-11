@@ -1,21 +1,16 @@
 dependencies:
 - name: mongodb
-  version: 7.14.1
+  version: 7.14.8
   repository: https://charts.bitnami.com/bitnami
   condition: mongodb.enabled
 
 - name: rabbitmq
-  version: 7.6.8
+  version: 8.26.3
   repository: https://charts.bitnami.com/bitnami
   condition: rabbitmq.enabled
 
-- name: redis
-  version: 10.5.0
-  repository: https://charts.bitnami.com/bitnami
-  condition: redis.enabled
-
 - name: postgresql
-  version: 8.9.6
+  version: 10.16.1
   repository: https://charts.bitnami.com/bitnami
   condition: postgresql.enabled
 
