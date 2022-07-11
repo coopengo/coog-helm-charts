@@ -1,4 +1,4 @@
-{{- if .Values.cron.enabled -}}
+{{- if .Values.celery.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
