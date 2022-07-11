@@ -525,10 +525,6 @@ celery:
     # -- Configure batch workDaysConf
     workDaysConf: french_work_days
 
-postgres:
-  host: "" # Mandatory
-  port: "" # Mandatory
-
 coog:
   config:
     COOG_SERVER_WORKERS: 2

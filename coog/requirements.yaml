@@ -9,15 +9,10 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   condition: rabbitmq.enabled
 
-- name: redis
-  version: 10.5.0
-  repository: https://charts.bitnami.com/bitnami
-  condition: redis.enabled
-
 - name: postgresql
-  version: 8.9.6
+  version: 11.6.15
   repository: https://charts.bitnami.com/bitnami
-  condition: postgresql.enabled
+  condition: postgres.ismanaged
 
   #- name: nginx
   #version: 5.1.6
