@@ -2,6 +2,29 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+image:
+  # -- Tag applied for all components
+  tag: coog-master-latest
+  # -- Image Pull Policy applied for all components
+  pullPolicy: Always
+  # -- secret to be used to download image for all components
+  pullSecrets:
+  - name: docker-registry
+
+replicaCount: 1
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 100m
+  nginx:
+    whitelistSourceRange: 127.0.0.1/32
+
 quota:
   enabled: false
   rolling_update: false
@@ -30,8 +53,8 @@ maintenance_mode:
       memory: 50Mi
   ingress:
     nginx:
-      customhttperrors: '403'
-      whitelistSourceRange: '127.0.0.1/32'
+      customhttperrors: 403
+      whitelistSourceRange: 127.0.0.1/32
     annotations: {}
   nodeSelector: {}
 
@@ -55,7 +78,7 @@ mongodb:
   enabled: true
   strategyType: Recreate
   image:
-    tag: "4.4.12"
+    tag: 4.4.12
   replicaSet:
     enabled: false
   usePassword: true
@@ -76,6 +99,105 @@ mongodb:
       requests:
         cpu: 50m
         memory: 150Mi
+
+##########################################################
+
+coog:
+  image:
+    # -- Image repository to run coog
+    repository: coopengohub/coog
+  config:
+    COOG_SERVER_WORKERS: 2
+    COOG_TIMEOUT: 3600
+    LOG_LEVEL: INFO
+    TRYTOND_CACHE__CLEAN_TIMEOUT: 0
+    TRYTOND_CACHE__RECORD: 50000
+    TRYTOND_DATABASE__LANGUAGE: fr
+    TRYTOND_EMAIL__FROM: to_define
+    TRYTOND_REPORT__UNOCONV: true
+    TRYTOND_DEBUG__VIEWS: false
+    TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
+    TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: 1
+    COOG_IWC: 1
+  # configurationFiles:
+  #   batch.conf: |-
+
+  max_worker_memory: 0
+  replicaCount: 1
+  persistentVolume:
+    enabled: true
+    name: workspace-io
+    io: /workspace/io/
+    storageClass: nfs-client
+    size: 10Gi
+    claim:
+      name: ""
+
+  securityContext:
+    runAsUser: 1000
+
+  ingress:
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt
+      kubernetes.io/ingress.class: nginx
+      nginx.ingress.kubernetes.io/send-timeout: "3600"
+      nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+      nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+      nginx.ingress.kubernetes.io/proxy-body-size: 100m
+      nginx.ingress.kubernetes.io/client-body-buffer-size: 100m
+    # -- Default host for the ingress resource for coog containers'
+    hosts:
+      - host: coog.local
+        paths: []
+    # -- TLS configuration for coog containers'
+    tls: []
+    #  - secretName: chart-example-tls
+    #    hosts:
+    #      - chart-example.local
+    nginx:
+      whitelistSourceRange: 127.0.0.1/32
+
+  # -- coog containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 1500m
+      memory: 1750Mi
+    requests:
+      cpu: 200m
+      memory: 300Mi
+
+  initContainers:
+    resources:
+      limits:
+        cpu: 500m
+        memory: 800Mi
+      requests:
+        cpu: 400m
+        memory: 400Mi
+
+  # -- Node labels for pod assignment
+  nodeSelector: {}
+
+  # -- Tolerations for pod assignment
+  tolerations: []
+
+  livenessProbe:
+    periodSeconds: 60
+    timeoutSeconds: 30
+  readinessProbe:
+    periodSeconds: 30
+    timeoutSeconds: 30
+
+  # -- Affinity for pod assignment
+  affinity: {}
+
+
+
+
+
+
+###########################################################
 
 api:
   # -- Deploy api container(s)
@@ -480,115 +602,6 @@ celery:
     workDays: 4
     # -- Configure batch workDaysConf
     workDaysConf: french_work_days
-
-coog:
-  config:
-    COOG_SERVER_WORKERS: 2
-    COOG_TIMEOUT: 3600
-    LOG_LEVEL: INFO
-    TRYTOND_CACHE__CLEAN_TIMEOUT: 0
-    TRYTOND_CACHE__RECORD: 50000
-    TRYTOND_DATABASE__LANGUAGE: fr
-    TRYTOND_EMAIL__FROM: to_define
-    TRYTOND_REPORT__UNOCONV: true
-    TRYTOND_DEBUG__VIEWS: false
-    TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
-    TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: 1
-    COOG_IWC: 1
-  # configurationFiles:
-  #   batch.conf: |-
-
-  # -- Deploy coog container(s)
-  enabled: true
-  root_dir: /workspace/io
-
-  max_worker_memory: 0
-  replicaCount: 1
-  persistentVolume:
-    enabled: true
-    name: workspace-io
-    io: /workspace/io/
-    storageClass: nfs-client
-#    storageClass: standard
-    size: 10Gi
-    claim:
-      name: ""
-
-
-  image:
-    # -- coog image repository
-    repository: coopengohub/coog
-    # -- coog image tag
-    tag: coog-2.10.2048
-    # -- coog image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  securityContext:
-    runAsUser: 1000
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  ingress:
-    # -- Enable ingress controller resource for coog containers'
-    enabled: false
-    # -- Ingress annotations for coog containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for coog containers'
-    hosts:
-      - host: coog.local
-        paths: []
-    # -- TLS configuration for coog containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-    nginx:
-      whitelistSourceRange: '127.0.0.1/32'
-
-  # -- coog containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 1500m
-      memory: 1750Mi
-    requests:
-      cpu: 200m
-      memory: 300Mi
-
-  initContainers:
-    resources:
-      limits:
-        cpu: 500m
-        memory: 800Mi
-      requests:
-        cpu: 400m
-        memory: 400Mi
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  livenessProbe:
-    periodSeconds: 60
-    timeoutSeconds: 30
-  readinessProbe:
-    periodSeconds: 30
-    timeoutSeconds: 30
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
 
 cron:
   # -- Deploy cron container(s)

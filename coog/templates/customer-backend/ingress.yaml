@@ -1,12 +1,10 @@
 {{- if .Values.customer_backend.enabled -}}
 {{- if .Values.customer_backend.ingress.enabled -}}
-{{- $fullName := include "full_name" . -}}
 apiVersion: {{ include "coog.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
   annotations:
     {{- range $key, $value := .Values.customer_backend.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
@@ -33,13 +31,13 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: {{ $fullName }}
+              name: {{ include "common.names.fullname" . }}
               port:
                 name: http
         {{- else -}}
         - path: {{ . }}
           backend:
-            serviceName: {{ $fullName }}
+            servicename: {{ include "common.names.fullname" . }}
             servicePort: http
         {{- end }}
         {{- end }}

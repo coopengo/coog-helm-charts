@@ -2,9 +2,8 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: {{ include "full_name" . }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   concurrencyPolicy: Forbid
   schedule: {{ .Values.batch.migquottosr.schedule }}
@@ -21,8 +20,8 @@ spec:
           restartPolicy: Never
           containers:
             - name: {{ .Chart.Name }}
-              image: "{{ .Values.batch.migquottosr.image.repository }}:{{ .Values.batch.migquottosr.image.tags }}"
-              imagePullPolicy: {{ .Values.batch.migquottosr.image.pullPolicy }}
+              image: "{{ .Values.batch.migquottosr.image.repository }}:{{ default .Values.image.tag .Values.batch.migquottosr.image.tags }}"
+              imagepullPolicy: {{ default .Values.image.pullPolicy .Values.batch.migquottosr.image.pullPolicy | quote }}
               securityContext:
                 allowPrivilegeEscalation: false
                 capabilities:
@@ -34,7 +33,7 @@ spec:
                 runAsUser: {{ .Values.coog.securityContext.runAsUser }}
               env:
                 - name: COOG_DB_NAME
-                  value: "{{ .Values.secrets.coog.postgres.database }}"
+                  value: "{{ .Values.postgres.auth.database }}"
                 - name: MONGO_URL
                   {{- if not .Values.gateway.external_mongodb.enabled }}
                   value: "{{ .Release.Name }}-mongodb"

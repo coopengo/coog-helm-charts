@@ -2,24 +2,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "full_name" . }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.customer_backend.replicaCount }}
+  replicas: {{ default .Values.replicaCount .Values.customer_backend.replicaCount }}
 {{- if not .Values.quota.rolling_update }}
   strategy:
     type: Recreate
 {{- end }}
   selector:
-    matchLabels:
-      app.kubernetes.io/name: {{ include "short_name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
-      labels:
-        app.kubernetes.io/name: {{ include "short_name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
     {{- with .Values.customer_backend.imagePullSecrets }}
       imagePullSecrets:
@@ -30,8 +25,8 @@ spec:
           emptyDir: {}
       initContainers:
         - name: "{{ .Chart.Name }}-build"
-          image: "{{ .Values.customer_backend.image.repository }}:{{ .Values.customer_backend.image.tag }}"
-          imagePullPolicy: {{ .Values.customer_backend.image.pullPolicy }}
+          image: "{{ .Values.customer_backend.image.repository }}:{{ default .Values.image.tag .Values.customer_backend.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customer_backend.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -79,9 +74,9 @@ spec:
             {{- end }}
             {{- end }}
       containers:
-        - name: {{ include "short_name" . }}
-          image: "{{ .Values.customer_backend.image.repository }}:{{ .Values.customer_backend.image.tag }}"
-          imagePullPolicy: {{ .Values.customer_backend.image.pullPolicy }}
+        - name: {{ include "common.names.name" . }}
+          image: "{{ .Values.customer_backend.image.repository }}:{{ default .Values.image.tag .Values.customer_backend.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customer_backend.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

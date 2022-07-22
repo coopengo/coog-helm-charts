@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
+  name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
   {{- if .Values.coog.persistentVolume.annotations }}
   annotations:
 {{ toYaml .Values.coog.persistentVolume.annotations | indent 4 }}

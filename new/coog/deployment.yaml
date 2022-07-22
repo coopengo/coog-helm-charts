@@ -1,24 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "full_name" . }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.coog.replicaCount }}
-{{- if not .Values.quota.rolling_update }}
+  replicas: {{ default .Values.replicaCount .Values.coog.replicaCount }}
+  {{- if not .Values.quota.rolling_update }}
   strategy:
     type: Recreate
-{{- end }}
+  {{- end }}
   selector:
-    matchLabels:
-      app.kubernetes.io/name: {{ include "short_name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
-      labels:
-        app.kubernetes.io/name: {{ include "short_name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
     {{- with .Values.coog.imagePullSecrets }}
       imagePullSecrets:
@@ -26,17 +21,17 @@ spec:
     {{- end }}
     {{- if .Values.coog.persistentVolume.enabled }}
       volumes:
-        - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
+        - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
-        - name: {{ .Release.Name }}-configuration
+            claimname: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
+        - name: {{ include "common.names.fullname" . }}-configuration
           configMap:
-            name: {{ .Release.Name }}-configuration
+            name: {{ include "common.names.fullname" . }}-configuration
       {{- end }}
       initContainers:
-        - name: "{{ .Chart.Name }}-module-update"
-          image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
-          imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
+        - name: {{ .Chart.Name }}-module-update
+          image: "{{ .Values.coog.image.repository }}:{{ default .Values.image.tag .Values.coog.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.coog.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -93,9 +88,9 @@ spec:
               containerPort: 8000
               protocol: TCP
       containers:
-        - name: {{ include "short_name" . }}
-          image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
-          imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
+        - name: {{ include "common.names.name" . }}
+          image: "{{ .Values.coog.image.repository }}:{{ default .Values.image.tag .Values.coog.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.coog.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -111,8 +106,8 @@ spec:
             - "{{ .Values.coog.workers }}"
           volumeMounts:
             {{- if .Values.coog.persistentVolume.enabled }}
-            - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
-              mountPath: {{ .Values.coog.root_dir }}
+            - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
+              mountPath: /workspace/io
               readOnly: false
             {{- end }}
             {{- if .Values.coog.configurationFiles }}
@@ -123,6 +118,12 @@ spec:
             {{- end }}
             {{- end }}
           env:
+            {{- if .Values.coog.extraEnv }}
+            {{- range $key, $value := .Values.coog.extraEnv }}
+            - name:  {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+            {{- end }}
             - name:  COOG_DB_USER
               valueFrom:
                 secretKeyRef:
@@ -133,12 +134,6 @@ spec:
                 secretKeyRef:
                   name: {{ printf "%s-%s" .Release.Name "db"  }}
                   key: db-password
-            {{- if .Values.coog.extraEnv }}
-            {{- range $key, $value := .Values.coog.extraEnv }}
-            - name:  {{ $key }}
-              value: {{ $value | quote }}
-            {{- end }}
-            {{- end }}
             - name:  TRYTOND_ASYNC__CELERY
               valueFrom:
                 secretKeyRef:
@@ -154,83 +149,6 @@ spec:
                 secretKeyRef:
                   name: {{ printf "%s-%s" .Release.Name "coog"  }}
                   key: TRYTOND_DATABASE__URI
-            {{- if .Values.secrets.coog.email_uri }}
-            - name: TRYTOND_EMAIL__URI
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
-                  key: TRYTOND_EMAIL__URI
-            {{- end }}
-            {{- if .Values.secrets.coog.trytond_session__passphrase }}
-            - name: TRYTOND_SESSION__PASSPHRASE
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
-                  key: TRYTOND_SESSION__PASSPHRASE
-            {{- end }}
-            {{- if .Values.secrets.coog.trytond_reset_password_api__password_token_secret }}
-            - name: TRYTOND_RESET_PASSWORD_API__PASSWORD_TOKEN_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
-                  key: TRYTOND_RESET_PASSWORD_API__PASSWORD_TOKEN_SECRET
-            {{- end }}
-            {{- if .Values.secrets.coog.trytond_prest_ij__access_key }}
-            - name: TRYTOND_PREST_IJ__ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
-                  key: TRYTOND_PREST_IJ__ACCESS_KEY
-            {{- end }}
-            {{- if .Values.secrets.coog.trytond_document_api__document_token_secret }}
-            - name: TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
-                  key: TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET
-            {{- end }}
-            {{- if .Values.secrets.coog.trytond_batch_report__uri }}
-            - name: TRYTOND_BATCH_REPORT__URI
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
-                  key: TRYTOND_BATCH_REPORT__URI
-            {{- end }}
-            {{- if .Values.secrets.coog.trytond_paybox__secret }}
-            - name: TRYTOND_PAYBOX__SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
-                  key: TRYTOND_PAYBOX__SECRET
-            {{- end }}
-            {{- if .Values.secrets.coog.trytond_primotexto__key }}
-            - name: TRYTOND_PRIMOTEXTO__KEY
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
-                  key: TRYTOND_PRIMOTEXTO__KEY
-            {{- end }}
-            {{- if .Values.secrets.coog.trytond_migration__password }}
-            - name: TRYTOND_MIGRATION__PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
-                  key: TRYTOND_MIGRATION__PASSWORD
-            {{- end }}
-            {{- if .Values.secrets.coog.trytond_strapi__admin_password }}
-            - name: TRYTOND_STRAPI__ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
-                  key: TRYTOND_STRAPI__ADMIN_PASSWORD
-            {{- end }}
-            {{- if .Values.secrets.coog.trytond_strapi__admin_email }}
-            - name: TRYTOND_STRAPI__ADMIN_EMAIL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
-                  key: TRYTOND_STRAPI__ADMIN_EMAIL
-            {{- end }}
           ports:
             - name: http
               containerPort: 8000
@@ -243,7 +161,7 @@ spec:
               {{- toYaml .Values.coog.livenessProbe | nindent 12 }}
           readinessProbe:
             httpGet:
-              path: "/{{ .Values.secrets.coog.postgres.database }}/readiness"
+              path: "/{{ .Values.postgres.auth.database }}/readiness"
               port: http
             exec:
               {{- toYaml .Values.coog.readinessProbe | nindent 12 }}

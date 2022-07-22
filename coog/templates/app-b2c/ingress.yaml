@@ -1,12 +1,10 @@
 {{- if .Values.app_b2c.enabled -}}
 {{- if .Values.app_b2c.ingress.enabled -}}
-{{- $fullName := include "full_name" . -}}
 apiVersion: {{ include "coog.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
   {{- with .Values.app_b2c.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -33,13 +31,13 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: {{ $fullName }}
+              name: {{ include "common.names.fullname" . }}
               port:
                 name: http
         {{- else -}}
         - path: {{ . }}
           backend:
-            serviceName: {{ $fullName }}
+            servicename: {{ include "common.names.fullname" . }}
             servicePort: http
         {{- end }}
         {{- end }}

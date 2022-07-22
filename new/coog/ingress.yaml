@@ -1,12 +1,8 @@
-{{- if .Values.coog.enabled -}}
-{{- if .Values.coog.ingress.enabled -}}
-{{- $fullName := include "full_name" . -}}
 apiVersion: {{ include "coog.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
   annotations:
   {{- if $.Values.maintenance_mode.enabled }}
   {{- range $key, $value := $.Values.maintenance_mode.ingress.annotations }}
@@ -14,9 +10,9 @@ metadata:
   {{- end }}
     nginx.ingress.kubernetes.io/custom-http-errors: {{ $.Values.maintenance_mode.ingress.nginx.customhttperrors | quote }}
     nginx.ingress.kubernetes.io/default-backend: "{{ $.Release.Name }}-{{ $.Chart.Name }}-maintenance"
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ $.Values.maintenance_mode.ingress.nginx.whitelistsourcerange | quote }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ $.Values.maintenance_mode.ingress.nginx.whitelistSourceRange | quote }}
   {{- else }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ .Values.coog.ingress.nginx.whitelistsourcerange | quote }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ .Values.coog.ingress.nginx.whitelistSourceRange | quote }}
   {{- end }}
   {{- range $key, $value := .Values.coog.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
@@ -43,16 +39,14 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: {{ $fullName }}
+              name: {{ include "common.names.fullname" . }}
               port:
                 name: http
         {{- else -}}
         - path: {{ . }}
           backend:
-            serviceName: {{ $fullName }}
+            servicename: {{ include "common.names.fullname" . }}
             servicePort: http
         {{- end }}
         {{- end }}
   {{- end }}
-{{- end }}
-{{- end }}

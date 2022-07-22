@@ -1,9 +1,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-configuration
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ include "common.names.fullname" . }}-configuration
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
 data:
   config.conf: |-
     TRYTOND_REPORT__API = http://{{ .Release.Name }}-{{ .Chart.Name }}-unoconv:5000/unoconv/{oext}
