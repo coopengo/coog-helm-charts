@@ -35,14 +35,6 @@ spec:
               env:
                 - name: COOG_DB_NAME
                   value: "{{ .Values.secrets.coog.postgres.database }}"
-                - name:  REDIS_URL
-                  {{- if .Values.redis.enabled }}
-                  value: "{{ .Release.Name }}-redis-master"
-                  {{- else }}
-                  value: {{ .Values.externalRedis.host | quote }}
-                {{- end }}
-                - name: REDIS_DB
-                  value: "7"
                 - name: MONGO_URL
                   {{- if not .Values.gateway.external_mongodb.enabled }}
                   value: "{{ .Release.Name }}-mongodb"
