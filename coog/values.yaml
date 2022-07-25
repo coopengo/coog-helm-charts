@@ -106,8 +106,6 @@ externalRedis:
 mongodb:
   enabled: true
   strategyType: Recreate
-  image:
-    tag: "4.0.10-debian-9-r39"
   replicaSet:
     enabled: false
   usePassword: true
