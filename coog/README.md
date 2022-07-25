@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.25.2225](https://img.shields.io/badge/Version-22.25.2225-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 22.29.2229](https://img.shields.io/badge/Version-22.29.2229-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -8,11 +8,9 @@ A Helm chart for Coog
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://charts.bitnami.com/bitnami | mongodb | 7.14.1 |
-| https://charts.bitnami.com/bitnami | postgresql | 8.9.6 |
-| https://charts.bitnami.com/bitnami | rabbitmq | 7.6.8 |
-| https://charts.bitnami.com/bitnami | redis | 10.5.0 |
-| https://gitlab.com/api/v4/projects/35933718/packages/helm/stable | flower | 0.2.1 |
+| https://charts.bitnami.com/bitnami | mongodb | 7.14.8 |
+| https://charts.bitnami.com/bitnami | postgresql | 10.16.1 |
+| https://charts.bitnami.com/bitnami | rabbitmq | 8.26.3 |
 
 ## Values
 
@@ -198,12 +196,12 @@ A Helm chart for Coog
 | cron.livenessProbe.successThreshold | int | `1` |  |
 | cron.livenessProbe.timeoutSeconds | int | `10` |  |
 | cron.nodeSelector | object | `{}` | Node labels for pod assignment |
-| cron.readinessProbe.failureThreshold | int | `2` |  |
-| cron.readinessProbe.initialDelaySeconds | int | `30` |  |
-| cron.readinessProbe.periodSeconds | int | `120` |  |
-| cron.readinessProbe.successThreshold | int | `1` |  |
-| cron.readinessProbe.timeoutSeconds | int | `10` |  |
 | cron.resources | object | `{"limits":{"cpu":"200m","memory":"500Mi"},"requests":{"cpu":"100m","memory":"300Mi"}}` | cron containers' resource requests and limits |
+| cron.startupProbe.failureThreshold | int | `2` |  |
+| cron.startupProbe.initialDelaySeconds | int | `30` |  |
+| cron.startupProbe.periodSeconds | int | `120` |  |
+| cron.startupProbe.successThreshold | int | `1` |  |
+| cron.startupProbe.timeoutSeconds | int | `10` |  |
 | cron.tolerations | list | `[]` | Tolerations for pod assignment |
 | customer_backend.affinity | object | `{}` | Affinity for pod assignment |
 | customer_backend.enabled | bool | `false` | Deploy portal container(s) |
@@ -216,11 +214,15 @@ A Helm chart for Coog
 | customer_backend.ingress.enabled | bool | `true` | Enable ingress controller resource for portal containers' |
 | customer_backend.ingress.hosts | list | `[{"host":"v1.customer.local","paths":[]}]` | Default host for the ingress resource for portal containers' |
 | customer_backend.ingress.tls | list | `[]` | TLS configuration for portal containers' |
+| customer_backend.initContainers.resources.limits.cpu | string | `"400m"` |  |
+| customer_backend.initContainers.resources.limits.memory | string | `"500Mi"` |  |
+| customer_backend.initContainers.resources.requests.cpu | string | `"200m"` |  |
+| customer_backend.initContainers.resources.requests.memory | string | `"250Mi"` |  |
 | customer_backend.nameOverride | string | `""` |  |
 | customer_backend.nodeSelector | object | `{}` | Node labels for pod assignment |
 | customer_backend.postgres_db | string | `"strapi"` |  |
 | customer_backend.replicaCount | int | `1` | Number of portal Pods to run |
-| customer_backend.resources | object | `{"limits":{"cpu":"400m","memory":"500Mi"},"requests":{"cpu":"100m","memory":"250Mi"}}` | portal containers' resource requests and limits |
+| customer_backend.resources | object | `{"limits":{"cpu":"400m","memory":"300Mi"},"requests":{"cpu":"100m","memory":"150Mi"}}` | portal containers' resource requests and limits |
 | customer_backend.service.port | int | `80` |  |
 | customer_backend.service.type | string | `"ClusterIP"` |  |
 | customer_backend.tolerations | list | `[]` | Tolerations for pod assignment |
@@ -235,16 +237,17 @@ A Helm chart for Coog
 | customer_frontend.ingress.enabled | bool | `true` | Enable ingress controller resource for portal containers' |
 | customer_frontend.ingress.hosts | list | `[{"host":"customer.local","paths":[]}]` | Default host for the ingress resource for portal containers' |
 | customer_frontend.ingress.tls | list | `[]` | TLS configuration for portal containers' |
+| customer_frontend.initContainers.resources.limits.cpu | string | `"400m"` |  |
+| customer_frontend.initContainers.resources.limits.memory | string | `"2000Mi"` |  |
+| customer_frontend.initContainers.resources.requests.cpu | string | `"200m"` |  |
+| customer_frontend.initContainers.resources.requests.memory | string | `"1500Mi"` |  |
 | customer_frontend.nameOverride | string | `""` |  |
 | customer_frontend.nodeSelector | object | `{}` | Node labels for pod assignment |
 | customer_frontend.replicaCount | int | `1` | Number of portal Pods to run |
-| customer_frontend.resources | object | `{"limits":{"cpu":"50m","memory":"50Mi"},"requests":{"cpu":"10m","memory":"25Mi"}}` | portal containers' resource requests and limits |
+| customer_frontend.resources | object | `{"limits":{"cpu":"100m","memory":"100Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | portal containers' resource requests and limits |
 | customer_frontend.service.port | int | `80` |  |
 | customer_frontend.service.type | string | `"ClusterIP"` |  |
 | customer_frontend.tolerations | list | `[]` | Tolerations for pod assignment |
-| externalRedis.host | string | `"localhost"` |  |
-| externalRedis.port | int | `6379` |  |
-| flower.enabled | bool | `false` |  |
 | gateway.affinity | object | `{}` | Affinity for pod assignment |
 | gateway.enabled | bool | `true` | Deploy gateway container(s) |
 | gateway.entrypoint | string | `"/gateway"` |  |
@@ -289,7 +292,7 @@ A Helm chart for Coog
 | maintenance_mode.resources.requests.cpu | string | `"50m"` |  |
 | maintenance_mode.resources.requests.memory | string | `"50Mi"` |  |
 | mongodb.enabled | bool | `true` |  |
-| mongodb.image.tag | string | `"4.0.10-debian-9-r39"` |  |
+| mongodb.image.tag | string | `"4.4.12"` |  |
 | mongodb.mongodbDatabase | string | `"coog-gateway"` |  |
 | mongodb.replicaSet.enabled | bool | `false` |  |
 | mongodb.resources.limits.cpu | string | `"100m"` |  |
@@ -356,20 +359,6 @@ A Helm chart for Coog
 | rabbitmq.resources.requests.cpu | string | `"100m"` |  |
 | rabbitmq.resources.requests.memory | string | `"100Mi"` |  |
 | rabbitmq.updateStrategyType | string | `"RollingUpdate"` |  |
-| redis.cluster.enabled | bool | `false` |  |
-| redis.enabled | bool | `true` |  |
-| redis.master.disableCommands | list | `[]` |  |
-| redis.master.persistence.enabled | bool | `false` |  |
-| redis.master.resources.limits.cpu | string | `"200m"` |  |
-| redis.master.resources.limits.memory | string | `"250Mi"` |  |
-| redis.master.resources.requests.cpu | string | `"100m"` |  |
-| redis.master.resources.requests.memory | string | `"150Mi"` |  |
-| redis.metrics.enabled | bool | `false` |  |
-| redis.metrics.prometheusRule.enabled | bool | `false` |  |
-| redis.podSecurityPolicy.create | bool | `false` |  |
-| redis.port | int | `27017` |  |
-| redis.rbac.create | bool | `true` |  |
-| redis.usePassword | bool | `false` |  |
 | static.affinity | object | `{}` | Affinity for pod assignment |
 | static.enabled | bool | `true` | Deploy static container(s) |
 | static.fullnameOverride | string | `""` |  |

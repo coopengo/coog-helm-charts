@@ -26,7 +26,7 @@ spec:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "short_name" . }}
           image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
           imagePullPolicy: {{ .Values.web.image.pullPolicy }}
           securityContext:
@@ -51,14 +51,6 @@ spec:
             {{ else }}
               value: "{{ .Values.gateway.external_mongodb.port }}"
             {{- end }}
-            - name: COOG_API_REDIS_URL
-              {{- if .Values.redis.enabled }}
-              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}"
-              {{- else }}
-              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}"
-              {{- end }}
-            - name: COOG_API_REDIS_DB
-              value: "7"
             - name: COOG_API_COOG_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog:{{ .Values.coog.service.port }}"
             - name: COOG_API_COOG_DB

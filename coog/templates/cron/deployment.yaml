@@ -1,4 +1,4 @@
-{{- if .Values.cron.enabled -}}
+{{- if .Values.celery.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,7 +32,7 @@ spec:
             claimName: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
     {{- end }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "short_name" . }}
           image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
           imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
           securityContext:
@@ -62,26 +62,6 @@ spec:
               value: "{{ .Values.coog.timeout }}"
             - name:  LOG_LEVEL
               value: "{{ .Values.coog.log_level }}"
-            {{- if not .Values.rabbitmq.enabled }}
-            - name:  COOG_REDIS_HOST
-              {{- if .Values.redis.enabled }}
-              value: "{{ .Release.Name }}-redis-master"
-              {{- else }}
-              value: {{ .Values.externalRedis.host | quote }}
-              {{- end }}
-            - name:  COOG_REDIS_PORT
-              {{- if .Values.redis.enabled }}
-              value: "{{ .Values.redis.redisPort }}"
-              {{- else }}
-              value: {{ .Values.externalRedis.port | quote }}
-              {{- end }}
-            - name:  TRYTOND_CACHE__URI
-              {{- if .Values.redis.enabled }}
-              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/0"
-              {{- else }}
-              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}/0"
-              {{- end }}
-            {{- end }}
             - name:  COOG_POSTGRES_HOST
             {{- if not .Values.coog.external_postgres.enabled }}
               value: "{{ .Release.Name }}-postgresql"
@@ -166,8 +146,7 @@ spec:
                 - "/bin/bash"
                 - "-c"
                 - "ep cron --check"
-            failureThreshold: 12
-            periodSeconds: 10
+            {{- toYaml .Values.cron.startupProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.cron.resources | nindent 12 }}
       {{- with .Values.cron.nodeSelector }}
