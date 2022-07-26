@@ -37,6 +37,8 @@ maintenance_mode:
 
 rabbitmq:
   enabled: true
+  persistence:
+    enabled: false
   resources:
     limits:
       cpu: 600m
