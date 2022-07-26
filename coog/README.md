@@ -1,6 +1,6 @@
 # coog
 
-![Version: 2.14.2229](https://img.shields.io/badge/Version-2.14.2229-informational?style=flat-square) ![AppVersion: coog-2.14](https://img.shields.io/badge/AppVersion-coog--2.14-informational?style=flat-square)
+![Version: 2.14.2229-1](https://img.shields.io/badge/Version-2.14.2229--1-informational?style=flat-square) ![AppVersion: coog-2.14](https://img.shields.io/badge/AppVersion-coog--2.14-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -342,6 +342,7 @@ A Helm chart for Coog
 | rabbitmq.enabled | bool | `true` |  |
 | rabbitmq.extraConfiguration | string | `"consumer_timeout = 172800000\nloopback_users.guest = false"` |  |
 | rabbitmq.livenessProbe.initialDelaySeconds | int | `240` |  |
+| rabbitmq.persistence.enabled | bool | `false` |  |
 | rabbitmq.resources.limits.cpu | string | `"600m"` |  |
 | rabbitmq.resources.limits.memory | string | `"400Mi"` |  |
 | rabbitmq.resources.requests.cpu | string | `"100m"` |  |
