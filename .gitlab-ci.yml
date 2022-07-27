@@ -179,9 +179,7 @@ coreye:synchronize:coog:
     - git clone --single-branch --branch "${CI_COMMIT_REF_NAME}" https://${COREYE_REPO_USER}:${COREYE_REPO_TOKEN}@git.coreye.fr/coopengo/artifacts/coopengo_helm_charts.git
     - cd coopengo_helm_charts
     - git remote set-url origin https://${COREYE_REPO_USER}:${COREYE_REPO_TOKEN}@git.coreye.fr/coopengo/artifacts/coopengo_helm_charts.git
-    - ls
-    - rm -rfv charts/coog
-    - ls charts/
+    - rm -rf charts/coog
     - cp -R "${CI_PROJECT_DIR}/coog" charts/.
     - git add .
     - git commit -m "Synchronize Repository from Coopengo repository"
