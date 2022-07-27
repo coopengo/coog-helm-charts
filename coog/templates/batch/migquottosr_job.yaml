@@ -33,7 +33,7 @@ spec:
                 runAsUser: {{ .Values.coog.securityContext.runAsUser }}
               env:
                 - name: COOG_DB_NAME
-                  value: "{{ .Values.postgres.auth.database }}"
+                  value: "{{ .Values.postgresql.auth.database }}"
                 - name: MONGO_URL
                   {{- if not .Values.gateway.external_mongodb.enabled }}
                   value: "{{ .Release.Name }}-mongodb"

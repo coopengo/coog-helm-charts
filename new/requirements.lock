@@ -1,15 +1,12 @@
 dependencies:
 - name: mongodb
   repository: https://charts.bitnami.com/bitnami
-  version: 7.14.1
+  version: 10.30.12
 - name: rabbitmq
   repository: https://charts.bitnami.com/bitnami
-  version: 7.6.8
-- name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 10.5.0
+  version: 8.26.3
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 8.9.6
-digest: sha256:3b39fb3aa402453dcfc34818931f0fc5f680b34f377924bdc469735e23905395
-generated: "2021-04-19T10:29:13.282110299+02:00"
+  version: 10.15.1
+digest: sha256:78cdcf192ac32624bd45a19c8a0d7d1ef4d9c0516debf84a9bf8076988b80dd9
+generated: "2022-07-27T10:41:45.143951091+02:00"

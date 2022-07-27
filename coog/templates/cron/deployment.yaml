@@ -70,7 +70,7 @@ spec:
               value: "{{ .Values.coog.external_postgres.port }}"
             {{- end }}
             - name:  COOG_DB_NAME
-              value: "{{ .Values.postgres.auth.database}}"
+              value: "{{ .Values.postgresql.auth.database}}"
             - name:  COOG_DB_USER
               valueFrom:
                 secretKeyRef:

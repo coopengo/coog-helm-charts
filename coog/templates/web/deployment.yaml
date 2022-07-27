@@ -49,7 +49,7 @@ spec:
             - name: COOG_API_COOG_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog:{{ .Values.coog.service.port }}"
             - name: COOG_API_COOG_DB
-              value: "{{ .Values.postgres.auth.database }}"
+              value: "{{ .Values.postgresql.auth.database }}"
             - name: COOG_API_API_PATH
               value: "/web/api"
             - name: COOG_API_APP_PATH

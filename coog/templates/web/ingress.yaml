@@ -1,6 +1,6 @@
 {{- if .Values.web.enabled -}}
 {{- if .Values.web.ingress.enabled -}}
-apiVersion: {{ include "coog.ingress.apiVersion" . }}
+apiVersion: {{ include "common.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ include "common.names.fullname" . }}
@@ -39,7 +39,7 @@ spec:
       http:
         paths:
         {{- range .paths }}
-        {{- if eq (include "coog.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+        {{- if eq (include "common.ingress.apiVersion" $) "networking.k8s.io/v1" }}
         - path: {{ . }}
           pathType: Prefix
           backend:

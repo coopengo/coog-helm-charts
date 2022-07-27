@@ -75,7 +75,7 @@ rabbitmq:
     initialDelaySeconds: 240
 
 mongodb:
-  enabled: true
+  enabled: false
   strategyType: Recreate
   image:
     tag: 4.4.12
@@ -106,16 +106,20 @@ coog:
   image:
     # -- Image repository to run coog
     repository: coopengohub/coog
+
+  containerPorts:
+    # -- Listening port of the application in the container
+    http: 8000
+  uwsgiMaxProcesses:
   config:
-    COOG_SERVER_WORKERS: 2
     COOG_TIMEOUT: 3600
     LOG_LEVEL: INFO
     TRYTOND_CACHE__CLEAN_TIMEOUT: 0
     TRYTOND_CACHE__RECORD: 50000
     TRYTOND_DATABASE__LANGUAGE: fr
     TRYTOND_EMAIL__FROM: to_define
-    TRYTOND_REPORT__UNOCONV: true
-    TRYTOND_DEBUG__VIEWS: false
+    # TRYTOND_REPORT__UNOCONV: true
+    # TRYTOND_DEBUG__VIEWS: false
     TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
     TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: 1
     COOG_IWC: 1
