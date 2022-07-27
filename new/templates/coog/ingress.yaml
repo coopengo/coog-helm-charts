@@ -14,7 +14,10 @@ metadata:
   {{- else }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ .Values.coog.ingress.nginx.whitelistSourceRange | quote }}
   {{- end }}
-  {{- range $key, $value := .Values.coog.ingress.annotations }}
+  {{- range $key, $value := default .Values.ingress.annotations .Values.coog.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- range $key, $value := default .Values.ingress.extraAnnotations .Values.coog.ingress.extraAnnotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
@@ -30,22 +33,22 @@ spec:
 {{- end }}
   rules:
   {{- range .Values.coog.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ default $.Values.ingress.host .host | quote }}
       http:
         paths:
         {{- range .paths }}
         {{- if eq (include "common.ingress.apiVersion" $) "networking.k8s.io/v1" }}
-        - path: {{ . }}
+        - path: {{ . | quote }}
           pathType: Prefix
           backend:
             service:
-              name: {{ include "common.names.fullname" . }}
+              name: {{ include "common.names.fullname" $ }}
               port:
                 name: http
         {{- else -}}
-        - path: {{ . }}
+        - path: {{ . | quote }}
           backend:
-            servicename: {{ include "common.names.fullname" . }}
+            servicename: {{ include "common.names.fullname" $ }}
             servicePort: http
         {{- end }}
         {{- end }}

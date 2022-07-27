@@ -1,18 +1,28 @@
-# Default values for coopengo.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# Global configuration applied to all components
 
 image:
-  # -- Tag applied for all components
+  # -- Tag applied for all components. It can be customized for each component (ex: coog.image.tag: my_tag)
   tag: coog-master-latest
-  # -- Image Pull Policy applied for all components
+  # -- Image Pull Policy applied for all components. It can be customized for each component (ex: coog.image.tag: my_tag)
   pullPolicy: Always
   # -- secret to be used to download image for all components
   pullSecrets:
   - name: docker-registry
 
+# -- Node labels for pod assignment. It can be customized for each component
+nodeSelector: {}
+
+# -- Tolerations for pod assignment. It can be customized for each component
+tolerations: []
+
+# -- Affinity for pod assignment. It can be customized for each component
+affinity: {}
+
+# -- Number of pod for all components. It can be customized for each component (ex: coog.replicaCount: 5)
 replicaCount: 1
 ingress:
+  # -- Host applied for all ingress. It can be customized for each component (ex: coog.ingress.hosts["host: coog.local, path: /"])
+  host: coog.local
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt
     kubernetes.io/ingress.class: nginx
@@ -22,8 +32,12 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
     nginx.ingress.kubernetes.io/client-body-buffer-size: 100m
+  # -- Allow to append annotations without to reset all the configuration
+  extraAnnotations: {}
   nginx:
     whitelistSourceRange: 127.0.0.1/32
+
+#############################################################################################################################""
 
 quota:
   enabled: false
@@ -77,8 +91,6 @@ rabbitmq:
 mongodb:
   enabled: false
   strategyType: Recreate
-  image:
-    tag: 4.4.12
   replicaSet:
     enabled: false
   usePassword: true
@@ -106,11 +118,16 @@ coog:
   image:
     # -- Image repository to run coog
     repository: coopengohub/coog
+    tag: ""
 
   containerPorts:
     # -- Listening port of the application in the container
     http: 8000
-  uwsgiMaxProcesses:
+
+  workers:
+    number: 1
+    maximumMemory: 512000
+
   config:
     COOG_TIMEOUT: 3600
     LOG_LEVEL: INFO
@@ -118,15 +135,10 @@ coog:
     TRYTOND_CACHE__RECORD: 50000
     TRYTOND_DATABASE__LANGUAGE: fr
     TRYTOND_EMAIL__FROM: to_define
-    # TRYTOND_REPORT__UNOCONV: true
-    # TRYTOND_DEBUG__VIEWS: false
     TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
     TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: 1
     COOG_IWC: 1
-  # configurationFiles:
-  #   batch.conf: |-
 
-  max_worker_memory: 0
   replicaCount: 1
   persistentVolume:
     enabled: true
@@ -141,19 +153,11 @@ coog:
     runAsUser: 1000
 
   ingress:
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt
-      kubernetes.io/ingress.class: nginx
-      nginx.ingress.kubernetes.io/send-timeout: "3600"
-      nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
-      nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-      nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-      nginx.ingress.kubernetes.io/proxy-body-size: 100m
-      nginx.ingress.kubernetes.io/client-body-buffer-size: 100m
     # -- Default host for the ingress resource for coog containers'
     hosts:
-      - host: coog.local
-        paths: []
+      - host:
+        paths:
+          - /
     # -- TLS configuration for coog containers'
     tls: []
     #  - secretName: chart-example-tls
@@ -180,21 +184,12 @@ coog:
         cpu: 400m
         memory: 400Mi
 
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
   livenessProbe:
     periodSeconds: 60
     timeoutSeconds: 30
   readinessProbe:
     periodSeconds: 30
     timeoutSeconds: 30
-
-  # -- Affinity for pod assignment
-  affinity: {}
 
 
 

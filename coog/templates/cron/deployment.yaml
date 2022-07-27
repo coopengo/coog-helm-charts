@@ -50,9 +50,9 @@ spec:
         {{- end }}
           env:
             - name:  COOG_SERVER_WORKERS
-              value: "{{ .Values.coog.workers }}"
+              value: "{{ .Values.coog.workers.number }}"
             - name:  COOG_CELERY_WORKERS
-              value: "{{ .Values.coog.workers }}"
+              value: "{{ .Values.coog.workers.number }}"
             - name:  COOG_TIMEOUT
               value: "{{ .Values.coog.timeout }}"
             - name:  LOG_LEVEL

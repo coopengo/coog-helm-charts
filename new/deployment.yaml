@@ -29,7 +29,7 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  postgresql-password: "V25WQldzZ29lZA=="
+  postgresql-password: "QXRkSVBXRFhaSw=="
 ---
 # Source: coog/charts/rabbitmq/templates/secrets.yaml
 apiVersion: v1
@@ -45,14 +45,14 @@ metadata:
     app.kubernetes.io/version: "3.9.13"
 type: Opaque
 data:
-  rabbitmq-password: "NVdSYkxHWUo4Yw=="
-  rabbitmq-erlang-cookie: "UXVuWklsUDk4Q3VVekJOZWhDc0pHZlJ2eHF6NmVNWEk="
+  rabbitmq-password: "MjhGWHNuQmh5dg=="
+  rabbitmq-erlang-cookie: "VWh3OTZNeDVuMHZVUUVSMDRsYkxpd2huVGowWjg2emg="
 ---
-# Source: coog/templates/coog/secret-db.yml
+# Source: coog/templates/coog/secret-database.yml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: release-name-db
+  name: release-name-coog-coog-database
   labels:
     app.kubernetes.io/name: coog-coog
     helm.sh/chart: coog-22.28.2228
@@ -65,11 +65,11 @@ stringData:
   db-username: "test"
   db-password: "test"
 ---
-# Source: coog/templates/coog/secrets.yaml
+# Source: coog/templates/coog/secret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: release-name-coog
+  name: release-name-coog-coog-configuration
   labels:
     app.kubernetes.io/name: coog-coog
     helm.sh/chart: coog-22.28.2228
@@ -399,32 +399,53 @@ spec:
             - name:  COOG_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: release-name-db
+                  name: release-name-coog-coog-database
                   key: db-username
             - name:  COOG_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: release-name-db
+                  name: release-name-coog-coog-database
                   key: db-password
             - name:  TRYTOND_ASYNC__CELERY
               valueFrom:
                 secretKeyRef:
-                  name: release-name-coog
+                  name: release-name-coog-coog-configuration
                   key: TRYTOND_ASYNC__CELERY
             - name:  TRYTOND_ASYNC_CELERY
               valueFrom:
                 secretKeyRef:
-                  name: release-name-coog
+                  name: release-name-coog-coog-configuration
                   key: TRYTOND_ASYNC__CELERY
             - name:  TRYTOND_DATABASE__URI
               valueFrom:
                 secretKeyRef:
-                  name: release-name-coog
+                  name: release-name-coog-coog-configuration
                   key: TRYTOND_DATABASE__URI
-            - name: test
+            - name:  TRYTOND_SESSION__PASSPHRASE
+              valueFrom:
+                secretKeyRef:
+                  name: release-name-coog-coog-configuration
+                  key: TRYTOND_SESSION__PASSPHRASE
+            - name: TRYTOND_REPORT__API
               valueFrom:
                 configMapKeyRef:
                   name: release-name-coog-coog-configuration
+                  key: TRYTOND_REPORT__API
+            - name: COOG_POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: release-name-coog-coog-configuration
+                  key: COOG_POSTGRES_HOST
+            - name: COOG_POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: release-name-coog-coog-configuration
+                  key: COOG_POSTGRES_PORT
+            - name: COOG_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: release-name-coog-coog-configuration
+                  key: COOG_DB_NAME
             - name: COOG_IWC
               valueFrom:
                 configMapKeyRef:
@@ -473,7 +494,7 @@ spec:
             - name: trytond_session__passphrase
               valueFrom:
                 secretKeyRef:
-                  name: release-name-coog
+                  name: release-name-coog-coog-configuration
                   key: trytond_session__passphrase
           ports:
             - name: http
@@ -492,7 +513,7 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: 1000
-          command: ['ep', 'server', ""] ## en attente d'adrien (slack)
+          command: ['ep', 'server', "1"]
           volumeMounts:
             - name: release-name-coog-coog-workspace-io
               mountPath: /workspace/io
@@ -777,7 +798,7 @@ spec:
         app.kubernetes.io/version: "3.9.13"
       annotations:
         checksum/config: 81c06353d0db535565cf432f8c3b872f5ec24d843afb74ac8b41f6ea6ada9b7f
-        checksum/secret: 1d6390dc769c6ad27ea2e609842716fc529997094821124b81c57447dae63d0f
+        checksum/secret: b93921b171df419cf8c69185742664e48dcbc92a9c9f3e85776e201bd0cd4001
     spec:
       
       serviceAccountName: release-name-rabbitmq
@@ -956,6 +977,13 @@ metadata:
     nginx.ingress.kubernetes.io/send-timeout: "3600"
 spec:
   rules:
-    - host: "coog.local"
+    - host: "test"
       http:
         paths:
+        - path: "/"
+          pathType: Prefix
+          backend:
+            service:
+              name: release-name-coog-coog
+              port:
+                name: http
