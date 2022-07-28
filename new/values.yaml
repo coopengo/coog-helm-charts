@@ -1,13 +1,90 @@
 # Global configuration applied to all components
 
+# -- Number of pod for all components. It can be customized for each component.
+# e.g:
+# coog:
+#   replicaCount: 1
+replicaCount: 1
+
 image:
-  # -- Tag applied for all components. It can be customized for each component (ex: coog.image.tag: my_tag)
+  # -- Tag applied for all components. It can be customized for each component.
+  # e.g:
+  # coog:
+  #   image:
+  #     repository: cooghub
+  repository: cooghub
+  # -- Tag applied for all components. It can be customized for each component.
+  # e.g:
+  # coog:
+  #   image:
+  #     tag: coog-master-latest
   tag: coog-master-latest
-  # -- Image Pull Policy applied for all components. It can be customized for each component (ex: coog.image.tag: my_tag)
+  # -- Image Pull Policy applied for all components. It can be customized for each component.
+  # e.g:
+  # coog:
+  #   image:
+  #     pullPolicy: Always
   pullPolicy: Always
-  # -- secret to be used to download image for all components
+  # -- secret to be used to download image for all components.
   pullSecrets:
-  - name: docker-registry
+    - name: docker-registry
+
+strategy: # to setup
+  type: Recreate
+
+ingress:
+  # -- Default host for the ingress record applied for all ingress. It can be customized for each component.
+  # e.g:
+  # coog:
+  #   ingress:
+  #     hosts:
+  #       - host: coog.local
+  #         path: /
+  host: coog.local
+
+  # Can't set key as "tls", else warning for Rabbitmq dependencie
+  thisTls:
+    # -- Enable TLS configuration for the host defined at `ingress.host` parameter
+    # TLS certificates will be retrieved from a TLS secret with name: `{{- printf "%s-tls" .Values.ingress.host }}`
+    # You can:
+    #   - Create a secret with your own certificates.
+    #     e.g:
+    #     apiVersion: v1
+    #     kind: Secret
+    #     metadata:
+    #       name: coog.local-tls
+    #     type: kubernetes.io/tls
+    #     data:
+    #       server.crt: |
+    #            <crt contents here>
+    #       server.key: |
+    #            <private key contents here>
+    #   - Rely on cert-manager to create it by setting the corresponding annotations
+    #
+    enable: true
+    # -- TLS configuration for additional hostname(s) to be covered with this ingress record
+    # ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+    # e.g:
+    # configuration:
+    # - hosts:
+    #     - coog.local
+    #   secretName: coog.local-tls
+    #
+    configuration: []
+
+  # -- Default annotations applied to all ingress. It can be customized for each component (ex: coog.ingress.commonAnnotations: key: value)
+  commonAnnotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/send-timeout: 3600
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: 3600
+    nginx.ingress.kubernetes.io/proxy-send-timeout: 3600
+    nginx.ingress.kubernetes.io/proxy-read-timeout: 3600
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 100m
+  annotations: {}
+  nginx:
+    whitelistSourceRange: 127.0.0.1/32
 
 # -- Node labels for pod assignment. It can be customized for each component
 nodeSelector: {}
@@ -18,37 +95,23 @@ tolerations: []
 # -- Affinity for pod assignment. It can be customized for each component
 affinity: {}
 
-# -- Number of pod for all components. It can be customized for each component (ex: coog.replicaCount: 5)
-replicaCount: 1
-ingress:
-  # -- Host applied for all ingress. It can be customized for each component (ex: coog.ingress.hosts["host: coog.local, path: /"])
-  host: coog.local
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/send-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-body-size: 100m
-    nginx.ingress.kubernetes.io/client-body-buffer-size: 100m
-  # -- Allow to append annotations without to reset all the configuration
-  extraAnnotations: {}
-  nginx:
-    whitelistSourceRange: 127.0.0.1/32
-
-#############################################################################################################################""
+#############################################################################################################################
 
 quota:
   enabled: false
   rolling_update: false
+  config:
+    cpuRequest: 0
+    memoryRequest: 0
+    cpuLimit: 0
+    memoryLimit: 0
 
 maintenance_mode:
   enabled: false
   imagePullSecrets:
     - name: docker-registry
   image:
-    repository: cooghub/nginx-custom-error-pages
+    name: nginx-custom-error-pages
     tag: latest
     pullPolicy: Always
   # Possible variables :
@@ -71,6 +134,9 @@ maintenance_mode:
       whitelistSourceRange: 127.0.0.1/32
     annotations: {}
   nodeSelector: {}
+
+#############################################################################################################################
+# Dependencies
 
 rabbitmq:
   enabled: true
@@ -112,13 +178,13 @@ mongodb:
         cpu: 50m
         memory: 150Mi
 
-##########################################################
+#############################################################################################################################
+# coog components
 
 coog:
   image:
     # -- Image repository to run coog
-    repository: coopengohub/coog
-    tag: ""
+    name: coog
 
   containerPorts:
     # -- Listening port of the application in the container
@@ -126,20 +192,21 @@ coog:
 
   workers:
     number: 1
-    maximumMemory: 512000
+    maximumMemory: 512000 # to setup
+  
+  cache: # to setup in deployment (coog + celery) + configmap (coog)
+    record: 50000
+    cleanTimeOut: 0
 
-  config:
+  config: # tester d'override pour voir si ca merge
     COOG_TIMEOUT: 3600
     LOG_LEVEL: INFO
-    TRYTOND_CACHE__CLEAN_TIMEOUT: 0
-    TRYTOND_CACHE__RECORD: 50000
     TRYTOND_DATABASE__LANGUAGE: fr
     TRYTOND_EMAIL__FROM: to_define
     TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
     TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: 1
     COOG_IWC: 1
 
-  replicaCount: 1
   persistentVolume:
     enabled: true
     name: workspace-io
@@ -155,8 +222,7 @@ coog:
   ingress:
     # -- Default host for the ingress resource for coog containers'
     hosts:
-      - host:
-        paths:
+      - paths:
           - /
     # -- TLS configuration for coog containers'
     tls: []
@@ -209,7 +275,7 @@ api:
 
   image:
     # -- api image repository
-    repository: coopengohub/api
+    name: api
     # -- api image tag
     tag: coog-2.10.2048
     # -- api image pull policy
@@ -252,7 +318,7 @@ api_b2b_config:
 
   image:
     # -- api_b2b_config image repository
-    repository: coopengohub/api-b2b-config
+    name: api-b2b-config
     # -- api_b2b_config image tag
     tag: coog-2.10.2048
     # -- api_b2b_config image pull policy
@@ -295,7 +361,7 @@ api_b2c:
 
   image:
     # -- api_b2c image repository
-    repository: coopengohub/api-b2c
+    name: api-b2c
     # -- api_b2c image tag
     tag: coog-2.10.2048
     # -- api_b2c image pull policy
@@ -338,7 +404,7 @@ api_identity_manager:
 
   image:
     # -- api-identity-manager image repository
-    repository: coopengohub/api-identity-manager
+    name: api-identity-manager
     # -- api-identity-manager image tag
     tag: coog-2.10.2048
     # -- api-identity-manager image pull policy
@@ -381,7 +447,7 @@ api_referential:
 
   image:
     # -- api_referential image repository
-    repository: coopengohub/api-referential
+    name: api-referential
     # -- api_referential image tag
     tag: coog-2.10.2048
     # -- api_referential image pull policy
@@ -424,7 +490,7 @@ app_b2c:
 
   image:
     # -- app_b2c image repository
-    repository: coopengohub/app-b2c
+    name: app-b2c
     # -- app_b2c image tag
     tag: coog-2.10.2048
     # -- app_b2c image pull policy
@@ -484,7 +550,7 @@ unoconv:
 
   image:
     # -- unoconv image repository
-    repository: coopengohub/unoconv
+    name: unoconv
     # -- unoconv image tag
     tag: dgw-0.0.1
     # -- unoconv image pull policy
@@ -643,7 +709,7 @@ web:
 
   image:
     # -- web image repository
-    repository: coopengohub/web
+    name: web
     # -- web image tag
     tag: coog-2.10.2048
     # -- web image pull policy
@@ -709,7 +775,7 @@ portal:
 
   image:
     # -- portal image repository
-    repository: coopengohub/portal
+    name: portal
     # -- portal image tag
     tag: coog-2.10.2048
     # -- portal image pull policy
@@ -787,7 +853,7 @@ gateway:
 
   image:
     # -- gateway image repository
-    repository: coopengohub/gateway
+    name: gateway
     # -- gateway image tag
     tag: coog-2.10.2048
     # -- gateway image pull policy
@@ -849,7 +915,7 @@ static:
 
   image:
     # -- static image repository
-    repository: coopengohub/static
+    name: static
     # -- static image tag
     tag: coog-2.10.2048
     # -- static image pull policy
@@ -911,7 +977,7 @@ batch:
     enabled: false
     image:
       pullPolicy: Always
-      repository: coopengohub/migquottosr
+      name: migquottosr
       tags: latest
     schedule: "0 20 * * *"
     imagePullSecrets:
@@ -933,7 +999,7 @@ customer_frontend:
 
   image:
     # -- portal image repository
-    repository: coopengohub/coog-customer-frontend
+    name: coog-customer-frontend
     # -- portal image tag
     tag: coog-2.13.2137
     # -- portal image pull policy
@@ -1007,7 +1073,7 @@ customer_backend:
 
   image:
     # -- portal image repository
-    repository: coopengohub/coog-customer-backend
+    name: coog-customer-backend
     # -- portal image tag
     tag: coog-2.13.2137
     # -- portal image pull policy

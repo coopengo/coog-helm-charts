@@ -1,13 +1,14 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "common.names.fullname" . }}-configuration
+  name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 data:
-  TRYTOND_REPORT__API: http://{{ .Release.Name }}-{{ .Chart.Name }}-unoconv:5000/unoconv/{oext}
+  TRYTOND_REPORT__API: {{ printf "http://%s-%s-libroconv:5000/unoconv/{oext}" .Release.Name .Chart.Name }}
   COOG_POSTGRES_HOST: {{ .Values.postgresql.host }}
   COOG_POSTGRES_PORT: {{ .Values.postgresql.service.ports.postgresql }}
   COOG_DB_NAME: {{ .Values.postgresql.auth.database }}
+  TRYTOND_CACHE__RECORD: {{ .Values.coog.cacheRecord}}
   {{- range $key, $value := .Values.coog.config }}
   {{ $key }}: {{ $value }}
   {{- end }}

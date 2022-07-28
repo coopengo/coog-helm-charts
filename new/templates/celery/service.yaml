@@ -1,4 +1,3 @@
-{{- if .Values.celery.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
@@ -12,4 +11,3 @@ spec:
       protocol: TCP
       name: http
   selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
-{{- end }}

@@ -14,23 +14,24 @@ metadata:
   {{- else }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ .Values.coog.ingress.nginx.whitelistSourceRange | quote }}
   {{- end }}
+  {{- range $key, $value := default .Values.ingress.commonAnnotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
   {{- range $key, $value := default .Values.ingress.annotations .Values.coog.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
-  {{- range $key, $value := default .Values.ingress.extraAnnotations .Values.coog.ingress.extraAnnotations }}
-    {{ $key }}: {{ $value | quote }}
-  {{- end }}
 spec:
-{{- if .Values.coog.ingress.tls }}
+  {{- if and .Values.ingress.thisTls.enable (or (include "common.ingress.certManagerRequest" ( dict "annotations" (default .Values.ingress.commonAnnotations .Values.ingress.annotations) )) .Values.ingress.hosts) }}
   tls:
-  {{- range .Values.coog.ingress.tls }}
+    {{- if and .Values.ingress.thisTls.enable (include "common.ingress.certManagerRequest" ( dict "annotations" (default .Values.ingress.commonAnnotations .Values.ingress.annotations) )) }}
     - hosts:
-      {{- range .hosts }}
-        - {{ . | quote }}
-      {{- end }}
-      secretName: {{ .secretName }}
+        - {{ .Values.ingress.host | quote }}
+      secretName: {{ printf "%s-tls" .Values.ingress.host }}
+    {{- end }}
+    {{- if .Values.ingress.thisTls.configuration }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.ingress.thisTls.configuration "context" $) | nindent 4 }}
+    {{- end }}
   {{- end }}
-{{- end }}
   rules:
   {{- range .Values.coog.ingress.hosts }}
     - host: {{ default $.Values.ingress.host .host | quote }}

@@ -12,14 +12,6 @@ Expand the name of the chart.
 {{- end -}}
 {{- end -}}
 
-
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "common.names.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
@@ -33,6 +25,13 @@ If release name contains chart name it will be used as a full name.
 {{- else -}}
 {{- printf "%s-%s-%s" .Release.Name $name $tplDir | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "common.names.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -84,24 +83,35 @@ Ingress dynamic configuration
 {{- end -}}
 {{- end -}}
 
-#####################################################""""
-
-
+{{/*
+Return true if cert-manager required annotations for TLS signed
+certificates are set in the Ingress annotations
+Ref: https://cert-manager.io/docs/usage/ingress/#supported-annotations
+Usage:
+{{ include "common.ingress.certManagerRequest" ( dict "annotations" .Values.path.to.the.ingress.annotations ) }}
+*/}}
+{{- define "common.ingress.certManagerRequest" -}}
+{{ if or (hasKey .annotations "cert-manager.io/cluster-issuer") (hasKey .annotations "cert-manager.io/issuer") }}
+    {{- true -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
+Renders a value that contains template.
+Usage:
+{{ include "common.tplvalues.render" ( dict "value" .Values.path.to.the.Value "context" $) }}
 */}}
-{{- define "full_name" -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- $tplDir := base (dir .Template.Name) -}}
-{{- if eq "templates" $tplDir -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s-%s" .Release.Name $name $tplDir | trunc 63 | trimSuffix "-" -}}
+{{- define "common.tplvalues.render" -}}
+    {{- if typeIs "string" .value }}
+        {{- tpl .value .context }}
+    {{- else }}
+        {{- tpl (.value | toYaml) .context }}
+    {{- end }}
 {{- end -}}
-{{- end -}}
+
+
+#####################################################""""
+
 
 {{/*
 Create image pull secret string.
