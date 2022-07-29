@@ -1,4 +1,4 @@
-{{- if .Values.web.enabled -}}
+{{- if .Values.web.enable -}}
 apiVersion: v1
 kind: Service
 metadata:

@@ -1,4 +1,4 @@
-{{- if .Values.maintenance_mode.enabled -}}
+{{- if .Values.maintenanceMode.enable -}}
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
@@ -14,28 +14,28 @@ spec:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
-    {{- with .Values.maintenance_mode.imagePullSecrets }}
+    {{- with .Values.maintenanceMode.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ .Chart.Name }}
-          image: "{{ .Values.maintenance_mode.image.repository }}:{{ default .Values.image.tag .Values.maintenance_mode.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.maintenance_mode.image.pullPolicy | quote }}
+          image: "{{ .Values.maintenanceMode.image.repository }}:{{ default .Values.image.tag .Values.maintenanceMode.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.maintenanceMode.image.pullPolicy | quote }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
           env:
-            {{- if .Values.maintenance_mode.env }}
-            {{- range $key, $value := .Values.maintenance_mode.env }}
+            {{- if .Values.maintenanceMode.env }}
+            {{- range $key, $value := .Values.maintenanceMode.env }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
             {{- end }}
           resources:
-            {{- toYaml .Values.maintenance_mode.resources | nindent 12 }}
-      {{- with .Values.maintenance_mode.nodeSelector }}
+            {{- toYaml .Values.maintenanceMode.resources | nindent 12 }}
+      {{- with .Values.maintenanceMode.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}

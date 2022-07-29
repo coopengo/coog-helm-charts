@@ -1,20 +1,20 @@
-{{- if .Values.portal.enabled -}}
-{{- if .Values.portal.ingress.enabled -}}
+{{- if .Values.portal.enable -}}
+{{- if .Values.portal.ingress.enable -}}
 apiVersion: {{ include "common.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
   annotations:
-  {{- if $.Values.maintenance_mode.enabled }}
-  {{- range $key, $value := $.Values.maintenance_mode.ingress.annotations }}
+  {{- if $.Values.maintenanceMode.enable }}
+    nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.maintenanceMode.ingress.nginx.customhttperrors }}
+    nginx.ingress.kubernetes.io/default-backend: {{ printf "%s-%s-maintenance" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (.Values.ingress.nginx.whiteList.trustedCidr) }}
+  {{- range $key, $value := $.Values.maintenanceMode.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
-    nginx.ingress.kubernetes.io/custom-http-errors: {{ $.Values.maintenance_mode.ingress.nginx.customhttperrors | quote }}
-    nginx.ingress.kubernetes.io/default-backend: "{{ $.Release.Name }}-{{ $.Chart.Name }}-maintenance"
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ $.Values.maintenance_mode.ingress.nginx.whitelistSourceRange | quote }}
   {{- else }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ .Values.portal.ingress.nginx.whitelistSourceRange | quote }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.portal.ingress.nginx.whiteList.publicCidr) | quote }}
   {{- end }}
   {{- range $key, $value := .Values.portal.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}

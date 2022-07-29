@@ -1,4 +1,4 @@
-{{- if .Values.api_identity_manager.enabled -}}
+{{- if .Values.api_identity_manager.enable -}}
 apiVersion: v1
 kind: Service
 metadata:

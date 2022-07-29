@@ -2,12 +2,12 @@ dependencies:
 - name: mongodb
   version: 7.14.8
   repository: https://charts.bitnami.com/bitnami
-  condition: mongodb.enabled
+  condition: mongodb.enable
 
 - name: rabbitmq
   version: 8.26.3
   repository: https://charts.bitnami.com/bitnami
-  condition: rabbitmq.enabled
+  condition: rabbitmq.enable
 
 - name: postgresql
   version: 11.6.15
@@ -17,4 +17,4 @@ dependencies:
   #- name: nginx
   #version: 5.1.6
   #repository: https://charts.bitnami.com/bitnami
-  #condition: nginx.enabled
+  #condition: nginx.enable

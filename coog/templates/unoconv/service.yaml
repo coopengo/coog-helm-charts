@@ -1,4 +1,4 @@
-{{- if .Values.unoconv.enabled -}}
+{{- if .Values.unoconv.enable -}}
 apiVersion: v1
 kind: Service
 metadata:

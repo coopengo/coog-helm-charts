@@ -1,4 +1,4 @@
-{{- if .Values.coog.persistentVolume.enabled -}}
+{{- if .Values.coog.persistentVolume.enable -}}
 {{- if not .Values.coog.persistentVolume.existingClaim -}}
 apiVersion: v1
 kind: PersistentVolumeClaim

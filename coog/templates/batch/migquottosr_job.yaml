@@ -1,4 +1,4 @@
-{{- if .Values.batch.migquottosr.enabled -}}
+{{- if .Values.batch.migquottosr.enable -}}
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
@@ -35,7 +35,7 @@ spec:
                 - name: COOG_DB_NAME
                   value: "{{ .Values.postgresql.auth.database }}"
                 - name: MONGO_URL
-                  {{- if not .Values.gateway.external_mongodb.enabled }}
+                  {{- if not .Values.gateway.external_mongodb.enable }}
                   value: "{{ .Release.Name }}-mongodb"
                   {{ else }}
                   value: "{{ .Values.gateway.external_mongodb.host }}"

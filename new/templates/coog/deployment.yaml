@@ -19,7 +19,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- if .Values.coog.persistentVolume.enabled }}
+    {{- if .Values.coog.persistentVolume.enable }}
       volumes:
         - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
           persistentVolumeClaim:
@@ -45,6 +45,7 @@ spec:
             {{- toYaml .Values.coog.initContainers.resources | nindent 12 }}
           command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies']
           env:
+            ############ Secrets
             - name:  COOG_DB_USER
               valueFrom:
                 secretKeyRef:
@@ -75,6 +76,7 @@ spec:
                 secretKeyRef:
                   name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
                   key: TRYTOND_SESSION__PASSPHRASE
+            ############ ConfigMaps
             - name: TRYTOND_REPORT__API
               valueFrom:
                 configMapKeyRef:
@@ -128,7 +130,7 @@ spec:
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           command: ['ep', 'server', "{{ .Values.coog.workers.number }}"]
           volumeMounts:
-            {{- if .Values.coog.persistentVolume.enabled }}
+            {{- if .Values.coog.persistentVolume.enable }}
             - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
               mountPath: /workspace/io
               readOnly: false
@@ -141,43 +143,65 @@ spec:
             {{- end }}
             {{- end }}
           env:
+            ############ Secrets
             - name:  COOG_DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "db"  }}
+                  name: {{ printf "%s-%s-database" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
                   key: db-username
             - name:  COOG_DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "db"  }}
+                  name: {{ printf "%s-%s-database" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
                   key: db-password
             - name:  TRYTOND_ASYNC__CELERY
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
+                  name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
                   key: TRYTOND_ASYNC__CELERY
             - name:  TRYTOND_ASYNC_CELERY
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
+                  name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
                   key: TRYTOND_ASYNC__CELERY
             - name:  TRYTOND_DATABASE__URI
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s" .Release.Name "coog"  }}
+                  name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
                   key: TRYTOND_DATABASE__URI
+            ############ ConfigMaps
+            - name: TRYTOND_REPORT__API
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                  key: TRYTOND_REPORT__API
+            - name: COOG_POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                  key: COOG_POSTGRES_HOST
+            - name: COOG_POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                  key: COOG_POSTGRES_PORT
+            - name: COOG_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                  key: COOG_DB_NAME
             {{- range $key, $value := .Values.coog.config }}
             - name: {{ $key }}
               valueFrom:
                 configMapKeyRef:
-                  name: {{ include "common.names.fullname" $ }}-configuration
+                  name: {{ printf "%s-%s-configuration" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
                   key: {{ $key }}
             {{- end }}
             {{- range $key, $value := .Values.secrets.coog }}
             - name: {{ $key }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ printf "%s-%s" $.Release.Name "coog"  }}
+                  name: {{ printf "%s-%s-configuration" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
                   key: {{ $key }}
             {{- end }}
           ports:

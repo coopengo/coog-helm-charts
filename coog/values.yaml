@@ -3,11 +3,11 @@
 # Declare variables to be passed into your templates.
 
 quota:
-  enabled: false
+  enable: false
   rolling_update: false
 
-maintenance_mode:
-  enabled: false
+maintenanceMode:
+  enable: false
   imagePullSecrets:
     - name: docker-registry
   image:
@@ -28,15 +28,11 @@ maintenance_mode:
     requests:
       cpu: 50m
       memory: 50Mi
-  ingress:
-    nginx:
-      customhttperrors: '403'
-      whitelistSourceRange: '127.0.0.1/32'
     annotations: {}
   nodeSelector: {}
 
 rabbitmq:
-  enabled: true
+  enable: true
   resources:
     limits:
       cpu: 600m
@@ -52,12 +48,12 @@ rabbitmq:
     initialDelaySeconds: 240
 
 mongodb:
-  enabled: true
+  enable: true
   strategyType: Recreate
   image:
     tag: "4.4.12"
   replicaSet:
-    enabled: false
+    enable: false
   usePassword: true
   mongodbDatabase: coog-gateway
   resources:
@@ -68,7 +64,7 @@ mongodb:
       cpu: 50m
       memory: 150Mi
   volumePermissions:
-    enabled: true
+    enable: true
     resources:
       limits:
         cpu: 100m
@@ -79,7 +75,7 @@ mongodb:
 
 api:
   # -- Deploy api container(s)
-  enabled: true
+  enable: true
   # -- 	Number of api Pods to run
   replicaCount: 1
 
@@ -125,7 +121,7 @@ api:
 
 api_b2b_config:
   # -- Deploy api_b2b_config container(s)
-  enabled: false
+  enable: false
   # -- 	Number of api_b2b_config Pods to run
   replicaCount: 1
 
@@ -168,7 +164,7 @@ api_b2b_config:
 
 api_b2c:
   # -- Deploy api_b2c container(s)
-  enabled: false
+  enable: false
   # -- 	Number of api_b2c Pods to run
   replicaCount: 1
 
@@ -211,7 +207,7 @@ api_b2c:
 
 api_identity_manager:
   # -- Deploy api_identity_manager container(s)
-  enabled: true
+  enable: true
   # -- 	Number of api_identity_manager Pods to run
   replicaCount: 1
 
@@ -254,7 +250,7 @@ api_identity_manager:
 
 api_referential:
   # -- Deploy api_referential container(s)
-  enabled: false
+  enable: false
   # -- 	Number of api_referential Pods to run
   replicaCount: 1
 
@@ -297,7 +293,7 @@ api_referential:
 
 app_b2c:
   # -- Deploy app_b2c container(s)
-  enabled: false
+  enable: false
   # -- 	Number of app_b2c Pods to run
   replicaCount: 1
 
@@ -321,7 +317,7 @@ app_b2c:
 
   ingress:
     # -- Enable ingress controller resource for app_b2c containers'
-    enabled: false
+    enable: false
     # -- Ingress annotations for app_b2c containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -357,7 +353,7 @@ app_b2c:
 
 unoconv:
   # -- Deploy unoconv container(s)
-  enabled: true
+  enable: true
   # -- 	Number of unoconv Pods to run
   replicaCount: 1
 
@@ -412,11 +408,11 @@ unoconv:
 
 celery:
   # -- Deploy celery container(s)
-  enabled: false
+  enable: false
   # -- 	Number of celery workers to run
   workers: 1
   specificBatchConcurrency:
-    enabled: false
+    enable: false
     resources:
       limits:
         cpu: 200m
@@ -499,13 +495,13 @@ coog:
   #   batch.conf: |-
 
   # -- Deploy coog container(s)
-  enabled: true
+  enable: true
   root_dir: /workspace/io
 
   max_worker_memory: 0
   replicaCount: 1
   persistentVolume:
-    enabled: true
+    enable: true
     name: workspace-io
     io: /workspace/io/
     storageClass: nfs-client
@@ -538,7 +534,7 @@ coog:
 
   ingress:
     # -- Enable ingress controller resource for coog containers'
-    enabled: false
+    enable: false
     # -- Ingress annotations for coog containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -552,8 +548,6 @@ coog:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
-    nginx:
-      whitelistSourceRange: '127.0.0.1/32'
 
   # -- coog containers' resource requests and limits
   resources:
@@ -592,7 +586,7 @@ coog:
 
 cron:
   # -- Deploy cron container(s)
-  enabled: true
+  enable: true
   affinity: {}
 
   # -- cron containers' resource requests and limits
@@ -625,7 +619,7 @@ cron:
 
 web:
   # -- Deploy web container(s)
-  enabled: true
+  enable: true
   # -- 	Number of web Pods to run
   replicaCount: 1
 
@@ -649,7 +643,7 @@ web:
 
   ingress:
     # -- Enable ingress controller resource for web containers'
-    enabled: false
+    enable: false
     # -- Ingress annotations for web containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -665,7 +659,6 @@ web:
     #      - chart-example.local
     nginx:
       rewritetarget: '/$2'
-      whitelistSourceRange: '127.0.0.1/32'
 
   livenessProbe:
     periodSeconds: 60
@@ -691,7 +684,7 @@ web:
 
 portal:
   # -- Deploy portal container(s)
-  enabled: false
+  enable: false
   # -- 	Number of portal Pods to run
   replicaCount: 1
 
@@ -715,7 +708,7 @@ portal:
 
   ingress:
     # -- Enable ingress controller resource for portal containers'
-    enabled: false
+    enable: false
     # -- Ingress annotations for portal containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -729,8 +722,6 @@ portal:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
-    nginx:
-      whitelistSourceRange: '127.0.0.1/32'
 
   # -- portal containers' resource requests and limits
   resources:
@@ -756,9 +747,9 @@ portal:
 
 gateway:
   # -- Deploy gateway container(s)
-  enabled: true
+  enable: true
   external_mongodb:
-    enabled: false
+    enable: false
   mongodb:
     database: coog-gateway
   jwt:
@@ -793,7 +784,7 @@ gateway:
 
   ingress:
     # -- Enable ingress controller resource for gateway containers'
-    enabled: false
+    enable: false
     # -- Ingress annotations for gateway containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -809,7 +800,6 @@ gateway:
     #      - chart-example.local
     nginx:
       rewritetarget: '/$2'
-      whitelistSourceRange: '127.0.0.1/32'
 
   # -- gateway containers' resource requests and limits
   resources:
@@ -831,7 +821,7 @@ gateway:
 
 static:
   # -- Deploy static container(s)
-  enabled: true
+  enable: true
   # -- 	Number of static Pods to run
   replicaCount: 1
 
@@ -855,7 +845,7 @@ static:
 
   ingress:
     # -- Enable ingress controller resource for static containers'
-    enabled: false
+    enable: false
     # -- Ingress annotations for static containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -869,8 +859,6 @@ static:
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
-    nginx:
-      whitelistSourceRange: '127.0.0.1/32'
 
   # -- static containers' resource requests and limits
   resources:
@@ -896,7 +884,7 @@ jwt:
 
 batch:
   migquottosr:
-    enabled: false
+    enable: false
     image:
       pullPolicy: Always
       repository: coopengohub/migquottosr
@@ -915,7 +903,7 @@ batch:
 # B2C Frontend
 customer_frontend:
   # -- Deploy portal container(s)
-  enabled: false
+  enable: false
   # -- 	Number of portal Pods to run
   replicaCount: 1
 
@@ -939,7 +927,7 @@ customer_frontend:
 
   ingress:
     # -- Enable ingress controller resource for portal containers'
-    enabled: true
+    enable: true
     # -- Ingress annotations for portal containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -988,7 +976,7 @@ customer_frontend:
 # B2C Backend
 customer_backend:
   # -- Deploy portal container(s)
-  enabled: false
+  enable: false
   # -- 	Number of portal Pods to run
   replicaCount: 1
   postgres_db: 'strapi'
@@ -1013,7 +1001,7 @@ customer_backend:
 
   ingress:
     # -- Enable ingress controller resource for portal containers'
-    enabled: true
+    enable: true
     # -- Ingress annotations for portal containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx

@@ -1,5 +1,5 @@
-{{- if .Values.customer_frontend.enabled -}}
-{{- if .Values.customer_frontend.ingress.enabled -}}
+{{- if .Values.customer_frontend.enable -}}
+{{- if .Values.customer_frontend.ingress.enable -}}
 apiVersion: {{ include "common.ingress.apiVersion" . }}
 kind: Ingress
 metadata:

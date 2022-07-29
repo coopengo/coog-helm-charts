@@ -1,5 +1,5 @@
-{{- if .Values.app_b2c.enabled -}}
-{{- if .Values.app_b2c.ingress.enabled -}}
+{{- if .Values.app_b2c.enable -}}
+{{- if .Values.app_b2c.ingress.enable -}}
 apiVersion: {{ include "common.ingress.apiVersion" . }}
 kind: Ingress
 metadata:

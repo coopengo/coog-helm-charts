@@ -1,4 +1,4 @@
-{{- if .Values.app_b2c.enabled -}}
+{{- if .Values.app_b2c.enable -}}
 apiVersion: v1
 kind: Service
 metadata:

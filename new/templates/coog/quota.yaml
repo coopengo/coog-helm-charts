@@ -1,4 +1,4 @@
-{{- if .Values.quota.enabled -}}
+{{- if .Values.quota.enable -}}
 apiVersion: v1
 kind: ResourceQuota
 metadata:

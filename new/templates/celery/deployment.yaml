@@ -19,7 +19,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- if .Values.coog.persistentVolume.enabled }}
+    {{- if .Values.coog.persistentVolume.enable }}
       volumes:
         - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
           persistentVolumeClaim:
@@ -42,7 +42,7 @@ spec:
             - ep
             - celery
             - "{{ .Values.celery.workers.number }}"
-        {{- if .Values.coog.persistentVolume.enabled }}
+        {{- if .Values.coog.persistentVolume.enable }}
           volumeMounts:
             - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
               mountPath: /workspace/io
