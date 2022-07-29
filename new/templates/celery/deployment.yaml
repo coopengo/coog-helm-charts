@@ -5,10 +5,8 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   replicas: {{ default .Values.replicaCount .Values.celery.replicaCount }}
-{{- if not .Values.quota.rolling_update }}
   strategy:
-    type: Recreate
-{{- end }}
+    type: {{ default .Values.strategy.type .Values.coog.strategy.type }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
   template:
@@ -16,19 +14,18 @@ spec:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
     {{- with .Values.coog.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
     {{- end }}
     {{- if .Values.coog.persistentVolume.enable }}
       volumes:
-        - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
+        - name: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
           persistentVolumeClaim:
-            claimname: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
+            claimname: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
     {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ .Values.coog.image.repository }}:{{ default .Values.image.tag .Values.coog.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.coog.image.pullPolicy | quote }}
+          image: "{{ default .Values.image.repository .Values.coog.image.repository }}/{{ .Values.coog.image.name }}:{{ default .Values.image.tag .Values.coog.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.coog.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -38,13 +35,10 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
-          command:
-            - ep
-            - celery
-            - "{{ .Values.celery.workers.number }}"
+          command: ['ep', 'celery', '{{ .Values.celery.workers.number }}']
         {{- if .Values.coog.persistentVolume.enable }}
           volumeMounts:
-            - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
+            - name: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
               mountPath: /workspace/io
               readOnly: false
         {{- end }}
@@ -120,7 +114,7 @@ spec:
             - name: {{ $key }}
               valueFrom:
                 configMapKeyRef:
-                  name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                  name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
                   key: {{ $key }}
             {{- end }}
             {{- range $key, $value := .Values.secrets.coog }}
@@ -132,43 +126,35 @@ spec:
             {{- end }}
           ports:
             - name: http
-              containerPort: 8000
-              protocol: TCP
+              containerPort: {{ .Values.coog.containerPorts.http }}
+          startupProbe: {{- toYaml (default .Values.startupProbe .Values.celery.startupProbe) | nindent 12 }}
           livenessProbe:
-            periodSeconds: 60
-            timeoutSeconds: 10
+            httpGet:
+              path: /liveness
+              port: http
             exec:
-              command:
-                - "/bin/bash"
-                - "-c"
-                - "celery -A {{ .Values.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
-            {{- toYaml .Values.celery.livenessProbe | nindent 12 }}
+              command: ['/bin/bash', '-c', 'celery -A {{ .Values.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME']
+            {{- toYaml (default .Values.livenessProbe .Values.celery.livenessProbe) | nindent 12 }}
           readinessProbe:
-            periodSeconds: 30
-            timeoutSeconds: 10
+            httpGet:
+              path: "/{{ .Values.postgresql.auth.database }}/readiness"
+              port: http
             exec:
-              command:
-                - "/bin/bash"
-                - "-c"
-                - "celery -A {{ .Values.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
-          resources:
-            {{- toYaml .Values.celery.resources | nindent 12 }}
-      {{- with .Values.celery.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
+              command: ['/bin/bash', '-c', 'celery -A {{ .Values.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME']
+            {{- toYaml (default .Values.readinessProbe .Values.celery.readinessProbe) | nindent 12 }}
+          resources: {{- toYaml .Values.celery.resources | nindent 12 }}
+      {{- with default .Values.nodeSelector .Values.celery.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.celery.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.celery.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-{{- if .Values.coog.dnsPolicy }}
-      dnsPolicy: {{ .Values.coog.dnsPolicy }}
-{{- end }}
-{{- if .Values.coog.dnsConfig }}
-      dnsConfig:
-{{ toYaml .Values.coog.dnsConfig | indent 8 }}
-{{- end }}
+      {{- with default .Values.affinity .Values.celery.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.tolerations .Values.celery.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if default .Values.dnsPolicy .Values.celery.dnsPolicy }}
+      dnsPolicy: {{ default .Values.dnsPolicy .Values.celery.dnsPolicy }}
+      {{- end }}
+      {{- if default .Values.dnsConfig .Values.celery.dnsConfig }}
+      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.celery.dnsConfig | indent 8 }}
+      {{- end }}

@@ -5,10 +5,8 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   replicas: {{ default .Values.replicaCount .Values.coog.replicaCount }}
-  {{- if not .Values.quota.rolling_update }}
   strategy:
-    type: Recreate
-  {{- end }}
+    type: {{ default .Values.strategy.type .Values.coog.strategy.type }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
   template:
@@ -16,22 +14,21 @@ spec:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
     {{- with .Values.image.pullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
     {{- end }}
     {{- if .Values.coog.persistentVolume.enable }}
       volumes:
-        - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
+        - name: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
           persistentVolumeClaim:
-            claimname: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
-        - name: {{ include "common.names.fullname" . }}-configuration
+            claimname: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+        - name: {{ printf "%s-configuration" .Release.Name | trunc 63 | trimSuffix "-" }}
           configMap:
-            name: {{ include "common.names.fullname" . }}-configuration
+            name: {{ printf "%s-configuration" .Release.Name | trunc 63 | trimSuffix "-" }}
       {{- end }}
       initContainers:
-        - name: {{ .Chart.Name }}-module-update
+        - name: {{ printf "%s-module-update" (include "common.names.name" .) | trunc 63 | trimSuffix "-" }}
           image: "{{ default .Values.image.repository .Values.coog.image.repository }}/{{ .Values.coog.image.name }}:{{ default .Values.image.tag .Values.coog.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.coog.image.pullPolicy | quote }}
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.coog.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -41,11 +38,8 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
-          resources:
-            {{- toYaml .Values.coog.initContainers.resources | nindent 12 }}
           command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies']
           env:
-            ############ Secrets
             - name:  COOG_DB_USER
               valueFrom:
                 secretKeyRef:
@@ -76,7 +70,6 @@ spec:
                 secretKeyRef:
                   name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
                   key: TRYTOND_SESSION__PASSPHRASE
-            ############ ConfigMaps
             - name: TRYTOND_REPORT__API
               valueFrom:
                 configMapKeyRef:
@@ -114,7 +107,7 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.coog.containerPorts.http }}
-              protocol: TCP
+          resources: {{- toYaml .Values.coog.initContainers.resources | nindent 12 }}
       containers:
         - name: {{ include "common.names.name" . }}
           image: "{{ default .Values.image.repository .Values.coog.image.repository }}/{{ .Values.coog.image.name }}:{{ default .Values.image.tag .Values.coog.image.tag }}"
@@ -128,22 +121,23 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
-          command: ['ep', 'server', "{{ .Values.coog.workers.number }}"]
+          command: ['ep', 'server', '{{ .Values.coog.workers.number }}']
+          {{- if or .Values.coog.persistentVolume.enable .Values.coog.configurationFiles }}
           volumeMounts:
             {{- if .Values.coog.persistentVolume.enable }}
-            - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
+            - name: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
               mountPath: /workspace/io
               readOnly: false
             {{- end }}
             {{- if .Values.coog.configurationFiles }}
             {{- range $key, $val := .Values.coog.configurationFiles }}
-            - name: {{ $.Release.Name }}-configuration
+            - name: {{ printf "%s-configuration" $.Release.Name | trunc 63 | trimSuffix "-" }}
               mountPath: /workspace/{{ $key }}
               subPath: {{ $key }}
             {{- end }}
             {{- end }}
+          {{- end }}
           env:
-            ############ Secrets
             - name:  COOG_DB_USER
               valueFrom:
                 secretKeyRef:
@@ -169,7 +163,6 @@ spec:
                 secretKeyRef:
                   name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
                   key: TRYTOND_DATABASE__URI
-            ############ ConfigMaps
             - name: TRYTOND_REPORT__API
               valueFrom:
                 configMapKeyRef:
@@ -207,37 +200,31 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.coog.containerPorts.http }}
-              protocol: TCP
+          startupProbe: {{- toYaml (default .Values.startupProbe .Values.coog.startupProbe) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /liveness
               port: http
-            exec:
-              {{- toYaml .Values.coog.livenessProbe | nindent 12 }}
+            {{- toYaml (default .Values.livenessProbe .Values.coog.livenessProbe) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: "/{{ .Values.postgresql.auth.database }}/readiness"
               port: http
-            exec:
-              {{- toYaml .Values.coog.readinessProbe | nindent 12 }}
+            {{- toYaml (default .Values.readinessProbe .Values.coog.readinessProbe) | nindent 12 }}
           resources:
             {{- toYaml .Values.coog.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.coog.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with default .Values.affinity .Values.coog.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with default .Values.tolerations .Values.coog.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-{{- if default .Values.dnsPolicy .Values.coog.dnsPolicy }}
+      {{- with default .Values.affinity .Values.coog.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.tolerations .Values.coog.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if default .Values.dnsPolicy .Values.coog.dnsPolicy }}
       dnsPolicy: {{ default .Values.dnsPolicy .Values.coog.dnsPolicy }}
-{{- end }}
-{{- if default .Values.dnsConfig .Values.coog.dnsConfig }}
-      dnsConfig:
-{{ toYaml default .Values.dnsConfig .Values.coog.dnsConfig | indent 8 }}
-{{- end }}
+      {{- end }}
+      {{- if default .Values.dnsConfig .Values.coog.dnsConfig }}
+      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.coog.dnsConfig | indent 8 }}
+      {{- end }}

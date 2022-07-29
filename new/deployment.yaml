@@ -29,7 +29,7 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  postgresql-password: "MXpHZUVGVmg3Qw=="
+  postgresql-password: "STlUTWk5WEtFbA=="
 ---
 # Source: coog/charts/rabbitmq/templates/secrets.yaml
 apiVersion: v1
@@ -45,16 +45,16 @@ metadata:
     app.kubernetes.io/version: "3.9.13"
 type: Opaque
 data:
-  rabbitmq-password: "cjBoeHJUYmExOA=="
-  rabbitmq-erlang-cookie: "dVJoRkY4RlFjWHJqTGtQV1FycUxZRFYyT2xvdkFyOTg="
+  rabbitmq-password: "emdOeHBuNXh1Zw=="
+  rabbitmq-erlang-cookie: "RmFnd3FtdFVINHBvZ3VXNlZSYzB6NlVVRWo2SHF2YWM="
 ---
-# Source: coog/templates/coog/secret-database.yml
+# Source: coog/templates/secret-database.yml
 apiVersion: v1
 kind: Secret
 metadata:
   name: ccas-coog-database
   labels:
-    app.kubernetes.io/name: coog-coog
+    app.kubernetes.io/name: coog
     helm.sh/chart: coog-22.28.2228
     app.kubernetes.io/instance: ccas
     app.kubernetes.io/managed-by: Helm
@@ -62,23 +62,23 @@ metadata:
 type: Opaque
 stringData:
   db-adminPassword: ""
-  db-username: "test"
-  db-password: "test"
+  db-username: ""
+  db-password: ""
 ---
-# Source: coog/templates/coog/secret.yaml
+# Source: coog/templates/secret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
   name: ccas-coog-configuration
   labels:
-    app.kubernetes.io/name: coog-coog
+    app.kubernetes.io/name: coog
     helm.sh/chart: coog-22.28.2228
     app.kubernetes.io/instance: ccas
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/version: "master"
 type: Opaque
 stringData:
-  TRYTOND_DATABASE__URI: "postgresql://test:test@:5432/test"
+  TRYTOND_DATABASE__URI: "postgresql://:@:5432/ccas"
   TRYTOND_ASYNC__CELERY: "amqp://user:@ccas-rabbitmq:5672"
   TRYTOND_SESSION__PASSPHRASE: "changeme"
   trytond_session__passphrase: "changeme"
@@ -115,13 +115,27 @@ data:
     consumer_timeout = 172800000
     loopback_users.guest = false
 ---
-# Source: coog/templates/coog/configmap.yaml
+# Source: coog/templates/celery/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ccas-coog-celery-configuration
+  labels:
+    app.kubernetes.io/name: coog-celery
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+data:
+  CELERY_MAX_MEMORY_PER_CHILD: 512000
+---
+# Source: coog/templates/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: ccas-coog-configuration
   labels:
-    app.kubernetes.io/name: coog-coog
+    app.kubernetes.io/name: coog
     helm.sh/chart: coog-22.28.2228
     app.kubernetes.io/instance: ccas
     app.kubernetes.io/managed-by: Helm
@@ -130,7 +144,7 @@ data:
   # Database
   COOG_POSTGRES_HOST: 
   COOG_POSTGRES_PORT: 5432
-  COOG_DB_NAME: test
+  COOG_DB_NAME: 
   # Tryton
   TRYTOND_REPORT__API: http://ccas-coog-libroconv:5000/unoconv/{oext}
   TRYTOND_CACHE__RECORD: 50000
@@ -143,11 +157,11 @@ data:
   TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
   TRYTOND_EMAIL__FROM: to_define
 ---
-# Source: coog/templates/coog/coog-pvc.yaml
+# Source: coog/templates/coog-pvc.yaml
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ccas-coog-coog-workspace-io
+  name: ccas-workspace-io
 spec:
   accessModes:
     - ReadWriteMany
@@ -319,13 +333,13 @@ spec:
     app.kubernetes.io/name: rabbitmq
     app.kubernetes.io/instance: ccas
 ---
-# Source: coog/templates/coog/service.yaml
+# Source: coog/templates/celery/service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: ccas-coog-coog
+  name: ccas-coog-celery
   labels:
-    app.kubernetes.io/name: coog-coog
+    app.kubernetes.io/name: coog-celery
     helm.sh/chart: coog-22.28.2228
     app.kubernetes.io/instance: ccas
     app.kubernetes.io/managed-by: Helm
@@ -337,16 +351,37 @@ spec:
       port: 80
       targetPort: http
   selector:
-    app.kubernetes.io/name: coog-coog
+    app.kubernetes.io/name: coog-celery
     app.kubernetes.io/instance: ccas
 ---
-# Source: coog/templates/coog/deployment.yaml
+# Source: coog/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccas-coog
+  labels:
+    app.kubernetes.io/name: coog
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: coog
+    app.kubernetes.io/instance: ccas
+---
+# Source: coog/templates/celery/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ccas-coog-coog
+  name: ccas-coog-celery
   labels:
-    app.kubernetes.io/name: coog-coog
+    app.kubernetes.io/name: coog-celery
     helm.sh/chart: coog-22.28.2228
     app.kubernetes.io/instance: ccas
     app.kubernetes.io/managed-by: Helm
@@ -357,30 +392,25 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      app.kubernetes.io/name: coog-coog
+      app.kubernetes.io/name: coog-celery
       app.kubernetes.io/instance: ccas
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: coog-coog
+        app.kubernetes.io/name: coog-celery
         helm.sh/chart: coog-22.28.2228
         app.kubernetes.io/instance: ccas
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/version: "master"
     spec:
-      imagePullSecrets:
-        - name: docker-registry
       volumes:
-        - name: ccas-coog-coog-workspace-io
+        - name: ccas-workspace-io
           persistentVolumeClaim:
-            claimname: ccas-coog-coog-workspace-io
-        - name: ccas-coog-coog-configuration
-          configMap:
-            name: ccas-coog-coog-configuration
-      initContainers:
-        - name: coog-module-update
+            claimname: ccas-workspace-io
+      containers:
+        - name: coog-celery
           image: "cooghub/coog:coog-master-latest"
-          imagepullPolicy: "Always"
+          imagepullPolicy: Always
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -390,16 +420,12 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: 1000
-          resources:
-            limits:
-              cpu: 500m
-              memory: 800Mi
-            requests:
-              cpu: 400m
-              memory: 400Mi
-          command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies']
+          command: ['ep', 'celery', '1']
+          volumeMounts:
+            - name: ccas-workspace-io
+              mountPath: /workspace/io
+              readOnly: false
           env:
-            ############ Secrets
             - name:  COOG_DB_USER
               valueFrom:
                 secretKeyRef:
@@ -430,7 +456,6 @@ spec:
                 secretKeyRef:
                   name: ccas-coog-configuration
                   key: TRYTOND_SESSION__PASSPHRASE
-            ############ ConfigMaps
             - name: TRYTOND_REPORT__API
               valueFrom:
                 configMapKeyRef:
@@ -451,6 +476,16 @@ spec:
                 configMapKeyRef:
                   name: ccas-coog-configuration
                   key: COOG_DB_NAME
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: COOG_DB_NAME
+            - name: CELERY_MAX_MEMORY_PER_CHILD
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: CELERY_MAX_MEMORY_PER_CHILD
             - name: COOG_IWC
               valueFrom:
                 configMapKeyRef:
@@ -494,9 +529,81 @@ spec:
           ports:
             - name: http
               containerPort: 8000
-              protocol: TCP
-      containers:
-        - name: coog-coog
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: http
+            exec:
+              command: ['/bin/bash', '-c', 'celery -A coog_async.coog_celery inspect ping -d celery@$HOSTNAME']
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: "//readiness"
+              port: http
+            exec:
+              command: ['/bin/bash', '-c', 'celery -A coog_async.coog_celery inspect ping -d celery@$HOSTNAME']
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          resources:
+            limits:
+              cpu: 400m
+              memory: 1000Mi
+            requests:
+              cpu: 100m
+              memory: 300Mi
+---
+# Source: coog/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccas-coog
+  labels:
+    app.kubernetes.io/name: coog
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: coog
+      app.kubernetes.io/instance: ccas
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: coog
+        helm.sh/chart: coog-22.28.2228
+        app.kubernetes.io/instance: ccas
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "master"
+    spec:
+      imagePullSecrets:
+        - name: docker-registry
+      volumes:
+        - name: ccas-workspace-io
+          persistentVolumeClaim:
+            claimname: ccas-workspace-io
+        - name: ccas-configuration
+          configMap:
+            name: ccas-configuration
+      initContainers:
+        - name: coog-module-update
           image: "cooghub/coog:coog-master-latest"
           imagepullPolicy: Always
           securityContext:
@@ -508,13 +615,8 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: 1000
-          command: ['ep', 'server', "1"]
-          volumeMounts:
-            - name: ccas-coog-coog-workspace-io
-              mountPath: /workspace/io
-              readOnly: false
+          command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies']
           env:
-            ############ Secrets
             - name:  COOG_DB_USER
               valueFrom:
                 secretKeyRef:
@@ -540,7 +642,11 @@ spec:
                 secretKeyRef:
                   name: ccas-coog-configuration
                   key: TRYTOND_DATABASE__URI
-            ############ ConfigMaps
+            - name:  TRYTOND_SESSION__PASSPHRASE
+              valueFrom:
+                secretKeyRef:
+                  name: ccas-coog-configuration
+                  key: TRYTOND_SESSION__PASSPHRASE
             - name: TRYTOND_REPORT__API
               valueFrom:
                 configMapKeyRef:
@@ -604,20 +710,143 @@ spec:
           ports:
             - name: http
               containerPort: 8000
-              protocol: TCP
+          resources:
+            limits:
+              cpu: 500m
+              memory: 800Mi
+            requests:
+              cpu: 400m
+              memory: 400Mi
+      containers:
+        - name: coog
+          image: "cooghub/coog:coog-master-latest"
+          imagepullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          command: ['ep', 'server', '1']
+          volumeMounts:
+            - name: ccas-workspace-io
+              mountPath: /workspace/io
+              readOnly: false
+          env:
+            - name:  COOG_DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: ccas-coog-database
+                  key: db-username
+            - name:  COOG_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ccas-coog-database
+                  key: db-password
+            - name:  TRYTOND_ASYNC__CELERY
+              valueFrom:
+                secretKeyRef:
+                  name: ccas-coog-configuration
+                  key: TRYTOND_ASYNC__CELERY
+            - name:  TRYTOND_ASYNC_CELERY
+              valueFrom:
+                secretKeyRef:
+                  name: ccas-coog-configuration
+                  key: TRYTOND_ASYNC__CELERY
+            - name:  TRYTOND_DATABASE__URI
+              valueFrom:
+                secretKeyRef:
+                  name: ccas-coog-configuration
+                  key: TRYTOND_DATABASE__URI
+            - name: TRYTOND_REPORT__API
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: TRYTOND_REPORT__API
+            - name: COOG_POSTGRES_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: COOG_POSTGRES_HOST
+            - name: COOG_POSTGRES_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: COOG_POSTGRES_PORT
+            - name: COOG_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: COOG_DB_NAME
+            - name: COOG_IWC
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: COOG_IWC
+            - name: COOG_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: COOG_TIMEOUT
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: LOG_LEVEL
+            - name: TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING
+            - name: TRYTOND_DATABASE__LANGUAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: TRYTOND_DATABASE__LANGUAGE
+            - name: TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
+            - name: TRYTOND_EMAIL__FROM
+              valueFrom:
+                configMapKeyRef:
+                  name: ccas-coog-configuration
+                  key: TRYTOND_EMAIL__FROM
+            - name: trytond_session__passphrase
+              valueFrom:
+                secretKeyRef:
+                  name: ccas-coog-configuration
+                  key: trytond_session__passphrase
+          ports:
+            - name: http
+              containerPort: 8000
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           livenessProbe:
             httpGet:
               path: /liveness
               port: http
-            exec:
-            periodSeconds: 60
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
             timeoutSeconds: 30
           readinessProbe:
             httpGet:
-              path: "/test/readiness"
+              path: "//readiness"
               port: http
-            exec:
+            failureThreshold: 3
+            initialDelaySeconds: 5
             periodSeconds: 30
+            successThreshold: 1
             timeoutSeconds: 30
           resources:
             limits:
@@ -805,7 +1034,7 @@ spec:
         app.kubernetes.io/version: "3.9.13"
       annotations:
         checksum/config: bb8cb47f49aa74e80f9ac14b72fb56062fd44927809ea42ecfe94e02a9a058ec
-        checksum/secret: ef71de031f991af5d5c1a3261c76bf9bf186dab90434036b36459771daf494ef
+        checksum/secret: e949bdc3c268dcd606d28fb97eeb2efa93224713724e964955e503a9f74322c2
     spec:
       
       serviceAccountName: ccas-rabbitmq
@@ -961,18 +1190,19 @@ spec:
           requests:
             storage: "8Gi"
 ---
-# Source: coog/templates/coog/ingress.yaml
+# Source: coog/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ccas-coog-coog
+  name: ccas-coog
   labels:
-    app.kubernetes.io/name: coog-coog
+    app.kubernetes.io/name: coog
     helm.sh/chart: coog-22.28.2228
     app.kubernetes.io/instance: ccas
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/version: "master"
   annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
     nginx.ingress.kubernetes.io/whitelist-source-range: "127.0.0.1/32"
     kubernetes.io/ingress.class: "nginx"
     nginx.ingress.kubernetes.io/client-body-buffer-size: "100m"
@@ -982,6 +1212,10 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     nginx.ingress.kubernetes.io/send-timeout: "3600"
 spec:
+  tls:
+    - hosts:
+        - "coog.local"
+      secretName: coog.local-tls
   rules:
     - host: "coog.local"
       http:
@@ -990,6 +1224,6 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: ccas-coog-coog
+              name: ccas-coog
               port:
                 name: http

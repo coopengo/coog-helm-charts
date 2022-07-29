@@ -22,9 +22,9 @@ spec:
     {{- end }}
     {{- if .Values.coog.persistentVolume.enable }}
       volumes:
-        - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
+        - name: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
           persistentVolumeClaim:
-            claimname: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
+            claimname: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
     {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
@@ -44,7 +44,7 @@ spec:
             - "cron"
         {{- if .Values.coog.persistentVolume.enable }}
           volumeMounts:
-            - name: {{ include "common.names.fullname" . }}-{{ .Values.coog.persistentVolume.name }}
+            - name: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
               mountPath: /workspace/io
               readOnly: false
         {{- end }}
@@ -118,8 +118,8 @@ spec:
               value: "1"
             - name: TRYTOND_DATABASE__LANGUAGE
               value: fr
-            {{- if .Values.celery.batchConfig }}
-            {{- range $key, $value := .Values.celery.batchConfig }}
+            {{- if .Values.celery.config }}
+            {{- range $key, $value := .Values.celery.config }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
