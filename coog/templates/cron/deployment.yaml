@@ -123,6 +123,20 @@ spec:
               value: "1"
             - name: TRYTOND_DATABASE__LANGUAGE
               value: fr
+            {{- if .Values.secrets.coog.email_uri }}
+            - name: TRYTOND_EMAIL__URI
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_EMAIL__URI
+            {{- end }}
+            {{- if .Values.secrets.coog.trytond_session__passphrase }}
+            - name: TRYTOND_SESSION__PASSPHRASE
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_SESSION__PASSPHRASE
+            {{- end }}
             {{- if .Values.celery.batchConfig }}
             {{- range $key, $value := .Values.celery.batchConfig }}
             - name:  {{ $key }}
