@@ -1,6 +1,6 @@
 # flower
 
-![Version: 2.10.2230](https://img.shields.io/badge/Version-2.10.2230-informational?style=flat-square) ![AppVersion: 0.9.5](https://img.shields.io/badge/AppVersion-0.9.5-informational?style=flat-square)
+![Version: 2.10.2231](https://img.shields.io/badge/Version-2.10.2231-informational?style=flat-square) ![AppVersion: 0.9.5](https://img.shields.io/badge/AppVersion-0.9.5-informational?style=flat-square)
 
 Flower Helm chart for Kubernetes
 
