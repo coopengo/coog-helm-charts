@@ -108,6 +108,20 @@ spec:
                 secretKeyRef:
                   name: coog-trytond-secret
                   key: TRYTOND_DATABASE__URI
+            {{- if .Values.secrets.coog.email_uri }}
+            - name: TRYTOND_EMAIL__URI
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_EMAIL__URI
+            {{- end }}
+            {{- if .Values.secrets.coog.trytond_session__passphrase }}
+            - name: TRYTOND_SESSION__PASSPHRASE
+              valueFrom:
+                secretKeyRef:
+                  name: coog-trytond-secret
+                  key: TRYTOND_SESSION__PASSPHRASE
+            {{- end }}
             - name:  TRYTOND_DEBUG__VIEWS
               value: "False"
             - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
