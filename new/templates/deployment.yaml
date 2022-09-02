@@ -6,7 +6,11 @@ metadata:
 spec:
   replicas: {{ default .Values.replicaCount .Values.coog.replicaCount }}
   strategy:
+  {{- if not .Values.quota.rollingUpdate }}
+    type: Recreate
+  {{- else -}}
     type: {{ default .Values.strategy.type .Values.coog.strategy.type }}
+  {{- end }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
   template:

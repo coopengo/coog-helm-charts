@@ -85,7 +85,12 @@ ingress:
     #
     configuration: []
 
-  # -- Default annotations applied to all ingress. It can be customized for each component (ex: coog.ingress.annotations: key: value)
+  # -- Default annotations applied to all ingress. It can be customized for each component
+  # e.g:
+  # coog:
+  #   ingress:
+  #     annotations: 
+  #       key: value
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/send-timeout: 3600
@@ -149,6 +154,7 @@ affinity: {}
 
 quota:
   enable: false
+  rollingUpdate: false
   config:
     cpuRequest: 0
     memoryRequest: 0
@@ -316,10 +322,11 @@ celery:
 
 static:
   image:
-    # -- static image repository
-    name: static
+    # -- static image name
+    name: coog-static
 
   strategy:
+    # -- static redeployment strategy type
     type: ""
 
   ingress:
