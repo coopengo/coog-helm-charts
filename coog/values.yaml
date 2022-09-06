@@ -511,6 +511,8 @@ coog:
   max_worker_memory: 0
   log_level: INFO
   timeout: 3600
+  extraEnv:
+    TRYTOND_TZ: Europe/Paris
   # -- 	Number of coog Pods to run
   replicaCount: 1
   persistentVolume:
