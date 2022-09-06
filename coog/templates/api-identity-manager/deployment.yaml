@@ -1,11 +1,11 @@
-{{- if .Values.api_identity_manager.enable -}}
+{{- if .Values.apiIdentityManager.enable -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ default .Values.replicaCount .Values.api_identity_manager.replicaCount }}
+  replicas: {{ default .Values.replicaCount .Values.apiIdentityManager.replicaCount }}
 {{- if not .Values.quota.rolling_update }}
   strategy:
     type: Recreate
@@ -16,14 +16,14 @@ spec:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
-    {{- with .Values.api_identity_manager.imagePullSecrets }}
+    {{- with .Values.apiIdentityManager.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ .Values.api_identity_manager.image.repository }}:{{ default .Values.image.tag .Values.api_identity_manager.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.api_identity_manager.image.pullPolicy | quote }}
+          image: "{{ .Values.apiIdentityManager.image.repository }}:{{ default .Values.image.tag .Values.apiIdentityManager.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.apiIdentityManager.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -32,7 +32,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.apiIdentityManager.securityContext.runAsUser }}
           env:
             - name:  MONGO_HOST
             {{- if not .Values.gateway.external_mongodb.enable }}
@@ -64,8 +64,8 @@ spec:
               value: "{{ .Values.postgresql.auth.database }}"
             - name:  JWT_INTERNAL_ENCRYPTION
               value: "{{ .Values.jwt.internal.encryption }}"
-            {{- if .Values.api_identity_manager.extraEnv }}
-            {{- range $key, $value := .Values.api_identity_manager.extraEnv }}
+            {{- if .Values.apiIdentityManager.extraEnv }}
+            {{- range $key, $value := .Values.apiIdentityManager.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
@@ -83,24 +83,24 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.api_identity_manager.resources | nindent 12 }}
-      {{- with .Values.api_identity_manager.nodeSelector }}
+            {{- toYaml .Values.apiIdentityManager.resources | nindent 12 }}
+      {{- with .Values.apiIdentityManager.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.api_identity_manager.affinity }}
+    {{- with .Values.apiIdentityManager.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.api_identity_manager.tolerations }}
+    {{- with .Values.apiIdentityManager.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{- if .Values.api_identity_manager.dnsPolicy }}
-      dnsPolicy: {{ .Values.api_identity_manager.dnsPolicy }}
+{{- if .Values.apiIdentityManager.dnsPolicy }}
+      dnsPolicy: {{ .Values.apiIdentityManager.dnsPolicy }}
 {{- end }}
-{{- if .Values.api_identity_manager.dnsConfig }}
+{{- if .Values.apiIdentityManager.dnsConfig }}
       dnsConfig:
-{{ toYaml .Values.api_identity_manager.dnsConfig | indent 8 }}
+{{ toYaml .Values.apiIdentityManager.dnsConfig | indent 8 }}
 {{- end }}
 {{- end }}

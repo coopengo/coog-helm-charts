@@ -1,11 +1,11 @@
-{{- if .Values.portal.enable -}}
+{{- if .Values.b2b.enable -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ default .Values.replicaCount .Values.portal.replicaCount }}
+  replicas: {{ default .Values.replicaCount .Values.b2b.replicaCount }}
 {{- if not .Values.quota.rolling_update }}
   strategy:
     type: Recreate
@@ -16,14 +16,14 @@ spec:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
-    {{- with .Values.portal.imagePullSecrets }}
+    {{- with .Values.b2b.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ .Values.portal.image.repository }}:{{ default .Values.image.tag .Values.portal.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.portal.image.pullPolicy | quote }}
+          image: "{{ .Values.b2b.image.repository }}:{{ default .Values.image.tag .Values.b2b.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.b2b.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -32,7 +32,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.b2b.securityContext.runAsUser }}
           ports:
             - name: http
               containerPort: 5000
@@ -46,24 +46,24 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.portal.resources | nindent 12 }}
-      {{- with .Values.portal.nodeSelector }}
+            {{- toYaml .Values.b2b.resources | nindent 12 }}
+      {{- with .Values.b2b.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.portal.affinity }}
+    {{- with .Values.b2b.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.portal.tolerations }}
+    {{- with .Values.b2b.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{- if .Values.portal.dnsPolicy }}
-      dnsPolicy: {{ .Values.portal.dnsPolicy }}
+{{- if .Values.b2b.dnsPolicy }}
+      dnsPolicy: {{ .Values.b2b.dnsPolicy }}
 {{- end }}
-{{- if .Values.portal.dnsConfig }}
+{{- if .Values.b2b.dnsConfig }}
       dnsConfig:
-{{ toYaml .Values.portal.dnsConfig | indent 8 }}
+{{ toYaml .Values.b2b.dnsConfig | indent 8 }}
 {{- end -}}
 {{- end }}

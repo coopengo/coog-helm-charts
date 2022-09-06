@@ -6,9 +6,9 @@
           .Values.apiReferential.enable
           .Values.appB2c.enable
           .Values.b2b.enable
-          .Values.api.enable
-          .Values.api.enable
-          .Values.api.enable 
+          .Values.customerBackend.enable
+          .Values.customerFrontend.enable
+          .Values.web.enable 
 -}}
 apiVersion: apps/v1
 kind: Deployment
@@ -17,10 +17,12 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
   replicas: {{ default .Values.replicaCount .Values.gateway.replicaCount }}
-{{- if not .Values.quota.rolling_update }}
   strategy:
+  {{- if not .Values.quota.rollingUpdate }}
     type: Recreate
-{{- end }}
+  {{- else -}}
+    type: {{ default .Values.strategy.type .Values.coog.strategy.type }}
+  {{- end }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
   template:
@@ -28,13 +30,12 @@ spec:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
     {{- with .Values.gateway.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ .Values.gateway.image.repository }}:{{ default .Values.image.tag .Values.gateway.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.gateway.image.pullPolicy | quote }}
+          image: "{{ default .Values.image.repository .Values.gateway.image.repository }}/{{ .Values.gateway.image.name }}:{{ default .Values.image.tag .Values.gateway.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.gateway.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -43,10 +44,10 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.gateway.securityContext.runAsUser }}
           env:
-            - name:  COOG_PORTAL_URL
-              value: "{{ .Values.gateway.portal_url }}"
+            - name:  COOG_b2b_URL
+              value: "{{ .Values.gateway.b2b_url }}"
             - name:  MONGO_HOST
             {{- if not .Values.gateway.external_mongodb.enable }}
               value: "{{ .Release.Name }}-mongodb"
@@ -71,14 +72,14 @@ spec:
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-web"
             - name:  COOG_API_URL_V2
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-api"
-            - name:  COOG_API_B2B_CONFIG_URL
+            - name:  COOG_apiB2bConfig_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-api-b2b-config"
-            - name:  COOG_API_B2C_URL
+            - name:  COOG_apiB2c_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-api-b2c"
-            - name:  COOG_API_REFERENTIAL_URL
+            - name:  COOG_apiReferential_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-api-referential"
-            - name:  COOG_API_IDENTITY_MANAGER_URL
-            {{- if not .Values.api_identity_manager.enable }}
+            - name:  COOG_apiIdentityManager_URL
+            {{- if not .Values.apiIdentityManager.enable }}
               value: "http://localhost:3000"
             {{ else }}
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-api-identity-manager"

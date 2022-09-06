@@ -1,11 +1,11 @@
-{{- if .Values.api_b2c.enable -}}
+{{- if .Values.apiB2c.enable -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ default .Values.replicaCount .Values.api_b2c.replicaCount }}
+  replicas: {{ default .Values.replicaCount .Values.apiB2c.replicaCount }}
 {{- if not .Values.quota.rolling_update }}
   strategy:
     type: Recreate
@@ -16,14 +16,14 @@ spec:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
-    {{- with .Values.api_b2c.imagePullSecrets }}
+    {{- with .Values.apiB2c.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ .Values.api_b2c.image.repository }}:{{ default .Values.image.tag .Values.api_b2c.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.api_b2c.image.pullPolicy | quote }}
+          image: "{{ .Values.apiB2c.image.repository }}:{{ default .Values.image.tag .Values.apiB2c.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.apiB2c.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -32,7 +32,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.apiB2c.securityContext.runAsUser }}
           env:
             - name: COOG_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
@@ -47,8 +47,8 @@ spec:
             {{- end }}
             - name:  JWT_INTERNAL_ENCRYPTION
               value: "{{ .Values.jwt.internal.encryption }}"
-            {{- if .Values.api_b2c.extraEnv }}
-            {{- range $key, $value := .Values.api_b2c.extraEnv }}
+            {{- if .Values.apiB2c.extraEnv }}
+            {{- range $key, $value := .Values.apiB2c.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
@@ -66,24 +66,24 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.api_b2c.resources | nindent 12 }}
-      {{- with .Values.api_b2c.nodeSelector }}
+            {{- toYaml .Values.apiB2c.resources | nindent 12 }}
+      {{- with .Values.apiB2c.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.api_b2c.affinity }}
+    {{- with .Values.apiB2c.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.api_b2c.tolerations }}
+    {{- with .Values.apiB2c.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{- if .Values.api_b2c.dnsPolicy }}
-      dnsPolicy: {{ .Values.api_b2c.dnsPolicy }}
+{{- if .Values.apiB2c.dnsPolicy }}
+      dnsPolicy: {{ .Values.apiB2c.dnsPolicy }}
 {{- end }}
-{{- if .Values.api_b2c.dnsConfig }}
+{{- if .Values.apiB2c.dnsConfig }}
       dnsConfig:
-{{ toYaml .Values.api_b2c.dnsConfig | indent 8 }}
+{{ toYaml .Values.apiB2c.dnsConfig | indent 8 }}
 {{- end }}
 {{- end }}

@@ -30,7 +30,7 @@ spec:
                 privileged: false
                 procMount: Default
                 runAsNonRoot: true
-                runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+                runAsUser: {{ default .Values.securityContext.runAsUser .Values.coog.securityContext.runAsUser }}
               env:
                 - name: COOG_DB_NAME
                   value: "{{ .Values.postgresql.auth.database }}"

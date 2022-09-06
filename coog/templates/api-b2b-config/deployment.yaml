@@ -1,4 +1,4 @@
-{{- if .Values.api_b2b_config.enable -}}
+{{- if .Values.apiB2bConfig.enable -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,21 +9,21 @@ spec:
   strategy:
     type: Recreate
 {{- end }}
-  replicas: {{ default .Values.replicaCount .Values.api_b2b_config.replicaCount }}
+  replicas: {{ default .Values.replicaCount .Values.apiB2bConfig.replicaCount }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
-    {{- with .Values.api_b2b_config.imagePullSecrets }}
+    {{- with .Values.apiB2bConfig.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ .Values.api_b2b_config.image.repository }}:{{ default .Values.image.tag .Values.api_b2b_config.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.api_b2b_config.image.pullPolicy | quote }}
+          image: "{{ .Values.apiB2bConfig.image.repository }}:{{ default .Values.image.tag .Values.apiB2bConfig.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.apiB2bConfig.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -32,7 +32,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.apiB2bConfig.securityContext.runAsUser }}
           env:
             - name: COOG_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
@@ -40,8 +40,8 @@ spec:
               value: "{{ .Values.postgresql.auth.database }}"
             - name:  JWT_INTERNAL_ENCRYPTION
               value: "{{ .Values.jwt.internal.encryption }}"
-            {{- if .Values.api_b2b_config.extraEnv }}
-            {{- range $key, $value := .Values.api_b2b_config.extraEnv }}
+            {{- if .Values.apiB2bConfig.extraEnv }}
+            {{- range $key, $value := .Values.apiB2bConfig.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
@@ -59,24 +59,24 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.api_b2b_config.resources | nindent 12 }}
-      {{- with .Values.api_b2b_config.nodeSelector }}
+            {{- toYaml .Values.apiB2bConfig.resources | nindent 12 }}
+      {{- with .Values.apiB2bConfig.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.api_b2b_config.affinity }}
+    {{- with .Values.apiB2bConfig.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.api_b2b_config.tolerations }}
+    {{- with .Values.apiB2bConfig.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{- if .Values.api_b2b_config.dnsPolicy }}
-      dnsPolicy: {{ .Values.api_b2b_config.dnsPolicy }}
+{{- if .Values.apiB2bConfig.dnsPolicy }}
+      dnsPolicy: {{ .Values.apiB2bConfig.dnsPolicy }}
 {{- end }}
-{{- if .Values.api_b2b_config.dnsConfig }}
+{{- if .Values.apiB2bConfig.dnsConfig }}
       dnsConfig:
-{{ toYaml .Values.api_b2b_config.dnsConfig | indent 8 }}
+{{ toYaml .Values.apiB2bConfig.dnsConfig | indent 8 }}
 {{- end }}
 {{- end }}

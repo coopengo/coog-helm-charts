@@ -1,11 +1,11 @@
-{{- if .Values.customer_backend.enable -}}
+{{- if .Values.customerBackend.enable -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ default .Values.replicaCount .Values.customer_backend.replicaCount }}
+  replicas: {{ default .Values.replicaCount .Values.customerBackend.replicaCount }}
 {{- if not .Values.quota.rolling_update }}
   strategy:
     type: Recreate
@@ -16,7 +16,7 @@ spec:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
-    {{- with .Values.customer_backend.imagePullSecrets }}
+    {{- with .Values.customerBackend.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
@@ -25,8 +25,8 @@ spec:
           emptyDir: {}
       initContainers:
         - name: "{{ .Chart.Name }}-build"
-          image: "{{ .Values.customer_backend.image.repository }}:{{ default .Values.image.tag .Values.customer_backend.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customer_backend.image.pullPolicy | quote }}
+          image: "{{ .Values.customerBackend.image.repository }}:{{ default .Values.image.tag .Values.customerBackend.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customerBackend.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -35,9 +35,9 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.customerBackend.securityContext.runAsUser }}
           resources:
-            {{- toYaml .Values.customer_backend.initContainers.resources | nindent 12 }}
+            {{- toYaml .Values.customerBackend.initContainers.resources | nindent 12 }}
           command: ['sh', '-c', 'yarn', 'build', '--no-optimization']
           volumeMounts:
             - name: builddir
@@ -56,7 +56,7 @@ spec:
               value: "{{ .Values.coog.external_postgres.port }}"
             {{- end }}
             - name:  DATABASE_NAME
-              value: "{{ .Values.customer_backend.postgres_db }}"
+              value: "{{ .Values.customerBackend.postgres_db }}"
             - name:  DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -67,16 +67,16 @@ spec:
                 secretKeyRef:
                   name: coog-postgres-db-secret
                   key: PASSWORD
-            {{- if .Values.customer_backend.extraEnv }}
-            {{- range $key, $value := .Values.customer_backend.extraEnv }}
+            {{- if .Values.customerBackend.extraEnv }}
+            {{- range $key, $value := .Values.customerBackend.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
             {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ .Values.customer_backend.image.repository }}:{{ default .Values.image.tag .Values.customer_backend.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customer_backend.image.pullPolicy | quote }}
+          image: "{{ .Values.customerBackend.image.repository }}:{{ default .Values.image.tag .Values.customerBackend.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customerBackend.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -85,7 +85,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.customerBackend.securityContext.runAsUser }}
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/build"
@@ -103,7 +103,7 @@ spec:
               value: "{{ .Values.coog.external_postgres.port }}"
             {{- end }}
             - name:  DATABASE_NAME
-              value: "{{ .Values.customer_backend.postgres_db }}"
+              value: "{{ .Values.customerBackend.postgres_db }}"
             - name:  DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
@@ -114,8 +114,8 @@ spec:
                 secretKeyRef:
                   name: coog-postgres-db-secret
                   key: PASSWORD
-            {{- if .Values.customer_backend.extraEnv }}
-            {{- range $key, $value := .Values.customer_backend.extraEnv }}
+            {{- if .Values.customerBackend.extraEnv }}
+            {{- range $key, $value := .Values.customerBackend.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
@@ -133,24 +133,24 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.customer_backend.resources | nindent 12 }}
-      {{- with .Values.customer_backend.nodeSelector }}
+            {{- toYaml .Values.customerBackend.resources | nindent 12 }}
+      {{- with .Values.customerBackend.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.customer_backend.affinity }}
+    {{- with .Values.customerBackend.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.customer_backend.tolerations }}
+    {{- with .Values.customerBackend.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{- if .Values.customer_backend.dnsPolicy }}
-      dnsPolicy: {{ .Values.customer_backend.dnsPolicy }}
+{{- if .Values.customerBackend.dnsPolicy }}
+      dnsPolicy: {{ .Values.customerBackend.dnsPolicy }}
 {{- end }}
-{{- if .Values.customer_backend.dnsConfig }}
+{{- if .Values.customerBackend.dnsConfig }}
       dnsConfig:
-{{ toYaml .Values.customer_backend.dnsConfig | indent 8 }}
+{{ toYaml .Values.customerBackend.dnsConfig | indent 8 }}
 {{- end }}
 {{- end }}

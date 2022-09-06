@@ -1,18 +1,18 @@
-{{- if .Values.customer_frontend.enable -}}
-{{- if .Values.customer_frontend.ingress.enable -}}
+{{- if .Values.customerFrontend.enable -}}
+{{- if .Values.customerFrontend.ingress.enable -}}
 apiVersion: {{ include "common.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
   annotations:
-    {{- range $key, $value := .Values.customer_frontend.ingress.annotations }}
+    {{- range $key, $value := .Values.customerFrontend.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
     {{- end }}
 spec:
-{{- if .Values.customer_frontend.ingress.tls }}
+{{- if .Values.customerFrontend.ingress.tls }}
   tls:
-  {{- range .Values.customer_frontend.ingress.tls }}
+  {{- range .Values.customerFrontend.ingress.tls }}
     - hosts:
       {{- range .hosts }}
         - {{ . | quote }}
@@ -21,7 +21,7 @@ spec:
   {{- end }}
 {{- end }}
   rules:
-  {{- range .Values.customer_frontend.ingress.hosts }}
+  {{- range .Values.customerFrontend.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:

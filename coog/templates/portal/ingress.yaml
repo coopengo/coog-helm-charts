@@ -1,5 +1,5 @@
-{{- if .Values.portal.enable -}}
-{{- if .Values.portal.ingress.enable -}}
+{{- if .Values.b2b.enable -}}
+{{- if .Values.b2b.ingress.enable -}}
 apiVersion: {{ include "common.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
@@ -14,15 +14,15 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- else }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.portal.ingress.nginx.whiteList.publicCidr) | quote }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.b2b.ingress.nginx.whiteList.publicCidr) | quote }}
   {{- end }}
-  {{- range $key, $value := .Values.portal.ingress.annotations }}
+  {{- range $key, $value := .Values.b2b.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
-{{- if .Values.portal.ingress.tls }}
+{{- if .Values.b2b.ingress.tls }}
   tls:
-  {{- range .Values.portal.ingress.tls }}
+  {{- range .Values.b2b.ingress.tls }}
     - hosts:
       {{- range .hosts }}
         - {{ . | quote }}
@@ -31,7 +31,7 @@ spec:
   {{- end }}
 {{- end }}
   rules:
-  {{- range .Values.portal.ingress.hosts }}
+  {{- range .Values.b2b.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:

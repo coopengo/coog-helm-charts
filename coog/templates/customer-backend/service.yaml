@@ -1,13 +1,13 @@
-{{- if .Values.customer_backend.enable -}}
+{{- if .Values.customerBackend.enable -}}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  type: {{ .Values.customer_backend.service.type }}
+  type: {{ .Values.customerBackend.service.type }}
   ports:
-    - port: {{ .Values.customer_backend.service.port }}
+    - port: {{ .Values.customerBackend.service.port }}
       targetPort: http
       protocol: TCP
       name: http

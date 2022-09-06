@@ -1,11 +1,11 @@
-{{- if .Values.customer_frontend.enable -}}
+{{- if .Values.customerFrontend.enable -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ default .Values.replicaCount .Values.customer_frontend.replicaCount }}
+  replicas: {{ default .Values.replicaCount .Values.customerFrontend.replicaCount }}
 {{- if not .Values.quota.rolling_update }}
   strategy:
     type: Recreate
@@ -16,7 +16,7 @@ spec:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
-    {{- with .Values.customer_frontend.imagePullSecrets }}
+    {{- with .Values.customerFrontend.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
@@ -25,8 +25,8 @@ spec:
           emptyDir: {}
       initContainers:
         - name: "{{ .Chart.Name }}-build"
-          image: "{{ .Values.customer_frontend.image.repository }}:{{ default .Values.image.tag .Values.customer_frontend.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customer_frontend.image.pullPolicy | quote }}
+          image: "{{ .Values.customerFrontend.image.repository }}:{{ default .Values.image.tag .Values.customerFrontend.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customerFrontend.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -35,24 +35,24 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.customerFrontend.securityContext.runAsUser }}
           resources:
-            {{- toYaml .Values.customer_frontend.initContainers.resources | nindent 12 }}
+            {{- toYaml .Values.customerFrontend.initContainers.resources | nindent 12 }}
           command: ['sh', '-c', 'yarn', 'build', '--prefix-paths']
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/public"
-          {{- if .Values.customer_frontend.env }}
+          {{- if .Values.customerFrontend.env }}
           env:
-            {{- range $key, $value := .Values.customer_frontend.env }}
+            {{- range $key, $value := .Values.customerFrontend.env }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
           {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ .Values.customer_frontend.image.repository }}:{{ default .Values.image.tag .Values.customer_frontend.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customer_frontend.image.pullPolicy | quote }}
+          image: "{{ .Values.customerFrontend.image.repository }}:{{ default .Values.image.tag .Values.customerFrontend.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customerFrontend.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -61,13 +61,13 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.customerFrontend.securityContext.runAsUser }}
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/public"
-          {{- if .Values.customer_frontend.extraEnv }}
+          {{- if .Values.customerFrontend.extraEnv }}
           env:
-            {{- range $key, $value := .Values.customer_frontend.extraEnv }}
+            {{- range $key, $value := .Values.customerFrontend.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
@@ -85,24 +85,24 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.customer_frontend.resources | nindent 12 }}
-      {{- with .Values.customer_frontend.nodeSelector }}
+            {{- toYaml .Values.customerFrontend.resources | nindent 12 }}
+      {{- with .Values.customerFrontend.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.customer_frontend.affinity }}
+    {{- with .Values.customerFrontend.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.customer_frontend.tolerations }}
+    {{- with .Values.customerFrontend.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{- if .Values.customer_frontend.dnsPolicy }}
-      dnsPolicy: {{ .Values.customer_frontend.dnsPolicy }}
+{{- if .Values.customerFrontend.dnsPolicy }}
+      dnsPolicy: {{ .Values.customerFrontend.dnsPolicy }}
 {{- end }}
-{{- if .Values.customer_frontend.dnsConfig }}
+{{- if .Values.customerFrontend.dnsConfig }}
       dnsConfig:
-{{ toYaml .Values.customer_frontend.dnsConfig | indent 8 }}
+{{ toYaml .Values.customerFrontend.dnsConfig | indent 8 }}
 {{- end }}
 {{- end }}

@@ -31,80 +31,80 @@ A Helm chart for Coog
 | api.service.port | int | `80` |  |
 | api.service.type | string | `"ClusterIP"` |  |
 | api.tolerations | list | `[]` | Tolerations for pod assignment |
-| api_b2b_config.affinity | object | `{}` | Affinity for pod assignment |
-| api_b2b_config.enabled | bool | `false` | Deploy api_b2b_config container(s) |
-| api_b2b_config.fullnameOverride | string | `""` |  |
-| api_b2b_config.image.pullPolicy | string | `"Always"` | api_b2b_config image pull policy |
-| api_b2b_config.image.repository | string | `"coopengohub/api-b2b-config"` | api_b2b_config image repository |
-| api_b2b_config.image.tag | string | `"coog-2.10.2048"` | api_b2b_config image tag |
-| api_b2b_config.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
-| api_b2b_config.nameOverride | string | `""` |  |
-| api_b2b_config.nodeSelector | object | `{}` | Node labels for pod assignment |
-| api_b2b_config.replicaCount | int | `1` | Number of api_b2b_config Pods to run |
-| api_b2b_config.resources | object | `{"limits":{"cpu":"50m","memory":"80Mi"},"requests":{"cpu":"30m","memory":"40Mi"}}` | api_b2b_config containers' resource requests and limits |
-| api_b2b_config.service.port | int | `80` |  |
-| api_b2b_config.service.type | string | `"ClusterIP"` |  |
-| api_b2b_config.tolerations | list | `[]` | Tolerations for pod assignment |
-| api_b2c.affinity | object | `{}` | Affinity for pod assignment |
-| api_b2c.enabled | bool | `false` | Deploy api_b2c container(s) |
-| api_b2c.fullnameOverride | string | `""` |  |
-| api_b2c.image.pullPolicy | string | `"Always"` | api_b2c image pull policy |
-| api_b2c.image.repository | string | `"coopengohub/api-b2c"` | api_b2c image repository |
-| api_b2c.image.tag | string | `"coog-2.10.2048"` | api_b2c image tag |
-| api_b2c.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
-| api_b2c.nameOverride | string | `""` |  |
-| api_b2c.nodeSelector | object | `{}` | Node labels for pod assignment |
-| api_b2c.replicaCount | int | `1` | Number of api_b2c Pods to run |
-| api_b2c.resources | object | `{"limits":{"cpu":"50m","memory":"50Mi"},"requests":{"cpu":"20m","memory":"25Mi"}}` | api_b2c containers' resource requests and limits |
-| api_b2c.service.port | int | `80` |  |
-| api_b2c.service.type | string | `"ClusterIP"` |  |
-| api_b2c.tolerations | list | `[]` | Tolerations for pod assignment |
-| api_identity_manager.affinity | object | `{}` | Affinity for pod assignment |
-| api_identity_manager.enabled | bool | `true` | Deploy api_identity_manager container(s) |
-| api_identity_manager.fullnameOverride | string | `""` |  |
-| api_identity_manager.image.pullPolicy | string | `"Always"` | api-identity-manager image pull policy |
-| api_identity_manager.image.repository | string | `"coopengohub/api-identity-manager"` | api-identity-manager image repository |
-| api_identity_manager.image.tag | string | `"coog-2.10.2048"` | api-identity-manager image tag |
-| api_identity_manager.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
-| api_identity_manager.nameOverride | string | `""` |  |
-| api_identity_manager.nodeSelector | object | `{}` | Node labels for pod assignment |
-| api_identity_manager.replicaCount | int | `1` | Number of api_identity_manager Pods to run |
-| api_identity_manager.resources | object | `{"limits":{"cpu":"50m","memory":"70Mi"},"requests":{"cpu":"10m","memory":"30Mi"}}` | api_identity_manager containers' resource requests and limits |
-| api_identity_manager.service.port | int | `80` |  |
-| api_identity_manager.service.type | string | `"ClusterIP"` |  |
-| api_identity_manager.tolerations | list | `[]` | Tolerations for pod assignment |
-| api_referential.affinity | object | `{}` | Affinity for pod assignment |
-| api_referential.enabled | bool | `false` | Deploy api_referential container(s) |
-| api_referential.fullnameOverride | string | `""` |  |
-| api_referential.image.pullPolicy | string | `"Always"` | api_referential image pull policy |
-| api_referential.image.repository | string | `"coopengohub/api-referential"` | api_referential image repository |
-| api_referential.image.tag | string | `"coog-2.10.2048"` | api_referential image tag |
-| api_referential.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
-| api_referential.nameOverride | string | `""` |  |
-| api_referential.nodeSelector | object | `{}` | Node labels for pod assignment |
-| api_referential.replicaCount | int | `1` | Number of api_referential Pods to run |
-| api_referential.resources | object | `{"limits":{"cpu":"200m","memory":"400Mi"},"requests":{"cpu":"100m","memory":"250Mi"}}` | api_referential containers' resource requests and limits |
-| api_referential.service.port | int | `80` |  |
-| api_referential.service.type | string | `"ClusterIP"` |  |
-| api_referential.tolerations | list | `[]` | Tolerations for pod assignment |
-| app_b2c.affinity | object | `{}` | Affinity for pod assignment |
-| app_b2c.enabled | bool | `false` | Deploy app_b2c container(s) |
-| app_b2c.fullnameOverride | string | `""` |  |
-| app_b2c.image.pullPolicy | string | `"Always"` | app_b2c image pull policy |
-| app_b2c.image.repository | string | `"coopengohub/app-b2c"` | app_b2c image repository |
-| app_b2c.image.tag | string | `"coog-2.10.2048"` | app_b2c image tag |
-| app_b2c.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
-| app_b2c.ingress.annotations | object | `{}` | Ingress annotations for app_b2c containers' |
-| app_b2c.ingress.enabled | bool | `false` | Enable ingress controller resource for app_b2c containers' |
-| app_b2c.ingress.hosts | list | `[{"host":"app-b2c.local","paths":[]}]` | Default host for the ingress resource for app_b2c containers' |
-| app_b2c.ingress.tls | list | `[]` | TLS configuration for app_b2c containers' |
-| app_b2c.nameOverride | string | `""` |  |
-| app_b2c.nodeSelector | object | `{}` | Node labels for pod assignment |
-| app_b2c.replicaCount | int | `1` | Number of app_b2c Pods to run |
-| app_b2c.resources | object | `{"limits":{"cpu":"50m","memory":"50Mi"},"requests":{"cpu":"10m","memory":"30Mi"}}` | app_b2c containers' resource requests and limits |
-| app_b2c.service.port | int | `80` |  |
-| app_b2c.service.type | string | `"ClusterIP"` |  |
-| app_b2c.tolerations | list | `[]` | Tolerations for pod assignment |
+| apiB2bConfig.affinity | object | `{}` | Affinity for pod assignment |
+| apiB2bConfig.enabled | bool | `false` | Deploy apiB2bConfig container(s) |
+| apiB2bConfig.fullnameOverride | string | `""` |  |
+| apiB2bConfig.image.pullPolicy | string | `"Always"` | apiB2bConfig image pull policy |
+| apiB2bConfig.image.repository | string | `"coopengohub/api-b2b-config"` | apiB2bConfig image repository |
+| apiB2bConfig.image.tag | string | `"coog-2.10.2048"` | apiB2bConfig image tag |
+| apiB2bConfig.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
+| apiB2bConfig.nameOverride | string | `""` |  |
+| apiB2bConfig.nodeSelector | object | `{}` | Node labels for pod assignment |
+| apiB2bConfig.replicaCount | int | `1` | Number of apiB2bConfig Pods to run |
+| apiB2bConfig.resources | object | `{"limits":{"cpu":"50m","memory":"80Mi"},"requests":{"cpu":"30m","memory":"40Mi"}}` | apiB2bConfig containers' resource requests and limits |
+| apiB2bConfig.service.port | int | `80` |  |
+| apiB2bConfig.service.type | string | `"ClusterIP"` |  |
+| apiB2bConfig.tolerations | list | `[]` | Tolerations for pod assignment |
+| apiB2c.affinity | object | `{}` | Affinity for pod assignment |
+| apiB2c.enabled | bool | `false` | Deploy apiB2c container(s) |
+| apiB2c.fullnameOverride | string | `""` |  |
+| apiB2c.image.pullPolicy | string | `"Always"` | apiB2c image pull policy |
+| apiB2c.image.repository | string | `"coopengohub/api-b2c"` | apiB2c image repository |
+| apiB2c.image.tag | string | `"coog-2.10.2048"` | apiB2c image tag |
+| apiB2c.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
+| apiB2c.nameOverride | string | `""` |  |
+| apiB2c.nodeSelector | object | `{}` | Node labels for pod assignment |
+| apiB2c.replicaCount | int | `1` | Number of apiB2c Pods to run |
+| apiB2c.resources | object | `{"limits":{"cpu":"50m","memory":"50Mi"},"requests":{"cpu":"20m","memory":"25Mi"}}` | apiB2c containers' resource requests and limits |
+| apiB2c.service.port | int | `80` |  |
+| apiB2c.service.type | string | `"ClusterIP"` |  |
+| apiB2c.tolerations | list | `[]` | Tolerations for pod assignment |
+| apiIdentityManager.affinity | object | `{}` | Affinity for pod assignment |
+| apiIdentityManager.enabled | bool | `true` | Deploy apiIdentityManager container(s) |
+| apiIdentityManager.fullnameOverride | string | `""` |  |
+| apiIdentityManager.image.pullPolicy | string | `"Always"` | api-identity-manager image pull policy |
+| apiIdentityManager.image.repository | string | `"coopengohub/api-identity-manager"` | api-identity-manager image repository |
+| apiIdentityManager.image.tag | string | `"coog-2.10.2048"` | api-identity-manager image tag |
+| apiIdentityManager.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
+| apiIdentityManager.nameOverride | string | `""` |  |
+| apiIdentityManager.nodeSelector | object | `{}` | Node labels for pod assignment |
+| apiIdentityManager.replicaCount | int | `1` | Number of apiIdentityManager Pods to run |
+| apiIdentityManager.resources | object | `{"limits":{"cpu":"50m","memory":"70Mi"},"requests":{"cpu":"10m","memory":"30Mi"}}` | apiIdentityManager containers' resource requests and limits |
+| apiIdentityManager.service.port | int | `80` |  |
+| apiIdentityManager.service.type | string | `"ClusterIP"` |  |
+| apiIdentityManager.tolerations | list | `[]` | Tolerations for pod assignment |
+| apiReferential.affinity | object | `{}` | Affinity for pod assignment |
+| apiReferential.enabled | bool | `false` | Deploy apiReferential container(s) |
+| apiReferential.fullnameOverride | string | `""` |  |
+| apiReferential.image.pullPolicy | string | `"Always"` | apiReferential image pull policy |
+| apiReferential.image.repository | string | `"coopengohub/api-referential"` | apiReferential image repository |
+| apiReferential.image.tag | string | `"coog-2.10.2048"` | apiReferential image tag |
+| apiReferential.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
+| apiReferential.nameOverride | string | `""` |  |
+| apiReferential.nodeSelector | object | `{}` | Node labels for pod assignment |
+| apiReferential.replicaCount | int | `1` | Number of apiReferential Pods to run |
+| apiReferential.resources | object | `{"limits":{"cpu":"200m","memory":"400Mi"},"requests":{"cpu":"100m","memory":"250Mi"}}` | apiReferential containers' resource requests and limits |
+| apiReferential.service.port | int | `80` |  |
+| apiReferential.service.type | string | `"ClusterIP"` |  |
+| apiReferential.tolerations | list | `[]` | Tolerations for pod assignment |
+| appB2c.affinity | object | `{}` | Affinity for pod assignment |
+| appB2c.enabled | bool | `false` | Deploy appB2c container(s) |
+| appB2c.fullnameOverride | string | `""` |  |
+| appB2c.image.pullPolicy | string | `"Always"` | appB2c image pull policy |
+| appB2c.image.repository | string | `"coopengohub/app-b2c"` | appB2c image repository |
+| appB2c.image.tag | string | `"coog-2.10.2048"` | appB2c image tag |
+| appB2c.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
+| appB2c.ingress.annotations | object | `{}` | Ingress annotations for appB2c containers' |
+| appB2c.ingress.enabled | bool | `false` | Enable ingress controller resource for appB2c containers' |
+| appB2c.ingress.hosts | list | `[{"host":"app-b2c.local","paths":[]}]` | Default host for the ingress resource for appB2c containers' |
+| appB2c.ingress.tls | list | `[]` | TLS configuration for appB2c containers' |
+| appB2c.nameOverride | string | `""` |  |
+| appB2c.nodeSelector | object | `{}` | Node labels for pod assignment |
+| appB2c.replicaCount | int | `1` | Number of appB2c Pods to run |
+| appB2c.resources | object | `{"limits":{"cpu":"50m","memory":"50Mi"},"requests":{"cpu":"10m","memory":"30Mi"}}` | appB2c containers' resource requests and limits |
+| appB2c.service.port | int | `80` |  |
+| appB2c.service.type | string | `"ClusterIP"` |  |
+| appB2c.tolerations | list | `[]` | Tolerations for pod assignment |
 | batch.migquottosr.enabled | bool | `false` |  |
 | batch.migquottosr.image.pullPolicy | string | `"Always"` |  |
 | batch.migquottosr.image.repository | string | `"coopengohub/migquottosr"` |  |
@@ -203,51 +203,51 @@ A Helm chart for Coog
 | cron.startupProbe.successThreshold | int | `1` |  |
 | cron.startupProbe.timeoutSeconds | int | `10` |  |
 | cron.tolerations | list | `[]` | Tolerations for pod assignment |
-| customer_backend.affinity | object | `{}` | Affinity for pod assignment |
-| customer_backend.enabled | bool | `false` | Deploy portal container(s) |
-| customer_backend.fullnameOverride | string | `""` |  |
-| customer_backend.image.pullPolicy | string | `"Always"` | portal image pull policy |
-| customer_backend.image.repository | string | `"coopengohub/coog-customer-backend"` | portal image repository |
-| customer_backend.image.tag | string | `"coog-2.13.2137"` | portal image tag |
-| customer_backend.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
-| customer_backend.ingress.annotations | object | `{}` | Ingress annotations for portal containers' |
-| customer_backend.ingress.enabled | bool | `true` | Enable ingress controller resource for portal containers' |
-| customer_backend.ingress.hosts | list | `[{"host":"v1.customer.local","paths":[]}]` | Default host for the ingress resource for portal containers' |
-| customer_backend.ingress.tls | list | `[]` | TLS configuration for portal containers' |
-| customer_backend.initContainers.resources.limits.cpu | string | `"400m"` |  |
-| customer_backend.initContainers.resources.limits.memory | string | `"500Mi"` |  |
-| customer_backend.initContainers.resources.requests.cpu | string | `"200m"` |  |
-| customer_backend.initContainers.resources.requests.memory | string | `"250Mi"` |  |
-| customer_backend.nameOverride | string | `""` |  |
-| customer_backend.nodeSelector | object | `{}` | Node labels for pod assignment |
-| customer_backend.postgres_db | string | `"strapi"` |  |
-| customer_backend.replicaCount | int | `1` | Number of portal Pods to run |
-| customer_backend.resources | object | `{"limits":{"cpu":"400m","memory":"300Mi"},"requests":{"cpu":"100m","memory":"150Mi"}}` | portal containers' resource requests and limits |
-| customer_backend.service.port | int | `80` |  |
-| customer_backend.service.type | string | `"ClusterIP"` |  |
-| customer_backend.tolerations | list | `[]` | Tolerations for pod assignment |
-| customer_frontend.affinity | object | `{}` | Affinity for pod assignment |
-| customer_frontend.enabled | bool | `false` | Deploy portal container(s) |
-| customer_frontend.fullnameOverride | string | `""` |  |
-| customer_frontend.image.pullPolicy | string | `"Always"` | portal image pull policy |
-| customer_frontend.image.repository | string | `"coopengohub/coog-customer-frontend"` | portal image repository |
-| customer_frontend.image.tag | string | `"coog-2.13.2137"` | portal image tag |
-| customer_frontend.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
-| customer_frontend.ingress.annotations | object | `{}` | Ingress annotations for portal containers' |
-| customer_frontend.ingress.enabled | bool | `true` | Enable ingress controller resource for portal containers' |
-| customer_frontend.ingress.hosts | list | `[{"host":"customer.local","paths":[]}]` | Default host for the ingress resource for portal containers' |
-| customer_frontend.ingress.tls | list | `[]` | TLS configuration for portal containers' |
-| customer_frontend.initContainers.resources.limits.cpu | string | `"400m"` |  |
-| customer_frontend.initContainers.resources.limits.memory | string | `"2000Mi"` |  |
-| customer_frontend.initContainers.resources.requests.cpu | string | `"200m"` |  |
-| customer_frontend.initContainers.resources.requests.memory | string | `"1500Mi"` |  |
-| customer_frontend.nameOverride | string | `""` |  |
-| customer_frontend.nodeSelector | object | `{}` | Node labels for pod assignment |
-| customer_frontend.replicaCount | int | `1` | Number of portal Pods to run |
-| customer_frontend.resources | object | `{"limits":{"cpu":"100m","memory":"100Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | portal containers' resource requests and limits |
-| customer_frontend.service.port | int | `80` |  |
-| customer_frontend.service.type | string | `"ClusterIP"` |  |
-| customer_frontend.tolerations | list | `[]` | Tolerations for pod assignment |
+| customerBackend.affinity | object | `{}` | Affinity for pod assignment |
+| customerBackend.enabled | bool | `false` | Deploy b2b container(s) |
+| customerBackend.fullnameOverride | string | `""` |  |
+| customerBackend.image.pullPolicy | string | `"Always"` | b2b image pull policy |
+| customerBackend.image.repository | string | `"coopengohub/coog-customer-backend"` | b2b image repository |
+| customerBackend.image.tag | string | `"coog-2.13.2137"` | b2b image tag |
+| customerBackend.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
+| customerBackend.ingress.annotations | object | `{}` | Ingress annotations for b2b containers' |
+| customerBackend.ingress.enabled | bool | `true` | Enable ingress controller resource for b2b containers' |
+| customerBackend.ingress.hosts | list | `[{"host":"v1.customer.local","paths":[]}]` | Default host for the ingress resource for b2b containers' |
+| customerBackend.ingress.tls | list | `[]` | TLS configuration for b2b containers' |
+| customerBackend.initContainers.resources.limits.cpu | string | `"400m"` |  |
+| customerBackend.initContainers.resources.limits.memory | string | `"500Mi"` |  |
+| customerBackend.initContainers.resources.requests.cpu | string | `"200m"` |  |
+| customerBackend.initContainers.resources.requests.memory | string | `"250Mi"` |  |
+| customerBackend.nameOverride | string | `""` |  |
+| customerBackend.nodeSelector | object | `{}` | Node labels for pod assignment |
+| customerBackend.postgres_db | string | `"strapi"` |  |
+| customerBackend.replicaCount | int | `1` | Number of b2b Pods to run |
+| customerBackend.resources | object | `{"limits":{"cpu":"400m","memory":"300Mi"},"requests":{"cpu":"100m","memory":"150Mi"}}` | b2b containers' resource requests and limits |
+| customerBackend.service.port | int | `80` |  |
+| customerBackend.service.type | string | `"ClusterIP"` |  |
+| customerBackend.tolerations | list | `[]` | Tolerations for pod assignment |
+| customerFrontend.affinity | object | `{}` | Affinity for pod assignment |
+| customerFrontend.enabled | bool | `false` | Deploy b2b container(s) |
+| customerFrontend.fullnameOverride | string | `""` |  |
+| customerFrontend.image.pullPolicy | string | `"Always"` | b2b image pull policy |
+| customerFrontend.image.repository | string | `"coopengohub/coog-customer-frontend"` | b2b image repository |
+| customerFrontend.image.tag | string | `"coog-2.13.2137"` | b2b image tag |
+| customerFrontend.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
+| customerFrontend.ingress.annotations | object | `{}` | Ingress annotations for b2b containers' |
+| customerFrontend.ingress.enabled | bool | `true` | Enable ingress controller resource for b2b containers' |
+| customerFrontend.ingress.hosts | list | `[{"host":"customer.local","paths":[]}]` | Default host for the ingress resource for b2b containers' |
+| customerFrontend.ingress.tls | list | `[]` | TLS configuration for b2b containers' |
+| customerFrontend.initContainers.resources.limits.cpu | string | `"400m"` |  |
+| customerFrontend.initContainers.resources.limits.memory | string | `"2000Mi"` |  |
+| customerFrontend.initContainers.resources.requests.cpu | string | `"200m"` |  |
+| customerFrontend.initContainers.resources.requests.memory | string | `"1500Mi"` |  |
+| customerFrontend.nameOverride | string | `""` |  |
+| customerFrontend.nodeSelector | object | `{}` | Node labels for pod assignment |
+| customerFrontend.replicaCount | int | `1` | Number of b2b Pods to run |
+| customerFrontend.resources | object | `{"limits":{"cpu":"100m","memory":"100Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | b2b containers' resource requests and limits |
+| customerFrontend.service.port | int | `80` |  |
+| customerFrontend.service.type | string | `"ClusterIP"` |  |
+| customerFrontend.tolerations | list | `[]` | Tolerations for pod assignment |
 | gateway.affinity | object | `{}` | Affinity for pod assignment |
 | gateway.enabled | bool | `true` | Deploy gateway container(s) |
 | gateway.entrypoint | string | `"/gateway"` |  |
@@ -270,7 +270,7 @@ A Helm chart for Coog
 | gateway.mongodb.database | string | `"coog-gateway"` |  |
 | gateway.nameOverride | string | `""` |  |
 | gateway.nodeSelector | object | `{}` | Node labels for pod assignment |
-| gateway.portal_url | string | `"coog.local"` |  |
+| gateway.b2b_url | string | `"coog.local"` |  |
 | gateway.replicaCount | int | `1` | Number of gateway Pods to run |
 | gateway.resources | object | `{"limits":{"cpu":"100m","memory":"100Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | gateway containers' resource requests and limits |
 | gateway.service.port | int | `80` |  |
@@ -324,25 +324,25 @@ A Helm chart for Coog
 | paybox.service.port | int | `80` |  |
 | paybox.service.type | string | `"ClusterIP"` |  |
 | paybox.tolerations | list | `[]` | Tolerations for pod assignment |
-| portal.affinity | object | `{}` | Affinity for pod assignment |
-| portal.enabled | bool | `false` | Deploy portal container(s) |
-| portal.fullnameOverride | string | `""` |  |
-| portal.image.pullPolicy | string | `"Always"` | portal image pull policy |
-| portal.image.repository | string | `"coopengohub/portal"` | portal image repository |
-| portal.image.tag | string | `"coog-2.10.2048"` | portal image tag |
-| portal.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
-| portal.ingress.annotations | object | `{}` | Ingress annotations for portal containers' |
-| portal.ingress.enabled | bool | `false` | Enable ingress controller resource for portal containers' |
-| portal.ingress.hosts | list | `[{"host":"portal.local","paths":[]}]` | Default host for the ingress resource for portal containers' |
-| portal.ingress.nginx.whitelistsourcerange | string | `"127.0.0.1/32"` |  |
-| portal.ingress.tls | list | `[]` | TLS configuration for portal containers' |
-| portal.nameOverride | string | `""` |  |
-| portal.nodeSelector | object | `{}` | Node labels for pod assignment |
-| portal.replicaCount | int | `1` | Number of portal Pods to run |
-| portal.resources | object | `{"limits":{"cpu":"250m","memory":"50Mi"},"requests":{"cpu":"10m","memory":"25Mi"}}` | portal containers' resource requests and limits |
-| portal.service.port | int | `80` |  |
-| portal.service.type | string | `"ClusterIP"` |  |
-| portal.tolerations | list | `[]` | Tolerations for pod assignment |
+| b2b.affinity | object | `{}` | Affinity for pod assignment |
+| b2b.enabled | bool | `false` | Deploy b2b container(s) |
+| b2b.fullnameOverride | string | `""` |  |
+| b2b.image.pullPolicy | string | `"Always"` | b2b image pull policy |
+| b2b.image.repository | string | `"coopengohub/b2b"` | b2b image repository |
+| b2b.image.tag | string | `"coog-2.10.2048"` | b2b image tag |
+| b2b.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
+| b2b.ingress.annotations | object | `{}` | Ingress annotations for b2b containers' |
+| b2b.ingress.enabled | bool | `false` | Enable ingress controller resource for b2b containers' |
+| b2b.ingress.hosts | list | `[{"host":"b2b.local","paths":[]}]` | Default host for the ingress resource for b2b containers' |
+| b2b.ingress.nginx.whitelistsourcerange | string | `"127.0.0.1/32"` |  |
+| b2b.ingress.tls | list | `[]` | TLS configuration for b2b containers' |
+| b2b.nameOverride | string | `""` |  |
+| b2b.nodeSelector | object | `{}` | Node labels for pod assignment |
+| b2b.replicaCount | int | `1` | Number of b2b Pods to run |
+| b2b.resources | object | `{"limits":{"cpu":"250m","memory":"50Mi"},"requests":{"cpu":"10m","memory":"25Mi"}}` | b2b containers' resource requests and limits |
+| b2b.service.port | int | `80` |  |
+| b2b.service.type | string | `"ClusterIP"` |  |
+| b2b.tolerations | list | `[]` | Tolerations for pod assignment |
 | postgresql.enabled | bool | `true` |  |
 | postgresql.image.debug | bool | `true` |  |
 | postgresql.initdbScripts."db-init.sql" | string | `"CREATE ROLE coog WITH LOGIN PASSWORD 'coog';\n"` |  |

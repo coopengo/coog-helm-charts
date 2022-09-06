@@ -1,11 +1,11 @@
-{{- if .Values.api_referential.enable -}}
+{{- if .Values.apiReferential.enable -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ default .Values.replicaCount .Values.api_referential.replicaCount }}
+  replicas: {{ default .Values.replicaCount .Values.apiReferential.replicaCount }}
 {{- if not .Values.quota.rolling_update }}
   strategy:
     type: Recreate
@@ -16,14 +16,14 @@ spec:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
-    {{- with .Values.api_referential.imagePullSecrets }}
+    {{- with .Values.apiReferential.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ .Values.api_referential.image.repository }}:{{ default .Values.image.tag .Values.api_referential.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.api_referential.image.pullPolicy | quote }}
+          image: "{{ .Values.apiReferential.image.repository }}:{{ default .Values.image.tag .Values.apiReferential.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.apiReferential.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -32,7 +32,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.apiReferential.securityContext.runAsUser }}
           env:
             - name: COOG_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
@@ -40,8 +40,8 @@ spec:
               value: "{{ .Values.postgresql.auth.database }}"
             - name:  JWT_INTERNAL_ENCRYPTION
               value: "{{ .Values.jwt.internal.encryption }}"
-            {{- if .Values.api_referential.extraEnv }}
-            {{- range $key, $value := .Values.api_referential.extraEnv }}
+            {{- if .Values.apiReferential.extraEnv }}
+            {{- range $key, $value := .Values.apiReferential.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
@@ -59,24 +59,24 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.api_referential.resources | nindent 12 }}
-      {{- with .Values.api_referential.nodeSelector }}
+            {{- toYaml .Values.apiReferential.resources | nindent 12 }}
+      {{- with .Values.apiReferential.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.api_referential.affinity }}
+    {{- with .Values.apiReferential.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.api_referential.tolerations }}
+    {{- with .Values.apiReferential.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{- if .Values.api_referential.dnsPolicy }}
-      dnsPolicy: {{ .Values.api_referential.dnsPolicy }}
+{{- if .Values.apiReferential.dnsPolicy }}
+      dnsPolicy: {{ .Values.apiReferential.dnsPolicy }}
 {{- end }}
-{{- if .Values.api_referential.dnsConfig }}
+{{- if .Values.apiReferential.dnsConfig }}
       dnsConfig:
-{{ toYaml .Values.api_referential.dnsConfig | indent 8 }}
+{{ toYaml .Values.apiReferential.dnsConfig | indent 8 }}
 {{- end }}
 {{- end }}

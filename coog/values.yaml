@@ -119,18 +119,18 @@ api:
   tolerations: []
 
 
-api_b2b_config:
-  # -- Deploy api_b2b_config container(s)
+apiB2bConfig:
+  # -- Deploy apiB2bConfig container(s)
   enable: false
-  # -- 	Number of api_b2b_config Pods to run
+  # -- 	Number of apiB2bConfig Pods to run
   replicaCount: 1
 
   image:
-    # -- api_b2b_config image repository
+    # -- apiB2bConfig image repository
     repository: coopengohub/api-b2b-config
-    # -- api_b2b_config image tag
+    # -- apiB2bConfig image tag
     tag: coog-2.10.2048
-    # -- api_b2b_config image pull policy
+    # -- apiB2bConfig image pull policy
     pullPolicy: Always
 
   # -- Specify docker-registry secret names as an array
@@ -144,7 +144,7 @@ api_b2b_config:
     type: ClusterIP
     port: 80
 
-  # -- api_b2b_config containers' resource requests and limits
+  # -- apiB2bConfig containers' resource requests and limits
   resources:
     limits:
       cpu: 50m
@@ -162,18 +162,18 @@ api_b2b_config:
   # -- Tolerations for pod assignment
   tolerations: []
 
-api_b2c:
-  # -- Deploy api_b2c container(s)
+apiB2c:
+  # -- Deploy apiB2c container(s)
   enable: false
-  # -- 	Number of api_b2c Pods to run
+  # -- 	Number of apiB2c Pods to run
   replicaCount: 1
 
   image:
-    # -- api_b2c image repository
+    # -- apiB2c image repository
     repository: coopengohub/api-b2c
-    # -- api_b2c image tag
+    # -- apiB2c image tag
     tag: coog-2.10.2048
-    # -- api_b2c image pull policy
+    # -- apiB2c image pull policy
     pullPolicy: Always
 
   # -- Specify docker-registry secret names as an array
@@ -186,7 +186,7 @@ api_b2c:
     type: ClusterIP
     port: 80
 
-  # -- api_b2c containers' resource requests and limits
+  # -- apiB2c containers' resource requests and limits
   resources:
     limits:
       cpu: 50m
@@ -205,10 +205,10 @@ api_b2c:
   tolerations: []
 
 
-api_identity_manager:
-  # -- Deploy api_identity_manager container(s)
+apiIdentityManager:
+  # -- Deploy apiIdentityManager container(s)
   enable: true
-  # -- 	Number of api_identity_manager Pods to run
+  # -- 	Number of apiIdentityManager Pods to run
   replicaCount: 1
 
   image:
@@ -229,7 +229,7 @@ api_identity_manager:
     type: ClusterIP
     port: 80
 
-  # -- api_identity_manager containers' resource requests and limits
+  # -- apiIdentityManager containers' resource requests and limits
   resources:
     limits:
       cpu: 50m
@@ -248,18 +248,18 @@ api_identity_manager:
   tolerations: []
 
 
-api_referential:
-  # -- Deploy api_referential container(s)
+apiReferential:
+  # -- Deploy apiReferential container(s)
   enable: false
-  # -- 	Number of api_referential Pods to run
+  # -- 	Number of apiReferential Pods to run
   replicaCount: 1
 
   image:
-    # -- api_referential image repository
+    # -- apiReferential image repository
     repository: coopengohub/api-referential
-    # -- api_referential image tag
+    # -- apiReferential image tag
     tag: coog-2.10.2048
-    # -- api_referential image pull policy
+    # -- apiReferential image pull policy
     pullPolicy: Always
 
   # -- Specify docker-registry secret names as an array
@@ -272,7 +272,7 @@ api_referential:
     type: ClusterIP
     port: 80
 
-  # -- api_referential containers' resource requests and limits
+  # -- apiReferential containers' resource requests and limits
   resources:
     limits:
       cpu: 200m
@@ -291,18 +291,18 @@ api_referential:
   tolerations: []
 
 
-app_b2c:
-  # -- Deploy app_b2c container(s)
+appB2c:
+  # -- Deploy appB2c container(s)
   enable: false
-  # -- 	Number of app_b2c Pods to run
+  # -- 	Number of appB2c Pods to run
   replicaCount: 1
 
   image:
-    # -- app_b2c image repository
+    # -- appB2c image repository
     repository: coopengohub/app-b2c
-    # -- app_b2c image tag
+    # -- appB2c image tag
     tag: coog-2.10.2048
-    # -- app_b2c image pull policy
+    # -- appB2c image pull policy
     pullPolicy: Always
 
   # -- Specify docker-registry secret names as an array
@@ -316,23 +316,23 @@ app_b2c:
     port: 80
 
   ingress:
-    # -- Enable ingress controller resource for app_b2c containers'
+    # -- Enable ingress controller resource for appB2c containers'
     enable: false
-    # -- Ingress annotations for app_b2c containers'
+    # -- Ingress annotations for appB2c containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for app_b2c containers'
+    # -- Default host for the ingress resource for appB2c containers'
     hosts:
       - host: app-b2c.local
         paths: []
-    # -- TLS configuration for app_b2c containers'
+    # -- TLS configuration for appB2c containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
 
-  # -- app_b2c containers' resource requests and limits
+  # -- appB2c containers' resource requests and limits
   resources:
     limits:
       cpu: 50m
@@ -682,18 +682,18 @@ web:
   # -- Affinity for pod assignment
   affinity: {}
 
-portal:
-  # -- Deploy portal container(s)
+b2b:
+  # -- Deploy b2b container(s)
   enable: false
-  # -- 	Number of portal Pods to run
+  # -- 	Number of b2b Pods to run
   replicaCount: 1
 
   image:
-    # -- portal image repository
-    repository: coopengohub/portal
-    # -- portal image tag
+    # -- b2b image repository
+    repository: coopengohub/b2b
+    # -- b2b image tag
     tag: coog-2.10.2048
-    # -- portal image pull policy
+    # -- b2b image pull policy
     pullPolicy: Always
 
   # -- Specify docker-registry secret names as an array
@@ -707,23 +707,23 @@ portal:
     port: 80
 
   ingress:
-    # -- Enable ingress controller resource for portal containers'
+    # -- Enable ingress controller resource for b2b containers'
     enable: false
-    # -- Ingress annotations for portal containers'
+    # -- Ingress annotations for b2b containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for portal containers'
+    # -- Default host for the ingress resource for b2b containers'
     hosts:
-      - host: portal.local
+      - host: b2b.local
         paths: []
-    # -- TLS configuration for portal containers'
+    # -- TLS configuration for b2b containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
 
-  # -- portal containers' resource requests and limits
+  # -- b2b containers' resource requests and limits
   resources:
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
@@ -758,7 +758,7 @@ gateway:
   whitelist:
   # -- 	Number of gateway Pods to run
   replicaCount: 1
-  portal_url: coog.local
+  b2b_url: coog.local
   gateway_url: coog.local
   entrypoint: "/gateway"
   extraEnv:
@@ -901,18 +901,18 @@ batch:
         memory: 50Mi
 
 # B2C Frontend
-customer_frontend:
-  # -- Deploy portal container(s)
+customerFrontend:
+  # -- Deploy b2b container(s)
   enable: false
-  # -- 	Number of portal Pods to run
+  # -- 	Number of b2b Pods to run
   replicaCount: 1
 
   image:
-    # -- portal image repository
+    # -- b2b image repository
     repository: coopengohub/coog-customer-frontend
-    # -- portal image tag
+    # -- b2b image tag
     tag: coog-2.13.2137
-    # -- portal image pull policy
+    # -- b2b image pull policy
     pullPolicy: Always
 
   # -- Specify docker-registry secret names as an array
@@ -926,23 +926,23 @@ customer_frontend:
     port: 80
 
   ingress:
-    # -- Enable ingress controller resource for portal containers'
+    # -- Enable ingress controller resource for b2b containers'
     enable: true
-    # -- Ingress annotations for portal containers'
+    # -- Ingress annotations for b2b containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for portal containers'
+    # -- Default host for the ingress resource for b2b containers'
     hosts:
       - host: customer.local
         paths: []
-    # -- TLS configuration for portal containers'
+    # -- TLS configuration for b2b containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
 
-  # -- portal containers' resource requests and limits
+  # -- b2b containers' resource requests and limits
   resources:
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little
@@ -974,19 +974,19 @@ customer_frontend:
   affinity: {}
 
 # B2C Backend
-customer_backend:
-  # -- Deploy portal container(s)
+customerBackend:
+  # -- Deploy b2b container(s)
   enable: false
-  # -- 	Number of portal Pods to run
+  # -- 	Number of b2b Pods to run
   replicaCount: 1
   postgres_db: 'strapi'
 
   image:
-    # -- portal image repository
+    # -- b2b image repository
     repository: coopengohub/coog-customer-backend
-    # -- portal image tag
+    # -- b2b image tag
     tag: coog-2.13.2137
-    # -- portal image pull policy
+    # -- b2b image pull policy
     pullPolicy: Always
 
   # -- Specify docker-registry secret names as an array
@@ -1000,23 +1000,23 @@ customer_backend:
     port: 80
 
   ingress:
-    # -- Enable ingress controller resource for portal containers'
+    # -- Enable ingress controller resource for b2b containers'
     enable: true
-    # -- Ingress annotations for portal containers'
+    # -- Ingress annotations for b2b containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for portal containers'
+    # -- Default host for the ingress resource for b2b containers'
     hosts:
       - host: v1.customer.local
         paths: []
-    # -- TLS configuration for portal containers'
+    # -- TLS configuration for b2b containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
 
-  # -- portal containers' resource requests and limits
+  # -- b2b containers' resource requests and limits
   resources:
     # We usually recommend not to specify default resources and to leave this as a conscious
     # choice for the user. This also increases chances charts run on environments with little

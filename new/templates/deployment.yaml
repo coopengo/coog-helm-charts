@@ -38,7 +38,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.coog.securityContext.runAsUser }}
           command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies']
           envFrom:
             - configMapRef:
@@ -72,7 +72,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.coog.securityContext.runAsUser }}
           command: ['ep', 'server', '{{ .Values.coog.workers.number }}']
           {{- if or .Values.coog.persistentVolume.enable .Values.coog.configurationFiles }}
           volumeMounts:
