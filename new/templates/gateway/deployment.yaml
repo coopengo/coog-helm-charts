@@ -1,4 +1,15 @@
-{{- if .Values.gateway.enable -}}
+{{- if or .Values.gateway.enable 
+          .Values.api.enable 
+          .Values.apiIdentityManager.enable 
+          .Values.apiB2bConfig.enable 
+          .Values.apiB2c.enable
+          .Values.apiReferential.enable
+          .Values.appB2c.enable
+          .Values.b2b.enable
+          .Values.api.enable
+          .Values.api.enable
+          .Values.api.enable 
+-}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

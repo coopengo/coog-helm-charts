@@ -99,6 +99,10 @@ ingress:
     nginx.ingress.kubernetes.io/proxy-read-timeout: 3600
     nginx.ingress.kubernetes.io/proxy-body-size: 100m
     nginx.ingress.kubernetes.io/client-body-buffer-size: 100m
+
+  # -- Création de 3 modes de configuration :
+  # trustedCidr : mettre en place les IP interne (seront autorisées automatiquement quand le mode maintenance sera actif)
+  # publicCidr (global + par composant) : IP externe à autoriser + possibilité de personnaliser par composant (append) - Non pris en compte par le mode maintenance
   nginx:
     whiteList:
       trustedCidr:
@@ -232,7 +236,7 @@ mongodb:
         memory: 150Mi
 
 #############################################################################################################################
-# coog components
+# coog components mandatory
 
 coog:
   image:
@@ -246,21 +250,26 @@ coog:
     # -- Listening port of the application in the container
     http: 8000
 
+  # -- coog, celery and batch configuration for number of workers
   workers:
     number: 1
-    maximumMemory: 512000 # to setup
+    maximumMemory: 512000
   
-  cache: # to setup in deployment (coog + celery) + configmap (coog)
+  # -- coog and celery configuration for cache
+  cache:
     record: 50000
     cleanTimeOut: 0
 
-  config: # tester d'override pour voir si ca merge
+  # -- Dynamic ConfigMap variables for coog.
+  # Each value can be modified without override all or delete other parameters
+  config:
     COOG_TIMEOUT: 3600
     LOG_LEVEL: INFO
     TRYTOND_DATABASE__LANGUAGE: fr
     TRYTOND_EMAIL__FROM: to_define
     TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
     TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: 1
+    TRYTOND_TZ: Europe/Paris
     COOG_IWC: 1
 
   persistentVolume:
@@ -309,6 +318,9 @@ celery:
     # -- Number of celery workers to run
     number: 1
 
+  # -- Dynamic ConfigMap variables for celery
+  config: {}
+
   # -- celery containers' resource requests and limits
   resources:
     limits:
@@ -351,6 +363,107 @@ static:
       memory: 20Mi
 
 
+
+cron:
+  # -- Dynamic ConfigMap variables for cron
+  config:
+    TRYTOND_DEBUG__VIEWS: false
+
+  # -- cron containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 200m
+      memory: 500Mi
+    requests:
+      cpu: 100m
+      memory: 300Mi
+
+  # -- Configure options applied to cron deployment, liveness, readiness and startup probes
+  # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+  # initialDelaySeconds: Initial delay seconds e
+  # periodSeconds: Period seconds
+  # timeoutSeconds: Timeout seconds
+  # failureThreshold: Failure threshold
+  # successThreshold: Success threshold
+  #
+  # With this configuration, the kubelet will attempt to open a socket to your container on the specified port. 
+  # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
+  livenessProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 120
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 2
+
+  # -- additional startup time on their first initialization
+  startupProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 120
+    timeoutSeconds: 10
+    successThreshold: 1
+    failureThreshold: 2
+  coogCeleryModule: coog_async.coog_celery
+
+
+
+
+### Optionals components
+gateway:
+  # -- Deploy gateway container(s)
+  enable: true
+  external_mongodb:
+    enable: false
+  mongodb:
+    database: coog-gateway
+  jwt:
+    encryption: secret
+    expiration: 3600
+  whitelist:
+  # -- 	Number of gateway Pods to run
+  replicaCount: 1
+  portal_url: coog.local
+  gateway_url: coog.local
+  entrypoint: "/gateway"
+  extraEnv:
+    COOG_TOKEN_MODULE: "false"
+
+  image:
+    # -- gateway image repository
+    name: gateway
+    # -- gateway image tag
+    tag: coog-2.10.2048
+    # -- gateway image pull policy
+    pullPolicy: Always
+
+  # -- Specify docker-registry secret names as an array
+  imagePullSecrets:
+    - name: docker-registry
+  nameOverride: ""
+  fullnameOverride: ""
+
+  service:
+    type: ClusterIP
+    port: 80
+
+  ingress:
+    # -- Default host for the ingress resource for coog containers'
+    hosts:
+      - paths:
+          - /
+    nginx:
+      whiteList:
+        publicCidr: []
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+
+  # -- gateway containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 50m
+      memory: 50Mi
 
 
 
@@ -404,7 +517,7 @@ api:
   tolerations: []
 
 
-api_b2b_config:
+apiB2bConfig:
   # -- Deploy api_b2b_config container(s)
   enable: false
   # -- 	Number of api_b2b_config Pods to run
@@ -447,7 +560,7 @@ api_b2b_config:
   # -- Tolerations for pod assignment
   tolerations: []
 
-api_b2c:
+apiB2c:
   # -- Deploy api_b2c container(s)
   enable: false
   # -- 	Number of api_b2c Pods to run
@@ -490,7 +603,7 @@ api_b2c:
   tolerations: []
 
 
-api_identity_manager:
+apiIdentityManager:
   # -- Deploy api_identity_manager container(s)
   enable: true
   # -- 	Number of api_identity_manager Pods to run
@@ -533,7 +646,7 @@ api_identity_manager:
   tolerations: []
 
 
-api_referential:
+apiReferential:
   # -- Deploy api_referential container(s)
   enable: false
   # -- 	Number of api_referential Pods to run
@@ -576,7 +689,7 @@ api_referential:
   tolerations: []
 
 
-app_b2c:
+appB2c:
   # -- Deploy app_b2c container(s)
   enable: false
   # -- 	Number of app_b2c Pods to run
@@ -691,38 +804,6 @@ unoconv:
     successThreshold: 1
     failureThreshold: 3
 
-cron:
-  # -- Deploy cron container(s)
-  enable: true
-  affinity: {}
-
-  # -- cron containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 200m
-      memory: 500Mi
-    requests:
-      cpu: 100m
-      memory: 300Mi
-  livenessProbe:
-    initialDelaySeconds: 30
-    periodSeconds: 120
-    timeoutSeconds: 10
-    successThreshold: 1
-    failureThreshold: 2
-  startupProbe:
-    initialDelaySeconds: 30
-    periodSeconds: 120
-    timeoutSeconds: 10
-    successThreshold: 1
-    failureThreshold: 2
-  coogCeleryModule: coog_async.coog_celery
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
 
 web:
   # -- Deploy web container(s)
@@ -789,7 +870,7 @@ web:
   # -- Affinity for pod assignment
   affinity: {}
 
-portal:
+b2b:
   # -- Deploy portal container(s)
   enable: false
   # -- 	Number of portal Pods to run
@@ -852,80 +933,6 @@ portal:
   # -- Affinity for pod assignment
   affinity: {}
 
-gateway:
-  # -- Deploy gateway container(s)
-  enable: true
-  external_mongodb:
-    enable: false
-  mongodb:
-    database: coog-gateway
-  jwt:
-    encryption: secret
-    expiration: 3600
-  whitelist:
-  # -- 	Number of gateway Pods to run
-  replicaCount: 1
-  portal_url: coog.local
-  gateway_url: coog.local
-  entrypoint: "/gateway"
-  extraEnv:
-    COOG_TOKEN_MODULE: "false"
-
-  image:
-    # -- gateway image repository
-    name: gateway
-    # -- gateway image tag
-    tag: coog-2.10.2048
-    # -- gateway image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  ingress:
-    # -- Enable ingress controller resource for gateway containers'
-    enable: false
-    # -- Ingress annotations for gateway containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for gateway containers'
-    hosts:
-      - host: coog.local
-        paths: []
-    # -- TLS configuration for gateway containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-    nginx:
-      rewritetarget: '/$2'
-
-  # -- gateway containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 100m
-      memory: 100Mi
-    requests:
-      cpu: 50m
-      memory: 50Mi
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
 jwt:
   internal:
     encryption: changeme
@@ -949,7 +956,7 @@ batch:
         memory: 50Mi
 
 # B2C Frontend
-customer_frontend:
+customerFrontend:
   # -- Deploy portal container(s)
   enable: false
   # -- 	Number of portal Pods to run
@@ -1022,7 +1029,7 @@ customer_frontend:
   affinity: {}
 
 # B2C Backend
-customer_backend:
+customerBackend:
   # -- Deploy portal container(s)
   enable: false
   # -- 	Number of portal Pods to run
