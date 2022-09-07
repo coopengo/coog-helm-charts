@@ -29,7 +29,7 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  postgresql-password: "V2M5TGIwU29WSA=="
+  postgresql-password: "YUFyQ25KS3poMg=="
 ---
 # Source: coog/charts/rabbitmq/templates/secrets.yaml
 apiVersion: v1
@@ -45,8 +45,8 @@ metadata:
     app.kubernetes.io/version: "3.9.13"
 type: Opaque
 data:
-  rabbitmq-password: "VGdaZjNVNEFiaw=="
-  rabbitmq-erlang-cookie: "MjRLRmlPd2txa09WTUFjR2ZMWVRTNWx4OERZTWV4ZGQ="
+  rabbitmq-password: "cHBVd1VZSnZSUA=="
+  rabbitmq-erlang-cookie: "WXVnbklDVjNNSjNVU0VzVXVabkdqa3F5TmJVWk1wZmk="
 ---
 # Source: coog/templates/gateway/secret-mongodb.yaml
 apiVersion: v1
@@ -64,7 +64,7 @@ stringData:
   MONGO_USER: "root"
   MONGO_PASSWORD: "admin"
 ---
-# Source: coog/templates/gateway/secrets-frontCore.yaml
+# Source: coog/templates/gateway/secrets-frontcore.yaml
 piVersion: v1
 kind: Secret
 metadata:
@@ -237,7 +237,7 @@ data:
   COOG_SERVER_WORKERS: 1
   TRYTOND_DEBUG__VIEWS: false
 ---
-# Source: coog/templates/gateway/configmap-frontCore.yaml
+# Source: coog/templates/gateway/configmap-frontcore.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -253,7 +253,9 @@ data:
   MONGO_HOST: ccas-mongodb
   MONGO_PORT: 27017
   MONGO_DB_NAME: frontCore
-  COOG_DB_NAME:
+  COOG_DB_NAME: 
+  COOG_URL: http://ccas-coog
+  JWT_EXPIRATION: 3600
 ---
 # Source: coog/templates/gateway/configmap.yaml
 apiVersion: v1
@@ -267,11 +269,9 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/version: "master"
 data:
-  # Software
+  # URLs
   PORTAL_URL: http://coog.local
   COOG_GATEWAY_URL: http://coog.local
-  COOG_URL: http://ccas-coog
-  # API
   COOG_API_URL: http://ccas-coog-web
   COOG_API_URL_V2: http://ccas-coog-api
   COOG_API_B2B_CONFIG_URL: http://ccas-coog-api-b2b-config # ajouter un if pour le composant
@@ -284,7 +284,6 @@ data:
   COOG_TOKEN_MODULE: true
   FACEBOOK_MODULE: false
   GOOGLE_MODULE: false
-  JWT_EXPIRATION: 3600
 ---
 # Source: coog/templates/coog-pvc.yaml
 apiVersion: v1
@@ -462,6 +461,27 @@ spec:
     app.kubernetes.io/name: rabbitmq
     app.kubernetes.io/instance: ccas
 ---
+# Source: coog/templates/api-identity-manager/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccas-coog-api-identity-manager
+  labels:
+    app.kubernetes.io/name: coog-api-identity-manager
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: coog-api-identity-manager
+    app.kubernetes.io/instance: ccas
+---
 # Source: coog/templates/api/service.yaml
 apiVersion: v1
 kind: Service
@@ -587,6 +607,78 @@ spec:
   selector:
     app.kubernetes.io/name: coog-static
     app.kubernetes.io/instance: ccas
+---
+# Source: coog/templates/api-identity-manager/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccas-coog-api-identity-manager
+  labels:
+    app.kubernetes.io/name: coog-api-identity-manager
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: coog-api-identity-manager
+      app.kubernetes.io/instance: ccas
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: coog-api-identity-manager
+        helm.sh/chart: coog-22.28.2228
+        app.kubernetes.io/instance: ccas
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "master"
+    spec:
+      imagePullSecrets:
+        - name: docker-registry
+      containers:
+        - name: coog-api-identity-manager
+          image: "cooghub/coog-api-identity-manager:coog-master-latest"
+          imagepullPolicy: "Always"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          envFrom:
+            - configMapRef:
+                name: ccas-coog-api-identity-manager-configuration
+            - configMapRef:
+                name: ccas-coog-gateway-frontCore
+            - secretRef:
+                name: ccas-coog-mongodb
+            - secretRef:
+                name: ccas-coog-gateway-frontCore
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              cpu: 50m
+              memory: 70Mi
+            requests:
+              cpu: 10m
+              memory: 30Mi
 ---
 # Source: coog/templates/api/deployment.yaml
 apiVersion: apps/v1
@@ -1304,7 +1396,7 @@ spec:
         app.kubernetes.io/version: "3.9.13"
       annotations:
         checksum/config: bb8cb47f49aa74e80f9ac14b72fb56062fd44927809ea42ecfe94e02a9a058ec
-        checksum/secret: b61fe8831cfe17be6dea9354489ec3ce4573f0ffa759f2867d15dd214888c530
+        checksum/secret: 01b7eb9704ac58c324d3d80879165809a318dc05a59d85bf65345e7c45263962
     spec:
       
       serviceAccountName: ccas-rabbitmq

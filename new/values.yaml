@@ -473,6 +473,9 @@ apiIdentityManager:
   image:
     # -- api-identity-manager image repository
     name: coog-api-identity-manager
+  
+  securityContext: {}
+    # runAsUser: ""
 
   # -- apiIdentityManager containers' resource requests and limits
   resources:
