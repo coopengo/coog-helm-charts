@@ -1,4 +1,4 @@
-{{- if .Values.customerBackend.enable -}}
+{{- if .Values.customerBackend.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -44,13 +44,13 @@ spec:
               mountPath: "/workdir/build"
           env:
             - name:  DATABASE_HOST
-            {{- if not .Values.coog.external_postgres.enable }}
+            {{- if not .Values.coog.external_postgres.enabled }}
               value: "{{ .Release.Name }}-postgresql"
             {{ else }}
               value: "{{ .Values.coog.external_postgres.host }}"
             {{- end }}
             - name:  DATABASE_PORT
-            {{- if not .Values.coog.external_postgres.enable }}
+            {{- if not .Values.coog.external_postgres.enabled }}
               value: "{{ .Values.postgresql.service.port }}"
             {{ else }}
               value: "{{ .Values.coog.external_postgres.port }}"
@@ -91,13 +91,13 @@ spec:
               mountPath: "/workdir/build"
           env:
             - name:  DATABASE_HOST
-            {{- if not .Values.coog.external_postgres.enable }}
+            {{- if not .Values.coog.external_postgres.enabled }}
               value: "{{ .Release.Name }}-postgresql"
             {{ else }}
               value: "{{ .Values.coog.external_postgres.host }}"
             {{- end }}
             - name:  DATABASE_PORT
-            {{- if not .Values.coog.external_postgres.enable }}
+            {{- if not .Values.coog.external_postgres.enabled }}
               value: "{{ .Values.postgresql.service.port }}"
             {{ else }}
               value: "{{ .Values.coog.external_postgres.port }}"

@@ -29,7 +29,7 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  postgresql-password: "QURzaEdSQ2kzaw=="
+  postgresql-password: "V2M5TGIwU29WSA=="
 ---
 # Source: coog/charts/rabbitmq/templates/secrets.yaml
 apiVersion: v1
@@ -45,14 +45,63 @@ metadata:
     app.kubernetes.io/version: "3.9.13"
 type: Opaque
 data:
-  rabbitmq-password: "NkNscVd6U2RQaQ=="
-  rabbitmq-erlang-cookie: "RTFTVXd3bFRMNFZTM3d1UnliZWM2NmVXUUZ1cVltbnI="
+  rabbitmq-password: "VGdaZjNVNEFiaw=="
+  rabbitmq-erlang-cookie: "MjRLRmlPd2txa09WTUFjR2ZMWVRTNWx4OERZTWV4ZGQ="
 ---
-# Source: coog/templates/secret-database.yml
+# Source: coog/templates/gateway/secret-mongodb.yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: ccas-coog-database
+  name: ccas-coog-mongodb
+  labels:
+    app.kubernetes.io/name: coog-gateway
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+type: Opaque
+stringData:
+  MONGO_USER: "root"
+  MONGO_PASSWORD: "admin"
+---
+# Source: coog/templates/gateway/secrets-frontCore.yaml
+piVersion: v1
+kind: Secret
+metadata:
+  name: ccas-coog-gateway-frontCore
+  labels:
+    app.kubernetes.io/name: coog-gateway
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+type: Opaque
+stringData:
+  JWT_ENCRYPTION: changeme
+  JWT_INTERNAL_ENCRYPTION: changeme
+---
+# Source: coog/templates/gateway/secrets.yaml
+piVersion: v1
+kind: Secret
+metadata:
+  name: ccas-coog-gateway-configuration
+  labels:
+    app.kubernetes.io/name: coog-gateway
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+type: Opaque
+stringData:
+  COOG_WEB_TOKEN: changeme
+  FORCEDOTCOM_CLIENT_ID: changeme
+  FORCEDOTCOM_CLIENT_SECRET: changeme
+---
+# Source: coog/templates/secret-postgresql.yml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ccas-coog-postgresql
   labels:
     app.kubernetes.io/name: coog
     helm.sh/chart: coog-22.28.2228
@@ -61,9 +110,8 @@ metadata:
     app.kubernetes.io/version: "master"
 type: Opaque
 stringData:
-  db-adminPassword: ""
-  db-username: ""
-  db-password: ""
+  COOG_DB_USER: ""
+  COOG_DB_PASSWORD: ""
 ---
 # Source: coog/templates/secret.yaml
 apiVersion: v1
@@ -78,11 +126,10 @@ metadata:
     app.kubernetes.io/version: "master"
 type: Opaque
 stringData:
-  TRYTOND_DATABASE__URI: "postgresql://:@:5432/ccas"
+  TRYTOND_DATABASE__URI: "postgresql://:@ccas-postgresql:5432/ccas"
   TRYTOND_ASYNC__CELERY: "amqp://user:@ccas-rabbitmq:5672"
-  TRYTOND_ASYNC_CELERY: "amqp://user:@ccas-rabbitmq:5672"
+  TRYTOND_ASYNC_CELERY: "amqp://user:@ccas-rabbitmq:5672" # duplicate of TRYTOND_ASYNC__CELERY
   TRYTOND_SESSION__PASSPHRASE: "changeme"
-  trytond_session__passphrase: "changeme"
 ---
 # Source: coog/charts/rabbitmq/templates/configuration.yaml
 apiVersion: v1
@@ -116,6 +163,20 @@ data:
     consumer_timeout = 172800000
     loopback_users.guest = false
 ---
+# Source: coog/templates/api/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ccas-coog-api-configuration
+  labels:
+    app.kubernetes.io/name: coog-api
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+data:
+  COOG_API_V1_URL: http://ccas-coog-web
+---
 # Source: coog/templates/celery/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -146,6 +207,7 @@ data:
   COOG_POSTGRES_HOST: 
   COOG_POSTGRES_PORT: 5432
   COOG_DB_NAME: 
+  DB_NAME:  # duplicate of COOG_DB_NAME
   # Tryton
   TRYTOND_REPORT__API: http://ccas-coog-libroconv:5000/unoconv/{oext}
   TRYTOND_CACHE__RECORD: 50000
@@ -174,6 +236,55 @@ data:
   COOG_CELERY_WORKERS: 1
   COOG_SERVER_WORKERS: 1
   TRYTOND_DEBUG__VIEWS: false
+---
+# Source: coog/templates/gateway/configmap-frontCore.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ccas-coog-gateway-frontCore
+  labels:
+    app.kubernetes.io/name: coog-gateway
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+data:
+  # Databases
+  MONGO_HOST: ccas-mongodb
+  MONGO_PORT: 27017
+  MONGO_DB_NAME: frontCore
+  COOG_DB_NAME:
+---
+# Source: coog/templates/gateway/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ccas-coog-gateway-configuration
+  labels:
+    app.kubernetes.io/name: coog-gateway
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+data:
+  # Software
+  PORTAL_URL: http://coog.local
+  COOG_GATEWAY_URL: http://coog.local
+  COOG_URL: http://ccas-coog
+  # API
+  COOG_API_URL: http://ccas-coog-web
+  COOG_API_URL_V2: http://ccas-coog-api
+  COOG_API_B2B_CONFIG_URL: http://ccas-coog-api-b2b-config # ajouter un if pour le composant
+  COOG_API_B2C_URL: http://ccas-coog-api-b2c # ajouter un if pour le composant
+  COOG_API_REFERENTIAL_URL: http://ccas-coog-api-referential # ajouter un if pour le composant
+  COOG_API_IDENTITY_MANAGER_URL: http://ccas-coog-api-identity-manager
+  COOG_GATEWAY_BASE_PATH: /gateway
+  COOG_GATEWAY_PORT: 8000
+  COOG_MODULE: true
+  COOG_TOKEN_MODULE: true
+  FACEBOOK_MODULE: false
+  GOOGLE_MODULE: false
+  JWT_EXPIRATION: 3600
 ---
 # Source: coog/templates/coog-pvc.yaml
 apiVersion: v1
@@ -351,6 +462,27 @@ spec:
     app.kubernetes.io/name: rabbitmq
     app.kubernetes.io/instance: ccas
 ---
+# Source: coog/templates/api/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccas-coog-api
+  labels:
+    app.kubernetes.io/name: coog-api
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: coog-api
+    app.kubernetes.io/instance: ccas
+---
 # Source: coog/templates/celery/service.yaml
 apiVersion: v1
 kind: Service
@@ -391,6 +523,27 @@ spec:
       targetPort: http
   selector:
     app.kubernetes.io/name: coog-cron
+    app.kubernetes.io/instance: ccas
+---
+# Source: coog/templates/gateway/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccas-coog-gateway
+  labels:
+    app.kubernetes.io/name: coog-gateway
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: coog-gateway
     app.kubernetes.io/instance: ccas
 ---
 # Source: coog/templates/service.yaml
@@ -435,6 +588,78 @@ spec:
     app.kubernetes.io/name: coog-static
     app.kubernetes.io/instance: ccas
 ---
+# Source: coog/templates/api/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccas-coog-api
+  labels:
+    app.kubernetes.io/name: coog-api
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: coog-api
+      app.kubernetes.io/instance: ccas
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: coog-api
+        helm.sh/chart: coog-22.28.2228
+        app.kubernetes.io/instance: ccas
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "master"
+    spec:
+      imagePullSecrets:
+        - name: docker-registry
+      containers:
+        - name: coog-api
+          image: "cooghub/coog-api:coog-master-latest"
+          imagepullPolicy: "Always"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          envFrom:
+            - configMapRef:
+                name: ccas-coog-api-configuration
+            - configMapRef:
+                name: ccas-coog-gateway-frontCore
+            - secretRef:
+                name: ccas-coog-mongodb
+            - secretRef:
+                name: ccas-coog-gateway-frontCore
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              cpu: 500m
+              memory: 100Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
+---
 # Source: coog/templates/celery/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -463,6 +688,8 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/version: "master"
     spec:
+      imagePullSecrets:
+        - name: docker-registry
       volumes:
         - name: ccas-workspace-io
           persistentVolumeClaim:
@@ -492,17 +719,8 @@ spec:
                 name: ccas-coog-celery-configuration
             - secretRef:
                 name: ccas-coog-configuration
-          env:
-            - name:  COOG_DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: ccas-coog-database
-                  key: db-username
-            - name:  COOG_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: ccas-coog-database
-                  key: db-password
+            - secretRef:
+                name: ccas-coog-postgresql
           ports:
             - name: http
               containerPort: 8000
@@ -601,21 +819,11 @@ spec:
                 name: ccas-coog-cron-configuration
             - secretRef:
                 name: ccas-coog-configuration
-          env:
-            - name:  COOG_DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: ccas-coog-database
-                  key: db-username
-            - name:  COOG_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: ccas-coog-database
-                  key: db-password
+            - secretRef:
+                name: ccas-coog-postgresql
           ports:
             - name: http
               containerPort: 8000
-              protocol: TCP
           livenessProbe:
             exec:
               command: ['/bin/bash', '-c', 'ep cron --check']
@@ -693,17 +901,8 @@ spec:
                 name: ccas-coog-configuration
             - secretRef:
                 name: ccas-coog-configuration
-          env:
-            - name:  COOG_DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: ccas-coog-database
-                  key: db-username
-            - name:  COOG_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: ccas-coog-database
-                  key: db-password
+            - secretRef:
+                name: ccas-coog-postgresql
           ports:
             - name: http
               containerPort: 8000
@@ -737,17 +936,8 @@ spec:
                 name: ccas-coog-configuration
             - secretRef:
                 name: ccas-coog-configuration
-          env:
-            - name:  COOG_DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: ccas-coog-database
-                  key: db-username
-            - name:  COOG_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: ccas-coog-database
-                  key: db-password
+            - secretRef:
+                name: ccas-coog-postgresql
           ports:
             - name: http
               containerPort: 8000
@@ -783,6 +973,80 @@ spec:
               cpu: 200m
               memory: 300Mi
 ---
+# Source: coog/templates/gateway/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccas-coog-gateway
+  labels:
+    app.kubernetes.io/name: coog-gateway
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: coog-gateway
+      app.kubernetes.io/instance: ccas
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: coog-gateway
+        helm.sh/chart: coog-22.28.2228
+        app.kubernetes.io/instance: ccas
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "master"
+    spec:
+      imagePullSecrets:
+        - name: docker-registry
+      containers:
+        - name: coog-gateway
+          image: "cooghub/coog-gateway:coog-master-latest"
+          imagepullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          envFrom:
+            - configMapRef:
+                name: ccas-coog-gateway-configuration
+            - configMapRef:
+                name: ccas-coog-gateway-frontCore
+            - secretRef:
+                name: ccas-coog-gateway-configuration
+            - secretRef:
+                name: ccas-coog-mongodb
+            - secretRef:
+                name: ccas-coog-gateway-frontCore
+          ports:
+            - name: http
+              containerPort: 8000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
+---
 # Source: coog/templates/static/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -811,6 +1075,8 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/version: "master"
     spec:
+      imagePullSecrets:
+        - name: docker-registry
       containers:
         - name: coog-static
           image: "cooghub/coog-static:coog-master-latest"
@@ -1038,7 +1304,7 @@ spec:
         app.kubernetes.io/version: "3.9.13"
       annotations:
         checksum/config: bb8cb47f49aa74e80f9ac14b72fb56062fd44927809ea42ecfe94e02a9a058ec
-        checksum/secret: 3284b0959af4fb845a6442b09cb198c62bb0439f76cae2f5d0cfaa2efa10eec5
+        checksum/secret: b61fe8831cfe17be6dea9354489ec3ce4573f0ffa759f2867d15dd214888c530
     spec:
       
       serviceAccountName: ccas-rabbitmq
@@ -1193,6 +1459,45 @@ spec:
         resources:
           requests:
             storage: "8Gi"
+---
+# Source: coog/templates/gateway/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ccas-coog-gateway
+  labels:
+    app.kubernetes.io/name: coog-gateway
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/whitelist-source-range: "127.0.0.1/32"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/send-timeout: "3600"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+spec:
+  tls:
+    - hosts:
+        - "coog.local"
+      secretName: coog.local-tls
+  rules:
+    - host: "coog.local"
+      http:
+        paths:
+        - path: "/gateway(/|$)(.*)"
+          pathType: Prefix
+          backend:
+            service:
+              name: ccas-coog-gateway
+              port:
+                name: http
 ---
 # Source: coog/templates/ingress.yaml
 apiVersion: networking.k8s.io/v1

@@ -1,4 +1,4 @@
-{{- if .Values.customerFrontend.enable -}}
+{{- if .Values.customerFrontend.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

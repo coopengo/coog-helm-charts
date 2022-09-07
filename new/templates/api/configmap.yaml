@@ -9,15 +9,13 @@
           .Values.web.enabled)
 -}}
 apiVersion: v1
-kind: Service
+kind: ConfigMap
 metadata:
-  name: {{ include "common.names.fullname" . }}
+  name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
-spec:
-  type: ClusterIP
-  ports:
-    - name: http
-      port: 80
-      targetPort: http
-  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+data:
+  COOG_API_V1_URL: {{ printf "http://%s-%s-web" .Release.Name .Chart.Name }}
+  {{- range $key, $value := .Values.api.config }}
+  {{ $key }}: {{ $value }}
+  {{- end }}
 {{- end }}

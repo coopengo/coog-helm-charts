@@ -1,0 +1,30 @@
+{{- if (or .Values.frontCore.enabled
+          .Values.apiB2bConfig.enabled
+          .Values.apiB2c.enabled
+          .Values.apiReferential.enabled
+          .Values.appB2c.enabled
+          .Values.b2b.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled
+          .Values.web.enabled)
+-}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+data:
+  # URLs
+  PORTAL_URL: {{ printf "http://%s" .Values.ingress.host }}
+  COOG_GATEWAY_URL: {{ printf "http://%s" .Values.ingress.host }}
+  COOG_URL: {{ printf "http://%s-%s" .Release.Name .Chart.Name }}
+  COOG_API_URL: {{ printf "http://%s-%s-web" .Release.Name .Chart.Name }}
+  COOG_API_URL_V2: {{ printf "http://%s-%s-api" .Release.Name .Chart.Name }}
+  COOG_API_B2B_CONFIG_URL: {{ printf "http://%s-%s-api-b2b-config" .Release.Name .Chart.Name }} # ajouter un if pour le composant
+  COOG_API_B2C_URL: {{ printf "http://%s-%s-api-b2c" .Release.Name .Chart.Name }} # ajouter un if pour le composant
+  COOG_API_REFERENTIAL_URL: {{ printf "http://%s-%s-api-referential" .Release.Name .Chart.Name }} # ajouter un if pour le composant
+  COOG_API_IDENTITY_MANAGER_URL: {{ printf "http://%s-%s-api-identity-manager" .Release.Name .Chart.Name }}
+  {{- range $key, $value := .Values.gateway.config }}
+  {{ $key }}: {{ $value }}
+  {{- end }}
+{{- end }}

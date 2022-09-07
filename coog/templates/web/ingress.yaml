@@ -1,5 +1,5 @@
-{{- if .Values.web.enable -}}
-{{- if .Values.web.ingress.enable -}}
+{{- if .Values.web.enabled -}}
+{{- if .Values.web.ingress.enabled -}}
 apiVersion: {{ include "common.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
@@ -9,7 +9,7 @@ metadata:
   {{- if .Values.web.ingress.nginx.rewritetarget }}
     nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.web.ingress.nginx.rewritetarget | quote }}
   {{- end }}
-  {{- if $.Values.maintenanceMode.enable }}
+  {{- if $.Values.maintenanceMode.enabled }}
     nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.maintenanceMode.ingress.nginx.customhttperrors }}
     nginx.ingress.kubernetes.io/default-backend: {{ printf "%s-%s-maintenance" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (.Values.ingress.nginx.whiteList.trustedCidr) }}

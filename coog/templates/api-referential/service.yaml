@@ -1,4 +1,4 @@
-{{- if .Values.apiReferential.enable -}}
+{{- if .Values.apiReferential.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:

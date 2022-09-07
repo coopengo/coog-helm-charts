@@ -1,4 +1,4 @@
-{{- if .Values.apiB2bConfig.enable -}}
+{{- if .Values.apiB2bConfig.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:

@@ -4,10 +4,10 @@ metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
   annotations:
-  {{- if and .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.enable }}
+  {{- if and .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.enabled }}
     cert-manager.io/cluster-issuer: letsencrypt
   {{- end }}
-  {{- if $.Values.maintenanceMode.enable }}
+  {{- if $.Values.maintenanceMode.enabled }}
     nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.maintenanceMode.ingress.nginx.customhttperrors }}
     nginx.ingress.kubernetes.io/default-backend: {{ printf "%s-%s-maintenance" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (.Values.ingress.nginx.whiteList.trustedCidr) }}
@@ -24,9 +24,9 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
-  {{- if and .Values.ingress.thisTls.enable (or .Values.ingress.thisTls.letsencrypt .Values.ingress.hosts) }}
+  {{- if and .Values.ingress.thisTls.enabled (or .Values.ingress.thisTls.letsencrypt .Values.ingress.hosts) }}
   tls:
-    {{- if and .Values.ingress.thisTls.enable .Values.ingress.thisTls.letsencrypt }}
+    {{- if and .Values.ingress.thisTls.enabled .Values.ingress.thisTls.letsencrypt }}
     - hosts:
         - {{ .Values.ingress.host | quote }}
       secretName: {{ printf "%s-tls" .Values.ingress.host }}

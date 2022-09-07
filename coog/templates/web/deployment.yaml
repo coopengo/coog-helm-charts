@@ -1,4 +1,4 @@
-{{- if .Values.web.enable -}}
+{{- if .Values.web.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,13 +35,13 @@ spec:
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.web.securityContext.runAsUser }}
           env:
             - name: COOG_API_MONGO_HOST
-            {{- if not .Values.gateway.external_mongodb.enable }}
+            {{- if not .Values.gateway.external_mongodb.enabled }}
               value: "{{ .Release.Name }}-mongodb"
             {{ else }}
               value: "{{ .Values.gateway.external_mongodb.host }}"
             {{- end }}
             - name: COOG_API_MONGO_PORT
-            {{- if not .Values.gateway.external_mongodb.enable }}
+            {{- if not .Values.gateway.external_mongodb.enabled }}
               value: "{{ .Values.mongodb.service.port }}"
             {{ else }}
               value: "{{ .Values.gateway.external_mongodb.port }}"
@@ -54,7 +54,7 @@ spec:
               value: "/web/api"
             - name: COOG_API_APP_PATH
               value: "/web"
-            {{- if .Values.gateway.enable }}
+            {{- if .Values.gateway.enabled }}
             - name:  COOG_API_MONGO_USER
               valueFrom:
                 secretKeyRef:

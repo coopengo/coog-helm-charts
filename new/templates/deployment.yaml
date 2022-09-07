@@ -20,7 +20,7 @@ spec:
     {{- with .Values.image.pullSecrets }}
       imagePullSecrets: {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- if .Values.coog.persistentVolume.enable }}
+    {{- if .Values.coog.persistentVolume.enabled }}
       volumes:
         - name: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
           persistentVolumeClaim:
@@ -45,17 +45,8 @@ spec:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             - secretRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
-          env:
-            - name:  COOG_DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-database" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
-                  key: db-username
-            - name:  COOG_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-database" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
-                  key: db-password
+            - secretRef:
+                name: {{ printf "%s-%s-postgresql" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
           ports:
             - name: http
               containerPort: {{ .Values.coog.containerPorts.http }}
@@ -74,9 +65,9 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.coog.securityContext.runAsUser }}
           command: ['ep', 'server', '{{ .Values.coog.workers.number }}']
-          {{- if or .Values.coog.persistentVolume.enable .Values.coog.configurationFiles }}
+          {{- if or .Values.coog.persistentVolume.enabled .Values.coog.configurationFiles }}
           volumeMounts:
-            {{- if .Values.coog.persistentVolume.enable }}
+            {{- if .Values.coog.persistentVolume.enabled }}
             - name: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
               mountPath: /workspace/io
               readOnly: false
@@ -94,17 +85,8 @@ spec:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             - secretRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
-          env:
-            - name:  COOG_DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-database" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
-                  key: db-username
-            - name:  COOG_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-%s-database" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
-                  key: db-password
+            - secretRef:
+                name: {{ printf "%s-%s-postgresql" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
           ports:
             - name: http
               containerPort: {{ .Values.coog.containerPorts.http }}
@@ -119,8 +101,7 @@ spec:
               path: "/{{ .Values.postgresql.auth.database }}/readiness"
               port: http
             {{- toYaml (default .Values.readinessProbe .Values.coog.readinessProbe) | nindent 12 }}
-          resources:
-            {{- toYaml .Values.coog.resources | nindent 12 }}
+          resources: {{- toYaml .Values.coog.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.coog.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}

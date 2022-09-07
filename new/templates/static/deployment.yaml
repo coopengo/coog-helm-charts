@@ -17,7 +17,7 @@ spec:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
-    {{- with .Values.static.imagePullSecrets }}
+    {{- with .Values.image.pullSecrets }}
       imagePullSecrets: {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
@@ -48,8 +48,7 @@ spec:
               path: /doc
               port: http
             {{- toYaml (default .Values.readinessProbe .Values.static.readinessProbe) | nindent 12 }}
-          resources:
-            {{- toYaml .Values.static.resources | nindent 12 }}
+          resources: {{- toYaml .Values.static.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.static.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}

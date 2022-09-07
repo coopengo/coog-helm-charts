@@ -17,6 +17,12 @@ replicaCount: 1
 strategy:
   type: Recreate
 
+# -- ## Configure Container Security Context. It can be customized for each component.
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+## @param securityContext.runAsUser Set components containers' Security Context runAsUser
+securityContext:
+  runAsUser: 1000
+
 image:
   # -- Tag applied for all components. It can be customized for each component.
   # e.g:
@@ -72,7 +78,7 @@ ingress:
     #            <private key contents here>
     #   - Rely on cert-manager to create it by setting the corresponding annotations
     #
-    enable: true
+    enabled: true
 
     letsencrypt: true
     # -- TLS configuration for additional hostname(s) to be covered with this ingress record
@@ -157,7 +163,7 @@ affinity: {}
 #############################################################################################################################
 
 quota:
-  enable: false
+  enabled: false
   rollingUpdate: false
   config:
     cpuRequest: 0
@@ -166,9 +172,7 @@ quota:
     memoryLimit: 0
 
 maintenanceMode:
-  enable: false
-  imagePullSecrets:
-    - name: docker-registry
+  enabled: false
   image:
     name: nginx-custom-error-pages
     tag: latest
@@ -196,7 +200,6 @@ maintenanceMode:
 # Dependencies
 
 rabbitmq:
-  enable: true
   resources:
     limits:
       cpu: 600m
@@ -211,29 +214,6 @@ rabbitmq:
   livenessProbe:
     initialDelaySeconds: 240
 
-mongodb:
-  enable: false
-  strategyType: Recreate
-  replicaSet:
-    enable: false
-  usePassword: true
-  mongodbDatabase: coog-gateway
-  resources:
-    limits:
-      cpu: 100m
-      memory: 300Mi
-    requests:
-      cpu: 50m
-      memory: 150Mi
-  volumePermissions:
-    enable: true
-    resources:
-      limits:
-        cpu: 100m
-        memory: 300Mi
-      requests:
-        cpu: 50m
-        memory: 150Mi
 
 #############################################################################################################################
 # coog components mandatory
@@ -273,16 +253,13 @@ coog:
     COOG_IWC: 1
 
   persistentVolume:
-    enable: true
+    enabled: true
     name: workspace-io
     io: /workspace/io/
     storageClass: nfs-client
     size: 10Gi
     claim:
       name: ""
-
-  securityContext:
-    runAsUser: 1000
 
   ingress:
     # -- Default host for the ingress resource for coog containers'
@@ -292,6 +269,9 @@ coog:
     nginx:
       whiteList:
         publicCidr: []
+
+  securityContext: {}
+    # runAsUser: ""
 
   # -- coog containers' resource requests and limits
   resources:
@@ -352,6 +332,8 @@ static:
       whiteList:
         publicCidr: []
 
+  securityContext: {}
+    # runAsUser: ""
 
   # -- static containers' resource requests and limits
   resources:
@@ -368,6 +350,8 @@ cron:
   # -- Dynamic ConfigMap variables for cron
   config:
     TRYTOND_DEBUG__VIEWS: false
+
+  coogCeleryModule: coog_async.coog_celery
 
   # -- cron containers' resource requests and limits
   resources:
@@ -402,61 +386,63 @@ cron:
     timeoutSeconds: 10
     successThreshold: 1
     failureThreshold: 2
-  coogCeleryModule: coog_async.coog_celery
+  
 
 
 
+### Front components :
 
-### Optionals components
+# -- FrontCore
+## If one frontend component is enabled: true, it will enable by default the frontCore components (gateway, api & api-identity-manager)
+# List of front components :
+# - gateway
+# - api
+# - apiIdentityManager
+# - apiB2bConfig
+# - apiB2c
+# - apiReferential
+# - appB2c
+# - b2b
+# - customerBackend
+# - customerFrontend
+# - web
+#
+# If you enable frontCore, you must set mongodb.isManaged: true in values_secrets.yaml
+frontCore:
+  enabled: true
+  config:
+    JWT_EXPIRATION: 3600
+
 gateway:
-  # -- Deploy gateway container(s)
-  enable: true
-  external_mongodb:
-    enable: false
-  mongodb:
-    database: coog-gateway
-  jwt:
-    encryption: secret
-    expiration: 3600
-  whitelist:
-  # -- 	Number of gateway Pods to run
-  replicaCount: 1
-  b2b_url: coog.local
-  gateway_url: coog.local
-  entrypoint: "/gateway"
-  extraEnv:
-    COOG_TOKEN_MODULE: "false"
-
   image:
     # -- gateway image repository
-    name: gateway
-    # -- gateway image tag
-    tag: coog-2.10.2048
-    # -- gateway image pull policy
-    pullPolicy: Always
+    name: coog-gateway
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
+  config:
+    COOG_MODULE: true
+    GOOGLE_MODULE: false
+    FACEBOOK_MODULE: false
+    COOG_TOKEN_MODULE: true
+    COOG_GATEWAY_PORT: 8000
+    COOG_GATEWAY_BASE_PATH: /gateway
 
   ingress:
-    # -- Default host for the ingress resource for coog containers'
+    # -- Default host for the ingress resource for gateway containers
     hosts:
       - paths:
-          - /
+          - /gateway(/|$)(.*)
+    
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+    
     nginx:
       whiteList:
         publicCidr: []
-      annotations:
-        nginx.ingress.kubernetes.io/rewrite-target: '/$2'
 
-  # -- gateway containers' resource requests and limits
+  securityContext: {}
+    # runAsUser: ""
+
+  # -- gateway containers resource requests and limits
   resources:
     limits:
       cpu: 100m
@@ -466,39 +452,15 @@ gateway:
       memory: 50Mi
 
 
-
-
-
-###########################################################
-
 api:
-  # -- Deploy api container(s)
-  enable: true
-  # -- 	Number of api Pods to run
-  replicaCount: 1
-
-  mongodb:
-    database: coog-api-v2
-
   image:
-    # -- api image repository
-    name: api
-    # -- api image tag
-    tag: coog-2.10.2048
-    # -- api image pull policy
-    pullPolicy: Always
+    # -- api-v2 image repository
+    name: coog-api
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
+  securityContext: {}
+    # runAsUser: ""
 
-  service:
-    type: ClusterIP
-    port: 80
-
-  # -- api containers' resource requests and limits
+  # -- api containers resource requests and limits
   resources:
     limits:
       cpu: 500m
@@ -507,19 +469,13 @@ api:
       cpu: 50m
       memory: 50Mi
 
-  # -- Affinity for pod assignment
-  affinity: {}
 
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
+###########################################################
 
 
 apiB2bConfig:
   # -- Deploy apiB2bConfig container(s)
-  enable: false
+  enabled: false
   # -- 	Number of apiB2bConfig Pods to run
   replicaCount: 1
 
@@ -531,17 +487,6 @@ apiB2bConfig:
     # -- apiB2bConfig image pull policy
     pullPolicy: Always
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
   # -- apiB2bConfig containers' resource requests and limits
   resources:
     limits:
@@ -551,18 +496,10 @@ apiB2bConfig:
       cpu: 30m
       memory: 40Mi
 
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
 
 apiB2c:
   # -- Deploy apiB2c container(s)
-  enable: false
+  enabled: false
   # -- 	Number of apiB2c Pods to run
   replicaCount: 1
 
@@ -574,15 +511,6 @@ apiB2c:
     # -- apiB2c image pull policy
     pullPolicy: Always
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
 
   # -- apiB2c containers' resource requests and limits
   resources:
@@ -593,19 +521,10 @@ apiB2c:
       cpu: 20m
       memory: 25Mi
 
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
 
 apiIdentityManager:
   # -- Deploy apiIdentityManager container(s)
-  enable: true
+  enabled: false
   # -- 	Number of apiIdentityManager Pods to run
   replicaCount: 1
 
@@ -617,16 +536,6 @@ apiIdentityManager:
     # -- api-identity-manager image pull policy
     pullPolicy: Always
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
   # -- apiIdentityManager containers' resource requests and limits
   resources:
     limits:
@@ -636,19 +545,10 @@ apiIdentityManager:
       cpu: 10m
       memory: 30Mi
 
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
 
 apiReferential:
   # -- Deploy apiReferential container(s)
-  enable: false
+  enabled: false
   # -- 	Number of apiReferential Pods to run
   replicaCount: 1
 
@@ -660,16 +560,6 @@ apiReferential:
     # -- apiReferential image pull policy
     pullPolicy: Always
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
   # -- apiReferential containers' resource requests and limits
   resources:
     limits:
@@ -679,19 +569,10 @@ apiReferential:
       cpu: 100m
       memory: 250Mi
 
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
 
 appB2c:
   # -- Deploy appB2c container(s)
-  enable: false
+  enabled: false
   # -- 	Number of appB2c Pods to run
   replicaCount: 1
 
@@ -703,19 +584,9 @@ appB2c:
     # -- appB2c image pull policy
     pullPolicy: Always
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
   ingress:
     # -- Enable ingress controller resource for appB2c containers'
-    enable: false
+    enabled: false
     # -- Ingress annotations for appB2c containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -739,19 +610,10 @@ appB2c:
       cpu: 10m
       memory: 30Mi
 
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
 
 unoconv:
   # -- Deploy unoconv container(s)
-  enable: true
+  enabled: false
   # -- 	Number of unoconv Pods to run
   replicaCount: 1
 
@@ -762,12 +624,6 @@ unoconv:
     tag: dgw-0.0.1
     # -- unoconv image pull policy
     pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
 
   service:
     type: ClusterIP
@@ -781,15 +637,6 @@ unoconv:
     requests:
       cpu: 50m
       memory: 50Mi
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
 
   livenessProbe:
     initialDelaySeconds: 0
@@ -807,7 +654,7 @@ unoconv:
 
 web:
   # -- Deploy web container(s)
-  enable: true
+  enabled: false
   # -- 	Number of web Pods to run
   replicaCount: 1
 
@@ -819,19 +666,9 @@ web:
     # -- web image pull policy
     pullPolicy: Always
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
   ingress:
     # -- Enable ingress controller resource for web containers'
-    enable: false
+    enabled: false
     # -- Ingress annotations for web containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -861,18 +698,9 @@ web:
       cpu: 30m
       memory: 30Mi
 
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
 b2b:
   # -- Deploy b2b container(s)
-  enable: false
+  enabled: false
   # -- 	Number of b2b Pods to run
   replicaCount: 1
 
@@ -884,19 +712,9 @@ b2b:
     # -- b2b image pull policy
     pullPolicy: Always
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
   ingress:
     # -- Enable ingress controller resource for b2b containers'
-    enable: false
+    enabled: false
     # -- Ingress annotations for b2b containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -924,29 +742,18 @@ b2b:
       cpu: 10m
       memory: 25Mi
 
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
 jwt:
   internal:
     encryption: changeme
 
 batch:
   migquottosr:
-    enable: false
+    enabled: false
     image:
       pullPolicy: Always
       name: migquottosr
       tags: latest
     schedule: "0 20 * * *"
-    imagePullSecrets:
-      - name: docker-registry
     resources:
       limits:
         cpu: 200m
@@ -958,7 +765,7 @@ batch:
 # B2C Frontend
 customerFrontend:
   # -- Deploy b2b container(s)
-  enable: false
+  enabled: false
   # -- 	Number of b2b Pods to run
   replicaCount: 1
 
@@ -970,19 +777,9 @@ customerFrontend:
     # -- b2b image pull policy
     pullPolicy: Always
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
   ingress:
     # -- Enable ingress controller resource for b2b containers'
-    enable: true
+    enabled: true
     # -- Ingress annotations for b2b containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -1019,19 +816,10 @@ customerFrontend:
         cpu: 200m
         memory: 1500Mi
 
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
 # B2C Backend
 customerBackend:
   # -- Deploy b2b container(s)
-  enable: false
+  enabled: false
   # -- 	Number of b2b Pods to run
   replicaCount: 1
   postgres_db: 'strapi'
@@ -1044,19 +832,9 @@ customerBackend:
     # -- b2b image pull policy
     pullPolicy: Always
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
   ingress:
     # -- Enable ingress controller resource for b2b containers'
-    enable: true
+    enabled: true
     # -- Ingress annotations for b2b containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -1092,12 +870,3 @@ customerBackend:
       requests:
         cpu: 200m
         memory: 250Mi
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  # -- Affinity for pod assignment
-  affinity: {}

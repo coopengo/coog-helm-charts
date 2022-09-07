@@ -3,11 +3,11 @@
 # Declare variables to be passed into your templates.
 
 quota:
-  enable: false
+  enabled: false
   rolling_update: false
 
 maintenanceMode:
-  enable: false
+  enabled: false
   imagePullSecrets:
     - name: docker-registry
   image:
@@ -32,7 +32,7 @@ maintenanceMode:
   nodeSelector: {}
 
 rabbitmq:
-  enable: true
+  enabled: true
   resources:
     limits:
       cpu: 600m
@@ -48,12 +48,12 @@ rabbitmq:
     initialDelaySeconds: 240
 
 mongodb:
-  enable: true
+  enabled: true
   strategyType: Recreate
   image:
     tag: "4.4.12"
   replicaSet:
-    enable: false
+    enabled: false
   usePassword: true
   mongodbDatabase: coog-gateway
   resources:
@@ -64,7 +64,7 @@ mongodb:
       cpu: 50m
       memory: 150Mi
   volumePermissions:
-    enable: true
+    enabled: true
     resources:
       limits:
         cpu: 100m
@@ -75,7 +75,7 @@ mongodb:
 
 api:
   # -- Deploy api container(s)
-  enable: true
+  enabled: true
   # -- 	Number of api Pods to run
   replicaCount: 1
 
@@ -121,7 +121,7 @@ api:
 
 apiB2bConfig:
   # -- Deploy apiB2bConfig container(s)
-  enable: false
+  enabled: false
   # -- 	Number of apiB2bConfig Pods to run
   replicaCount: 1
 
@@ -164,7 +164,7 @@ apiB2bConfig:
 
 apiB2c:
   # -- Deploy apiB2c container(s)
-  enable: false
+  enabled: false
   # -- 	Number of apiB2c Pods to run
   replicaCount: 1
 
@@ -207,7 +207,7 @@ apiB2c:
 
 apiIdentityManager:
   # -- Deploy apiIdentityManager container(s)
-  enable: true
+  enabled: true
   # -- 	Number of apiIdentityManager Pods to run
   replicaCount: 1
 
@@ -250,7 +250,7 @@ apiIdentityManager:
 
 apiReferential:
   # -- Deploy apiReferential container(s)
-  enable: false
+  enabled: false
   # -- 	Number of apiReferential Pods to run
   replicaCount: 1
 
@@ -293,7 +293,7 @@ apiReferential:
 
 appB2c:
   # -- Deploy appB2c container(s)
-  enable: false
+  enabled: false
   # -- 	Number of appB2c Pods to run
   replicaCount: 1
 
@@ -317,7 +317,7 @@ appB2c:
 
   ingress:
     # -- Enable ingress controller resource for appB2c containers'
-    enable: false
+    enabled: false
     # -- Ingress annotations for appB2c containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -353,7 +353,7 @@ appB2c:
 
 unoconv:
   # -- Deploy unoconv container(s)
-  enable: true
+  enabled: true
   # -- 	Number of unoconv Pods to run
   replicaCount: 1
 
@@ -408,11 +408,11 @@ unoconv:
 
 celery:
   # -- Deploy celery container(s)
-  enable: false
+  enabled: false
   # -- 	Number of celery workers to run
   workers: 1
   specificBatchConcurrency:
-    enable: false
+    enabled: false
     resources:
       limits:
         cpu: 200m
@@ -495,13 +495,13 @@ coog:
   #   batch.conf: |-
 
   # -- Deploy coog container(s)
-  enable: true
+  enabled: true
   root_dir: /workspace/io
 
   max_worker_memory: 0
   replicaCount: 1
   persistentVolume:
-    enable: true
+    enabled: true
     name: workspace-io
     io: /workspace/io/
     storageClass: nfs-client
@@ -534,7 +534,7 @@ coog:
 
   ingress:
     # -- Enable ingress controller resource for coog containers'
-    enable: false
+    enabled: false
     # -- Ingress annotations for coog containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -586,7 +586,7 @@ coog:
 
 cron:
   # -- Deploy cron container(s)
-  enable: true
+  enabled: true
   affinity: {}
 
   # -- cron containers' resource requests and limits
@@ -619,7 +619,7 @@ cron:
 
 web:
   # -- Deploy web container(s)
-  enable: true
+  enabled: true
   # -- 	Number of web Pods to run
   replicaCount: 1
 
@@ -643,7 +643,7 @@ web:
 
   ingress:
     # -- Enable ingress controller resource for web containers'
-    enable: false
+    enabled: false
     # -- Ingress annotations for web containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -684,7 +684,7 @@ web:
 
 b2b:
   # -- Deploy b2b container(s)
-  enable: false
+  enabled: false
   # -- 	Number of b2b Pods to run
   replicaCount: 1
 
@@ -708,7 +708,7 @@ b2b:
 
   ingress:
     # -- Enable ingress controller resource for b2b containers'
-    enable: false
+    enabled: false
     # -- Ingress annotations for b2b containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -747,9 +747,9 @@ b2b:
 
 gateway:
   # -- Deploy gateway container(s)
-  enable: true
+  enabled: true
   external_mongodb:
-    enable: false
+    enabled: false
   mongodb:
     database: coog-gateway
   jwt:
@@ -784,7 +784,7 @@ gateway:
 
   ingress:
     # -- Enable ingress controller resource for gateway containers'
-    enable: false
+    enabled: false
     # -- Ingress annotations for gateway containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -821,7 +821,7 @@ gateway:
 
 static:
   # -- Deploy static container(s)
-  enable: true
+  enabled: true
   # -- 	Number of static Pods to run
   replicaCount: 1
 
@@ -845,7 +845,7 @@ static:
 
   ingress:
     # -- Enable ingress controller resource for static containers'
-    enable: false
+    enabled: false
     # -- Ingress annotations for static containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -882,28 +882,10 @@ jwt:
   internal:
     encryption: changeme
 
-batch:
-  migquottosr:
-    enable: false
-    image:
-      pullPolicy: Always
-      repository: coopengohub/migquottosr
-      tags: latest
-    schedule: "0 20 * * *"
-    imagePullSecrets:
-      - name: docker-registry
-    resources:
-      limits:
-        cpu: 200m
-        memory: 100Mi
-      requests:
-        cpu: 100m
-        memory: 50Mi
-
 # B2C Frontend
 customerFrontend:
   # -- Deploy b2b container(s)
-  enable: false
+  enabled: false
   # -- 	Number of b2b Pods to run
   replicaCount: 1
 
@@ -927,7 +909,7 @@ customerFrontend:
 
   ingress:
     # -- Enable ingress controller resource for b2b containers'
-    enable: true
+    enabled: true
     # -- Ingress annotations for b2b containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
@@ -976,7 +958,7 @@ customerFrontend:
 # B2C Backend
 customerBackend:
   # -- Deploy b2b container(s)
-  enable: false
+  enabled: false
   # -- 	Number of b2b Pods to run
   replicaCount: 1
   postgres_db: 'strapi'
@@ -1001,7 +983,7 @@ customerBackend:
 
   ingress:
     # -- Enable ingress controller resource for b2b containers'
-    enable: true
+    enabled: true
     # -- Ingress annotations for b2b containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx

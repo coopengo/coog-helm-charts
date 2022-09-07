@@ -1,4 +1,4 @@
-{{- if .Values.apiIdentityManager.enable -}}
+{{- if .Values.apiIdentityManager.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -35,13 +35,13 @@ spec:
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.apiIdentityManager.securityContext.runAsUser }}
           env:
             - name:  MONGO_HOST
-            {{- if not .Values.gateway.external_mongodb.enable }}
+            {{- if not .Values.gateway.external_mongodb.enabled }}
               value: "{{ .Release.Name }}-mongodb"
             {{ else }}
               value: "{{ .Values.gateway.external_mongodb.host }}"
             {{- end }}
             - name:  MONGO_PORT
-            {{- if not .Values.gateway.external_mongodb.enable }}
+            {{- if not .Values.gateway.external_mongodb.enabled }}
               value: "{{ .Values.mongodb.service.port }}"
             {{ else }}
               value: "{{ .Values.gateway.external_mongodb.port }}"
