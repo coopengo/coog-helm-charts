@@ -469,6 +469,19 @@ api:
       cpu: 50m
       memory: 50Mi
 
+apiIdentityManager:
+  image:
+    # -- api-identity-manager image repository
+    name: coog-api-identity-manager
+
+  # -- apiIdentityManager containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 50m
+      memory: 70Mi
+    requests:
+      cpu: 10m
+      memory: 30Mi
 
 ###########################################################
 
@@ -521,29 +534,6 @@ apiB2c:
       cpu: 20m
       memory: 25Mi
 
-
-apiIdentityManager:
-  # -- Deploy apiIdentityManager container(s)
-  enabled: false
-  # -- 	Number of apiIdentityManager Pods to run
-  replicaCount: 1
-
-  image:
-    # -- api-identity-manager image repository
-    name: api-identity-manager
-    # -- api-identity-manager image tag
-    tag: coog-2.10.2048
-    # -- api-identity-manager image pull policy
-    pullPolicy: Always
-
-  # -- apiIdentityManager containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 50m
-      memory: 70Mi
-    requests:
-      cpu: 10m
-      memory: 30Mi
 
 
 apiReferential:

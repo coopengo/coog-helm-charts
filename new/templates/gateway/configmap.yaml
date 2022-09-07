@@ -17,7 +17,6 @@ data:
   # URLs
   PORTAL_URL: {{ printf "http://%s" .Values.ingress.host }}
   COOG_GATEWAY_URL: {{ printf "http://%s" .Values.ingress.host }}
-  COOG_URL: {{ printf "http://%s-%s" .Release.Name .Chart.Name }}
   COOG_API_URL: {{ printf "http://%s-%s-web" .Release.Name .Chart.Name }}
   COOG_API_URL_V2: {{ printf "http://%s-%s-api" .Release.Name .Chart.Name }}
   COOG_API_B2B_CONFIG_URL: {{ printf "http://%s-%s-api-b2b-config" .Release.Name .Chart.Name }} # ajouter un if pour le composant

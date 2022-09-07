@@ -23,6 +23,7 @@ data:
   MONGO_PORT: {{ .Values.mongodb.service.ports.mongodb}}
   MONGO_DB_NAME: {{ .Values.mongodb.auth.database}}
   COOG_DB_NAME: {{ .Values.postgresql.auth.database }}
+  COOG_URL: {{ printf "http://%s-%s" .Release.Name .Chart.Name }}
   {{- range $key, $value := .Values.frontCore.config }}
   {{ $key }}: {{ $value }}
   {{- end }}
