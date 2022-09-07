@@ -19,7 +19,7 @@ spec:
   {{- if not .Values.quota.rollingUpdate }}
     type: Recreate
   {{- else -}}
-    type: {{ default .Values.strategy.type .Values.gateway.strategy.type }}
+    type: {{ default .Values.strategy.type .Values.apiIdentityManager.strategy.type }}
   {{- end }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
