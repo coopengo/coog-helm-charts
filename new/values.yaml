@@ -176,14 +176,14 @@ maintenanceMode:
   image:
     name: nginx-custom-error-pages
     tag: latest
-    pullPolicy: Always
-  # Possible variables :
-  # env:
+
+  config: {}
   #   TEMPLATE_NAME: "coopengo"
   #   DEFAULT_ERROR_PAGE: 404
   #   DEFAULT_HTTP_CODE: 404
   #   SHOW_DETAILS: false
   #   DISABLE_L10N: false
+
   resources:
     limits:
       cpu: 100m
@@ -191,6 +191,7 @@ maintenanceMode:
     requests:
       cpu: 50m
       memory: 50Mi
+      
   ingress:
     nginx:
       customhttperrors: 403
