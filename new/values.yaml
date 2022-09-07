@@ -457,6 +457,8 @@ api:
     # -- api-v2 image repository
     name: coog-api
 
+  config: {}
+
   securityContext: {}
     # runAsUser: ""
 
@@ -473,6 +475,8 @@ apiIdentityManager:
   image:
     # -- api-identity-manager image repository
     name: coog-api-identity-manager
+  
+  config: {}
   
   securityContext: {}
     # runAsUser: ""

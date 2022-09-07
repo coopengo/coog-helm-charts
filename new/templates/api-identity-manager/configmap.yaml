@@ -1,0 +1,20 @@
+{{- if (or .Values.frontCore.enabled
+          .Values.apiB2bConfig.enabled
+          .Values.apiB2c.enabled
+          .Values.apiReferential.enabled
+          .Values.appB2c.enabled
+          .Values.b2b.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled
+          .Values.web.enabled)
+-}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+data:
+  {{- range $key, $value := .Values.apiIdentityManager.config }}
+  {{ $key }}: {{ $value }}
+  {{- end }}
+{{- end }}

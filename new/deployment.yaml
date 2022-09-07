@@ -29,7 +29,7 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  postgresql-password: "YUFyQ25KS3poMg=="
+  postgresql-password: "VVZLTE5hZXBSbA=="
 ---
 # Source: coog/charts/rabbitmq/templates/secrets.yaml
 apiVersion: v1
@@ -45,8 +45,8 @@ metadata:
     app.kubernetes.io/version: "3.9.13"
 type: Opaque
 data:
-  rabbitmq-password: "cHBVd1VZSnZSUA=="
-  rabbitmq-erlang-cookie: "WXVnbklDVjNNSjNVU0VzVXVabkdqa3F5TmJVWk1wZmk="
+  rabbitmq-password: "RzFWazVjMVRQcw=="
+  rabbitmq-erlang-cookie: "aVFHdm5GODNuZ2M5ZWI2OHNxTGVESEx4YXM2U21GVTI="
 ---
 # Source: coog/templates/gateway/secret-mongodb.yaml
 apiVersion: v1
@@ -162,6 +162,19 @@ data:
     loopback_users.guest = false
     consumer_timeout = 172800000
     loopback_users.guest = false
+---
+# Source: coog/templates/api-identity-manager/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ccas-coog-api-identity-manager-configuration
+  labels:
+    app.kubernetes.io/name: coog-api-identity-manager
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+data:
 ---
 # Source: coog/templates/api/configmap.yaml
 apiVersion: v1
@@ -1396,7 +1409,7 @@ spec:
         app.kubernetes.io/version: "3.9.13"
       annotations:
         checksum/config: bb8cb47f49aa74e80f9ac14b72fb56062fd44927809ea42ecfe94e02a9a058ec
-        checksum/secret: 01b7eb9704ac58c324d3d80879165809a318dc05a59d85bf65345e7c45263962
+        checksum/secret: 10d3ed10f78473ecd644629e2f4ed1804b07da08c91b3fa2e711eb09a4102080
     spec:
       
       serviceAccountName: ccas-rabbitmq
