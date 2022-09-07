@@ -266,6 +266,10 @@ coog:
     hosts:
       - paths:
           - /
+
+    annotations:
+      nginx.ingress.kubernetes.io/use-proxy-protocol: true
+    
     nginx:
       whiteList:
         publicCidr: []
@@ -409,7 +413,7 @@ cron:
 #
 # If you enable frontCore, you must set mongodb.isManaged: true in values_secrets.yaml
 frontCore:
-  enabled: true
+  enabled: false
   config:
     JWT_EXPIRATION: 3600
 
@@ -492,6 +496,41 @@ apiIdentityManager:
     requests:
       cpu: 10m
       memory: 30Mi
+
+
+### Front Additional components
+
+b2b:
+  enabled: true
+
+  image:
+    # -- b2b image repository
+    name: coog-b2b
+
+  ingress:
+    # -- Default host for the ingress resource for gateway containers
+    hosts:
+      - paths:
+          - /portal(/|$)(.*)
+    
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+    
+    nginx:
+      whiteList:
+        publicCidr: []
+
+  securityContext: {}
+    # runAsUser: ""
+
+  # -- b2b containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 250m
+      memory: 50Mi
+    requests:
+      cpu: 10m
+      memory: 25Mi
 
 ###########################################################
 
@@ -698,69 +737,6 @@ web:
       cpu: 30m
       memory: 30Mi
 
-b2b:
-  # -- Deploy b2b container(s)
-  enabled: false
-  # -- 	Number of b2b Pods to run
-  replicaCount: 1
-
-  image:
-    # -- b2b image repository
-    name: b2b
-    # -- b2b image tag
-    tag: coog-2.10.2048
-    # -- b2b image pull policy
-    pullPolicy: Always
-
-  ingress:
-    # -- Enable ingress controller resource for b2b containers'
-    enabled: false
-    # -- Ingress annotations for b2b containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for b2b containers'
-    hosts:
-      - host: b2b.local
-        paths: []
-    # -- TLS configuration for b2b containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-
-  # -- b2b containers' resource requests and limits
-  resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    limits:
-      cpu: 250m
-      memory: 50Mi
-    requests:
-      cpu: 10m
-      memory: 25Mi
-
-jwt:
-  internal:
-    encryption: changeme
-
-batch:
-  migquottosr:
-    enabled: false
-    image:
-      pullPolicy: Always
-      name: migquottosr
-      tags: latest
-    schedule: "0 20 * * *"
-    resources:
-      limits:
-        cpu: 200m
-        memory: 100Mi
-      requests:
-        cpu: 100m
-        memory: 50Mi
 
 # B2C Frontend
 customerFrontend:
