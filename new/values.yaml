@@ -191,7 +191,7 @@ maintenanceMode:
     requests:
       cpu: 50m
       memory: 50Mi
-      
+
   ingress:
     nginx:
       customhttperrors: 403
@@ -199,6 +199,41 @@ maintenanceMode:
 
 #############################################################################################################################
 # Dependencies
+
+# -- Mongodb dependency parameters.
+# Ref: https://artifacthub.io/packages/helm/bitnami/mongodb/10.30.12
+mongodb:
+  # -- Enable to install mongodb on Kubernetes
+  # This is a coog parameter not mongodb
+  isManaged: true
+  # -- Enable to use an external mongodb server (Database not managed by this chart)
+  # This is a coog parameter not mongodb
+  isExternal: false
+  updateStrategy:
+    type: Recreate
+  service:
+    ports:
+      mongodb: 27017
+  # -- Must be configured when mongodb.isExternal is true
+  # This is a coog parameter not mongodb
+    external:
+      host: ""
+  resources:
+    limits:
+      cpu: 100m
+      memory: 300Mi
+    requests:
+      cpu: 50m
+      memory: 150Mi
+  volumePermissions:
+    enabled: true
+    resources:
+      limits:
+        cpu: 100m
+        memory: 300Mi
+      requests:
+        cpu: 50m
+        memory: 150Mi
 
 rabbitmq:
   resources:
@@ -214,6 +249,7 @@ rabbitmq:
     loopback_users.guest = false
   livenessProbe:
     initialDelaySeconds: 240
+  # Voir pour le parametre de persistence > a desactiver
 
 
 #############################################################################################################################
@@ -412,7 +448,7 @@ cron:
 # - customerFrontend
 # - web
 #
-# If you enable frontCore, you must set mongodb.isManaged: true in values_secrets.yaml
+# If you enable one front component, you must set mongodb.isManaged: true
 frontCore:
   enabled: false
   config:
@@ -502,7 +538,7 @@ apiIdentityManager:
 ### Front Additional components
 
 b2b:
-  enabled: true
+  enabled: false
 
   image:
     # -- b2b image repository
@@ -533,22 +569,35 @@ b2b:
       cpu: 10m
       memory: 25Mi
 
+apiB2c:
+  enabled: true
+
+  image:
+    # -- apiB2c image repository
+    name: coog-api-b2c
+
+  securityContext: {}
+    # runAsUser: ""
+
+  # -- apiB2c containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 50m
+      memory: 50Mi
+    requests:
+      cpu: 20m
+      memory: 25Mi
+
 ###########################################################
 
 
 apiB2bConfig:
   # -- Deploy apiB2bConfig container(s)
   enabled: false
-  # -- 	Number of apiB2bConfig Pods to run
-  replicaCount: 1
 
   image:
     # -- apiB2bConfig image repository
     name: api-b2b-config
-    # -- apiB2bConfig image tag
-    tag: coog-2.10.2048
-    # -- apiB2bConfig image pull policy
-    pullPolicy: Always
 
   # -- apiB2bConfig containers' resource requests and limits
   resources:
@@ -560,45 +609,15 @@ apiB2bConfig:
       memory: 40Mi
 
 
-apiB2c:
-  # -- Deploy apiB2c container(s)
-  enabled: false
-  # -- 	Number of apiB2c Pods to run
-  replicaCount: 1
-
-  image:
-    # -- apiB2c image repository
-    name: api-b2c
-    # -- apiB2c image tag
-    tag: coog-2.10.2048
-    # -- apiB2c image pull policy
-    pullPolicy: Always
-
-
-  # -- apiB2c containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 50m
-      memory: 50Mi
-    requests:
-      cpu: 20m
-      memory: 25Mi
-
 
 
 apiReferential:
   # -- Deploy apiReferential container(s)
   enabled: false
-  # -- 	Number of apiReferential Pods to run
-  replicaCount: 1
 
   image:
     # -- apiReferential image repository
     name: api-referential
-    # -- apiReferential image tag
-    tag: coog-2.10.2048
-    # -- apiReferential image pull policy
-    pullPolicy: Always
 
   # -- apiReferential containers' resource requests and limits
   resources:
@@ -613,16 +632,10 @@ apiReferential:
 appB2c:
   # -- Deploy appB2c container(s)
   enabled: false
-  # -- 	Number of appB2c Pods to run
-  replicaCount: 1
 
   image:
     # -- appB2c image repository
     name: app-b2c
-    # -- appB2c image tag
-    tag: coog-2.10.2048
-    # -- appB2c image pull policy
-    pullPolicy: Always
 
   ingress:
     # -- Enable ingress controller resource for appB2c containers'

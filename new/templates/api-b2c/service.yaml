@@ -1,15 +1,18 @@
-{{- if .Values.apiB2c.enabled -}}
+{{- if (or .Values.apiB2c.enabled 
+          .Values.appB2c.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled)
+-}}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  type: {{ .Values.apiB2c.service.type }}
+  type: ClusterIP
   ports:
-    - port: {{ .Values.apiB2c.service.port }}
+    - name: http
+      port: 80
       targetPort: http
-      protocol: TCP
-      name: http
   selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
 {{- end }}

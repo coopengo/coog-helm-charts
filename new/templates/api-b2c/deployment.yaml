@@ -1,0 +1,76 @@
+{{- if (or .Values.apiB2c.enabled 
+          .Values.appB2c.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled)
+-}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  replicas: {{ default .Values.replicaCount .Values.apiB2c.replicaCount }}
+  strategy:
+  {{- if not .Values.quota.rollingUpdate }}
+    type: Recreate
+  {{- else -}}
+    type: {{ default .Values.strategy.type .Values.apiB2c.strategy.type }}
+  {{- end }}
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+    spec:
+    {{- with .Values.image.pullSecrets }}
+      imagePullSecrets: {{- toYaml . | nindent 8 }}
+    {{- end }}
+      containers:
+        - name: {{ include "common.names.name" . }}
+          image: "{{ default .Values.image.repository .Values.apiB2c.image.repository }}/{{ .Values.apiB2c.image.name }}:{{ default .Values.image.tag .Values.apiB2c.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.apiB2c.image.pullPolicy | quote }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.apiB2c.securityContext.runAsUser }}
+          envFrom:
+            - configMapRef:
+                name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+            - configMapRef:
+                name: {{ printf "%s-%s-gateway-frontCore" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            - secretRef:
+                name: {{ printf "%s-%s-gateway-frontCore" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources: {{- toYaml .Values.apiB2c.resources | nindent 12 }}
+      {{- with default .Values.nodeSelector .Values.apiB2c.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.affinity .Values.apiB2c.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.tolerations .Values.apiB2c.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if default .Values.dnsPolicy .Values.apiB2c.dnsPolicy }}
+      dnsPolicy: {{ default .Values.dnsPolicy .Values.apiB2c.dnsPolicy }}
+      {{- end }}
+      {{- if default .Values.dnsConfig .Values.apiB2c.dnsConfig }}
+      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.apiB2c.dnsConfig | indent 8 }}
+      {{- end }}
+{{- end }}
