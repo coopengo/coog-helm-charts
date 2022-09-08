@@ -62,7 +62,7 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  postgresql-password: "eGs2OVZWNGsyUg=="
+  postgresql-password: "SGtCZ1ZGdWx0Ng=="
 ---
 # Source: coog/charts/rabbitmq/templates/secrets.yaml
 apiVersion: v1
@@ -79,7 +79,7 @@ metadata:
 type: Opaque
 data:
   rabbitmq-password: "Y2hhbmdlbWU="
-  rabbitmq-erlang-cookie: "RHhxSllQN2Z2VWZkWWRyTHRMUmRoY0NLS1JhWFNBWHY="
+  rabbitmq-erlang-cookie: "cDVscnNObGlZa3kzNTFEMjYwQ01pZ3c4OVZvYUQyUUg="
 ---
 # Source: coog/templates/api-b2c/secrets.yaml
 piVersion: v1
@@ -744,6 +744,27 @@ spec:
     app.kubernetes.io/name: coog-gateway
     app.kubernetes.io/instance: ccas
 ---
+# Source: coog/templates/libroconv/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccas-coog-libroconv
+  labels:
+    app.kubernetes.io/name: coog-libroconv
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 5000
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: coog-libroconv
+    app.kubernetes.io/instance: ccas
+---
 # Source: coog/templates/service.yaml
 apiVersion: v1
 kind: Service
@@ -1009,7 +1030,6 @@ spec:
           ports:
             - name: http
               containerPort: 3000
-              protocol: TCP
           startupProbe:
             failureThreshold: 30
             initialDelaySeconds: 10
@@ -1097,7 +1117,6 @@ spec:
           ports:
             - name: http
               containerPort: 3000
-              protocol: TCP
           startupProbe:
             failureThreshold: 30
             initialDelaySeconds: 10
@@ -1185,7 +1204,6 @@ spec:
           ports:
             - name: http
               containerPort: 3000
-              protocol: TCP
           startupProbe:
             failureThreshold: 30
             initialDelaySeconds: 10
@@ -1264,7 +1282,6 @@ spec:
           ports:
             - name: http
               containerPort: 5000
-              protocol: TCP
           startupProbe:
             failureThreshold: 30
             initialDelaySeconds: 10
@@ -1667,7 +1684,6 @@ spec:
           ports:
             - name: http
               containerPort: 8000
-              protocol: TCP
           startupProbe:
             failureThreshold: 30
             initialDelaySeconds: 10
@@ -1696,6 +1712,84 @@ spec:
             limits:
               cpu: 100m
               memory: 100Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
+---
+# Source: coog/templates/libroconv/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccas-coog-libroconv
+  labels:
+    app.kubernetes.io/name: coog-libroconv
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: coog-libroconv
+      app.kubernetes.io/instance: ccas
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: coog-libroconv
+        helm.sh/chart: coog-22.28.2228
+        app.kubernetes.io/instance: ccas
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "master"
+    spec:
+      imagePullSecrets:
+        - name: docker-registry
+      containers:
+        - name: coog-libroconv
+          image: "cooghub/coog-libroconv:coog-master-latest"
+          imagepullPolicy: "Always"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          ports:
+            - name: http
+              containerPort: 5000
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /liveness
+              port: http
+            failureThreshold: 2
+            initialDelaySeconds: 0
+            periodSeconds: 60
+            successThreshold: 1
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: "/liveness"
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 0
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          resources:
+            limits:
+              cpu: 300m
+              memory: 300Mi
             requests:
               cpu: 50m
               memory: 50Mi
@@ -1746,7 +1840,6 @@ spec:
           ports:
             - name: http
               containerPort: 5000
-              protocol: TCP
           startupProbe:
             failureThreshold: 30
             initialDelaySeconds: 10
@@ -1957,7 +2050,7 @@ spec:
         app.kubernetes.io/version: "3.9.13"
       annotations:
         checksum/config: 5ea800d51a276263166d2827cfcbdd6e4e1361167addc9d4c6345b66675217e4
-        checksum/secret: 78f6646344247292dbf6ce8d4bea9c0cf4ec41541763f4a693cf1d7638a0f23a
+        checksum/secret: c7f62fca54da9aad832dff6ad69687bb2d6f129068f0f77d7e5b40a6de81a5e8
     spec:
       
       serviceAccountName: ccas-rabbitmq
