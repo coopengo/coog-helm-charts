@@ -62,7 +62,7 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  postgresql-password: "NzhSSmdIU3ZYVw=="
+  postgresql-password: "eGs2OVZWNGsyUg=="
 ---
 # Source: coog/charts/rabbitmq/templates/secrets.yaml
 apiVersion: v1
@@ -79,7 +79,7 @@ metadata:
 type: Opaque
 data:
   rabbitmq-password: "Y2hhbmdlbWU="
-  rabbitmq-erlang-cookie: "UkNYcnlwQ3N5eGFDQWxINU1qYWlpRzJITTNsY0Q2Qlc="
+  rabbitmq-erlang-cookie: "RHhxSllQN2Z2VWZkWWRyTHRMUmRoY0NLS1JhWFNBWHY="
 ---
 # Source: coog/templates/api-b2c/secrets.yaml
 piVersion: v1
@@ -660,6 +660,27 @@ spec:
     app.kubernetes.io/name: coog-api
     app.kubernetes.io/instance: ccas
 ---
+# Source: coog/templates/b2c/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccas-coog-b2c
+  labels:
+    app.kubernetes.io/name: coog-b2c
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: coog-b2c
+    app.kubernetes.io/instance: ccas
+---
 # Source: coog/templates/celery/service.yaml
 apiVersion: v1
 kind: Service
@@ -1196,6 +1217,85 @@ spec:
             requests:
               cpu: 50m
               memory: 50Mi
+---
+# Source: coog/templates/b2c/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccas-coog-b2c
+  labels:
+    app.kubernetes.io/name: coog-b2c
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: coog-b2c
+      app.kubernetes.io/instance: ccas
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: coog-b2c
+        helm.sh/chart: coog-22.28.2228
+        app.kubernetes.io/instance: ccas
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "master"
+    spec:
+      imagePullSecrets:
+        - name: docker-registry
+      containers:
+        - name: coog-b2c
+          image: "cooghub/coog-app-b2c:coog-master-latest"
+          imagepullPolicy: "Always"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          ports:
+            - name: http
+              containerPort: 5000
+              protocol: TCP
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          resources:
+            limits:
+              cpu: 50m
+              memory: 50Mi
+            requests:
+              cpu: 10m
+              memory: 30Mi
 ---
 # Source: coog/templates/celery/deployment.yaml
 apiVersion: apps/v1
@@ -1857,7 +1957,7 @@ spec:
         app.kubernetes.io/version: "3.9.13"
       annotations:
         checksum/config: 5ea800d51a276263166d2827cfcbdd6e4e1361167addc9d4c6345b66675217e4
-        checksum/secret: 309bf8a335c0825e4a4ddf63e65062e4b80e9ff9b0a4bb341ca8711e67c82121
+        checksum/secret: 78f6646344247292dbf6ce8d4bea9c0cf4ec41541763f4a693cf1d7638a0f23a
     spec:
       
       serviceAccountName: ccas-rabbitmq
@@ -2012,6 +2112,45 @@ spec:
         resources:
           requests:
             storage: "8Gi"
+---
+# Source: coog/templates/b2c/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ccas-coog-b2c
+  labels:
+    app.kubernetes.io/name: coog-b2c
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/whitelist-source-range: "127.0.0.1/32"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/send-timeout: "3600"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+spec:
+  tls:
+    - hosts:
+        - "coog.local"
+      secretName: coog.local-tls
+  rules:
+    - host: "coog.local"
+      http:
+        paths:
+        - path: "/customers/myspace(/|$)(.*)"
+          pathType: Prefix
+          backend:
+            service:
+              name: ccas-coog-b2c
+              port:
+                name: http
 ---
 # Source: coog/templates/gateway/ingress.yaml
 apiVersion: networking.k8s.io/v1

@@ -5,11 +5,10 @@ metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  type: {{ .Values.b2c.service.type }}
+  type: ClusterIP
   ports:
-    - port: {{ .Values.b2c.service.port }}
+    - name: http
+      port: 80
       targetPort: http
-      protocol: TCP
-      name: http
   selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
 {{- end }}

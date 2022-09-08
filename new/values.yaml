@@ -540,6 +540,10 @@ apiIdentityManager:
 
 ### Front Additional components
 
+##################
+# Components B2B #
+##################
+
 b2b:
   enabled: false
 
@@ -574,9 +578,74 @@ b2b:
 
 
 
-apiB2c:
+web:
   enabled: false
 
+  image:
+    # -- web image repository
+    name: coog-web
+
+  # -- Configure environement variables for this component
+  config:
+    COOG_API_API_PATH: /web/api
+    COOG_API_APP_PATH: /web
+
+  securityContext: {}
+    # runAsUser: ""
+
+  # -- web containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 500m
+      memory: 200Mi
+    requests:
+      cpu: 30m
+      memory: 30Mi
+
+
+##################
+# Components B2C #
+##################
+
+b2c:
+  # -- Deploy b2c container(s)
+  enabled: true
+
+  image:
+    # -- b2c image repository
+    name: coog-app-b2c
+
+  ingress:
+    # -- Default host for the ingress resource for gateway containers
+    hosts:
+      - paths:
+          - /customers/myspace(/|$)(.*)
+    
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+    
+    nginx:
+      whiteList:
+        publicCidr: []
+
+  securityContext: {}
+    # runAsUser: ""
+
+  # -- b2c containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 50m
+      memory: 50Mi
+    requests:
+      cpu: 10m
+      memory: 30Mi
+
+
+# -- Is enable if one off following front component is enable :
+# - b2c
+# - customerBackend
+# - customerFrontend
+apiB2c:
   image:
     # -- apiB2c image repository
     name: coog-api-b2c
@@ -595,32 +664,6 @@ apiB2c:
     requests:
       cpu: 20m
       memory: 25Mi
-
-
-
-web:
-  enabled: false
-
-  image:
-    # -- web image repository
-    name: web
-
-  # -- Configure environement variables for this component
-  config:
-    COOG_API_API_PATH: /web/api
-    COOG_API_APP_PATH: /web
-
-  securityContext: {}
-    # runAsUser: ""
-
-  # -- web containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 500m
-      memory: 200Mi
-    requests:
-      cpu: 30m
-      memory: 30Mi
 
 ###########################################################
 
@@ -643,40 +686,6 @@ apiReferential:
       cpu: 100m
       memory: 250Mi
 
-
-b2c:
-  # -- Deploy b2c container(s)
-  enabled: false
-
-  image:
-    # -- b2c image repository
-    name: app-b2c
-
-  ingress:
-    # -- Enable ingress controller resource for b2c containers'
-    enabled: false
-    # -- Ingress annotations for b2c containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for b2c containers'
-    hosts:
-      - host: app-b2c.local
-        paths: []
-    # -- TLS configuration for b2c containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-
-  # -- b2c containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 50m
-      memory: 50Mi
-    requests:
-      cpu: 10m
-      memory: 30Mi
 
 
 unoconv:
