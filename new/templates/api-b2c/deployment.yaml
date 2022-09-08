@@ -1,5 +1,5 @@
 {{- if (or .Values.apiB2c.enabled 
-          .Values.appB2c.enabled
+          .Values.b2c.enabled
           .Values.customerBackend.enabled
           .Values.customerFrontend.enabled)
 -}}

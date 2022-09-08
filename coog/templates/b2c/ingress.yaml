@@ -1,18 +1,18 @@
-{{- if .Values.appB2c.enabled -}}
-{{- if .Values.appB2c.ingress.enabled -}}
+{{- if .Values.b2c.enabled -}}
+{{- if .Values.b2c.ingress.enabled -}}
 apiVersion: {{ include "common.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
-  {{- with .Values.appB2c.ingress.annotations }}
+  {{- with .Values.b2c.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-{{- if .Values.appB2c.ingress.tls }}
+{{- if .Values.b2c.ingress.tls }}
   tls:
-  {{- range .Values.appB2c.ingress.tls }}
+  {{- range .Values.b2c.ingress.tls }}
     - hosts:
       {{- range .hosts }}
         - {{ . | quote }}
@@ -21,7 +21,7 @@ spec:
   {{- end }}
 {{- end }}
   rules:
-  {{- range .Values.appB2c.ingress.hosts }}
+  {{- range .Values.b2c.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:

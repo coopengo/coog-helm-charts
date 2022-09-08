@@ -1,13 +1,13 @@
-{{- if .Values.appB2c.enabled -}}
+{{- if .Values.b2c.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  type: {{ .Values.appB2c.service.type }}
+  type: {{ .Values.b2c.service.type }}
   ports:
-    - port: {{ .Values.appB2c.service.port }}
+    - port: {{ .Values.b2c.service.port }}
       targetPort: http
       protocol: TCP
       name: http

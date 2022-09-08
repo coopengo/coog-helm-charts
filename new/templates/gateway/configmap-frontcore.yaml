@@ -1,7 +1,7 @@
 {{- if (or .Values.frontCore.enabled
           .Values.apiB2c.enabled
           .Values.apiReferential.enabled
-          .Values.appB2c.enabled
+          .Values.b2c.enabled
           .Values.b2b.enabled
           .Values.customerBackend.enabled
           .Values.customerFrontend.enabled

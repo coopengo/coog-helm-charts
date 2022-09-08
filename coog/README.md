@@ -87,24 +87,24 @@ A Helm chart for Coog
 | apiReferential.service.port | int | `80` |  |
 | apiReferential.service.type | string | `"ClusterIP"` |  |
 | apiReferential.tolerations | list | `[]` | Tolerations for pod assignment |
-| appB2c.affinity | object | `{}` | Affinity for pod assignment |
-| appB2c.enabled | bool | `false` | Deploy appB2c container(s) |
-| appB2c.fullnameOverride | string | `""` |  |
-| appB2c.image.pullPolicy | string | `"Always"` | appB2c image pull policy |
-| appB2c.image.repository | string | `"coopengohub/app-b2c"` | appB2c image repository |
-| appB2c.image.tag | string | `"coog-2.10.2048"` | appB2c image tag |
-| appB2c.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
-| appB2c.ingress.annotations | object | `{}` | Ingress annotations for appB2c containers' |
-| appB2c.ingress.enabled | bool | `false` | Enable ingress controller resource for appB2c containers' |
-| appB2c.ingress.hosts | list | `[{"host":"app-b2c.local","paths":[]}]` | Default host for the ingress resource for appB2c containers' |
-| appB2c.ingress.tls | list | `[]` | TLS configuration for appB2c containers' |
-| appB2c.nameOverride | string | `""` |  |
-| appB2c.nodeSelector | object | `{}` | Node labels for pod assignment |
-| appB2c.replicaCount | int | `1` | Number of appB2c Pods to run |
-| appB2c.resources | object | `{"limits":{"cpu":"50m","memory":"50Mi"},"requests":{"cpu":"10m","memory":"30Mi"}}` | appB2c containers' resource requests and limits |
-| appB2c.service.port | int | `80` |  |
-| appB2c.service.type | string | `"ClusterIP"` |  |
-| appB2c.tolerations | list | `[]` | Tolerations for pod assignment |
+| b2c.affinity | object | `{}` | Affinity for pod assignment |
+| b2c.enabled | bool | `false` | Deploy b2c container(s) |
+| b2c.fullnameOverride | string | `""` |  |
+| b2c.image.pullPolicy | string | `"Always"` | b2c image pull policy |
+| b2c.image.repository | string | `"coopengohub/app-b2c"` | b2c image repository |
+| b2c.image.tag | string | `"coog-2.10.2048"` | b2c image tag |
+| b2c.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
+| b2c.ingress.annotations | object | `{}` | Ingress annotations for b2c containers' |
+| b2c.ingress.enabled | bool | `false` | Enable ingress controller resource for b2c containers' |
+| b2c.ingress.hosts | list | `[{"host":"app-b2c.local","paths":[]}]` | Default host for the ingress resource for b2c containers' |
+| b2c.ingress.tls | list | `[]` | TLS configuration for b2c containers' |
+| b2c.nameOverride | string | `""` |  |
+| b2c.nodeSelector | object | `{}` | Node labels for pod assignment |
+| b2c.replicaCount | int | `1` | Number of b2c Pods to run |
+| b2c.resources | object | `{"limits":{"cpu":"50m","memory":"50Mi"},"requests":{"cpu":"10m","memory":"30Mi"}}` | b2c containers' resource requests and limits |
+| b2c.service.port | int | `80` |  |
+| b2c.service.type | string | `"ClusterIP"` |  |
+| b2c.tolerations | list | `[]` | Tolerations for pod assignment |
 | batch.migquottosr.enabled | bool | `false` |  |
 | batch.migquottosr.image.pullPolicy | string | `"Always"` |  |
 | batch.migquottosr.image.repository | string | `"coopengohub/migquottosr"` |  |

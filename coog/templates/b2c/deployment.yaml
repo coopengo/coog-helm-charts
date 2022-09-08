@@ -1,11 +1,11 @@
-{{- if .Values.appB2c.enabled -}}
+{{- if .Values.b2c.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ default .Values.replicaCount .Values.appB2c.replicaCount }}
+  replicas: {{ default .Values.replicaCount .Values.b2c.replicaCount }}
 {{- if not .Values.quota.rolling_update }}
   strategy:
     type: Recreate
@@ -16,14 +16,14 @@ spec:
     metadata:
       labels: {{- include "common.labels.standard" . | nindent 8 }}
     spec:
-    {{- with .Values.appB2c.imagePullSecrets }}
+    {{- with .Values.b2c.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
     {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ .Values.appB2c.image.repository }}:{{ default .Values.image.tag .Values.appB2c.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.appB2c.image.pullPolicy | quote }}
+          image: "{{ .Values.b2c.image.repository }}:{{ default .Values.image.tag .Values.b2c.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.b2c.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -32,7 +32,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ default .Values.securityContext.runAsUser .Values.appB2c.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.b2c.securityContext.runAsUser }}
           ports:
             - name: http
               containerPort: 5000
@@ -46,24 +46,24 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.appB2c.resources | nindent 12 }}
-      {{- with .Values.appB2c.nodeSelector }}
+            {{- toYaml .Values.b2c.resources | nindent 12 }}
+      {{- with .Values.b2c.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.appB2c.affinity }}
+    {{- with .Values.b2c.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-    {{- with .Values.appB2c.tolerations }}
+    {{- with .Values.b2c.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
     {{- end }}
-{{- if .Values.appB2c.dnsPolicy }}
-      dnsPolicy: {{ .Values.appB2c.dnsPolicy }}
+{{- if .Values.b2c.dnsPolicy }}
+      dnsPolicy: {{ .Values.b2c.dnsPolicy }}
 {{- end }}
-{{- if .Values.appB2c.dnsConfig }}
+{{- if .Values.b2c.dnsConfig }}
       dnsConfig:
-{{ toYaml .Values.appB2c.dnsConfig | indent 8 }}
+{{ toYaml .Values.b2c.dnsConfig | indent 8 }}
 {{- end -}}
 {{- end }}

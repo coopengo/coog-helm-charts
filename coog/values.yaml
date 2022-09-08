@@ -291,18 +291,18 @@ apiReferential:
   tolerations: []
 
 
-appB2c:
-  # -- Deploy appB2c container(s)
+b2c:
+  # -- Deploy b2c container(s)
   enabled: false
-  # -- 	Number of appB2c Pods to run
+  # -- 	Number of b2c Pods to run
   replicaCount: 1
 
   image:
-    # -- appB2c image repository
+    # -- b2c image repository
     repository: coopengohub/app-b2c
-    # -- appB2c image tag
+    # -- b2c image tag
     tag: coog-2.10.2048
-    # -- appB2c image pull policy
+    # -- b2c image pull policy
     pullPolicy: Always
 
   # -- Specify docker-registry secret names as an array
@@ -316,23 +316,23 @@ appB2c:
     port: 80
 
   ingress:
-    # -- Enable ingress controller resource for appB2c containers'
+    # -- Enable ingress controller resource for b2c containers'
     enabled: false
-    # -- Ingress annotations for appB2c containers'
+    # -- Ingress annotations for b2c containers'
     annotations: {}
       # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for appB2c containers'
+    # -- Default host for the ingress resource for b2c containers'
     hosts:
       - host: app-b2c.local
         paths: []
-    # -- TLS configuration for appB2c containers'
+    # -- TLS configuration for b2c containers'
     tls: []
     #  - secretName: chart-example-tls
     #    hosts:
     #      - chart-example.local
 
-  # -- appB2c containers' resource requests and limits
+  # -- b2c containers' resource requests and limits
   resources:
     limits:
       cpu: 50m
