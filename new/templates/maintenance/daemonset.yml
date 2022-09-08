@@ -24,7 +24,6 @@ spec:
           ports:
             - name: http
               containerPort: 8080
-              protocol: TCP
           envFrom:
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}

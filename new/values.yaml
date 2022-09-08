@@ -1,4 +1,6 @@
-# Global configuration applied to all components
+#############################################################################################################################
+#                                      Global configuration applied to all components                                       #
+#############################################################################################################################
 
 # -- Number of pod for all components. It can be customized for each component.
 # e.g:
@@ -161,6 +163,8 @@ tolerations: []
 affinity: {}
 
 #############################################################################################################################
+#                                            Tools / Options                                                                #
+#############################################################################################################################
 
 quota:
   enabled: false
@@ -198,7 +202,8 @@ maintenanceMode:
     annotations: {}
 
 #############################################################################################################################
-# Dependencies
+#                                            External dependencies                                                          #
+#############################################################################################################################
 
 # -- Mongodb dependency parameters.
 # Ref: https://artifacthub.io/packages/helm/bitnami/mongodb/10.30.12
@@ -253,7 +258,8 @@ rabbitmq:
 
 
 #############################################################################################################################
-# coog components mandatory
+#                                            Coog minimum components                                                        #
+#############################################################################################################################
 
 coog:
   image:
@@ -428,10 +434,44 @@ cron:
     successThreshold: 1
     failureThreshold: 2
   
+#############################################################################################################################
+#                                            Back Additional components                                                     #
+#############################################################################################################################
+
+libroconv:
+  # -- Deploy libroconv container(s)
+  enabled: false
+
+  image:
+    # -- libroconv image repository
+    name: coog-libroconv
+
+  # -- libroconv containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 300m
+      memory: 300Mi
+    requests:
+      cpu: 50m
+      memory: 50Mi
+
+  livenessProbe:
+    initialDelaySeconds: 0
+    periodSeconds: 60
+    timeoutSeconds: 30
+    successThreshold: 1
+    failureThreshold: 2
+  readinessProbe:
+    initialDelaySeconds: 0
+    periodSeconds: 30
+    timeoutSeconds: 30
+    successThreshold: 1
+    failureThreshold: 3
 
 
-
-### Front components :
+#############################################################################################################################
+#                                            Front Minimum components                                                       #
+#############################################################################################################################
 
 # -- FrontCore
 ## If one frontend component is enabled: true, it will enable by default the frontCore components (gateway, api & api-identity-manager)
@@ -538,11 +578,13 @@ apiIdentityManager:
       memory: 30Mi
 
 
-### Front Additional components
+#############################################################################################################################
+#                                            Front Additional components                                                    #
+#############################################################################################################################
 
-##################
-# Components B2B #
-##################
+##############################
+#      Components B2B        #
+##############################
 
 b2b:
   enabled: false
@@ -603,9 +645,9 @@ web:
       memory: 30Mi
 
 
-##################
-# Components B2C #
-##################
+##############################
+#      Components B2C        #
+##############################
 
 b2c:
   # -- Deploy b2c container(s)
@@ -686,47 +728,6 @@ apiReferential:
       cpu: 100m
       memory: 250Mi
 
-
-
-unoconv:
-  # -- Deploy unoconv container(s)
-  enabled: false
-  # -- 	Number of unoconv Pods to run
-  replicaCount: 1
-
-  image:
-    # -- unoconv image repository
-    name: unoconv
-    # -- unoconv image tag
-    tag: dgw-0.0.1
-    # -- unoconv image pull policy
-    pullPolicy: Always
-
-  service:
-    type: ClusterIP
-    port: 5000
-
-  # -- unoconv containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 300m
-      memory: 300Mi
-    requests:
-      cpu: 50m
-      memory: 50Mi
-
-  livenessProbe:
-    initialDelaySeconds: 0
-    periodSeconds: 60
-    timeoutSeconds: 30
-    successThreshold: 1
-    failureThreshold: 1
-  readinessProbe:
-    initialDelaySeconds: 0
-    periodSeconds: 30
-    timeoutSeconds: 30
-    successThreshold: 1
-    failureThreshold: 3
 
 
 # B2C Frontend

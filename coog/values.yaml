@@ -351,18 +351,18 @@ b2c:
   tolerations: []
 
 
-unoconv:
-  # -- Deploy unoconv container(s)
+libroconv:
+  # -- Deploy libroconv container(s)
   enabled: true
-  # -- 	Number of unoconv Pods to run
+  # -- 	Number of libroconv Pods to run
   replicaCount: 1
 
   image:
-    # -- unoconv image repository
-    repository: coopengohub/unoconv
-    # -- unoconv image tag
+    # -- libroconv image repository
+    repository: coopengohub/libroconv
+    # -- libroconv image tag
     tag: dgw-0.0.1
-    # -- unoconv image pull policy
+    # -- libroconv image pull policy
     pullPolicy: Always
 
   # -- Specify docker-registry secret names as an array
@@ -375,7 +375,7 @@ unoconv:
     type: ClusterIP
     port: 5000
 
-  # -- unoconv containers' resource requests and limits
+  # -- libroconv containers' resource requests and limits
   resources:
     limits:
       cpu: 300m

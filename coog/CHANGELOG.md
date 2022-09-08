@@ -108,14 +108,14 @@
 
 ### Fix
 
--  Fix default value for unoconv liveness/readiness
+-  Fix default value for libroconv liveness/readiness
 
 
 ## [2.2.0] - 2020-11-17
 
 ### Added
 
--  New unoconv realease
+-  New libroconv realease
 
 ## [2.1.4] - 2020-11-12
 

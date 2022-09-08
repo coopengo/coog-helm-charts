@@ -300,7 +300,7 @@ data:
   COOG_DB_NAME: ccas
   DB_NAME: ccas # duplicate of COOG_DB_NAME
   # Tryton
-  TRYTOND_REPORT__API: http://ccas-coog-libroconv:5000/unoconv/{oext}
+  TRYTOND_REPORT__API: http://ccas-coog-libroconv:5000/libroconv/{oext}
   TRYTOND_CACHE__RECORD: 50000
   TRYTOND_CACHE__CLEAN_TIMEOUT: 0
   COOG_IWC: 1

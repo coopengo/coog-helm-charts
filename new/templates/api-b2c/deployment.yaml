@@ -47,7 +47,6 @@ spec:
           ports:
             - name: http
               containerPort: 3000
-              protocol: TCP
           startupProbe: {{- toYaml (default .Values.startupProbe .Values.apiB2c.startupProbe) | nindent 12 }}
           livenessProbe:
             httpGet:

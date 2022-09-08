@@ -378,30 +378,30 @@ A Helm chart for Coog
 | static.service.port | int | `80` |  |
 | static.service.type | string | `"ClusterIP"` |  |
 | static.tolerations | list | `[]` | Tolerations for pod assignment |
-| unoconv.affinity | object | `{}` | Affinity for pod assignment |
-| unoconv.enabled | bool | `true` | Deploy unoconv container(s) |
-| unoconv.fullnameOverride | string | `""` |  |
-| unoconv.image.pullPolicy | string | `"Always"` | unoconv image pull policy |
-| unoconv.image.repository | string | `"coopengohub/unoconv"` | unoconv image repository |
-| unoconv.image.tag | string | `"dgw-0.0.1"` | unoconv image tag |
-| unoconv.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
-| unoconv.livenessProbe.failureThreshold | int | `1` |  |
-| unoconv.livenessProbe.initialDelaySeconds | int | `0` |  |
-| unoconv.livenessProbe.periodSeconds | int | `60` |  |
-| unoconv.livenessProbe.successThreshold | int | `1` |  |
-| unoconv.livenessProbe.timeoutSeconds | int | `30` |  |
-| unoconv.nameOverride | string | `""` |  |
-| unoconv.nodeSelector | object | `{}` | Node labels for pod assignment |
-| unoconv.readinessProbe.failureThreshold | int | `3` |  |
-| unoconv.readinessProbe.initialDelaySeconds | int | `0` |  |
-| unoconv.readinessProbe.periodSeconds | int | `30` |  |
-| unoconv.readinessProbe.successThreshold | int | `1` |  |
-| unoconv.readinessProbe.timeoutSeconds | int | `30` |  |
-| unoconv.replicaCount | int | `1` | Number of unoconv Pods to run |
-| unoconv.resources | object | `{"limits":{"cpu":"300m","memory":"300Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | unoconv containers' resource requests and limits |
-| unoconv.service.port | int | `5000` |  |
-| unoconv.service.type | string | `"ClusterIP"` |  |
-| unoconv.tolerations | list | `[]` | Tolerations for pod assignment |
+| libroconv.affinity | object | `{}` | Affinity for pod assignment |
+| libroconv.enabled | bool | `true` | Deploy libroconv container(s) |
+| libroconv.fullnameOverride | string | `""` |  |
+| libroconv.image.pullPolicy | string | `"Always"` | libroconv image pull policy |
+| libroconv.image.repository | string | `"coopengohub/libroconv"` | libroconv image repository |
+| libroconv.image.tag | string | `"dgw-0.0.1"` | libroconv image tag |
+| libroconv.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
+| libroconv.livenessProbe.failureThreshold | int | `1` |  |
+| libroconv.livenessProbe.initialDelaySeconds | int | `0` |  |
+| libroconv.livenessProbe.periodSeconds | int | `60` |  |
+| libroconv.livenessProbe.successThreshold | int | `1` |  |
+| libroconv.livenessProbe.timeoutSeconds | int | `30` |  |
+| libroconv.nameOverride | string | `""` |  |
+| libroconv.nodeSelector | object | `{}` | Node labels for pod assignment |
+| libroconv.readinessProbe.failureThreshold | int | `3` |  |
+| libroconv.readinessProbe.initialDelaySeconds | int | `0` |  |
+| libroconv.readinessProbe.periodSeconds | int | `30` |  |
+| libroconv.readinessProbe.successThreshold | int | `1` |  |
+| libroconv.readinessProbe.timeoutSeconds | int | `30` |  |
+| libroconv.replicaCount | int | `1` | Number of libroconv Pods to run |
+| libroconv.resources | object | `{"limits":{"cpu":"300m","memory":"300Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | libroconv containers' resource requests and limits |
+| libroconv.service.port | int | `5000` |  |
+| libroconv.service.type | string | `"ClusterIP"` |  |
+| libroconv.tolerations | list | `[]` | Tolerations for pod assignment |
 | web.affinity | object | `{}` | Affinity for pod assignment |
 | web.enabled | bool | `true` | Deploy web container(s) |
 | web.fullnameOverride | string | `""` |  |
