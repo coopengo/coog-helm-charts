@@ -446,6 +446,9 @@ libroconv:
     # -- libroconv image repository
     name: coog-libroconv
 
+  securityContext: {}
+    # runAsUser: ""
+
   # -- libroconv containers' resource requests and limits
   resources:
     limits:
