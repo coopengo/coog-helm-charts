@@ -1,4 +1,19 @@
 ---
+# Source: coog/charts/mongodb/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: ccas-mongodb
+  namespace: default
+  labels:
+    app.kubernetes.io/name: mongodb
+    helm.sh/chart: mongodb-10.30.12
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "4.4.11"
+secrets:
+  - name: ccas-mongodb
+---
 # Source: coog/charts/rabbitmq/templates/serviceaccount.yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -15,6 +30,24 @@ automountServiceAccountToken: true
 secrets:
   - name: ccas-rabbitmq
 ---
+# Source: coog/charts/mongodb/templates/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ccas-mongodb
+  namespace: default
+  labels:
+    app.kubernetes.io/name: mongodb
+    helm.sh/chart: mongodb-10.30.12
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "4.4.11"
+    app.kubernetes.io/component: mongodb
+type: Opaque
+data:
+  mongodb-root-password: "YWRtaW4="
+  mongodb-passwords: "YWRtaW4="
+---
 # Source: coog/charts/postgresql/templates/secrets.yaml
 apiVersion: v1
 kind: Secret
@@ -29,7 +62,7 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  postgresql-password: "cmZZdk5MeGhjZw=="
+  postgresql-password: "NzhSSmdIU3ZYVw=="
 ---
 # Source: coog/charts/rabbitmq/templates/secrets.yaml
 apiVersion: v1
@@ -45,8 +78,23 @@ metadata:
     app.kubernetes.io/version: "3.9.13"
 type: Opaque
 data:
-  rabbitmq-password: "YTZHVUlsakNoYQ=="
-  rabbitmq-erlang-cookie: "M3hwV2JzSUltZlhBNUVZNkRKYk9MSkQyR0ZYQXdCeUk="
+  rabbitmq-password: "Y2hhbmdlbWU="
+  rabbitmq-erlang-cookie: "UkNYcnlwQ3N5eGFDQWxINU1qYWlpRzJITTNsY0Q2Qlc="
+---
+# Source: coog/templates/api-b2c/secrets.yaml
+piVersion: v1
+kind: Secret
+metadata:
+  name: ccas-coog-api-b2c-configuration
+  labels:
+    app.kubernetes.io/name: coog-api-b2c
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+type: Opaque
+stringData:
+  COOG_DOCUMENT_TOKEN_SECRET: changeme
 ---
 # Source: coog/templates/gateway/secret-mongodb.yaml
 apiVersion: v1
@@ -110,8 +158,8 @@ metadata:
     app.kubernetes.io/version: "master"
 type: Opaque
 stringData:
-  COOG_DB_USER: ""
-  COOG_DB_PASSWORD: ""
+  COOG_DB_USER: "coog"
+  COOG_DB_PASSWORD: "changeme"
 ---
 # Source: coog/templates/secret.yaml
 apiVersion: v1
@@ -126,10 +174,27 @@ metadata:
     app.kubernetes.io/version: "master"
 type: Opaque
 stringData:
-  TRYTOND_DATABASE__URI: "postgresql://:@ccas-postgresql:5432/ccas"
-  TRYTOND_ASYNC__CELERY: "amqp://user:@ccas-rabbitmq:5672"
-  TRYTOND_ASYNC_CELERY: "amqp://user:@ccas-rabbitmq:5672" # duplicate of TRYTOND_ASYNC__CELERY
+  TRYTOND_DATABASE__URI: "postgresql://coog:changeme@ccas-postgresql:5432/ccas"
+  TRYTOND_ASYNC__CELERY: "amqp://coog:changeme@ccas-rabbitmq:5672"
+  TRYTOND_ASYNC_CELERY: "amqp://coog:changeme@ccas-rabbitmq:5672" # duplicate of TRYTOND_ASYNC__CELERY
+  COOG_DOCUMENT_TOKEN_SECRET: "changeme"
   TRYTOND_SESSION__PASSPHRASE: "changeme"
+---
+# Source: coog/templates/web/secret-mongodb.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ccas-coog-mongodb
+  labels:
+    app.kubernetes.io/name: coog-web
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+type: Opaque
+stringData:
+  COOG_API_MONGO_USER: "root"
+  COOG_API_MONGO_PASSWORD: "admin"
 ---
 # Source: coog/charts/rabbitmq/templates/configuration.yaml
 apiVersion: v1
@@ -147,7 +212,7 @@ data:
   rabbitmq.conf: |-
     ## Username and password
     ##
-    default_user = user
+    default_user = coog
     default_pass = CHANGEME
     ## Clustering
     ##
@@ -162,6 +227,19 @@ data:
     loopback_users.guest = false
     consumer_timeout = 172800000
     loopback_users.guest = false
+---
+# Source: coog/templates/api-b2c/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ccas-coog-api-b2c-configuration
+  labels:
+    app.kubernetes.io/name: coog-api-b2c
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+data:
 ---
 # Source: coog/templates/api-identity-manager/configmap.yaml
 apiVersion: v1
@@ -217,10 +295,10 @@ metadata:
     app.kubernetes.io/version: "master"
 data:
   # Database
-  COOG_POSTGRES_HOST: 
+  COOG_POSTGRES_HOST: ccas-postgresql
   COOG_POSTGRES_PORT: 5432
-  COOG_DB_NAME: 
-  DB_NAME:  # duplicate of COOG_DB_NAME
+  COOG_DB_NAME: ccas
+  DB_NAME: ccas # duplicate of COOG_DB_NAME
   # Tryton
   TRYTOND_REPORT__API: http://ccas-coog-libroconv:5000/unoconv/{oext}
   TRYTOND_CACHE__RECORD: 50000
@@ -266,7 +344,7 @@ data:
   MONGO_HOST: ccas-mongodb
   MONGO_PORT: 27017
   MONGO_DB_NAME: api-core-services
-  COOG_DB_NAME: 
+  COOG_DB_NAME: ccas
   COOG_URL: http://ccas-coog
   JWT_EXPIRATION: 3600
 ---
@@ -297,6 +375,26 @@ data:
   COOG_TOKEN_MODULE: true
   FACEBOOK_MODULE: false
   GOOGLE_MODULE: false
+---
+# Source: coog/charts/mongodb/templates/standalone/pvc.yaml
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: ccas-mongodb-standalone
+  namespace: default
+  labels:
+    app.kubernetes.io/name: mongodb-standalone
+    helm.sh/chart: mongodb-10.30.12
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "4.4.11"
+    app.kubernetes.io/component: mongodb
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "8Gi"
 ---
 # Source: coog/templates/coog-pvc.yaml
 apiVersion: v1
@@ -350,6 +448,31 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: ccas-rabbitmq-endpoint-reader
+---
+# Source: coog/charts/mongodb/templates/standalone/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccas-mongodb-standalone
+  namespace: default
+  labels:
+    app.kubernetes.io/name: mongodb-standalone
+    helm.sh/chart: mongodb-10.30.12
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "4.4.11"
+    app.kubernetes.io/component: mongodb
+spec:
+  type: ClusterIP
+  ports:
+    - name: mongodb
+      port: 27017
+      targetPort: mongodb
+      nodePort: null
+  selector:
+    app.kubernetes.io/name: mongodb-standalone
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/component: mongodb
 ---
 # Source: coog/charts/postgresql/templates/svc-headless.yaml
 apiVersion: v1
@@ -474,6 +597,27 @@ spec:
     app.kubernetes.io/name: rabbitmq
     app.kubernetes.io/instance: ccas
 ---
+# Source: coog/templates/api-b2c/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccas-coog-api-b2c
+  labels:
+    app.kubernetes.io/name: coog-api-b2c
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: coog-api-b2c
+    app.kubernetes.io/instance: ccas
+---
 # Source: coog/templates/api-identity-manager/service.yaml
 apiVersion: v1
 kind: Service
@@ -514,27 +658,6 @@ spec:
       targetPort: http
   selector:
     app.kubernetes.io/name: coog-api
-    app.kubernetes.io/instance: ccas
----
-# Source: coog/templates/b2b/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: ccas-coog-b2b
-  labels:
-    app.kubernetes.io/name: coog-b2b
-    helm.sh/chart: coog-22.28.2228
-    app.kubernetes.io/instance: ccas
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: "master"
-spec:
-  type: ClusterIP
-  ports:
-    - name: http
-      port: 80
-      targetPort: http
-  selector:
-    app.kubernetes.io/name: coog-b2b
     app.kubernetes.io/instance: ccas
 ---
 # Source: coog/templates/celery/service.yaml
@@ -642,6 +765,262 @@ spec:
     app.kubernetes.io/name: coog-static
     app.kubernetes.io/instance: ccas
 ---
+# Source: coog/charts/mongodb/templates/standalone/dep-sts.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccas-mongodb-standalone
+  namespace: default
+  labels:
+    app.kubernetes.io/name: mongodb-standalone
+    helm.sh/chart: mongodb-10.30.12
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "4.4.11"
+    app.kubernetes.io/component: mongodb
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: mongodb-standalone
+      app.kubernetes.io/instance: ccas
+      app.kubernetes.io/component: mongodb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: mongodb-standalone
+        helm.sh/chart: mongodb-10.30.12
+        app.kubernetes.io/instance: ccas
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "4.4.11"
+        app.kubernetes.io/component: mongodb
+    spec:
+      
+      serviceAccountName: ccas-mongodb-standalone
+      affinity:
+        podAffinity:
+          
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app.kubernetes.io/name: mongodb-standalone
+                    app.kubernetes.io/instance: ccas
+                    app.kubernetes.io/component: mongodb
+                namespaces:
+                  - "default"
+                topologyKey: kubernetes.io/hostname
+              weight: 1
+        nodeAffinity:
+          
+      securityContext:
+        fsGroup: 1001
+        sysctls: []
+      initContainers:
+        - name: volume-permissions
+          image: docker.io/bitnami/bitnami-shell:10-debian-10-r299
+          imagePullPolicy: "IfNotPresent"
+          command:
+            - /bin/bash
+            - -ec
+          args:
+            - |
+              mkdir -p /bitnami/mongodb
+              chown -R "1001:1001" "/bitnami/mongodb"
+          securityContext:
+            runAsUser: 0
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 50m
+              memory: 150Mi
+          volumeMounts:
+            - name: datadir
+              mountPath: /bitnami/mongodb
+      containers:
+        - name: mongodb
+          image: docker.io/bitnami/mongodb:4.4.11-debian-10-r5
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: MONGODB_EXTRA_USERNAMES
+              value: "root"
+            - name: MONGODB_EXTRA_DATABASES
+              value: "api-core-services"
+            - name: MONGODB_EXTRA_PASSWORDS
+              valueFrom:
+                secretKeyRef:
+                  name: ccas-mongodb-standalone
+                  key: mongodb-passwords
+            - name: MONGODB_ROOT_USER
+              value: "root"
+            - name: MONGODB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: ccas-mongodb-standalone
+                  key: mongodb-root-password
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "no"
+            - name: MONGODB_SYSTEM_LOG_VERBOSITY
+              value: "0"
+            - name: MONGODB_DISABLE_SYSTEM_LOG
+              value: "no"
+            - name: MONGODB_DISABLE_JAVASCRIPT
+              value: "no"
+            - name: MONGODB_ENABLE_JOURNAL
+              value: "yes"
+            - name: MONGODB_ENABLE_IPV6
+              value: "no"
+            - name: MONGODB_ENABLE_DIRECTORY_PER_DB
+              value: "no"
+          ports:
+            - name: mongodb
+              containerPort: 27017
+          livenessProbe:
+            exec:
+              command:
+                - mongo
+                - --disableImplicitSessions
+                - --eval
+                - "db.adminCommand('ping')"
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          readinessProbe:
+            exec:
+              command:
+                - bash
+                - -ec
+                - |
+                  # Run the proper check depending on the version
+                  [[ $(mongo --version | grep "MongoDB shell") =~ ([0-9]+\.[0-9]+\.[0-9]+) ]] && VERSION=${BASH_REMATCH[1]}
+                  . /opt/bitnami/scripts/libversion.sh
+                  VERSION_MAJOR="$(get_sematic_version "$VERSION" 1)"
+                  VERSION_MINOR="$(get_sematic_version "$VERSION" 2)"
+                  VERSION_PATCH="$(get_sematic_version "$VERSION" 3)"
+                  if [[ "$VERSION_MAJOR" -ge 4 ]] && [[ "$VERSION_MINOR" -ge 4 ]] && [[ "$VERSION_PATCH" -ge 2 ]]; then
+                      mongo --disableImplicitSessions $TLS_OPTIONS --eval 'db.hello().isWritablePrimary || db.hello().secondary' | grep -q 'true'
+                  else
+                      mongo --disableImplicitSessions $TLS_OPTIONS --eval 'db.isMaster().ismaster || db.isMaster().secondary' | grep -q 'true'
+                  fi
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 50m
+              memory: 150Mi
+          volumeMounts:
+            - name: datadir
+              mountPath: /bitnami/mongodb
+              subPath: 
+      volumes:
+        - name: datadir
+          persistentVolumeClaim:
+            claimName: ccas-mongodb-standalone
+---
+# Source: coog/templates/api-b2c/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccas-coog-api-b2c
+  labels:
+    app.kubernetes.io/name: coog-api-b2c
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: coog-api-b2c
+      app.kubernetes.io/instance: ccas
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: coog-api-b2c
+        helm.sh/chart: coog-22.28.2228
+        app.kubernetes.io/instance: ccas
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "master"
+    spec:
+      imagePullSecrets:
+        - name: docker-registry
+      containers:
+        - name: coog-api-b2c
+          image: "cooghub/coog-api-b2c:coog-master-latest"
+          imagepullPolicy: "Always"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          envFrom:
+            - configMapRef:
+                name: ccas-coog-api-b2c-configuration
+            - configMapRef:
+                name: ccas-coog-gateway-frontCore
+            - secretRef:
+                name: ccas-coog-gateway-frontCore
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          resources:
+            limits:
+              cpu: 50m
+              memory: 50Mi
+            requests:
+              cpu: 20m
+              memory: 25Mi
+---
 # Source: coog/templates/api-identity-manager/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -698,14 +1077,30 @@ spec:
             - name: http
               containerPort: 3000
               protocol: TCP
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           livenessProbe:
             httpGet:
               path: /
               port: http
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
           readinessProbe:
             httpGet:
               path: /
               port: http
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
           resources:
             limits:
               cpu: 50m
@@ -770,14 +1165,30 @@ spec:
             - name: http
               containerPort: 3000
               protocol: TCP
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           livenessProbe:
             httpGet:
               path: /
               port: http
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
           readinessProbe:
             httpGet:
               path: /
               port: http
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
           resources:
             limits:
               cpu: 500m
@@ -785,69 +1196,6 @@ spec:
             requests:
               cpu: 50m
               memory: 50Mi
----
-# Source: coog/templates/b2b/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: ccas-coog-b2b
-  labels:
-    app.kubernetes.io/name: coog-b2b
-    helm.sh/chart: coog-22.28.2228
-    app.kubernetes.io/instance: ccas
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: "master"
-spec:
-  replicas: 1
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: coog-b2b
-      app.kubernetes.io/instance: ccas
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: coog-b2b
-        helm.sh/chart: coog-22.28.2228
-        app.kubernetes.io/instance: ccas
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/version: "master"
-    spec:
-      imagePullSecrets:
-        - name: docker-registry
-      containers:
-        - name: coog-b2b
-          image: "cooghub/coog-b2b:coog-master-latest"
-          imagepullPolicy: "Always"
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-              - ALL
-            privileged: false
-            procMount: Default
-            runAsNonRoot: true
-            runAsUser: 1000
-          ports:
-            - name: http
-              containerPort: 5000
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            limits:
-              cpu: 250m
-              memory: 50Mi
-            requests:
-              cpu: 10m
-              memory: 25Mi
 ---
 # Source: coog/templates/celery/deployment.yaml
 apiVersion: apps/v1
@@ -1013,7 +1361,7 @@ spec:
           ports:
             - name: http
               containerPort: 8000
-          livenessProbe:
+          startupProbe:
             exec:
               command: ['/bin/bash', '-c', 'ep cron --check']
             failureThreshold: 2
@@ -1021,7 +1369,7 @@ spec:
             periodSeconds: 120
             successThreshold: 1
             timeoutSeconds: 10
-          startupProbe:
+          livenessProbe:
             exec:
               command: ['/bin/bash', '-c', 'ep cron --check']
             failureThreshold: 2
@@ -1220,14 +1568,30 @@ spec:
             - name: http
               containerPort: 8000
               protocol: TCP
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
           livenessProbe:
             httpGet:
               path: /
               port: http
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
           readinessProbe:
             httpGet:
               path: /
               port: http
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
           resources:
             limits:
               cpu: 100m
@@ -1492,8 +1856,8 @@ spec:
         app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/version: "3.9.13"
       annotations:
-        checksum/config: bb8cb47f49aa74e80f9ac14b72fb56062fd44927809ea42ecfe94e02a9a058ec
-        checksum/secret: 124bcb96506c2f0b22644564ee09f9f88acbc9d007d4b98485d3b3febf622a4a
+        checksum/config: 5ea800d51a276263166d2827cfcbdd6e4e1361167addc9d4c6345b66675217e4
+        checksum/secret: 309bf8a335c0825e4a4ddf63e65062e4b80e9ff9b0a4bb341ca8711e67c82121
     spec:
       
       serviceAccountName: ccas-rabbitmq
@@ -1566,7 +1930,7 @@ spec:
             - name: RABBITMQ_SECURE_PASSWORD
               value: "yes"
             - name: RABBITMQ_USERNAME
-              value: "user"
+              value: "coog"
             - name: RABBITMQ_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -1648,45 +2012,6 @@ spec:
         resources:
           requests:
             storage: "8Gi"
----
-# Source: coog/templates/b2b/ingress.yaml
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ccas-coog-b2b
-  labels:
-    app.kubernetes.io/name: coog-b2b
-    helm.sh/chart: coog-22.28.2228
-    app.kubernetes.io/instance: ccas
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: "master"
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt
-    nginx.ingress.kubernetes.io/whitelist-source-range: "127.0.0.1/32"
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/client-body-buffer-size: "100m"
-    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    nginx.ingress.kubernetes.io/send-timeout: "3600"
-    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
-spec:
-  tls:
-    - hosts:
-        - "coog.local"
-      secretName: coog.local-tls
-  rules:
-    - host: "coog.local"
-      http:
-        paths:
-        - path: "/portal(/|$)(.*)"
-          pathType: Prefix
-          backend:
-            service:
-              name: ccas-coog-b2b
-              port:
-                name: http
 ---
 # Source: coog/templates/gateway/ingress.yaml
 apiVersion: networking.k8s.io/v1

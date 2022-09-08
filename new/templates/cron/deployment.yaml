@@ -58,14 +58,14 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.coog.containerPorts.http }}
-          livenessProbe:
-            exec:
-              command: ['/bin/bash', '-c', 'ep cron --check']
-            {{- toYaml (default .Values.livenessProbe .Values.cron.livenessProbe) | nindent 12 }}
           startupProbe:
             exec:
               command: ['/bin/bash', '-c', 'ep cron --check']
             {{- toYaml (default .Values.startupProbe .Values.cron.startupProbe) | nindent 12 }}
+          livenessProbe:
+            exec:
+              command: ['/bin/bash', '-c', 'ep cron --check']
+            {{- toYaml (default .Values.livenessProbe .Values.cron.livenessProbe) | nindent 12 }}
           resources: {{- toYaml .Values.cron.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.cron.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

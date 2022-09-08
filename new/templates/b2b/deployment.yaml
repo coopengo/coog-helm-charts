@@ -38,14 +38,17 @@ spec:
             - name: http
               containerPort: 5000
               protocol: TCP
+          startupProbe: {{- toYaml (default .Values.startupProbe .Values.b2b.startupProbe) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /
               port: http
+            {{- toYaml (default .Values.livenessProbe .Values.b2b.livenessProbe) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /
               port: http
+            {{- toYaml (default .Values.readinessProbe .Values.b2b.readinessProbe) | nindent 12 }}
           resources: {{- toYaml .Values.b2b.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.b2b.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

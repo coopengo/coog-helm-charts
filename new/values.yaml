@@ -439,7 +439,6 @@ cron:
 # - gateway
 # - api
 # - apiIdentityManager
-# - apiB2bConfig
 # - apiB2c
 # - apiReferential
 # - appB2c
@@ -453,6 +452,8 @@ frontCore:
   enabled: false
   config:
     JWT_EXPIRATION: 3600
+
+
 
 gateway:
   image:
@@ -514,6 +515,8 @@ api:
       cpu: 50m
       memory: 50Mi
 
+
+
 apiIdentityManager:
   image:
     # -- api-identity-manager image repository
@@ -569,12 +572,17 @@ b2b:
       cpu: 10m
       memory: 25Mi
 
+
+
 apiB2c:
-  enabled: true
+  enabled: false
 
   image:
     # -- apiB2c image repository
     name: coog-api-b2c
+
+  # -- Configure environement variables for this component
+  config: {}
 
   securityContext: {}
     # runAsUser: ""
@@ -588,26 +596,33 @@ apiB2c:
       cpu: 20m
       memory: 25Mi
 
-###########################################################
 
 
-apiB2bConfig:
-  # -- Deploy apiB2bConfig container(s)
+web:
   enabled: false
 
   image:
-    # -- apiB2bConfig image repository
-    name: api-b2b-config
+    # -- web image repository
+    name: web
 
-  # -- apiB2bConfig containers' resource requests and limits
+  # -- Configure environement variables for this component
+  config:
+    COOG_API_API_PATH: /web/api
+    COOG_API_APP_PATH: /web
+
+  securityContext: {}
+    # runAsUser: ""
+
+  # -- web containers' resource requests and limits
   resources:
     limits:
-      cpu: 50m
-      memory: 80Mi
+      cpu: 500m
+      memory: 200Mi
     requests:
       cpu: 30m
-      memory: 40Mi
+      memory: 30Mi
 
+###########################################################
 
 
 
@@ -703,53 +718,6 @@ unoconv:
     timeoutSeconds: 30
     successThreshold: 1
     failureThreshold: 3
-
-
-web:
-  # -- Deploy web container(s)
-  enabled: false
-  # -- 	Number of web Pods to run
-  replicaCount: 1
-
-  image:
-    # -- web image repository
-    name: web
-    # -- web image tag
-    tag: coog-2.10.2048
-    # -- web image pull policy
-    pullPolicy: Always
-
-  ingress:
-    # -- Enable ingress controller resource for web containers'
-    enabled: false
-    # -- Ingress annotations for web containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for web containers'
-    hosts:
-      - host: web.local
-        paths: []
-    # -- TLS configuration for web containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-    nginx:
-      rewritetarget: '/$2'
-
-  livenessProbe:
-    periodSeconds: 60
-    timeoutSeconds: 30
-
-  # -- web containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 500m
-      memory: 200Mi
-    requests:
-      cpu: 30m
-      memory: 30Mi
 
 
 # B2C Frontend

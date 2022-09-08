@@ -1,5 +1,4 @@
 {{- if (or .Values.frontCore.enabled
-          .Values.apiB2bConfig.enabled
           .Values.apiB2c.enabled
           .Values.apiReferential.enabled
           .Values.appB2c.enabled
@@ -56,14 +55,17 @@ spec:
             - name: http
               containerPort: 3000
               protocol: TCP
+          startupProbe: {{- toYaml (default .Values.startupProbe .Values.api.startupProbe) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /
               port: http
+            {{- toYaml (default .Values.livenessProbe .Values.api.livenessProbe) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /
               port: http
+            {{- toYaml (default .Values.readinessProbe .Values.api.readinessProbe) | nindent 12 }}
           resources: {{- toYaml .Values.api.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.api.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
