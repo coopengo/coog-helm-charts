@@ -62,7 +62,7 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  postgresql-password: "SGtCZ1ZGdWx0Ng=="
+  postgresql-password: "Z1hpQnZ4bHdubg=="
 ---
 # Source: coog/charts/rabbitmq/templates/secrets.yaml
 apiVersion: v1
@@ -79,7 +79,7 @@ metadata:
 type: Opaque
 data:
   rabbitmq-password: "Y2hhbmdlbWU="
-  rabbitmq-erlang-cookie: "cDVscnNObGlZa3kzNTFEMjYwQ01pZ3c4OVZvYUQyUUg="
+  rabbitmq-erlang-cookie: "bExzYWRTbHFRQzYxNUJUZEJBYnVnWEE5bGFVZXh0b2Q="
 ---
 # Source: coog/templates/api-b2c/secrets.yaml
 piVersion: v1
@@ -254,6 +254,19 @@ metadata:
     app.kubernetes.io/version: "master"
 data:
 ---
+# Source: coog/templates/api-referential/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ccas-coog-api-referential-configuration
+  labels:
+    app.kubernetes.io/name: coog-api-referential
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+data:
+---
 # Source: coog/templates/api/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -300,7 +313,7 @@ data:
   COOG_DB_NAME: ccas
   DB_NAME: ccas # duplicate of COOG_DB_NAME
   # Tryton
-  TRYTOND_REPORT__API: http://ccas-coog-libroconv:5000/libroconv/{oext}
+  TRYTOND_REPORT__API: http://ccas-coog-libroconv:5000/unoconv/{oext}
   TRYTOND_CACHE__RECORD: 50000
   TRYTOND_CACHE__CLEAN_TIMEOUT: 0
   COOG_IWC: 1
@@ -639,6 +652,27 @@ spec:
     app.kubernetes.io/name: coog-api-identity-manager
     app.kubernetes.io/instance: ccas
 ---
+# Source: coog/templates/api-referential/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccas-coog-api-referential
+  labels:
+    app.kubernetes.io/name: coog-api-referential
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: coog-api-referential
+    app.kubernetes.io/instance: ccas
+---
 # Source: coog/templates/api/service.yaml
 apiVersion: v1
 kind: Service
@@ -742,27 +776,6 @@ spec:
       targetPort: http
   selector:
     app.kubernetes.io/name: coog-gateway
-    app.kubernetes.io/instance: ccas
----
-# Source: coog/templates/libroconv/service.yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: ccas-coog-libroconv
-  labels:
-    app.kubernetes.io/name: coog-libroconv
-    helm.sh/chart: coog-22.28.2228
-    app.kubernetes.io/instance: ccas
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: "master"
-spec:
-  type: ClusterIP
-  ports:
-    - name: http
-      port: 5000
-      targetPort: http
-  selector:
-    app.kubernetes.io/name: coog-libroconv
     app.kubernetes.io/instance: ccas
 ---
 # Source: coog/templates/service.yaml
@@ -1148,6 +1161,92 @@ spec:
             requests:
               cpu: 10m
               memory: 30Mi
+---
+# Source: coog/templates/api-referential/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccas-coog-api-referential
+  labels:
+    app.kubernetes.io/name: coog-api-referential
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: coog-api-referential
+      app.kubernetes.io/instance: ccas
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: coog-api-referential
+        helm.sh/chart: coog-22.28.2228
+        app.kubernetes.io/instance: ccas
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "master"
+    spec:
+      imagePullSecrets:
+        - name: docker-registry
+      containers:
+        - name: coog-api-referential
+          image: "cooghub/coog-api-referential:coog-master-latest"
+          imagepullPolicy: "Always"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          envFrom:
+            - configMapRef:
+                name: ccas-coog-api-referential-configuration
+            - configMapRef:
+                name: ccas-coog-gateway-frontCore
+            - secretRef:
+                name: ccas-coog-gateway-frontCore
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          resources:
+            limits:
+              cpu: 200m
+              memory: 400Mi
+            requests:
+              cpu: 100m
+              memory: 250Mi
 ---
 # Source: coog/templates/api/deployment.yaml
 apiVersion: apps/v1
@@ -1716,84 +1815,6 @@ spec:
               cpu: 50m
               memory: 50Mi
 ---
-# Source: coog/templates/libroconv/deployment.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: ccas-coog-libroconv
-  labels:
-    app.kubernetes.io/name: coog-libroconv
-    helm.sh/chart: coog-22.28.2228
-    app.kubernetes.io/instance: ccas
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: "master"
-spec:
-  replicas: 1
-  strategy:
-    type: Recreate
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: coog-libroconv
-      app.kubernetes.io/instance: ccas
-  template:
-    metadata:
-      labels:
-        app.kubernetes.io/name: coog-libroconv
-        helm.sh/chart: coog-22.28.2228
-        app.kubernetes.io/instance: ccas
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/version: "master"
-    spec:
-      imagePullSecrets:
-        - name: docker-registry
-      containers:
-        - name: coog-libroconv
-          image: "cooghub/coog-libroconv:coog-master-latest"
-          imagepullPolicy: "Always"
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-              - ALL
-            privileged: false
-            procMount: Default
-            runAsNonRoot: true
-            runAsUser: 1000
-          ports:
-            - name: http
-              containerPort: 5000
-          startupProbe:
-            failureThreshold: 30
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            successThreshold: 1
-            timeoutSeconds: 1
-          livenessProbe:
-            httpGet:
-              path: /liveness
-              port: http
-            failureThreshold: 2
-            initialDelaySeconds: 0
-            periodSeconds: 60
-            successThreshold: 1
-            timeoutSeconds: 30
-          readinessProbe:
-            httpGet:
-              path: "/liveness"
-              port: http
-            failureThreshold: 3
-            initialDelaySeconds: 0
-            periodSeconds: 30
-            successThreshold: 1
-            timeoutSeconds: 30
-          resources:
-            limits:
-              cpu: 300m
-              memory: 300Mi
-            requests:
-              cpu: 50m
-              memory: 50Mi
----
 # Source: coog/templates/static/deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -2050,7 +2071,7 @@ spec:
         app.kubernetes.io/version: "3.9.13"
       annotations:
         checksum/config: 5ea800d51a276263166d2827cfcbdd6e4e1361167addc9d4c6345b66675217e4
-        checksum/secret: c7f62fca54da9aad832dff6ad69687bb2d6f129068f0f77d7e5b40a6de81a5e8
+        checksum/secret: b22987512327dbf8a3bbbad0aab0b98439e1e859631cf90ba9b67911ae6213bf
     spec:
       
       serviceAccountName: ccas-rabbitmq

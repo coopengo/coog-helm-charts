@@ -648,12 +648,38 @@ web:
       memory: 30Mi
 
 
+
+apiReferential:
+  # -- Deploy apiReferential container(s)
+  enabled: true
+
+  image:
+    # -- apiReferential image repository
+    name: coog-api-referential
+
+  # -- Configure environement variables for this component
+  config: {}
+
+  securityContext: {}
+    # runAsUser: ""
+
+  # -- apiReferential containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 200m
+      memory: 400Mi
+    requests:
+      cpu: 100m
+      memory: 250Mi
+
+
+
 ##############################
 #      Components B2C        #
 ##############################
 
 b2c:
-  # -- Deploy b2c container(s)
+  # -- Deploy b2c + apiB2c container(s)
   enabled: true
 
   image:
@@ -712,24 +738,6 @@ apiB2c:
 
 ###########################################################
 
-
-
-apiReferential:
-  # -- Deploy apiReferential container(s)
-  enabled: false
-
-  image:
-    # -- apiReferential image repository
-    name: api-referential
-
-  # -- apiReferential containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 200m
-      memory: 400Mi
-    requests:
-      cpu: 100m
-      memory: 250Mi
 
 
 
