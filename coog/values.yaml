@@ -231,6 +231,8 @@ postgresql:
 
 # -- Mongodb dependency parameters.
 # Ref: https://artifacthub.io/packages/helm/bitnami/mongodb/10.30.12
+# Current Ref is the last chart version available for kubernetes 1.18 (Cluster version to Coreye)
+# Mongodb is mandatory if we have front / api components enable
 mongodb:
   # -- Enable to install mongodb on Kubernetes
   # This is a coog parameter not mongodb
@@ -261,6 +263,8 @@ mongodb:
         memory: 150Mi
 
 rabbitmq:
+  persistence:
+    enabled: false
   resources:
     limits:
       cpu: 600m
@@ -274,7 +278,6 @@ rabbitmq:
     loopback_users.guest = false
   livenessProbe:
     initialDelaySeconds: 240
-  # Voir pour le parametre de persistence > a desactiver
 
 
 #############################################################################################################################
@@ -285,13 +288,6 @@ coog:
   image:
     # -- Image repository to run coog
     name: coog
-
-  strategy:
-    type: ""
-
-  containerPorts:
-    # -- Listening port of the application in the container
-    http: 8000
 
   # -- coog, celery and batch configuration for number of workers
   workers:
