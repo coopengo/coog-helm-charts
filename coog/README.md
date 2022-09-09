@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.35.2235](https://img.shields.io/badge/Version-22.35.2235-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 22.36.2236](https://img.shields.io/badge/Version-22.36.2236-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -150,6 +150,7 @@ A Helm chart for Coog
 | coog.configurationFiles."coog.conf" | string | `""` |  |
 | coog.enabled | bool | `true` | Deploy coog container(s) |
 | coog.external_postgres.enabled | bool | `false` |  |
+| coog.extraEnv.TRYTOND_TZ | string | `"Europe/Paris"` |  |
 | coog.fullnameOverride | string | `""` |  |
 | coog.image.pullPolicy | string | `"Always"` | coog image pull policy |
 | coog.image.repository | string | `"coopengohub/coog"` | coog image repository |
