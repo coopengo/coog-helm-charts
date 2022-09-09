@@ -1,12 +1,12 @@
-{{- if .Values.apiReferential.enabled -}}
-{{- if .Values.apiReferential.config -}}
+{{- if .Values.customerFrontend.enabled -}}
+{{- if .Values.customerFrontend.config -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 data:
-  {{- range $key, $value := .Values.apiReferential.config }}
+  {{- range $key, $value := .Values.customerFrontend.config }}
   {{ $key }}: {{ $value }}
   {{- end }}
 {{- end }}

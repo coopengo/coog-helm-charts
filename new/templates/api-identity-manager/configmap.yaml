@@ -7,6 +7,7 @@
           .Values.customerFrontend.enabled
           .Values.web.enabled)
 -}}
+{{- if .Values.apiReferential.config -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -16,4 +17,5 @@ data:
   {{- range $key, $value := .Values.apiIdentityManager.config }}
   {{ $key }}: {{ $value }}
   {{- end }}
+{{- end }}
 {{- end }}

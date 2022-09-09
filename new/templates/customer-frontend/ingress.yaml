@@ -1,0 +1,61 @@
+{{- if .Values.customerFrontend.enabled -}}
+apiVersion: {{ include "common.ingress.apiVersion" . }}
+kind: Ingress
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  annotations:
+  {{- if and .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.enabled }}
+    cert-manager.io/cluster-issuer: letsencrypt
+  {{- end }}
+  {{- if $.Values.maintenanceMode.enabled }}
+    nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.maintenanceMode.ingress.nginx.customhttperrors }}
+    nginx.ingress.kubernetes.io/default-backend: {{ printf "%s-%s-maintenance" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (.Values.ingress.nginx.whiteList.trustedCidr) }}
+  {{- range $key, $value := $.Values.maintenanceMode.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- else }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.customerFrontend.ingress.nginx.whiteList.publicCidr) | quote }}
+  {{- end }}
+  {{- range $key, $value := .Values.ingress.annotations}}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- range $key, $value := .Values.customerFrontend.ingress.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+spec:
+{{- if and .Values.ingress.thisTls.enabled (or .Values.ingress.thisTls.letsencrypt .Values.ingress.hosts) }}
+  tls:
+    {{- if and .Values.ingress.thisTls.enabled .Values.ingress.thisTls.letsencrypt }}
+    - hosts:
+        - {{ .Values.ingress.host | quote }}
+      secretName: {{ printf "%s-tls" .Values.ingress.host }}
+    {{- end }}
+    {{- if .Values.ingress.thisTls.configuration }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.ingress.thisTls.configuration "context" $) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+  rules:
+  {{- range .Values.customerFrontend.ingress.hosts }}
+    - host: {{ default $.Values.ingress.host .host | quote }}
+      http:
+        paths:
+        {{- range .paths }}
+        {{- if eq (include "common.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+        - path: {{ . | quote }}
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ include "common.names.fullname" $ }}
+              port:
+                name: http
+        {{- else -}}
+        - path: {{ . | quote }}
+          backend:
+            servicename: {{ include "common.names.fullname" $ }}
+            servicePort: http
+        {{- end }}
+        {{- end }}
+  {{- end }}
+{{- end }}

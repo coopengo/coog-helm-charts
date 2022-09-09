@@ -62,7 +62,7 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  postgresql-password: "Z1hpQnZ4bHdubg=="
+  postgresql-password: "bmNYZTRYWTRSeQ=="
 ---
 # Source: coog/charts/rabbitmq/templates/secrets.yaml
 apiVersion: v1
@@ -79,7 +79,7 @@ metadata:
 type: Opaque
 data:
   rabbitmq-password: "Y2hhbmdlbWU="
-  rabbitmq-erlang-cookie: "bExzYWRTbHFRQzYxNUJUZEJBYnVnWEE5bGFVZXh0b2Q="
+  rabbitmq-erlang-cookie: "UjlWUTZkNXVzVE1oZ0M4V0Z6dndVeDhIUTRSV1lKcjQ="
 ---
 # Source: coog/templates/api-b2c/secrets.yaml
 piVersion: v1
@@ -95,6 +95,22 @@ metadata:
 type: Opaque
 stringData:
   COOG_DOCUMENT_TOKEN_SECRET: changeme
+---
+# Source: coog/templates/customer-backend/secrets.yaml
+piVersion: v1
+kind: Secret
+metadata:
+  name: ccas-coog-customer-backend-configuration
+  labels:
+    app.kubernetes.io/name: coog-customer-backend
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+type: Opaque
+stringData:
+  DATABASE_USERNAME: "coog"
+  DATABASE_PASSWORD: "changeme"
 ---
 # Source: coog/templates/gateway/secret-mongodb.yaml
 apiVersion: v1
@@ -228,45 +244,6 @@ data:
     consumer_timeout = 172800000
     loopback_users.guest = false
 ---
-# Source: coog/templates/api-b2c/configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ccas-coog-api-b2c-configuration
-  labels:
-    app.kubernetes.io/name: coog-api-b2c
-    helm.sh/chart: coog-22.28.2228
-    app.kubernetes.io/instance: ccas
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: "master"
-data:
----
-# Source: coog/templates/api-identity-manager/configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ccas-coog-api-identity-manager-configuration
-  labels:
-    app.kubernetes.io/name: coog-api-identity-manager
-    helm.sh/chart: coog-22.28.2228
-    app.kubernetes.io/instance: ccas
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: "master"
-data:
----
-# Source: coog/templates/api-referential/configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: ccas-coog-api-referential-configuration
-  labels:
-    app.kubernetes.io/name: coog-api-referential
-    helm.sh/chart: coog-22.28.2228
-    app.kubernetes.io/instance: ccas
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: "master"
-data:
----
 # Source: coog/templates/api/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
@@ -340,6 +317,22 @@ data:
   COOG_CELERY_WORKERS: 1
   COOG_SERVER_WORKERS: 1
   TRYTOND_DEBUG__VIEWS: false
+---
+# Source: coog/templates/customer-backend/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ccas-coog-customer-backend-configuration
+  labels:
+    app.kubernetes.io/name: coog-customer-backend
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+data:
+  DATABASE_HOST: ccas-postgresql
+  DATABASE_PORT: 5432
+  DATABASE_NAME: strapi
 ---
 # Source: coog/templates/gateway/configmap-frontcore.yaml
 apiVersion: v1
@@ -755,6 +748,48 @@ spec:
       targetPort: http
   selector:
     app.kubernetes.io/name: coog-cron
+    app.kubernetes.io/instance: ccas
+---
+# Source: coog/templates/customer-backend/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccas-coog-customer-backend
+  labels:
+    app.kubernetes.io/name: coog-customer-backend
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: coog-customer-backend
+    app.kubernetes.io/instance: ccas
+---
+# Source: coog/templates/customer-frontend/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ccas-coog-customer-frontend
+  labels:
+    app.kubernetes.io/name: coog-customer-frontend
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector:
+    app.kubernetes.io/name: coog-customer-frontend
     app.kubernetes.io/instance: ccas
 ---
 # Source: coog/templates/gateway/service.yaml
@@ -1215,7 +1250,6 @@ spec:
           ports:
             - name: http
               containerPort: 3000
-              protocol: TCP
           startupProbe:
             failureThreshold: 30
             initialDelaySeconds: 10
@@ -1600,6 +1634,242 @@ spec:
             requests:
               cpu: 100m
               memory: 300Mi
+---
+# Source: coog/templates/customer-backend/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccas-coog-customer-backend
+  labels:
+    app.kubernetes.io/name: coog-customer-backend
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: coog-customer-backend
+      app.kubernetes.io/instance: ccas
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: coog-customer-backend
+        helm.sh/chart: coog-22.28.2228
+        app.kubernetes.io/instance: ccas
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "master"
+    spec:
+      imagePullSecrets:
+        - name: docker-registry
+      volumes:
+        - name: builddir
+          emptyDir: {}
+      initContainers:
+        - name: coog-customer-backend-build
+          image: "cooghub/coog-customer-backend:coog-master-latest"
+          imagepullPolicy: "Always"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          resources:
+            limits:
+              cpu: 400m
+              memory: 500Mi
+            requests:
+              cpu: 200m
+              memory: 250Mi
+          command: ['sh', '-c', 'yarn', 'build', '--no-optimization']
+          volumeMounts:
+            - name: builddir
+              mountPath: "/workdir/build"
+          envFrom:
+            - configMapRef:
+                name: ccas-coog-customer-backend-configuration
+            - secretRef:
+                name: ccas-coog-customer-backend-configuration
+      containers:
+        - name: coog-customer-backend
+          image: "cooghub/coog-customer-backend:coog-master-latest"
+          imagepullPolicy: "Always"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          volumeMounts:
+            - name: builddir
+              mountPath: "/workdir/build"
+          envFrom:
+            - configMapRef:
+                name: ccas-coog-customer-backend-configuration
+            - secretRef:
+                name: ccas-coog-customer-backend-configuration
+          ports:
+            - name: http
+              containerPort: 1337
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          resources:
+            limits:
+              cpu: 400m
+              memory: 300Mi
+            requests:
+              cpu: 100m
+              memory: 150Mi
+---
+# Source: coog/templates/customer-frontend/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ccas-coog-customer-frontend
+  labels:
+    app.kubernetes.io/name: coog-customer-frontend
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: coog-customer-frontend
+      app.kubernetes.io/instance: ccas
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: coog-customer-frontend
+        helm.sh/chart: coog-22.28.2228
+        app.kubernetes.io/instance: ccas
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/version: "master"
+    spec:
+      imagePullSecrets:
+        - name: docker-registry
+      volumes:
+        - name: builddir
+          emptyDir: {}
+      initContainers:
+        - name: coog-customer-frontend-build
+          image: "cooghub/coog-customer-frontend:coog-master-latest"
+          imagepullPolicy: "Always"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          resources:
+            limits:
+              cpu: 400m
+              memory: 2000Mi
+            requests:
+              cpu: 200m
+              memory: 1500Mi
+          command: ['sh', '-c', 'yarn', 'build', '--prefix-paths']
+          volumeMounts:
+            - name: builddir
+              mountPath: "/workdir/public"
+          envFrom:
+            - configMapRef:
+                name: ccas-coog-customer-frontend-configuration
+            - secretRef:
+                name: ccas-coog-customer-frontend-configuration
+      containers:
+        - name: coog-customer-frontend
+          image: "cooghub/coog-customer-frontend:coog-master-latest"
+          imagepullPolicy: "Always"
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: 1000
+          volumeMounts:
+            - name: builddir
+              mountPath: "/workdir/public"
+          envFrom:
+            - configMapRef:
+                name: ccas-coog-customer-frontend-configuration
+            - secretRef:
+                name: ccas-coog-customer-frontend-configuration
+          ports:
+            - name: http
+              containerPort: 5000
+          startupProbe:
+            failureThreshold: 30
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 30
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+            requests:
+              cpu: 50m
+              memory: 50Mi
 ---
 # Source: coog/templates/deployment.yaml
 apiVersion: apps/v1
@@ -2071,7 +2341,7 @@ spec:
         app.kubernetes.io/version: "3.9.13"
       annotations:
         checksum/config: 5ea800d51a276263166d2827cfcbdd6e4e1361167addc9d4c6345b66675217e4
-        checksum/secret: b22987512327dbf8a3bbbad0aab0b98439e1e859631cf90ba9b67911ae6213bf
+        checksum/secret: 7505bb7451bed8f7d20ce94ad726337dcef7bdb7c60675efa8a788a039f149c6
     spec:
       
       serviceAccountName: ccas-rabbitmq
@@ -2263,6 +2533,84 @@ spec:
           backend:
             service:
               name: ccas-coog-b2c
+              port:
+                name: http
+---
+# Source: coog/templates/customer-backend/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ccas-coog-customer-backend
+  labels:
+    app.kubernetes.io/name: coog-customer-backend
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/whitelist-source-range: "127.0.0.1/32"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/send-timeout: "3600"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+spec:
+  tls:
+    - hosts:
+        - "coog.local"
+      secretName: coog.local-tls
+  rules:
+    - host: "coog.local"
+      http:
+        paths:
+        - path: "/v1/customer(/|$)(.*)"
+          pathType: Prefix
+          backend:
+            service:
+              name: ccas-coog-customer-backend
+              port:
+                name: http
+---
+# Source: coog/templates/customer-frontend/ingress.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ccas-coog-customer-frontend
+  labels:
+    app.kubernetes.io/name: coog-customer-frontend
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/whitelist-source-range: "127.0.0.1/32"
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-body-size: "100m"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/send-timeout: "3600"
+    nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+spec:
+  tls:
+    - hosts:
+        - "coog.local"
+      secretName: coog.local-tls
+  rules:
+    - host: "coog.local"
+      http:
+        paths:
+        - path: "/customer(/|$)(.*)"
+          pathType: Prefix
+          backend:
+            service:
+              name: ccas-coog-customer-frontend
               port:
                 name: http
 ---

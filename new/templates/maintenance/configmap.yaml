@@ -1,4 +1,5 @@
 {{- if .Values.maintenanceMode.enabled -}}
+{{- if .Values.maintenanceMode.config -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,4 +9,5 @@ data:
   {{- range $key, $value := .Values.maintenanceMode.config }}
   {{ $key }}: {{ $value }}
   {{- end }}
+{{- end }}
 {{- end }}

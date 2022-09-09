@@ -1,16 +1,15 @@
-{{- if (or .Values.b2c.enabled
-          .Values.customerBackend.enabled
+{{- if (or .Values.customerBackend.enabled
           .Values.customerFrontend.enabled)
 -}}
-{{- if .Values.apiB2c.config -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 data:
-  {{- range $key, $value := .Values.apiB2c.config }}
+  DATABASE_HOST: {{ default (printf "%s-%s" .Release.Name "postgresql") .Values.postgresql.host }}
+  DATABASE_PORT: {{ .Values.postgresql.service.ports.postgresql }}
+  {{- range $key, $value := .Values.customerBackend.config }}
   {{ $key }}: {{ $value }}
   {{- end }}
-{{- end }}
 {{- end }}

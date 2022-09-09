@@ -1,15 +1,14 @@
-{{- if .Values.customerBackend.enabled -}}
+{{- if .Values.customerFrontend.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  type: {{ .Values.customerBackend.service.type }}
+  type: ClusterIP
   ports:
-    - port: {{ .Values.customerBackend.service.port }}
+    - name: http
+      port: 80
       targetPort: http
-      protocol: TCP
-      name: http
   selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
 {{- end }}
