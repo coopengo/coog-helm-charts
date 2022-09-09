@@ -1,0 +1,45 @@
+{{- if .Values.maintenanceMode.enabled -}}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.imageCredentials.name }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ default .Values.image.repository .Values.maintenanceMode.image.repository }}/{{ .Values.maintenanceMode.image.name }}:{{ default .Values.image.tag .Values.maintenanceMode.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.maintenanceMode.image.pullPolicy | quote }}
+          ports:
+            - name: http
+              containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+          resources: {{- toYaml .Values.maintenanceMode.resources | nindent 12 }}
+      {{- with default .Values.nodeSelector .Values.maintenanceMode.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.affinity .Values.maintenanceMode.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.tolerations .Values.maintenanceMode.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if default .Values.dnsPolicy .Values.maintenanceMode.dnsPolicy }}
+      dnsPolicy: {{ default .Values.dnsPolicy .Values.maintenanceMode.dnsPolicy }}
+      {{- end }}
+      {{- if default .Values.dnsConfig .Values.maintenanceMode.dnsConfig }}
+      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.maintenanceMode.dnsConfig | indent 8 }}
+      {{- end }}
+{{- end }}

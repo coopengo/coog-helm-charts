@@ -6,18 +6,10 @@ Expand the name of the chart.
 {{- define "common.names.name" -}}
 {{- $tplDir := base (dir .Template.Name) -}}
 {{- if eq "templates" $tplDir -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- printf "%s-%s" .Chart.Name $tplDir | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
-{{- end -}}
-
-
-{{/*
-Create chart name and version as used by the chart label.
-*/}}
-{{- define "common.names.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -26,13 +18,19 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "common.names.fullname" -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
 {{- $tplDir := base (dir .Template.Name) -}}
 {{- if eq "templates" $tplDir -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
-{{- printf "%s-%s-%s" .Release.Name $name $tplDir | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s-%s" .Release.Name .Chart.Name $tplDir | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "common.names.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -71,33 +69,6 @@ Return the proper image name
 {{- end -}}
 {{- end -}}
 
-#####################################################""""
-
-
-
-{{/*
-Create a default fully qualified app name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-If release name contains chart name it will be used as a full name.
-*/}}
-{{- define "full_name" -}}
-{{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- $tplDir := base (dir .Template.Name) -}}
-{{- if eq "templates" $tplDir -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- printf "%s-%s-%s" .Release.Name $name $tplDir | trunc 63 | trimSuffix "-" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create image pull secret string.
-*/}}
-{{- define "imagePullSecret" }}
-{{- printf "{\"auths\": {\"%s\": {\"auth\": \"%s\"}}}" .Values.imageCredentials.registry (printf "%s:%s" .Values.imageCredentials.username .Values.imageCredentials.password | b64enc) | b64enc }}
-{{- end }}
-
-
 {{/*
 Ingress dynamic configuration
 */}}
@@ -108,5 +79,31 @@ Ingress dynamic configuration
 {{- print "networking.k8s.io/v1beta1" -}}
 {{- else -}}
 {{- print "networking.k8s.io/v1" -}}
-{{- end }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Renders a value that contains template.
+Usage:
+{{ include "common.tplvalues.render" ( dict "value" .Values.path.to.the.Value "context" $) }}
+*/}}
+{{- define "common.tplvalues.render" -}}
+    {{- if typeIs "string" .value }}
+        {{- tpl .value .context }}
+    {{- else }}
+        {{- tpl (.value | toYaml) .context }}
+    {{- end }}
+{{- end -}}
+
+
+#####################################################
+
+
+{{/*
+Create image pull secret string.
+*/}}
+{{- define "imagePullSecret" }}
+{{- with .Values.imageCredentials }}
+{{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
+{{- end }}
+{{- end }}
