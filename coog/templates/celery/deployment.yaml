@@ -27,7 +27,7 @@ spec:
     {{- end }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ default .Values.image.repository .Values.backCore.coog.image.repository }}/{{ .Values.backCore.coog.image.name }}:{{ default .Values.image.tag .Values.backCore.coog.image.tag }}"
+          image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagepullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.coog.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false

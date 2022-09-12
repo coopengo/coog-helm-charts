@@ -2,27 +2,6 @@
 #                                      Global configuration applied to all components                                       #
 #############################################################################################################################
 
-# We can desactivate every pod with value : 0
-# possible change, if true : 1 if false : 0 (variable name : enabled)
-# At the end, create a sample file with mandatory parameters uncommented
-# Avoir une configuration "backoffice" qui s'applique a coog, celery & cron (config: {})
-# Avoir un cache global au niveau backoffice + possibilité d'override pour chaque composant
-# dans global:
-# JWT config
-# COOG_DOCUMENT_TOKEN_SECRET (secrets file)
-
-
-# workers:
-#    number: 1
-#    maximumMemory: 512000
-
-
-# image celery + coog + cron à configurer au niveau du backCore
-# Avoir 3 niveau de configmap + secrets (global + backCore/frontCore + composant)
-# deplacer le cache au niveau de backCore + avoir la possibilité de surcharger (mettre dans config en valeur par defaut)
-# Pour le fichier sample mettre les ressources en commentaires en "exemple"
-
-
 # -- Number of pod for all components. It can be customized for each component.
 # e.g:
 # coog:
@@ -146,8 +125,9 @@ ingress:
     nginx.ingress.kubernetes.io/client-body-buffer-size: 100m
 
   # -- Création de 3 modes de configuration :
-  # trustedCidr : mettre en place les IP interne (seront autorisées automatiquement quand le mode maintenance sera actif)
-  # publicCidr (global + par composant) : IP externe à autoriser + possibilité de personnaliser par composant (append) - Non pris en compte par le mode maintenance
+  # trustedCidr : Ip list which are always allowed. maintenanceMode allow these IPs
+  # publicCidr (global + per component) : External IP to allow. We can append this list for each component.
+  # These IPs are not allowed when maintenanceMode is enable
   nginx:
     whiteList:
       trustedCidr:
@@ -317,6 +297,12 @@ rabbitmq:
 #############################################################################################################################
 
 backCore:
+  image:
+    # -- Image repository to run coog, celery & cron
+    name: coog
+    # repository: ""
+    # tag: ""
+
   # -- coog, celery and cron configuration for number of workers. It can be customized for each component
   workers:
     number: 1
@@ -350,10 +336,6 @@ backCore:
     TRYTOND_CACHE__CLEAN_TIMEOUT: 0
 
   coog:
-    image:
-      # -- Image repository to run coog
-      name: coog
-
     # -- coog, celery and batch configuration for number of workers
     workers:
       number: ""
@@ -427,41 +409,7 @@ backCore:
 
 
 
-  static:
-    image:
-      # -- static image name
-      name: coog-static
-
-    strategy:
-      # -- static redeployment strategy type
-      type: ""
-
-    ingress:
-      # -- Default host for the ingress resource for static containers'
-      hosts:
-        - paths:
-            - /sao
-            - /bench
-            - /doc
-      nginx:
-        whiteList:
-          publicCidr: []
-
-    securityContext: {}
-      # runAsUser: ""
-
-    # -- static containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 50m
-        memory: 80Mi
-      requests:
-        cpu: 10m
-        memory: 20Mi
-
-
-
-  cron:
+cron:
     # -- Dynamic ConfigMap variables for cron
     config:
       TRYTOND_DEBUG__VIEWS: false
@@ -501,6 +449,40 @@ backCore:
       timeoutSeconds: 10
       successThreshold: 1
       failureThreshold: 2
+
+
+
+  static:
+    image:
+      # -- static image name
+      name: coog-static
+
+    strategy:
+      # -- static redeployment strategy type
+      type: ""
+
+    ingress:
+      # -- Default host for the ingress resource for static containers'
+      hosts:
+        - paths:
+            - /sao
+            - /bench
+            - /doc
+      nginx:
+        whiteList:
+          publicCidr: []
+
+    securityContext: {}
+      # runAsUser: ""
+
+    # -- static containers' resource requests and limits
+    resources:
+      limits:
+        cpu: 50m
+        memory: 80Mi
+      requests:
+        cpu: 10m
+        memory: 20Mi
   
 #############################################################################################################################
 #                                            Back Additional components                                                     #
