@@ -328,8 +328,8 @@ backCore:
       name: coog
 
     # -- coog, celery and batch configuration for number of workers
-    # workers:
-    #   number: 1
+    workers:
+      number: ""
     
     # -- coog and celery configuration for cache
     cache:
@@ -388,7 +388,7 @@ backCore:
   celery:
     workers:
       # -- Number of celery workers to run
-      # number: 1
+      number: ""
       maximumMemory: 512000
 
     # -- Configure environement variables for this component
