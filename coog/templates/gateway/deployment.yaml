@@ -13,12 +13,12 @@ metadata:
   name: {{ include "common.names.fullname" . }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ default .Values.replicaCount .Values.gateway.replicaCount }}
+  replicas: {{ default .Values.replicaCount .Values.frontCore.gateway.replicaCount }}
   strategy:
   {{- if not .Values.quota.rollingUpdate }}
     type: Recreate
   {{- else -}}
-    type: {{ default .Values.strategy.type .Values.gateway.strategy.type }}
+    type: {{ default .Values.strategy.type .Values.frontCore.gateway.strategy.type }}
   {{- end }}
   selector:
     matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
@@ -30,8 +30,8 @@ spec:
         - name: {{ .Values.imageCredentials.name }}
       containers:
         - name: {{ include "common.names.name" . }}
-          image: "{{ default .Values.image.repository .Values.gateway.image.repository }}/{{ .Values.gateway.image.name }}:{{ default .Values.image.tag .Values.gateway.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.gateway.image.pullPolicy }}
+          image: "{{ default .Values.image.repository .Values.frontCore.gateway.image.repository }}/{{ .Values.frontCore.gateway.image.name }}:{{ default .Values.image.tag .Values.frontCore.gateway.image.tag }}"
+          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.frontCore.gateway.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -40,7 +40,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ default .Values.securityContext.runAsUser .Values.gateway.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.frontCore.gateway.securityContext.runAsUser }}
           envFrom:
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
@@ -55,31 +55,31 @@ spec:
           ports:
             - name: http
               containerPort: 8000
-          startupProbe: {{- toYaml (default .Values.startupProbe .Values.gateway.startupProbe) | nindent 12 }}
+          startupProbe: {{- toYaml (default .Values.startupProbe .Values.frontCore.gateway.startupProbe) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /
               port: http
-            {{- toYaml (default .Values.livenessProbe .Values.gateway.livenessProbe) | nindent 12 }}
+            {{- toYaml (default .Values.livenessProbe .Values.frontCore.gateway.livenessProbe) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /
               port: http
-            {{- toYaml (default .Values.readinessProbe .Values.gateway.readinessProbe) | nindent 12 }}
-          resources: {{- toYaml .Values.gateway.resources | nindent 12 }}
-      {{- with default .Values.nodeSelector .Values.gateway.nodeSelector }}
+            {{- toYaml (default .Values.readinessProbe .Values.frontCore.gateway.readinessProbe) | nindent 12 }}
+          resources: {{- toYaml .Values.frontCore.gateway.resources | nindent 12 }}
+      {{- with default .Values.nodeSelector .Values.frontCore.gateway.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with default .Values.affinity .Values.gateway.affinity }}
+      {{- with default .Values.affinity .Values.frontCore.gateway.affinity }}
       affinity: {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with default .Values.tolerations .Values.gateway.tolerations }}
+      {{- with default .Values.tolerations .Values.frontCore.gateway.tolerations }}
       tolerations: {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if default .Values.dnsPolicy .Values.gateway.dnsPolicy }}
-      dnsPolicy: {{ default .Values.dnsPolicy .Values.gateway.dnsPolicy }}
+      {{- if default .Values.dnsPolicy .Values.frontCore.gateway.dnsPolicy }}
+      dnsPolicy: {{ default .Values.dnsPolicy .Values.frontCore.gateway.dnsPolicy }}
       {{- end }}
-      {{- if default .Values.dnsConfig .Values.gateway.dnsConfig }}
-      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.gateway.dnsConfig | indent 8 }}
+      {{- if default .Values.dnsConfig .Values.frontCore.gateway.dnsConfig }}
+      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.frontCore.gateway.dnsConfig | indent 8 }}
       {{- end }}
 {{- end }}

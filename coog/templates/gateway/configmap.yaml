@@ -22,7 +22,7 @@ data:
   COOG_API_B2C_URL: {{ printf "http://%s-%s-api-b2c" .Release.Name .Chart.Name }} # ajouter un if pour le composant
   COOG_API_REFERENTIAL_URL: {{ printf "http://%s-%s-api-referential" .Release.Name .Chart.Name }} # ajouter un if pour le composant
   COOG_API_IDENTITY_MANAGER_URL: {{ printf "http://%s-%s-api-identity-manager" .Release.Name .Chart.Name }}
-  {{- range $key, $value := .Values.gateway.config }}
+  {{- range $key, $value := .Values.frontCore.gateway.config }}
   {{ $key }}: {{ $value }}
   {{- end }}
 {{- end }}

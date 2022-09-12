@@ -15,12 +15,12 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- else }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.static.ingress.nginx.whiteList.publicCidr) | quote }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.backCore.static.ingress.nginx.whiteList.publicCidr) | quote }}
   {{- end }}
   {{- range $key, $value := .Values.ingress.annotations}}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
-  {{- range $key, $value := .Values.static.ingress.annotations }}
+  {{- range $key, $value := .Values.backCore.static.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
@@ -36,7 +36,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-  {{- range .Values.static.ingress.hosts }}
+  {{- range .Values.backCore.static.ingress.hosts }}
     - host: {{ default $.Values.ingress.host .host | quote }}
       http:
         paths:

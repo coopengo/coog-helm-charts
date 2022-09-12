@@ -14,7 +14,7 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 data:
   COOG_API_V1_URL: {{ printf "http://%s-%s-web" .Release.Name .Chart.Name }}
-  {{- range $key, $value := .Values.api.config }}
+  {{- range $key, $value := .Values.frontCore.api.config }}
   {{ $key }}: {{ $value }}
   {{- end }}
 {{- end }}

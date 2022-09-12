@@ -40,9 +40,9 @@ spec:
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             - configMapRef:
-                name: {{ printf "%s-%s-gateway-frontCore" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-%s-frontCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             - secretRef:
-                name: {{ printf "%s-%s-gateway-frontCore" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-%s-frontCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
           ports:
             - name: http
               containerPort: 3000

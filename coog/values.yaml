@@ -2,6 +2,26 @@
 #                                      Global configuration applied to all components                                       #
 #############################################################################################################################
 
+# We can desactivate every pod with value : 0
+# possible change, if true : 1 if false : 0 (variable name : enabled)
+# At the end, create a sample file with mandatory parameters uncommented
+# Avoir une configuration "backoffice" qui s'applique a coog, celery & cron (config: {})
+# Avoir un cache global au niveau backoffice + possibilité d'override pour chaque composant
+# workers:
+#    number: 1
+#    maximumMemory: 512000
+
+
+# Cree un format type 
+# backCore:
+#   coog:
+#     ...
+#   celery:
+#     ...
+# Faire la même chose pour le frontCore:
+
+
+
 # -- Number of pod for all components. It can be customized for each component.
 # e.g:
 # coog:
@@ -15,13 +35,14 @@ replicaCount: 1
 #     type: Recreate
 #
 # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
-# values: Recreate or RollingUpdate 
+# values: Recreate or RollingUpdate
+# If quota.rollingUpdate: false default value is "Recreate"
 strategy:
   type: Recreate
 
 # -- ## Configure Container Security Context. It can be customized for each component.
-## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
-## @param securityContext.runAsUser Set components containers' Security Context runAsUser
+# ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+# @param securityContext.runAsUser Set components containers' Security Context runAsUser
 securityContext:
   runAsUser: 1000
 
@@ -51,7 +72,7 @@ image:
   # coog:
   #   image:
   #     tag: coog-master-latest
-  tag: coog-master-latest
+  tag: "changeme"
 
   # -- Image Pull Policy applied for all components. It can be customized for each component.
   # e.g:
@@ -223,7 +244,7 @@ maintenanceMode:
 postgresql:
   isManaged: true
   # -- Mandatory if isManaged is false else 'host' is automatically added
-  # Use an external mongodb server (Database not managed by this chart)
+  # Use an external postgresql server (Database not managed by this chart)
   host: ""
   service:
     ports:
@@ -284,23 +305,13 @@ rabbitmq:
 #                                            Coog minimum components                                                        #
 #############################################################################################################################
 
-coog:
-  image:
-    # -- Image repository to run coog
-    name: coog
-
-  # -- coog, celery and batch configuration for number of workers
+backCore:
+  # -- coog, celery and cron configuration for number of workers. It can be customized for each component
   workers:
     number: 1
-    maximumMemory: 512000
-  
-  # -- coog and celery configuration for cache
-  cache:
-    record: 50000
-    cleanTimeOut: 0
 
-  # -- Configure environement variables for this component
-  # Each value can be modified without override all or delete other parameters
+  # -- Configure environement variables for backCore components (coog, celery, cron (except static : doesn't need configuration))
+    # Each value can be modified without override all or delete other parameters
   config:
     COOG_TIMEOUT: 3600
     LOG_LEVEL: INFO
@@ -311,144 +322,163 @@ coog:
     TRYTOND_TZ: Europe/Paris
     COOG_IWC: 1
 
-  persistentVolume:
-    enabled: true
-    name: workspace-io
-    io: /workspace/io/
-    storageClass: nfs-client
-    size: 10Gi
-    claim:
-      name: ""
+  coog:
+    image:
+      # -- Image repository to run coog
+      name: coog
 
-  ingress:
-    # -- Default host for the ingress resource for coog containers'
-    hosts:
-      - paths:
-          - /
-
-    annotations:
-      nginx.ingress.kubernetes.io/use-proxy-protocol: true
+    # -- coog, celery and batch configuration for number of workers
+    # workers:
+    #   number: 1
     
-    nginx:
-      whiteList:
-        publicCidr: []
+    # -- coog and celery configuration for cache
+    cache:
+      record: 50000
+      cleanTimeOut: 0
 
-  securityContext: {}
-    # runAsUser: ""
+    # -- Configure environement variables for this component
+    # Each value can be modified without override all or delete other parameters
+    config: {}
 
-  # -- coog containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 1500m
-      memory: 1750Mi
-    requests:
-      cpu: 200m
-      memory: 300Mi
+    persistentVolume:
+      enabled: true
+      name: workspace-io
+      io: /workspace/io/
+      storageClass: nfs-client
+      size: 10Gi
+      claim:
+        name: ""
 
-  initContainers:
+    ingress:
+      # -- Default host for the ingress resource for coog containers'
+      hosts:
+        - paths:
+            - /
+
+      annotations:
+        nginx.ingress.kubernetes.io/use-proxy-protocol: true
+      
+      nginx:
+        whiteList:
+          publicCidr: []
+
+    securityContext: {}
+      # runAsUser: ""
+
+    # -- coog containers' resource requests and limits
     resources:
       limits:
-        cpu: 500m
-        memory: 800Mi
+        cpu: 1500m
+        memory: 1750Mi
       requests:
+        cpu: 200m
+        memory: 300Mi
+
+    initContainers:
+      resources:
+        limits:
+          cpu: 500m
+          memory: 800Mi
+        requests:
+          cpu: 400m
+          memory: 400Mi
+
+
+
+  celery:
+    workers:
+      # -- Number of celery workers to run
+      # number: 1
+      maximumMemory: 512000
+
+    # -- Configure environement variables for this component
+    config: {}
+
+    # -- celery containers' resource requests and limits
+    resources:
+      limits:
         cpu: 400m
-        memory: 400Mi
+        memory: 1000Mi
+      requests:
+        cpu: 100m
+        memory: 300Mi
 
 
 
-celery:
-  workers:
-    # -- Number of celery workers to run
-    number: 1
+  static:
+    image:
+      # -- static image name
+      name: coog-static
 
-  # -- Configure environement variables for this component
-  config: {}
+    strategy:
+      # -- static redeployment strategy type
+      type: ""
 
-  # -- celery containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 400m
-      memory: 1000Mi
-    requests:
-      cpu: 100m
-      memory: 300Mi
+    ingress:
+      # -- Default host for the ingress resource for static containers'
+      hosts:
+        - paths:
+            - /sao
+            - /bench
+            - /doc
+      nginx:
+        whiteList:
+          publicCidr: []
 
+    securityContext: {}
+      # runAsUser: ""
 
-
-static:
-  image:
-    # -- static image name
-    name: coog-static
-
-  strategy:
-    # -- static redeployment strategy type
-    type: ""
-
-  ingress:
-    # -- Default host for the ingress resource for static containers'
-    hosts:
-      - paths:
-          - /sao
-          - /bench
-          - /doc
-    nginx:
-      whiteList:
-        publicCidr: []
-
-  securityContext: {}
-    # runAsUser: ""
-
-  # -- static containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 50m
-      memory: 80Mi
-    requests:
-      cpu: 10m
-      memory: 20Mi
+    # -- static containers' resource requests and limits
+    resources:
+      limits:
+        cpu: 50m
+        memory: 80Mi
+      requests:
+        cpu: 10m
+        memory: 20Mi
 
 
 
-cron:
-  # -- Dynamic ConfigMap variables for cron
-  config:
-    TRYTOND_DEBUG__VIEWS: false
+  cron:
+    # -- Dynamic ConfigMap variables for cron
+    config:
+      TRYTOND_DEBUG__VIEWS: false
 
-  coogCeleryModule: coog_async.coog_celery
+    coogCeleryModule: coog_async.coog_celery
 
-  # -- cron containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 200m
-      memory: 500Mi
-    requests:
-      cpu: 100m
-      memory: 300Mi
+    # -- cron containers' resource requests and limits
+    resources:
+      limits:
+        cpu: 200m
+        memory: 500Mi
+      requests:
+        cpu: 100m
+        memory: 300Mi
 
-  # -- Configure options applied to cron deployment, liveness, readiness and startup probes
-  # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
-  # initialDelaySeconds: Initial delay seconds e
-  # periodSeconds: Period seconds
-  # timeoutSeconds: Timeout seconds
-  # failureThreshold: Failure threshold
-  # successThreshold: Success threshold
-  #
-  # With this configuration, the kubelet will attempt to open a socket to your container on the specified port. 
-  # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
-  livenessProbe:
-    initialDelaySeconds: 30
-    periodSeconds: 120
-    timeoutSeconds: 10
-    successThreshold: 1
-    failureThreshold: 2
+    # -- Configure options applied to cron deployment, liveness, readiness and startup probes
+    # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+    # initialDelaySeconds: Initial delay seconds e
+    # periodSeconds: Period seconds
+    # timeoutSeconds: Timeout seconds
+    # failureThreshold: Failure threshold
+    # successThreshold: Success threshold
+    #
+    # With this configuration, the kubelet will attempt to open a socket to your container on the specified port. 
+    # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
+    livenessProbe:
+      initialDelaySeconds: 30
+      periodSeconds: 120
+      timeoutSeconds: 10
+      successThreshold: 1
+      failureThreshold: 2
 
-  # -- additional startup time on their first initialization
-  startupProbe:
-    initialDelaySeconds: 30
-    periodSeconds: 120
-    timeoutSeconds: 10
-    successThreshold: 1
-    failureThreshold: 2
+    # -- additional startup time on their first initialization
+    startupProbe:
+      initialDelaySeconds: 30
+      periodSeconds: 120
+      timeoutSeconds: 10
+      successThreshold: 1
+      failureThreshold: 2
   
 #############################################################################################################################
 #                                            Back Additional components                                                     #
@@ -512,89 +542,87 @@ frontCore:
   config:
     JWT_EXPIRATION: 3600
 
+  gateway:
+    image:
+      # -- gateway image repository
+      name: coog-gateway
+
+    # -- Configure environement variables for this component
+    config:
+      COOG_MODULE: true
+      GOOGLE_MODULE: false
+      FACEBOOK_MODULE: false
+      COOG_TOKEN_MODULE: true
+      COOG_GATEWAY_PORT: 8000
+      COOG_GATEWAY_BASE_PATH: /gateway
+
+    ingress:
+      # -- Default host for the ingress resource for gateway containers
+      hosts:
+        - paths:
+            - /gateway(/|$)(.*)
+      
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+      
+      nginx:
+        whiteList:
+          publicCidr: []
+
+    securityContext: {}
+      # runAsUser: ""
+
+    # -- gateway containers resource requests and limits
+    resources:
+      limits:
+        cpu: 100m
+        memory: 100Mi
+      requests:
+        cpu: 50m
+        memory: 50Mi
 
 
-gateway:
-  image:
-    # -- gateway image repository
-    name: coog-gateway
+  api:
+    image:
+      # -- api-v2 image repository
+      name: coog-api
 
-  # -- Configure environement variables for this component
-  config:
-    COOG_MODULE: true
-    GOOGLE_MODULE: false
-    FACEBOOK_MODULE: false
-    COOG_TOKEN_MODULE: true
-    COOG_GATEWAY_PORT: 8000
-    COOG_GATEWAY_BASE_PATH: /gateway
+    # -- Configure environement variables for this component
+    config: {}
 
-  ingress:
-    # -- Default host for the ingress resource for gateway containers
-    hosts:
-      - paths:
-          - /gateway(/|$)(.*)
+    securityContext: {}
+      # runAsUser: ""
+
+    # -- api containers resource requests and limits
+    resources:
+      limits:
+        cpu: 500m
+        memory: 100Mi
+      requests:
+        cpu: 50m
+        memory: 50Mi
+
+
+
+  apiIdentityManager:
+    image:
+      # -- api-identity-manager image repository
+      name: coog-api-identity-manager
     
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
-    
-    nginx:
-      whiteList:
-        publicCidr: []
+    # -- Configure environement variables for this component
+    config: {}
 
-  securityContext: {}
-    # runAsUser: ""
+    securityContext: {}
+      # runAsUser: ""
 
-  # -- gateway containers resource requests and limits
-  resources:
-    limits:
-      cpu: 100m
-      memory: 100Mi
-    requests:
-      cpu: 50m
-      memory: 50Mi
-
-
-api:
-  image:
-    # -- api-v2 image repository
-    name: coog-api
-
-  # -- Configure environement variables for this component
-  config: {}
-
-  securityContext: {}
-    # runAsUser: ""
-
-  # -- api containers resource requests and limits
-  resources:
-    limits:
-      cpu: 500m
-      memory: 100Mi
-    requests:
-      cpu: 50m
-      memory: 50Mi
-
-
-
-apiIdentityManager:
-  image:
-    # -- api-identity-manager image repository
-    name: coog-api-identity-manager
-  
-  # -- Configure environement variables for this component
-  config: {}
-
-  securityContext: {}
-    # runAsUser: ""
-
-  # -- apiIdentityManager containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 50m
-      memory: 70Mi
-    requests:
-      cpu: 10m
-      memory: 30Mi
+    # -- apiIdentityManager containers' resource requests and limits
+    resources:
+      limits:
+        cpu: 50m
+        memory: 70Mi
+      requests:
+        cpu: 10m
+        memory: 30Mi
 
 
 #############################################################################################################################

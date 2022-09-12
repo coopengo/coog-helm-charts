@@ -1,22 +1,22 @@
-{{- if .Values.coog.persistentVolume.enabled -}}
-{{- if not .Values.coog.persistentVolume.existingClaim -}}
+{{- if .Values.backCore.coog.persistentVolume.enabled -}}
+{{- if not .Values.backCore.coog.persistentVolume.existingClaim -}}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ printf "%s-%s" .Release.Name .Values.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
-  {{- if .Values.coog.persistentVolume.annotations }}
+  name: {{ printf "%s-%s" .Release.Name .Values.backCore.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+  {{- if .Values.backCore.coog.persistentVolume.annotations }}
   annotations:
-{{ toYaml .Values.coog.persistentVolume.annotations | indent 4 }}
+{{ toYaml .Values.backCore.coog.persistentVolume.annotations | indent 4 }}
   {{- end }}
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: "{{ .Values.coog.persistentVolume.storageClass }}"
-  {{- if .Values.coog.persistentVolume.claim.name }}
-  volumeName: "{{ .Values.coog.persistentVolume.claim.name }}"
+  storageClassName: "{{ .Values.backCore.coog.persistentVolume.storageClass }}"
+  {{- if .Values.backCore.coog.persistentVolume.claim.name }}
+  volumeName: "{{ .Values.backCore.coog.persistentVolume.claim.name }}"
   {{- end }}
   resources:
     requests:
-      storage: "{{ .Values.coog.persistentVolume.size }}"
+      storage: "{{ .Values.backCore.coog.persistentVolume.size }}"
 {{- end -}}
 {{- end -}}

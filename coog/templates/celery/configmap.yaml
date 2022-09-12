@@ -1,10 +1,12 @@
+{{- if .Values.backCore.celery.config -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 data:
-  CELERY_MAX_MEMORY_PER_CHILD: {{ .Values.coog.workers.maximumMemory }}
-  {{- range $key, $value := .Values.celery.config }}
+  CELERY_MAX_MEMORY_PER_CHILD: {{ .Values.backCore.celery.workers.maximumMemory }}
+  {{- range $key, $value := .Values.backCore.celery.config }}
   {{ $key }}: {{ $value }}
   {{- end }}
+{{- end }}
