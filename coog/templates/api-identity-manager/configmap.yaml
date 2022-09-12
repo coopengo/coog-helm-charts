@@ -7,7 +7,7 @@
           .Values.customerFrontend.enabled
           .Values.web.enabled)
 -}}
-{{- if .Values.apiReferential.config -}}
+{{- if .Values.apiIdentityManager.config -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
