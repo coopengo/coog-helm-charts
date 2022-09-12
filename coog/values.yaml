@@ -7,19 +7,20 @@
 # At the end, create a sample file with mandatory parameters uncommented
 # Avoir une configuration "backoffice" qui s'applique a coog, celery & cron (config: {})
 # Avoir un cache global au niveau backoffice + possibilité d'override pour chaque composant
+# dans global:
+# JWT config
+# COOG_DOCUMENT_TOKEN_SECRET (secrets file)
+
+
 # workers:
 #    number: 1
 #    maximumMemory: 512000
 
 
-# Cree un format type 
-# backCore:
-#   coog:
-#     ...
-#   celery:
-#     ...
-# Faire la même chose pour le frontCore:
-
+# image celery + coog + cron à configurer au niveau du backCore
+# Avoir 3 niveau de configmap + secrets (global + backCore/frontCore + composant)
+# deplacer le cache au niveau de backCore + avoir la possibilité de surcharger (mettre dans config en valeur par defaut)
+# Pour le fichier sample mettre les ressources en commentaires en "exemple"
 
 
 # -- Number of pod for all components. It can be customized for each component.
@@ -45,6 +46,12 @@ strategy:
 # @param securityContext.runAsUser Set components containers' Security Context runAsUser
 securityContext:
   runAsUser: 1000
+
+config:
+  # back
+  JWT_EXPIRATION: 3600
+  # front
+
 
 # -- Configure secret with docker image registry credentials.
 imageCredentials:
@@ -213,9 +220,13 @@ quota:
 
 maintenanceMode:
   enabled: false
-  image:
-    name: nginx-custom-error-pages
-    tag: latest
+  image:resources:
+      limits:
+        cpu: 400m
+        memory: 1000Mi
+      requests:
+        cpu: 100m
+        memory: 300Mi
 
   config: {}
   #   TEMPLATE_NAME: "coopengo"
@@ -311,16 +322,32 @@ backCore:
     number: 1
 
   # -- Configure environement variables for backCore components (coog, celery, cron (except static : doesn't need configuration))
-    # Each value can be modified without override all or delete other parameters
+  # Each value can be modified without override all or delete other parameters
+  # Ref: https://github.com/coopengo/coog/blob/master/bin/conf/trytond.conf
+  # ex:
+  # [web]
+  # listen = localhost:8000
+  #
+  # convert to variable :
+  # TRYTOND_WEB__LISTEN: localhost:8000
   config:
+  # Following variables must be defined :
+  # start
+    TRYTOND_EMAIL__FROM: changeme
+    TRYTOND_OPTIONS__TABLE_DIMENSION: changeme
+  # end
     COOG_TIMEOUT: 3600
+    COOG_IWC: 1
     LOG_LEVEL: INFO
     TRYTOND_DATABASE__LANGUAGE: fr
-    TRYTOND_EMAIL__FROM: to_define
     TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
     TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: 1
     TRYTOND_TZ: Europe/Paris
-    COOG_IWC: 1
+    TRYTOND_DATABASE__PATH: "/workspace/io/edm"
+    TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_EXPIRATION_MINUTES: 864000
+    TRYTOND_PASSWORD__ENTROPY: "0.1"
+    TRYTOND_CACHE__RECORD: 50000
+    TRYTOND_CACHE__CLEAN_TIMEOUT: 0
 
   coog:
     image:
@@ -330,11 +357,6 @@ backCore:
     # -- coog, celery and batch configuration for number of workers
     workers:
       number: ""
-    
-    # -- coog and celery configuration for cache
-    cache:
-      record: 50000
-      cleanTimeOut: 0
 
     # -- Configure environement variables for this component
     # Each value can be modified without override all or delete other parameters
@@ -539,8 +561,7 @@ libroconv:
 # If you enable one front component, you must set mongodb.isManaged: true
 frontCore:
   enabled: false
-  config:
-    JWT_EXPIRATION: 3600
+  config: {}
 
   gateway:
     image:

@@ -1,0 +1,11 @@
+{{- if .Values.config }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+data:
+  {{- range $key, $value := .Values.config }}
+  {{ $key }}: {{ $value }}
+  {{- end }}
+{{- end }}

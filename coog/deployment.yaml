@@ -29,7 +29,7 @@ metadata:
   namespace: default
 type: Opaque
 data:
-  postgresql-password: "MEdad2NxOGpJUw=="
+  postgresql-password: "NHJZdHl6MllmWg=="
 ---
 # Source: coog/charts/rabbitmq/templates/secrets.yaml
 apiVersion: v1
@@ -46,7 +46,7 @@ metadata:
 type: Opaque
 data:
   rabbitmq-password: "Y2hhbmdlbWU="
-  rabbitmq-erlang-cookie: "cFVraU40a3c4ZGgzN2l6Q3VNZWZ3alIzVmJVVzdlVFg="
+  rabbitmq-erlang-cookie: "VVlOWUtNb1k5NmJXSmNJcHc1TndkYkU3cklJNGFMQTU="
 ---
 # Source: coog/templates/secret-backCore.yaml
 apiVersion: v1
@@ -64,8 +64,6 @@ stringData:
   TRYTOND_DATABASE__URI: "postgresql://coog:changeme@ccas-postgresql:5432/ccas"
   TRYTOND_ASYNC__CELERY: "amqp://coog:changeme@ccas-rabbitmq:5672"
   TRYTOND_ASYNC_CELERY: "amqp://coog:changeme@ccas-rabbitmq:5672" # duplicate of TRYTOND_ASYNC__CELERY
-  COOG_DOCUMENT_TOKEN_SECRET: "changeme"
-  TRYTOND_SESSION__PASSPHRASE: "changeme"
 ---
 # Source: coog/templates/secret-docker-registry.yaml
 apiVersion: v1
@@ -75,6 +73,23 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 data:
   .dockerconfigjson: eyJhdXRocyI6eyJkb2NrZXIuaW8iOnsidXNlcm5hbWUiOiIiLCJwYXNzd29yZCI6IiIsImVtYWlsIjoiIiwiYXV0aCI6Ik9nPT0ifX19
+---
+# Source: coog/templates/secret-global.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ccas-coog-global-configuration
+  labels:
+    app.kubernetes.io/name: coog
+    helm.sh/chart: coog-22.28.2228
+    app.kubernetes.io/instance: ccas
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/version: "master"
+type: Opaque
+stringData:
+  COOG_DOCUMENT_TOKEN_SECRET: "changeme"
+  JWT_ENCRYPTION: "changeme"
+  JWT_INTERNAL_ENCRYPTION: "changeme"
 ---
 # Source: coog/templates/secret-postgresql.yaml
 apiVersion: v1
@@ -91,25 +106,6 @@ type: Opaque
 stringData:
   COOG_DB_USER: "coog"
   COOG_DB_PASSWORD: "changeme"
----
-# Source: coog/templates/secret.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: ccas-coog-configuration
-  labels:
-    app.kubernetes.io/name: coog
-    helm.sh/chart: coog-22.28.2228
-    app.kubernetes.io/instance: ccas
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/version: "master"
-type: Opaque
-stringData:
-  TRYTOND_DATABASE__URI: "postgresql://coog:changeme@ccas-postgresql:5432/ccas"
-  TRYTOND_ASYNC__CELERY: "amqp://coog:changeme@ccas-rabbitmq:5672"
-  TRYTOND_ASYNC_CELERY: "amqp://coog:changeme@ccas-rabbitmq:5672" # duplicate of TRYTOND_ASYNC__CELERY
-  COOG_DOCUMENT_TOKEN_SECRET: "changeme"
-  TRYTOND_SESSION__PASSPHRASE: "changeme"
 ---
 # Source: coog/charts/rabbitmq/templates/configuration.yaml
 apiVersion: v1
@@ -162,14 +158,12 @@ data:
   DB_NAME: ccas # duplicate of COOG_DB_NAME
   # Tryton
   TRYTOND_REPORT__API: http://ccas-coog-libroconv:5000/unoconv/{oext}
-  TRYTOND_CACHE__RECORD: 50000
-  TRYTOND_CACHE__CLEAN_TIMEOUT: 0
 ---
-# Source: coog/templates/configmap.yaml
+# Source: coog/templates/configmap-global.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: ccas-coog-configuration
+  name: ccas-coog-global-configuration
   labels:
     app.kubernetes.io/name: coog
     helm.sh/chart: coog-22.28.2228
@@ -177,15 +171,7 @@ metadata:
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/version: "master"
 data:
-  # Database
-  COOG_POSTGRES_HOST: ccas-postgresql
-  COOG_POSTGRES_PORT: 5432
-  COOG_DB_NAME: ccas
-  DB_NAME: ccas # duplicate of COOG_DB_NAME
-  # Tryton
-  TRYTOND_REPORT__API: http://ccas-coog-libroconv:5000/unoconv/{oext}
-  TRYTOND_CACHE__RECORD: 50000
-  TRYTOND_CACHE__CLEAN_TIMEOUT: 0
+  JWT_EXPIRATION: 3600
 ---
 # Source: coog/templates/cron/configmap.yaml
 apiVersion: v1
@@ -518,9 +504,13 @@ spec:
               readOnly: false
           envFrom:
             - configMapRef:
+                name: ccas-coog-global-configuration
+            - configMapRef:
                 name: ccas-coog-backCore-configuration
             - configMapRef:
                 name: ccas-coog-celery-configuration
+            - secretRef:
+                name: ccas-coog-global-configuration
             - secretRef:
                 name: ccas-coog-backCore-configuration
             - secretRef:
@@ -620,9 +610,13 @@ spec:
               readOnly: false
           envFrom:
             - configMapRef:
+                name: ccas-coog-global-configuration
+            - configMapRef:
                 name: ccas-coog-backCore-configuration
             - configMapRef:
                 name: ccas-coog-cron-configuration
+            - secretRef:
+                name: ccas-coog-global-configuration
             - secretRef:
                 name: ccas-coog-backCore-configuration
             - secretRef:
@@ -706,9 +700,13 @@ spec:
           command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies']
           envFrom:
             - configMapRef:
+                name: ccas-coog-global-configuration
+            - configMapRef:
                 name: ccas-coog-backCore-configuration
             - configMapRef:
                 name: ccas-coog-configuration
+            - secretRef:
+                name: ccas-coog-global-configuration
             - secretRef:
                 name: ccas-coog-backCore-configuration
             - secretRef:
@@ -745,9 +743,13 @@ spec:
               readOnly: false
           envFrom:
             - configMapRef:
+                name: ccas-coog-global-configuration
+            - configMapRef:
                 name: ccas-coog-backCore-configuration
             - configMapRef:
                 name: ccas-coog-configuration
+            - secretRef:
+                name: ccas-coog-global-configuration
             - secretRef:
                 name: ccas-coog-backCore-configuration
             - secretRef:
@@ -1045,7 +1047,7 @@ spec:
         app.kubernetes.io/version: "3.9.13"
       annotations:
         checksum/config: 5ea800d51a276263166d2827cfcbdd6e4e1361167addc9d4c6345b66675217e4
-        checksum/secret: 4a51f3307f34d3b91a5291737d74e35ef4165dafc37cca8e4cba43c9c0590bf1
+        checksum/secret: fdc521f3376fe079130f31e483a9fc93583e6bdd2214b2ed938e8b9b51738876
     spec:
       
       serviceAccountName: ccas-rabbitmq

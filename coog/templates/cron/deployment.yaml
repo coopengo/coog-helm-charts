@@ -46,12 +46,24 @@ spec:
               readOnly: false
         {{- end }}
           envFrom:
+            {{- if .Values.config }}
+            - configMapRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
+            {{- if .Values.backCore.config }}
             - configMapRef:
                 name: {{ printf "%s-%s-backCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+            {{- if .Values.secrets.config }}
+            - secretRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
+            {{- if .Values.secrets.backCore.config }}
             - secretRef:
                 name: {{ printf "%s-%s-backCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             - secretRef:

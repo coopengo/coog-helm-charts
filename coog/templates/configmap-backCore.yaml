@@ -11,8 +11,6 @@ data:
   DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database }} # duplicate of COOG_DB_NAME
   # Tryton
   TRYTOND_REPORT__API: {{ printf "http://%s-%s-libroconv:5000/unoconv/{oext}" .Release.Name .Chart.Name }}
-  TRYTOND_CACHE__RECORD: {{ .Values.backCore.coog.cache.record }}
-  TRYTOND_CACHE__CLEAN_TIMEOUT: {{ .Values.backCore.coog.cache.cleanTimeOut }}
   {{- range $key, $value := .Values.backCore.coog.config }}
   {{ $key }}: {{ $value }}
   {{- end }}

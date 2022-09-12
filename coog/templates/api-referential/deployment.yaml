@@ -34,12 +34,26 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.apiReferential.securityContext.runAsUser }}
           envFrom:
+            {{- if .Values.config }}
+            - configMapRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
+            {{- if .Values.frontCore.config }}
+            - configMapRef:
+                name: {{ printf "%s-%s-frontCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
-            - configMapRef:
-                name: {{ printf "%s-%s-frontCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- if .Values.secrets.config }}
+            - secretRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
+            {{- if .Values.secrets.frontCore.config -}}
             - secretRef:
                 name: {{ printf "%s-%s-frontCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
+            - secretRef:
+                name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
           ports:
             - name: http
               containerPort: 3000

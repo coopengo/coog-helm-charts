@@ -40,12 +40,24 @@ spec:
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.coog.securityContext.runAsUser }}
           command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies']
           envFrom:
+            {{- if .Values.config }}
+            - configMapRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
+            {{- if .Values.backCore.config }}
             - configMapRef:
                 name: {{ printf "%s-%s-backCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             - configMapRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- if .Values.secrets.config }}
+            - secretRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
+            {{- if .Values.secrets.backCore.config }}
             - secretRef:
                 name: {{ printf "%s-%s-backCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             - secretRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             - secretRef:
@@ -84,12 +96,24 @@ spec:
             {{- end }}
           {{- end }}
           envFrom:
+            {{- if .Values.config }}
+            - configMapRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
+            {{- if .Values.backCore.config }}
             - configMapRef:
                 name: {{ printf "%s-%s-backCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             - configMapRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- if .Values.secrets.config }}
+            - secretRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
+            {{- if .Values.secrets.backCore.config }}
             - secretRef:
                 name: {{ printf "%s-%s-backCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             - secretRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             - secretRef:
