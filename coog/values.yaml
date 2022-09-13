@@ -200,13 +200,9 @@ quota:
 
 maintenanceMode:
   enabled: false
-  image:resources:
-      limits:
-        cpu: 400m
-        memory: 1000Mi
-      requests:
-        cpu: 100m
-        memory: 300Mi
+  image:
+    name: nginx-custom-error-pages
+    tag: latest
 
   config: {}
   #   TEMPLATE_NAME: "coopengo"
@@ -220,8 +216,8 @@ maintenanceMode:
       cpu: 100m
       memory: 100Mi
     requests:
-      cpu: 50m
-      memory: 50Mi
+      cpu: 100m
+      memory: 100Mi
 
   ingress:
     nginx:
@@ -262,8 +258,8 @@ mongodb:
       cpu: 100m
       memory: 300Mi
     requests:
-      cpu: 50m
-      memory: 150Mi
+      cpu: 100m
+      memory: 300Mi
   volumePermissions:
     enabled: true
     resources:
@@ -271,8 +267,8 @@ mongodb:
         cpu: 100m
         memory: 300Mi
       requests:
-        cpu: 50m
-        memory: 150Mi
+        cpu: 100m
+        memory: 300Mi
 
 rabbitmq:
   persistence:
@@ -282,8 +278,8 @@ rabbitmq:
       cpu: 600m
       memory: 400Mi
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 600m
+      memory: 400Mi
   updateStrategyType: RollingUpdate
   extraConfiguration: |-
     consumer_timeout = 172800000
@@ -375,8 +371,8 @@ backCore:
         cpu: 1500m
         memory: 1750Mi
       requests:
-        cpu: 200m
-        memory: 300Mi
+        cpu: 1500m
+        memory: 1750Mi
 
     initContainers:
       resources:
@@ -384,8 +380,8 @@ backCore:
           cpu: 500m
           memory: 800Mi
         requests:
-          cpu: 400m
-          memory: 400Mi
+          cpu: 500m
+          memory: 800Mi
 
 
 
@@ -404,8 +400,8 @@ backCore:
         cpu: 400m
         memory: 1000Mi
       requests:
-        cpu: 100m
-        memory: 300Mi
+        cpu: 400m
+        memory: 1000Mi
 
 
 
@@ -422,8 +418,8 @@ cron:
         cpu: 200m
         memory: 500Mi
       requests:
-        cpu: 100m
-        memory: 300Mi
+        cpu: 200m
+        memory: 500Mi
 
     # -- Configure options applied to cron deployment, liveness, readiness and startup probes
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
@@ -481,8 +477,8 @@ cron:
         cpu: 50m
         memory: 80Mi
       requests:
-        cpu: 10m
-        memory: 20Mi
+        cpu: 50m
+        memory: 80Mi
   
 #############################################################################################################################
 #                                            Back Additional components                                                     #
@@ -505,8 +501,8 @@ libroconv:
       cpu: 300m
       memory: 300Mi
     requests:
-      cpu: 50m
-      memory: 50Mi
+      cpu: 300m
+      memory: 300Mi
 
   livenessProbe:
     initialDelaySeconds: 0
@@ -581,8 +577,8 @@ frontCore:
         cpu: 100m
         memory: 100Mi
       requests:
-        cpu: 50m
-        memory: 50Mi
+        cpu: 100m
+        memory: 100Mi
 
 
   api:
@@ -602,8 +598,8 @@ frontCore:
         cpu: 500m
         memory: 100Mi
       requests:
-        cpu: 50m
-        memory: 50Mi
+        cpu: 500m
+        memory: 100Mi
 
 
 
@@ -624,8 +620,8 @@ frontCore:
         cpu: 50m
         memory: 70Mi
       requests:
-        cpu: 10m
-        memory: 30Mi
+        cpu: 50m
+        memory: 70Mi
 
 
 #############################################################################################################################
@@ -665,8 +661,8 @@ b2b:
       cpu: 250m
       memory: 50Mi
     requests:
-      cpu: 10m
-      memory: 25Mi
+      cpu: 250m
+      memory: 50Mi
 
 
 
@@ -691,8 +687,8 @@ web:
       cpu: 500m
       memory: 200Mi
     requests:
-      cpu: 30m
-      memory: 30Mi
+      cpu: 500m
+      memory: 200Mi
 
 
 
@@ -716,8 +712,8 @@ apiReferential:
       cpu: 200m
       memory: 400Mi
     requests:
-      cpu: 100m
-      memory: 250Mi
+      cpu: 200m
+      memory: 400Mi
 
 
 
@@ -755,8 +751,8 @@ b2c:
       cpu: 50m
       memory: 50Mi
     requests:
-      cpu: 10m
-      memory: 30Mi
+      cpu: 50m
+      memory: 50Mi
 
 
 
@@ -794,8 +790,8 @@ customerBackend:
       cpu: 400m
       memory: 300Mi
     requests:
-      cpu: 100m
-      memory: 150Mi
+      cpu: 400m
+      memory: 300Mi
 
   initContainers:
     resources:
@@ -803,8 +799,8 @@ customerBackend:
         cpu: 400m
         memory: 500Mi
       requests:
-        cpu: 200m
-        memory: 250Mi
+        cpu: 400m
+        memory: 500Mi
   
 
 
@@ -841,8 +837,8 @@ customerFrontend:
       cpu: 100m
       memory: 100Mi
     requests:
-      cpu: 50m
-      memory: 50Mi
+      cpu: 100m
+      memory: 100Mi
 
   initContainers:
     resources:
@@ -850,8 +846,8 @@ customerFrontend:
         cpu: 400m
         memory: 2000Mi
       requests:
-        cpu: 200m
-        memory: 1500Mi
+        cpu: 400m
+        memory: 2000Mi
 
 
 
@@ -876,5 +872,5 @@ apiB2c:
       cpu: 50m
       memory: 50Mi
     requests:
-      cpu: 20m
-      memory: 25Mi
+      cpu: 50m
+      memory: 50Mi
