@@ -6,7 +6,9 @@
 # e.g:
 # coog:
 #   replicaCount: 1
-replicaCount: 1
+
+# Example:
+# replicaCount: 1
 
 # -- Strategy used to replace old pods with newest. It can be customized for each component.
 # e.g:
@@ -16,18 +18,23 @@ replicaCount: 1
 #
 # ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
 # values: Recreate or RollingUpdate
-# Note: it's not apply on dependencies
-strategy:
-  type: Recreate
+
+# Example:
+# strategy:
+#   type: Recreate
 
 # -- ## Configure Container Security Context. It can be customized for each component.
 # ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 # @param securityContext.runAsUser Set components containers' Security Context runAsUser
-securityContext:
-  runAsUser: 1000
+
+# Example:
+# securityContext:
+#   runAsUser: 1000
 
 # -- Setup variables shared to all components.
-config: {}
+# Example:
+# config: {}
+
 
 image:
   # -- Tag applied for all components. It can be customized for each component.
@@ -49,7 +56,9 @@ image:
   # coog:
   #   image:
   #     pullPolicy: Always
-  pullPolicy: Always
+
+  # Example:
+  # pullPolicy: Always
 
 ingress:
   # -- Default host for the ingress record applied for all ingress. It can be customized for each component.
@@ -99,14 +108,16 @@ ingress:
   #   ingress:
   #     annotations: 
   #       key: value
-  annotations:
-    kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/send-timeout: 3600
-    nginx.ingress.kubernetes.io/proxy-connect-timeout: 3600
-    nginx.ingress.kubernetes.io/proxy-send-timeout: 3600
-    nginx.ingress.kubernetes.io/proxy-read-timeout: 3600
-    nginx.ingress.kubernetes.io/proxy-body-size: 100m
-    nginx.ingress.kubernetes.io/client-body-buffer-size: 100m
+  
+  # Example:
+  # annotations:
+  #   kubernetes.io/ingress.class: nginx
+  #   nginx.ingress.kubernetes.io/send-timeout: 3600
+  #   nginx.ingress.kubernetes.io/proxy-connect-timeout: 3600
+  #   nginx.ingress.kubernetes.io/proxy-send-timeout: 3600
+  #   nginx.ingress.kubernetes.io/proxy-read-timeout: 3600
+  #   nginx.ingress.kubernetes.io/proxy-body-size: 100m
+  #   nginx.ingress.kubernetes.io/client-body-buffer-size: 100m
 
   # -- Création de 3 modes de configuration :
   # trustedCidr : Ip list which are always allowed. maintenanceMode allow these IPs
@@ -127,47 +138,57 @@ ingress:
 # successThreshold: Success threshold
 #
 # -- additional startup time on their first initialization
-startupProbe:
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 1
-  failureThreshold: 30
-  successThreshold: 1
+# Example:
+# startupProbe:
+#   initialDelaySeconds: 10
+#   periodSeconds: 10
+#   timeoutSeconds: 1
+#   failureThreshold: 30
+#   successThreshold: 1
 
 # -- Sometimes, applications are temporarily unable to serve traffic. 
 # For example, an application might need to load large data or configuration files during startup, 
 # or depend on external services after startup. In such cases, you don't want to kill the application, 
 # but you don't want to send it requests either
-readinessProbe:
-  initialDelaySeconds: 5
-  periodSeconds: 30
-  timeoutSeconds: 30
-  successThreshold: 1
-  failureThreshold: 3
 
-# With this configuration, the kubelet will attempt to open a socket to your container on the specified port. 
+# Example:
+# readinessProbe:
+#   initialDelaySeconds: 5
+#   periodSeconds: 30
+#   timeoutSeconds: 30
+#   successThreshold: 1
+#   failureThreshold: 3
+
+# -- With this configuration, the kubelet will attempt to open a socket to your container on the specified port. 
 # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
-livenessProbe:
-  initialDelaySeconds: 15
-  periodSeconds: 30
-  timeoutSeconds: 30
-  successThreshold: 1
-  failureThreshold: 3
+
+# Example:
+# livenessProbe:
+#   initialDelaySeconds: 15
+#   periodSeconds: 30
+#   timeoutSeconds: 30
+#   successThreshold: 1
+#   failureThreshold: 3
 
 # -- Node labels for pod assignment. It can be customized for each component
-nodeSelector: {}
+# Example:
+# nodeSelector: {}
 
 # -- Tolerations for pod assignment. It can be customized for each component
-tolerations: []
+# Example:
+# tolerations: []
 
 # -- Affinity for pod assignment. It can be customized for each component
-affinity: {}
+# Example:
+# affinity: {}
 
 # -- dnsConfig for pod assignment. It can be customized for each component
-dnsConfig: {}
+# Example:
+# dnsConfig: {}
 
 # -- dnsPolicy for pod assignment. It can be customized for each component
-dnsPolicy: {}
+# Example:
+# dnsPolicy: {}
 
 #############################################################################################################################
 #                                            Tools / Options                                                                #
@@ -175,42 +196,46 @@ dnsPolicy: {}
 
 # -- Limite total Resource usage
 # Ref: https://kubernetes.io/docs/concepts/policy/resource-quotas/
-quota:
-  enabled: false
-  config:
-    cpuRequest: 0
-    memoryRequest: 0
-    cpuLimit: 0
-    memoryLimit: 0
+
+# Example:
+# quota:
+#   enabled: false
+#   config:
+#     cpuRequest: 0
+#     memoryRequest: 0
+#     cpuLimit: 0
+#     memoryLimit: 0
 
 # -- Create a container to receive unauthorized traffic.
 # Allow only "TrustedCIDR" to access to the environment (for tests & confirm that everything work)
 # Ref: https://gitlab.com/coopengo/devops/nginx-custom-error-pages
-maintenanceMode:
-  enabled: false
-  image:
-    name: nginx-custom-error-pages
-    tag: latest
 
-  config: {}
-  #   TEMPLATE_NAME: "coopengo"
-  #   DEFAULT_ERROR_PAGE: 404
-  #   DEFAULT_HTTP_CODE: 404
-  #   SHOW_DETAILS: false
-  #   DISABLE_L10N: false
+# Example:
+# maintenanceMode:
+#   enabled: false
+#   image:
+#     name: nginx-custom-error-pages
+#     tag: latest
 
-  resources:
-    limits:
-      cpu: 100m
-      memory: 100Mi
-    requests:
-      cpu: 100m
-      memory: 100Mi
+#   config: {}
+#   #   TEMPLATE_NAME: "coopengo"
+#   #   DEFAULT_ERROR_PAGE: 404
+#   #   DEFAULT_HTTP_CODE: 404
+#   #   SHOW_DETAILS: false
+#   #   DISABLE_L10N: false
 
-  ingress:
-    nginx:
-      customhttperrors: 403
-    annotations: {}
+#   resources:
+#     limits:
+#       cpu: 100m
+#       memory: 100Mi
+#     requests:
+#       cpu: 100m
+#       memory: 100Mi
+
+#   ingress:
+#     nginx:
+#       customhttperrors: 403
+#     annotations: {}
 
 #############################################################################################################################
 #                                            External dependencies                                                          #
@@ -224,9 +249,9 @@ postgresql:
   # -- Mandatory if isManaged is false else 'host' is automatically added
   # Use an external postgresql server (Database not managed by this chart)
   host: ""
-  service:
-    ports:
-      postgresql: 5432
+  # service:
+  #   ports:
+  #     postgresql: 5432
 
 # -- Mongodb dependency parameters.
 # Ref: https://artifacthub.io/packages/helm/bitnami/mongodb/10.30.12
@@ -239,47 +264,49 @@ mongodb:
   # -- Mandatory if isManaged is false else 'host' is automatically added
   # Use an external mongodb server (Database not managed by this chart)
   host: ""
-  service:
-    ports:
-      mongodb: 27017
-  updateStrategy:
-    type: Recreate
-  resources:
-    limits:
-      cpu: 100m
-      memory: 300Mi
-    requests:
-      cpu: 100m
-      memory: 300Mi
-  volumePermissions:
-    enabled: true
-    resources:
-      limits:
-        cpu: 100m
-        memory: 300Mi
-      requests:
-        cpu: 100m
-        memory: 300Mi
+  # service:
+  #   ports:
+  #     mongodb: 27017
+  # updateStrategy:
+  #   type: Recreate
+  # resources:
+  #   limits:
+  #     cpu: 100m
+  #     memory: 300Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 300Mi
+  # volumePermissions:
+  #   enabled: true
+  #   resources:
+  #     limits:
+  #       cpu: 100m
+  #       memory: 300Mi
+  #     requests:
+  #       cpu: 100m
+  #       memory: 300Mi
 
 # -- Default message service used by backCore
 # Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/8.26.3
 # Current Ref is the last chart version available for kubernetes 1.18 (Cluster version to Coreye)
-rabbitmq:
-  persistence:
-    enabled: false
-  resources:
-    limits:
-      cpu: 600m
-      memory: 400Mi
-    requests:
-      cpu: 600m
-      memory: 400Mi
-  updateStrategyType: RollingUpdate
-  extraConfiguration: |-
-    consumer_timeout = 172800000
-    loopback_users.guest = false
-  livenessProbe:
-    initialDelaySeconds: 240
+
+# Example
+# rabbitmq:
+#   persistence:
+#     enabled: false
+#   resources:
+#     limits:
+#       cpu: 600m
+#       memory: 400Mi
+#     requests:
+#       cpu: 600m
+#       memory: 400Mi
+#   updateStrategyType: RollingUpdate
+#   extraConfiguration: |-
+#     consumer_timeout = 172800000
+#     loopback_users.guest = false
+#   livenessProbe:
+#     initialDelaySeconds: 240
 
 
 #############################################################################################################################
@@ -296,12 +323,14 @@ backCore:
 
   # -- coog, celery and cron strategy type.
   # values: Recreate or RollingUpdate
-  strategy:
-    type: ""
+  # strategy:
+  #   type: ""
+
 
   # -- coog, celery and cron configuration for number of workers. It can be customized for each component
-  workers:
-    number: 1
+  # Example:
+  # workers:
+    # number: 1
 
   # -- Configure environement variables for backCore components (coog, celery, cron (except static : doesn't need configuration))
   # Each value can be modified without override all or delete other parameters
@@ -334,75 +363,76 @@ backCore:
 
   coog:
     # -- coog, celery and batch configuration for number of workers
-    workers:
-      number: ""
+    # Example:
+    # workers:
+    #   number: ""
 
     # -- Configure environement variables for this component
     # Each value can be modified without override all or delete other parameters
     config: {}
 
-    persistentVolume:
-      enabled: true
-      name: workspace-io
-      io: /workspace/io/
-      storageClass: nfs-client
-      size: 50Gi
-      claim:
-        name: "" # Verifier si c'est renseigné par terraform
+    # persistentVolume:
+    #   enabled: true
+    #   name: workspace-io
+    #   io: /workspace/io/
+    #   storageClass: nfs-client
+    #   size: 50Gi
+    #   claim:
+    #     name: ""
 
-    ingress:
-      # -- Default host for the ingress resource for coog containers'
-      hosts:
-        - paths:
-            - /
+    # ingress:
+    #   # -- Default host for the ingress resource for coog containers'
+    #   hosts:
+    #     - paths:
+    #         - /
 
-      annotations:
-        nginx.ingress.kubernetes.io/use-proxy-protocol: true
+    #   annotations:
+    #     nginx.ingress.kubernetes.io/use-proxy-protocol: true
       
-      nginx:
-        whiteList:
-          publicCidr: []
+    #   nginx:
+    #     whiteList:
+    #       publicCidr: []
 
-    securityContext: {}
+    # securityContext: {}
       # runAsUser: ""
 
     # -- coog containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 1500m
-        memory: 1750Mi
-      requests:
-        cpu: 1500m
-        memory: 1750Mi
+    # resources:
+    #   limits:
+    #     cpu: 1500m
+    #     memory: 1750Mi
+    #   requests:
+    #     cpu: 1500m
+    #     memory: 1750Mi
 
-    initContainers:
-      resources:
-        limits:
-          cpu: 500m
-          memory: 800Mi
-        requests:
-          cpu: 500m
-          memory: 800Mi
+    # initContainers:
+    #   resources:
+    #     limits:
+    #       cpu: 500m
+    #       memory: 800Mi
+    #     requests:
+    #       cpu: 500m
+    #       memory: 800Mi
 
 
 
   celery:
     workers:
       # -- Number of celery workers to run
-      number: ""
+      # number: ""
       maximumMemory: 512000
 
     # -- Configure environement variables for this component
     config: {}
 
     # -- celery containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 400m
-        memory: 1000Mi
-      requests:
-        cpu: 400m
-        memory: 1000Mi
+    # resources:
+    #   limits:
+    #     cpu: 400m
+    #     memory: 1000Mi
+    #   requests:
+    #     cpu: 400m
+    #     memory: 1000Mi
 
 
 
@@ -413,13 +443,13 @@ backCore:
     coogCeleryModule: coog_async.coog_celery
 
     # -- cron containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 200m
-        memory: 500Mi
-      requests:
-        cpu: 200m
-        memory: 500Mi
+    # resources:
+    #   limits:
+    #     cpu: 200m
+    #     memory: 500Mi
+    #   requests:
+    #     cpu: 200m
+    #     memory: 500Mi
 
     # -- Configure options applied to cron deployment, liveness, readiness and startup probes
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
@@ -431,91 +461,91 @@ backCore:
     #
     # With this configuration, the kubelet will attempt to open a socket to your container on the specified port. 
     # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
-    livenessProbe:
-      initialDelaySeconds: 30
-      periodSeconds: 120
-      timeoutSeconds: 10
-      successThreshold: 1
-      failureThreshold: 2
+    # livenessProbe:
+    #   initialDelaySeconds: 30
+    #   periodSeconds: 120
+    #   timeoutSeconds: 10
+    #   successThreshold: 1
+    #   failureThreshold: 2
 
     # -- additional startup time on their first initialization
-    startupProbe:
-      initialDelaySeconds: 30
-      periodSeconds: 120
-      timeoutSeconds: 10
-      successThreshold: 1
-      failureThreshold: 2
+    # startupProbe:
+    #   initialDelaySeconds: 30
+    #   periodSeconds: 120
+    #   timeoutSeconds: 10
+    #   successThreshold: 1
+    #   failureThreshold: 2
 
 
 
-  static:
-    image:
-      # -- static image name
-      name: coog-static
+  # static:
+  #   image:
+  #     # -- static image name
+  #     name: coog-static
 
-    strategy:
-      # -- static redeployment strategy type
-      type: ""
+  #   # strategy:
+  #     # -- static redeployment strategy type
+  #     # type: ""
 
-    ingress:
-      # -- Default host for the ingress resource for static containers'
-      hosts:
-        - paths:
-            - /sao
-            - /bench
-            - /doc
-      nginx:
-        whiteList:
-          publicCidr: []
+  #   ingress:
+  #     # -- Default host for the ingress resource for static containers'
+  #     hosts:
+  #       - paths:
+  #           - /sao
+  #           - /bench
+  #           - /doc
+  #     nginx:
+  #       whiteList:
+  #         publicCidr: []
 
-    securityContext: {}
-      # runAsUser: ""
+  #   securityContext: {}
+  #     # runAsUser: ""
 
-    # -- static containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 50m
-        memory: 80Mi
-      requests:
-        cpu: 50m
-        memory: 80Mi
+  #   # -- static containers' resource requests and limits
+  #   resources:
+  #     limits:
+  #       cpu: 50m
+  #       memory: 80Mi
+  #     requests:
+  #       cpu: 50m
+  #       memory: 80Mi
   
 #############################################################################################################################
 #                                            Back Additional components                                                     #
 #############################################################################################################################
 
-libroconv:
-  # -- Deploy libroconv container(s)
-  enabled: false
+# libroconv:
+#   # -- Deploy libroconv container(s)
+#   enabled: false
 
-  image:
-    # -- libroconv image repository
-    name: coog-libroconv
+#   image:
+#     # -- libroconv image repository
+#     name: coog-libroconv
 
-  securityContext: {}
-    # runAsUser: ""
+#   securityContext: {}
+#     # runAsUser: ""
 
-  # -- libroconv containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 300m
-      memory: 300Mi
-    requests:
-      cpu: 300m
-      memory: 300Mi
+#   # -- libroconv containers' resource requests and limits
+#   resources:
+#     limits:
+#       cpu: 300m
+#       memory: 300Mi
+#     requests:
+#       cpu: 300m
+#       memory: 300Mi
 
-  livenessProbe:
-    initialDelaySeconds: 0
-    periodSeconds: 60
-    timeoutSeconds: 30
-    successThreshold: 1
-    failureThreshold: 2
-  readinessProbe:
-    initialDelaySeconds: 0
-    periodSeconds: 30
-    timeoutSeconds: 30
-    successThreshold: 1
-    failureThreshold: 3
+#   livenessProbe:
+#     initialDelaySeconds: 0
+#     periodSeconds: 60
+#     timeoutSeconds: 30
+#     successThreshold: 1
+#     failureThreshold: 2
+#   readinessProbe:
+#     initialDelaySeconds: 0
+#     periodSeconds: 30
+#     timeoutSeconds: 30
+#     successThreshold: 1
+#     failureThreshold: 3
 
 
 #############################################################################################################################
@@ -537,92 +567,92 @@ libroconv:
 # - web
 #
 # If you enable one front component, you must set mongodb.isManaged: true
-frontCore:
-  enabled: false
-  config:
-    JWT_EXPIRATION: 3600
+# frontCore:
+#   enabled: false
+#   config:
+#     JWT_EXPIRATION: 3600
 
-  gateway:
-    image:
-      # -- gateway image repository
-      name: coog-gateway
+#   gateway:
+#     image:
+#       # -- gateway image repository
+#       name: coog-gateway
 
-    # -- Configure environement variables for this component
-    config:
-      COOG_MODULE: true
-      GOOGLE_MODULE: false
-      FACEBOOK_MODULE: false
-      COOG_TOKEN_MODULE: true
-      COOG_GATEWAY_PORT: 8000
-      COOG_GATEWAY_BASE_PATH: /gateway
+#     # -- Configure environement variables for this component
+#     config:
+#       COOG_MODULE: true
+#       GOOGLE_MODULE: false
+#       FACEBOOK_MODULE: false
+#       COOG_TOKEN_MODULE: true
+#       COOG_GATEWAY_PORT: 8000
+#       COOG_GATEWAY_BASE_PATH: /gateway
 
-    ingress:
-      # -- Default host for the ingress resource for gateway containers
-      hosts:
-        - paths:
-            - /gateway(/|$)(.*)
+#     ingress:
+#       # -- Default host for the ingress resource for gateway containers
+#       hosts:
+#         - paths:
+#             - /gateway(/|$)(.*)
       
-      annotations:
-        nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+#       annotations:
+#         nginx.ingress.kubernetes.io/rewrite-target: '/$2'
       
-      nginx:
-        whiteList:
-          publicCidr: []
+#       nginx:
+#         whiteList:
+#           publicCidr: []
 
-    securityContext: {}
-      # runAsUser: ""
+#     securityContext: {}
+#       # runAsUser: ""
 
-    # -- gateway containers resource requests and limits
-    resources:
-      limits:
-        cpu: 100m
-        memory: 100Mi
-      requests:
-        cpu: 100m
-        memory: 100Mi
-
-
-  api:
-    image:
-      # -- api-v2 image repository
-      name: coog-api
-
-    # -- Configure environement variables for this component
-    config: {}
-
-    securityContext: {}
-      # runAsUser: ""
-
-    # -- api containers resource requests and limits
-    resources:
-      limits:
-        cpu: 500m
-        memory: 100Mi
-      requests:
-        cpu: 500m
-        memory: 100Mi
+#     # -- gateway containers resource requests and limits
+#     resources:
+#       limits:
+#         cpu: 100m
+#         memory: 100Mi
+#       requests:
+#         cpu: 100m
+#         memory: 100Mi
 
 
+#   api:
+#     image:
+#       # -- api-v2 image repository
+#       name: coog-api
 
-  apiIdentityManager:
-    image:
-      # -- api-identity-manager image repository
-      name: coog-api-identity-manager
+#     # -- Configure environement variables for this component
+#     config: {}
+
+#     securityContext: {}
+#       # runAsUser: ""
+
+#     # -- api containers resource requests and limits
+#     resources:
+#       limits:
+#         cpu: 500m
+#         memory: 100Mi
+#       requests:
+#         cpu: 500m
+#         memory: 100Mi
+
+
+
+#   apiIdentityManager:
+#     image:
+#       # -- api-identity-manager image repository
+#       name: coog-api-identity-manager
     
-    # -- Configure environement variables for this component
-    config: {}
+#     # -- Configure environement variables for this component
+#     config: {}
 
-    securityContext: {}
-      # runAsUser: ""
+#     securityContext: {}
+#       # runAsUser: ""
 
-    # -- apiIdentityManager containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 50m
-        memory: 70Mi
-      requests:
-        cpu: 50m
-        memory: 70Mi
+#     # -- apiIdentityManager containers' resource requests and limits
+#     resources:
+#       limits:
+#         cpu: 50m
+#         memory: 70Mi
+#       requests:
+#         cpu: 50m
+#       memory: 70Mi
 
 
 #############################################################################################################################
@@ -633,88 +663,88 @@ frontCore:
 #      Components B2B        #
 ##############################
 
-b2b:
-  enabled: false
+# b2b:
+#   enabled: false
 
-  image:
-    # -- b2b image repository
-    name: coog-b2b
+#   image:
+#     # -- b2b image repository
+#     name: coog-b2b
 
-  ingress:
-    # -- Default host for the ingress resource for gateway containers
-    hosts:
-      - paths:
-          - /portal(/|$)(.*)
+#   ingress:
+#     # -- Default host for the ingress resource for gateway containers
+#     hosts:
+#       - paths:
+#           - /portal(/|$)(.*)
     
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+#     annotations:
+#       nginx.ingress.kubernetes.io/rewrite-target: '/$2'
     
-    nginx:
-      whiteList:
-        publicCidr: []
+#     nginx:
+#       whiteList:
+#         publicCidr: []
 
-  securityContext: {}
-    # runAsUser: ""
+#   securityContext: {}
+#     # runAsUser: ""
 
-  # -- b2b containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 250m
-      memory: 50Mi
-    requests:
-      cpu: 250m
-      memory: 50Mi
-
-
-
-web:
-  enabled: false
-
-  image:
-    # -- web image repository
-    name: coog-web
-
-  # -- Configure environement variables for this component
-  config:
-    COOG_API_API_PATH: /web/api
-    COOG_API_APP_PATH: /web
-
-  securityContext: {}
-    # runAsUser: ""
-
-  # -- web containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 500m
-      memory: 200Mi
-    requests:
-      cpu: 500m
-      memory: 200Mi
+#   # -- b2b containers' resource requests and limits
+#   resources:
+#     limits:
+#       cpu: 250m
+#       memory: 50Mi
+#     requests:
+#       cpu: 250m
+#       memory: 50Mi
 
 
 
-apiReferential:
-  # -- Deploy apiReferential container(s)
-  enabled: false
+# web:
+#   enabled: false
 
-  image:
-    # -- apiReferential image repository
-    name: coog-api-referential
+#   image:
+#     # -- web image repository
+#     name: coog-web
 
-  # -- Configure environement variables for this component
-  config: {}
+#   # -- Configure environement variables for this component
+#   config:
+#     COOG_API_API_PATH: /web/api
+#     COOG_API_APP_PATH: /web
 
-  securityContext: {}
-    # runAsUser: ""
+#   securityContext: {}
+#     # runAsUser: ""
 
-  # -- apiReferential containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 200m
-      memory: 400Mi
-    requests:
-      cpu: 200m
-      memory: 400Mi
+#   # -- web containers' resource requests and limits
+#   resources:
+#     limits:
+#       cpu: 500m
+#       memory: 200Mi
+#     requests:
+#       cpu: 500m
+#       memory: 200Mi
+
+
+
+# apiReferential:
+#   # -- Deploy apiReferential container(s)
+#   enabled: false
+
+#   image:
+#     # -- apiReferential image repository
+#     name: coog-api-referential
+
+#   # -- Configure environement variables for this component
+#   config: {}
+
+#   securityContext: {}
+#     # runAsUser: ""
+
+#   # -- apiReferential containers' resource requests and limits
+#   resources:
+#     limits:
+#       cpu: 200m
+#       memory: 400Mi
+#     requests:
+#       cpu: 200m
+#       memory: 400Mi
 
 
 
@@ -722,133 +752,133 @@ apiReferential:
 #      Components B2C        #
 ##############################
 
-b2c:
-  # -- Deploy b2c + apiB2c container(s)
-  enabled: false
+# b2c:
+#   # -- Deploy b2c + apiB2c container(s)
+#   enabled: false
 
-  image:
-    # -- b2c image repository
-    name: coog-app-b2c
+#   image:
+#     # -- b2c image repository
+#     name: coog-app-b2c
 
-  ingress:
-    # -- Default host for the ingress resource for gateway containers
-    hosts:
-      - paths:
-          - /customers/myspace(/|$)(.*)
+#   ingress:
+#     # -- Default host for the ingress resource for gateway containers
+#     hosts:
+#       - paths:
+#           - /customers/myspace(/|$)(.*)
     
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+#     annotations:
+#       nginx.ingress.kubernetes.io/rewrite-target: '/$2'
     
-    nginx:
-      whiteList:
-        publicCidr: []
+#     nginx:
+#       whiteList:
+#         publicCidr: []
 
-  securityContext: {}
-    # runAsUser: ""
+#   securityContext: {}
+#     # runAsUser: ""
 
-  # -- b2c containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 50m
-      memory: 50Mi
-    requests:
-      cpu: 50m
-      memory: 50Mi
+#   # -- b2c containers' resource requests and limits
+#   resources:
+#     limits:
+#       cpu: 50m
+#       memory: 50Mi
+#     requests:
+#       cpu: 50m
+#       memory: 50Mi
 
 
 
-customerBackend:
-  # -- Deploy b2b container(s)
-  enabled: false
+# customerBackend:
+#   # -- Deploy b2b container(s)
+#   enabled: false
 
-  image:
-    # -- b2b image repository
-    name: coog-customer-backend
+#   image:
+#     # -- b2b image repository
+#     name: coog-customer-backend
 
-  # -- Configure environement variables for this component
-  config:
-    DATABASE_NAME: strapi
+#   # -- Configure environement variables for this component
+#   config:
+#     DATABASE_NAME: strapi
 
-  ingress:
-    # -- Default host for the ingress resource for gateway containers
-    hosts:
-      - paths:
-          - /v1/customer(/|$)(.*)
+#   ingress:
+#     # -- Default host for the ingress resource for gateway containers
+#     hosts:
+#       - paths:
+#           - /v1/customer(/|$)(.*)
     
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+#     annotations:
+#       nginx.ingress.kubernetes.io/rewrite-target: '/$2'
 
-    nginx:
-      whiteList:
-        publicCidr: []
+#     nginx:
+#       whiteList:
+#         publicCidr: []
 
-  securityContext: {}
-    # runAsUser: ""
+#   securityContext: {}
+#     # runAsUser: ""
 
-  # -- b2b containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 400m
-      memory: 300Mi
-    requests:
-      cpu: 400m
-      memory: 300Mi
+#   # -- b2b containers' resource requests and limits
+#   resources:
+#     limits:
+#       cpu: 400m
+#       memory: 300Mi
+#     requests:
+#       cpu: 400m
+#       memory: 300Mi
 
-  initContainers:
-    resources:
-      limits:
-        cpu: 400m
-        memory: 500Mi
-      requests:
-        cpu: 400m
-        memory: 500Mi
+#   initContainers:
+#     resources:
+#       limits:
+#         cpu: 400m
+#         memory: 500Mi
+#       requests:
+#         cpu: 400m
+#         memory: 500Mi
   
 
 
-customerFrontend:
-  # -- Deploy customerFrontend container(s)
-  enabled: false
+# customerFrontend:
+#   # -- Deploy customerFrontend container(s)
+#   enabled: false
 
-  image:
-    # -- customerFrontend image repository
-    name: coog-customer-frontend
+#   image:
+#     # -- customerFrontend image repository
+#     name: coog-customer-frontend
 
-  # -- Configure environement variables for this component
-  config: {}
+#   # -- Configure environement variables for this component
+#   config: {}
 
-  ingress:
-    # -- Default host for the ingress resource for gateway containers
-    hosts:
-      - paths:
-          - /customer(/|$)(.*)
+#   ingress:
+#     # -- Default host for the ingress resource for gateway containers
+#     hosts:
+#       - paths:
+#           - /customer(/|$)(.*)
     
-    annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+#     annotations:
+#       nginx.ingress.kubernetes.io/rewrite-target: '/$2'
 
-    nginx:
-      whiteList:
-        publicCidr: []
+#     nginx:
+#       whiteList:
+#         publicCidr: []
 
-  securityContext: {}
-    # runAsUser: ""
+#   securityContext: {}
+#     # runAsUser: ""
 
-  # -- customerFrontend containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 100m
-      memory: 100Mi
-    requests:
-      cpu: 100m
-      memory: 100Mi
+#   # -- customerFrontend containers' resource requests and limits
+#   resources:
+#     limits:
+#       cpu: 100m
+#       memory: 100Mi
+#     requests:
+#       cpu: 100m
+#       memory: 100Mi
 
-  initContainers:
-    resources:
-      limits:
-        cpu: 400m
-        memory: 2000Mi
-      requests:
-        cpu: 400m
-        memory: 2000Mi
+#   initContainers:
+#     resources:
+#       limits:
+#         cpu: 400m
+#         memory: 2000Mi
+#       requests:
+#         cpu: 400m
+#         memory: 2000Mi
 
 
 
@@ -856,22 +886,22 @@ customerFrontend:
 # - b2c
 # - customerBackend
 # - customerFrontend
-apiB2c:
-  image:
-    # -- apiB2c image repository
-    name: coog-api-b2c
+# apiB2c:
+#   image:
+#     # -- apiB2c image repository
+#     name: coog-api-b2c
 
-  # -- Configure environement variables for this component
-  config: {}
+#   # -- Configure environement variables for this component
+#   config: {}
 
-  securityContext: {}
-    # runAsUser: ""
+#   securityContext: {}
+#     # runAsUser: ""
 
-  # -- apiB2c containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 50m
-      memory: 50Mi
-    requests:
-      cpu: 50m
-      memory: 50Mi
+#   # -- apiB2c containers' resource requests and limits
+#   resources:
+#     limits:
+#       cpu: 50m
+#       memory: 50Mi
+#     requests:
+#       cpu: 50m
+#       memory: 50Mi
