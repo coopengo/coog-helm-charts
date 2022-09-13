@@ -20,6 +20,15 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ default .Values.image.repository .Values.maintenanceMode.image.repository }}/{{ .Values.maintenanceMode.image.name }}:{{ default .Values.image.tag .Values.maintenanceMode.image.tag }}"
           imagepullPolicy: {{ default .Values.image.pullPolicy .Values.maintenanceMode.image.pullPolicy | quote }}
+          envFrom:
+            {{- if .Values.config }}
+            - configMapRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
+            {{- if .Values.secrets.config }}
+            - secretRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 8080

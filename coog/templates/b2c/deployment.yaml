@@ -29,6 +29,15 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.b2c.securityContext.runAsUser }}
+          envFrom:
+            {{- if .Values.config }}
+            - configMapRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
+            {{- if .Values.secrets.config }}
+            - secretRef:
+                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 5000
