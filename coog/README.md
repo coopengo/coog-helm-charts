@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.14.2236](https://img.shields.io/badge/Version-22.14.2236-informational?style=flat-square) ![AppVersion: coog-22.14](https://img.shields.io/badge/AppVersion-coog--22.14-informational?style=flat-square)
+![Version: 22.14.2236-1](https://img.shields.io/badge/Version-22.14.2236--1-informational?style=flat-square) ![AppVersion: coog-22.14](https://img.shields.io/badge/AppVersion-coog--22.14-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -215,11 +215,15 @@ A Helm chart for Coog
 | customer_backend.ingress.enabled | bool | `true` | Enable ingress controller resource for portal containers' |
 | customer_backend.ingress.hosts | list | `[{"host":"v1.customer.local","paths":[]}]` | Default host for the ingress resource for portal containers' |
 | customer_backend.ingress.tls | list | `[]` | TLS configuration for portal containers' |
+| customer_backend.initContainers.resources.limits.cpu | string | `"400m"` |  |
+| customer_backend.initContainers.resources.limits.memory | string | `"500Mi"` |  |
+| customer_backend.initContainers.resources.requests.cpu | string | `"200m"` |  |
+| customer_backend.initContainers.resources.requests.memory | string | `"250Mi"` |  |
 | customer_backend.nameOverride | string | `""` |  |
 | customer_backend.nodeSelector | object | `{}` | Node labels for pod assignment |
 | customer_backend.postgres_db | string | `"strapi"` |  |
 | customer_backend.replicaCount | int | `1` | Number of portal Pods to run |
-| customer_backend.resources | object | `{"limits":{"cpu":"400m","memory":"500Mi"},"requests":{"cpu":"100m","memory":"250Mi"}}` | portal containers' resource requests and limits |
+| customer_backend.resources | object | `{"limits":{"cpu":"400m","memory":"300Mi"},"requests":{"cpu":"100m","memory":"150Mi"}}` | portal containers' resource requests and limits |
 | customer_backend.service.port | int | `80` |  |
 | customer_backend.service.type | string | `"ClusterIP"` |  |
 | customer_backend.tolerations | list | `[]` | Tolerations for pod assignment |
@@ -234,10 +238,14 @@ A Helm chart for Coog
 | customer_frontend.ingress.enabled | bool | `true` | Enable ingress controller resource for portal containers' |
 | customer_frontend.ingress.hosts | list | `[{"host":"customer.local","paths":[]}]` | Default host for the ingress resource for portal containers' |
 | customer_frontend.ingress.tls | list | `[]` | TLS configuration for portal containers' |
+| customer_frontend.initContainers.resources.limits.cpu | string | `"400m"` |  |
+| customer_frontend.initContainers.resources.limits.memory | string | `"2000Mi"` |  |
+| customer_frontend.initContainers.resources.requests.cpu | string | `"200m"` |  |
+| customer_frontend.initContainers.resources.requests.memory | string | `"1500Mi"` |  |
 | customer_frontend.nameOverride | string | `""` |  |
 | customer_frontend.nodeSelector | object | `{}` | Node labels for pod assignment |
 | customer_frontend.replicaCount | int | `1` | Number of portal Pods to run |
-| customer_frontend.resources | object | `{"limits":{"cpu":"50m","memory":"50Mi"},"requests":{"cpu":"10m","memory":"25Mi"}}` | portal containers' resource requests and limits |
+| customer_frontend.resources | object | `{"limits":{"cpu":"100m","memory":"100Mi"},"requests":{"cpu":"50m","memory":"50Mi"}}` | portal containers' resource requests and limits |
 | customer_frontend.service.port | int | `80` |  |
 | customer_frontend.service.type | string | `"ClusterIP"` |  |
 | customer_frontend.tolerations | list | `[]` | Tolerations for pod assignment |
