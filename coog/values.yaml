@@ -44,8 +44,8 @@ rabbitmq:
       cpu: 600m
       memory: 400Mi
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 600m
+      memory: 400Mi
   updateStrategyType: RollingUpdate
   extraConfiguration: |-
     consumer_timeout = 172800000
@@ -67,8 +67,8 @@ mongodb:
       cpu: 100m
       memory: 300Mi
     requests:
-      cpu: 50m
-      memory: 150Mi
+      cpu: 100m
+      memory: 300Mi
   volumePermissions:
     enabled: true
     resources:
@@ -76,8 +76,8 @@ mongodb:
         cpu: 100m
         memory: 300Mi
       requests:
-        cpu: 50m
-        memory: 150Mi
+        cpu: 100m
+        memory: 300Mi
 
 postgresql:
   enabled: true
@@ -125,8 +125,8 @@ api:
       cpu: 500m
       memory: 100Mi
     requests:
-      cpu: 50m
-      memory: 50Mi
+      cpu: 500m
+      memory: 100Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -169,8 +169,8 @@ api_b2b_config:
       cpu: 50m
       memory: 80Mi
     requests:
-      cpu: 30m
-      memory: 40Mi
+      cpu: 40m
+      memory: 60Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -211,8 +211,8 @@ api_b2c:
       cpu: 50m
       memory: 50Mi
     requests:
-      cpu: 20m
-      memory: 25Mi
+      cpu: 40m
+      memory: 50Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -254,8 +254,8 @@ api_identity_manager:
       cpu: 50m
       memory: 70Mi
     requests:
-      cpu: 10m
-      memory: 30Mi
+      cpu: 40m
+      memory: 60Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -297,8 +297,8 @@ api_referential:
       cpu: 200m
       memory: 400Mi
     requests:
-      cpu: 100m
-      memory: 250Mi
+      cpu: 150m
+      memory: 400Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -357,8 +357,8 @@ app_b2c:
       cpu: 50m
       memory: 50Mi
     requests:
-      cpu: 10m
-      memory: 30Mi
+      cpu: 40m
+      memory: 50Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -400,8 +400,8 @@ unoconv:
       cpu: 300m
       memory: 300Mi
     requests:
-      cpu: 50m
-      memory: 50Mi
+      cpu: 300m
+      memory: 300Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -437,8 +437,8 @@ celery:
         cpu: 200m
         memory: 700Mi
       requests:
-        cpu: 100m
-        memory: 300Mi
+        cpu: 200m
+        memory: 700Mi
     # -- Affinity for pod assignment
     affinity: {}
 
@@ -462,8 +462,8 @@ celery:
       cpu: 400m
       memory: 1000Mi
     requests:
-      cpu: 100m
-      memory: 300Mi
+      cpu: 400m
+      memory: 1000Mi
   cron:
     # -- celery cron job containers' resource requests and limits
     backend_configuration: true
@@ -472,8 +472,8 @@ celery:
         cpu: 200m
         memory: 300Mi
       requests:
-        cpu: 100m
-        memory: 100Mi
+        cpu: 200m
+        memory: 300Mi
 
   # -- Affinity for pod assignment
   affinity: {}
@@ -570,8 +570,8 @@ coog:
       cpu: 1500m
       memory: 1750Mi
     requests:
-      cpu: 200m
-      memory: 300Mi
+      cpu: 1500m
+      memory: 1750Mi
 
   initContainers:
     resources:
@@ -579,8 +579,8 @@ coog:
         cpu: 500m
         memory: 800Mi
       requests:
-        cpu: 400m
-        memory: 400Mi
+        cpu: 500m
+        memory: 800Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -610,8 +610,8 @@ cron:
       cpu: 200m
       memory: 500Mi
     requests:
-      cpu: 100m
-      memory: 300Mi
+      cpu: 200m
+      memory: 500Mi
   livenessProbe:
     initialDelaySeconds: 30
     periodSeconds: 120
@@ -747,8 +747,8 @@ web:
       cpu: 500m
       memory: 200Mi
     requests:
-      cpu: 30m
-      memory: 30Mi
+      cpu: 500m
+      memory: 200Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -812,8 +812,8 @@ portal:
       cpu: 250m
       memory: 50Mi
     requests:
-      cpu: 10m
-      memory: 25Mi
+      cpu: 200m
+      memory: 50Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -887,8 +887,8 @@ gateway:
       cpu: 100m
       memory: 100Mi
     requests:
-      cpu: 50m
-      memory: 50Mi
+      cpu: 100m
+      memory: 100Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -948,8 +948,8 @@ static:
       cpu: 50m
       memory: 80Mi
     requests:
-      cpu: 10m
-      memory: 20Mi
+      cpu: 50m
+      memory: 80Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -979,8 +979,8 @@ batch:
         cpu: 200m
         memory: 100Mi
       requests:
-        cpu: 100m
-        memory: 50Mi
+        cpu: 200m
+        memory: 100Mi
 
 # B2C Frontend
 customer_frontend:
@@ -1034,8 +1034,8 @@ customer_frontend:
       cpu: 100m
       memory: 100Mi
     requests:
-      cpu: 50m
-      memory: 50Mi
+      cpu: 100m
+      memory: 100Mi
 
   initContainers:
     resources:
@@ -1043,8 +1043,8 @@ customer_frontend:
         cpu: 400m
         memory: 2000Mi
       requests:
-        cpu: 200m
-        memory: 1500Mi
+        cpu: 400m
+        memory: 2000Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
@@ -1108,8 +1108,8 @@ customer_backend:
       cpu: 400m
       memory: 300Mi
     requests:
-      cpu: 100m
-      memory: 150Mi
+      cpu: 400m
+      memory: 300Mi
 
   initContainers:
     resources:
@@ -1117,8 +1117,8 @@ customer_backend:
         cpu: 400m
         memory: 500Mi
       requests:
-        cpu: 200m
-        memory: 250Mi
+        cpu: 400m
+        memory: 500Mi
 
   # -- Node labels for pod assignment
   nodeSelector: {}
