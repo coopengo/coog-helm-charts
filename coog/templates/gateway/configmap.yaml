@@ -24,11 +24,11 @@ data:
   COOG_API_IDENTITY_MANAGER_URL: {{ printf "http://%s-%s-api-identity-manager" .Release.Name .Chart.Name }}
   # CORS
   {{- if eq (default .Values.ingress.nginx.whiteList.managementMode .Values.frontCore.gateway.ingress.nginx.whiteList.managementMode) "append" }}
-    WHITELIST: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.frontCore.gateway.ingress.nginx.whiteList.publicCidr) | quote }}
+  WHITELIST: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.frontCore.gateway.ingress.nginx.whiteList.publicCidr) | quote }}
   {{- else if eq (default .Values.ingress.nginx.whiteList.managementMode .Values.frontCore.gateway.ingress.nginx.whiteList.managementMode) "replace" }}
-    WHITELIST: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr (default .Values.ingress.nginx.whiteList.publicCidr .Values.frontCore.gateway.ingress.nginx.whiteList.publicCidr)) | quote }}
+  WHITELIST: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr (default .Values.ingress.nginx.whiteList.publicCidr .Values.frontCore.gateway.ingress.nginx.whiteList.publicCidr)) | quote }}
   {{- else }}
-    WHITELIST: 127.0.0.1/32
+  WHITELIST: 127.0.0.1/32
   {{- end }} 
   {{- range $key, $value := .Values.frontCore.gateway.config }}
   {{ $key }}: {{ $value }}
