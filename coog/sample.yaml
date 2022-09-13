@@ -125,6 +125,20 @@ ingress:
   # These IPs are not allowed when maintenanceMode is enable
   nginx:
     whiteList:
+      # -- managementMode define behavior for publicCidr parameter. It can be customized for each component
+      # e.g:
+      # coog:
+      #   ingress:
+      #     nginx:
+      #       whiteList:
+      #         managementMode: append
+      #
+      # possible values : append or replace
+      # append: group trustedCidr + global publicCidr + component publicCidr
+      # replace: if publicCidr's component is not empty, it's replace the content of the global public Cidr
+      
+      # Example:
+      # managementMode: append
       trustedCidr:
         - 127.0.0.1/32
       publicCidr: []

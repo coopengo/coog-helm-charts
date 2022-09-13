@@ -18,7 +18,13 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- else }}
+  {{- if eq (default .Values.ingress.nginx.whiteList.managementMode .Values.customerBackend.ingress.nginx.whiteList.managementMode) "append" }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.customerBackend.ingress.nginx.whiteList.publicCidr) | quote }}
+  {{- else if eq (default .Values.ingress.nginx.whiteList.managementMode .Values.customerBackend.ingress.nginx.whiteList.managementMode) "replace" }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr (default .Values.ingress.nginx.whiteList.publicCidr .Values.customerBackend.ingress.nginx.whiteList.publicCidr)) | quote }}
+  {{- else }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: 127.0.0.1/32
+  {{- end }}
   {{- end }}
   {{- range $key, $value := .Values.ingress.annotations}}
     {{ $key }}: {{ $value | quote }}
