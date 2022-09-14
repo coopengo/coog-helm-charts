@@ -11,12 +11,7 @@ data:
   DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database }} # duplicate of COOG_DB_NAME
   # Tryton
   TRYTOND_REPORT__API: {{ printf "http://%s-%s-libroconv:5000/unoconv/{oext}" .Release.Name .Chart.Name }}
-  {{- if eq (default .Values.ingress.nginx.whiteList.managementMode .Values.backCore.coog.ingress.nginx.whiteList.managementMode) "append" }}
-  TRYTOND_WEB__CORS: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.backCore.coog.ingress.nginx.whiteList.publicCidr) | quote }}
-  {{- else if eq (default .Values.ingress.nginx.whiteList.managementMode .Values.backCore.coog.ingress.nginx.whiteList.managementMode) "replace" }}
-  TRYTOND_WEB__CORS: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr (default .Values.ingress.nginx.whiteList.publicCidr .Values.backCore.coog.ingress.nginx.whiteList.publicCidr)) | quote }}
-  {{- else }}
-  TRYTOND_WEB__CORS: 127.0.0.1/32
+  TRYTOND_WEB__CORS: {{ join "," (default .Values.ingress.nginx.whiteList.cors.url .Values.backCore.coog.ingress.nginx.whiteList.cors.url) | quote }}S: 127.0.0.1/32
   {{- end }}
   {{- range $key, $value := .Values.backCore.coog.config }}
   {{ $key }}: {{ $value }}

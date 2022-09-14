@@ -128,8 +128,9 @@ ingress:
       managementMode: append
       trustedCidr:
         - 127.0.0.1/32
-      publicCidr:
-        - 1.2.3.4/32
+      publicCidr: []
+      cors:
+        url: []
 
 # -- Configure options applied to all deployments, liveness, readiness and startup probes
 # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
@@ -374,8 +375,9 @@ backCore:
       
       nginx:
         whiteList:
-          publicCidr:
-            - 5.6.7.8/32
+          publicCidr: []
+          cors:
+            url: []
 
     securityContext: {}
       # runAsUser: ""
@@ -582,6 +584,8 @@ frontCore:
       nginx:
         whiteList:
           publicCidr: []
+          cors:
+            url: []
 
     securityContext: {}
       # runAsUser: ""
