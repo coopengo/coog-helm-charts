@@ -832,7 +832,8 @@ customerFrontend:
     name: coog-customer-frontend
 
   # -- Configure environement variables for this component
-  config: {}
+  config:
+    GATSBY_API_URL: "/v1/customer"
 
   ingress:
     # -- Default host for the ingress resource for gateway containers
