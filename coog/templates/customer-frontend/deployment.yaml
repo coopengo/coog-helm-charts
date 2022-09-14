@@ -43,13 +43,13 @@ spec:
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           resources:
             {{- toYaml .Values.customer_frontend.initContainers.resources | nindent 12 }}
-          command: ['sh', '-c', 'yarn', 'build', '--prefix-paths']
+          command: ['yarn', 'build', '--prefix-paths']
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/public"
           {{- if .Values.customer_frontend.env }}
           env:
-            {{- range $key, $value := .Values.customer_frontend.env }}
+            {{- range $key, $value := .Values.customer_frontend.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
