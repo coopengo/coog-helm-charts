@@ -43,7 +43,7 @@ spec:
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           resources:
             {{- toYaml .Values.customer_backend.initContainers.resources | nindent 12 }}
-          command: ['sh', '-c', 'yarn', 'build', '--no-optimization']
+          command: ['yarn', 'build', '--no-optimization']
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/build"
