@@ -70,13 +70,13 @@ spec:
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/public"
-          {{- if .Values.customer_frontend.extraEnv }}
           env:
             - name:  GATSBY_GEOAPIFY_API_KEY
               valueFrom:
                 secretKeyRef:
                   name: coog-customer-frontend-configuration
                   key: GATSBY_GEOAPIFY_API_KEY
+            {{- if .Values.customer_frontend.extraEnv }}
             {{- range $key, $value := .Values.customer_frontend.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
