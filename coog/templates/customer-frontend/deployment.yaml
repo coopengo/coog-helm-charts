@@ -75,7 +75,7 @@ spec:
             - name:  GATSBY_GEOAPIFY_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: coog-postgres-db-secret
+                  name: coog-customer-frontend-configuration
                   key: GATSBY_GEOAPIFY_API_KEY
             {{- range $key, $value := .Values.customer_frontend.extraEnv }}
             - name:  {{ $key }}
