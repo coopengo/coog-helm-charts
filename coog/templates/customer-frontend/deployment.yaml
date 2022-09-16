@@ -43,13 +43,13 @@ spec:
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           resources:
             {{- toYaml .Values.customer_frontend.initContainers.resources | nindent 12 }}
-          command: ['sh', '-c', 'yarn', 'build', '--prefix-paths']
+          command: ['yarn', 'build', '--prefix-paths']
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/public"
-          {{- if .Values.customer_frontend.env }}
+          {{- if .Values.customer_frontend.extraEnv }}
           env:
-            {{- range $key, $value := .Values.customer_frontend.env }}
+            {{- range $key, $value := .Values.customer_frontend.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
@@ -72,6 +72,11 @@ spec:
               mountPath: "/workdir/public"
           {{- if .Values.customer_frontend.extraEnv }}
           env:
+            - name:  GATSBY_GEOAPIFY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: coog-postgres-db-secret
+                  key: GATSBY_GEOAPIFY_API_KEY
             {{- range $key, $value := .Values.customer_frontend.extraEnv }}
             - name:  {{ $key }}
               value: {{ $value | quote }}
