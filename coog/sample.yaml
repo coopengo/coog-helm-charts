@@ -243,8 +243,8 @@ ingress:
 #       cpu: 100m
 #       memory: 100Mi
 #     requests:
-#       cpu: 100m
-#       memory: 100Mi
+#       cpu: 80m
+#       memory: 80Mi
 
 #   ingress:
 #     nginx:
@@ -288,8 +288,8 @@ mongodb:
   #     cpu: 100m
   #     memory: 300Mi
   #   requests:
-  #     cpu: 100m
-  #     memory: 300Mi
+  #     cpu: 80m
+  #     memory: 240Mi
   # volumePermissions:
   #   enabled: true
   #   resources:
@@ -297,8 +297,8 @@ mongodb:
   #       cpu: 100m
   #       memory: 300Mi
   #     requests:
-  #       cpu: 100m
-  #       memory: 300Mi
+  #       cpu: 80m
+  #       memory: 240Mi
 
 # -- Default message service used by backCore
 # Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/8.26.3
@@ -313,8 +313,8 @@ mongodb:
 #       cpu: 600m
 #       memory: 400Mi
 #     requests:
-#       cpu: 600m
-#       memory: 400Mi
+#       cpu: 480m
+#       memory: 320Mi
 #   updateStrategyType: RollingUpdate
 #   extraConfiguration: |-
 #     consumer_timeout = 172800000
@@ -416,8 +416,8 @@ backCore:
     #     cpu: 1500m
     #     memory: 1750Mi
     #   requests:
-    #     cpu: 1500m
-    #     memory: 1750Mi
+    #     cpu: 1200m
+    #     memory: 1400Mi
 
     # initContainers:
     #   resources:
@@ -425,8 +425,8 @@ backCore:
     #       cpu: 500m
     #       memory: 800Mi
     #     requests:
-    #       cpu: 500m
-    #       memory: 800Mi
+    #       cpu: 400m
+    #       memory: 640Mi
 
 
 
@@ -445,8 +445,8 @@ backCore:
     #     cpu: 400m
     #     memory: 1000Mi
     #   requests:
-    #     cpu: 400m
-    #     memory: 1000Mi
+    #     cpu: 320m
+    #     memory: 800Mi
 
 
 
@@ -462,8 +462,8 @@ backCore:
     #     cpu: 200m
     #     memory: 500Mi
     #   requests:
-    #     cpu: 200m
-    #     memory: 500Mi
+    #     cpu: 160m
+    #     memory: 400Mi
 
     # -- Configure options applied to cron deployment, liveness, readiness and startup probes
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
@@ -521,8 +521,8 @@ backCore:
   #       cpu: 50m
   #       memory: 80Mi
   #     requests:
-  #       cpu: 50m
-  #       memory: 80Mi
+  #       cpu: 40m
+  #       memory: 64Mi
   
 #############################################################################################################################
 #                                            Back Additional components                                                     #
@@ -545,8 +545,8 @@ backCore:
 #       cpu: 300m
 #       memory: 300Mi
 #     requests:
-#       cpu: 300m
-#       memory: 300Mi
+#       cpu: 240m
+#       memory: 240Mi
 
 #   livenessProbe:
 #     initialDelaySeconds: 0
@@ -622,8 +622,8 @@ backCore:
 #         cpu: 100m
 #         memory: 100Mi
 #       requests:
-#         cpu: 100m
-#         memory: 100Mi
+#         cpu: 80m
+#         memory: 80Mi
 
 
 #   api:
@@ -666,7 +666,7 @@ backCore:
 #         memory: 70Mi
 #       requests:
 #         cpu: 50m
-#       memory: 70Mi
+#       memory: 56Mi
 
 
 #############################################################################################################################
@@ -706,8 +706,8 @@ backCore:
 #       cpu: 250m
 #       memory: 50Mi
 #     requests:
-#       cpu: 250m
-#       memory: 50Mi
+#       cpu: 200m
+#       memory: 40Mi
 
 
 
@@ -732,8 +732,8 @@ backCore:
 #       cpu: 500m
 #       memory: 200Mi
 #     requests:
-#       cpu: 500m
-#       memory: 200Mi
+#       cpu: 400m
+#       memory: 160Mi
 
 
 
@@ -757,8 +757,8 @@ backCore:
 #       cpu: 200m
 #       memory: 400Mi
 #     requests:
-#       cpu: 200m
-#       memory: 400Mi
+#       cpu: 160m
+#       memory: 320Mi
 
 
 
@@ -797,7 +797,7 @@ backCore:
 #       memory: 50Mi
 #     requests:
 #       cpu: 50m
-#       memory: 50Mi
+#       memory: 40Mi
 
 
 
@@ -835,8 +835,8 @@ backCore:
 #       cpu: 400m
 #       memory: 300Mi
 #     requests:
-#       cpu: 400m
-#       memory: 300Mi
+#       cpu: 320m
+#       memory: 240Mi
 
 #   initContainers:
 #     resources:
@@ -844,8 +844,8 @@ backCore:
 #         cpu: 400m
 #         memory: 500Mi
 #       requests:
-#         cpu: 400m
-#         memory: 500Mi
+#         cpu: 320m
+#         memory: 400Mi
   
 
 
@@ -883,8 +883,8 @@ backCore:
 #       cpu: 100m
 #       memory: 100Mi
 #     requests:
-#       cpu: 100m
-#       memory: 100Mi
+#       cpu: 80m
+#       memory: 80Mi
 
 #   initContainers:
 #     resources:
@@ -892,8 +892,8 @@ backCore:
 #         cpu: 400m
 #         memory: 2000Mi
 #       requests:
-#         cpu: 400m
-#         memory: 2000Mi
+#         cpu: 320m
+#         memory: 1600Mi
 
 
 
@@ -919,4 +919,4 @@ backCore:
 #       memory: 50Mi
 #     requests:
 #       cpu: 50m
-#       memory: 50Mi
+#       memory: 40Mi
