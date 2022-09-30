@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "coog-2.14"
 description: A Helm chart for Coog
 name: coog
-version: '2.14.2238'
+version: '2.14.2239'
