@@ -409,7 +409,7 @@ A Helm chart for Coog
 | unoconv.readinessProbe.successThreshold | int | `1` |  |
 | unoconv.readinessProbe.timeoutSeconds | int | `30` |  |
 | unoconv.replicaCount | int | `1` | Number of unoconv Pods to run |
-| unoconv.resources | object | `{"limits":{"cpu":"100m","memory":"300Mi"},"requests":{"cpu":"240m","memory":"240Mi"}}` | unoconv containers' resource requests and limits |
+| unoconv.resources | object | `{"limits":{"cpu":"300m","memory":"300Mi"},"requests":{"cpu":"240m","memory":"240Mi"}}` | unoconv containers' resource requests and limits |
 | unoconv.service.port | int | `5000` |  |
 | unoconv.service.type | string | `"ClusterIP"` |  |
 | unoconv.tolerations | list | `[]` | Tolerations for pod assignment |
