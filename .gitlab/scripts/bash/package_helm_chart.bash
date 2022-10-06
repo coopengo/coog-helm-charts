@@ -1,5 +1,5 @@
 #!/bin/bash
-for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".git" -exec basename {} \;); do
+for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".git" ! -name ".gitlab" -exec basename {} \;); do
   if [ -e "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml" ]; then
     export HELM_PROJECT_VERSION="$(yq e '.version' "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml")"
     if [[ $(curl -s --fail --header --request GET --user gitlab-ci-token:${CI_JOB_TOKEN} "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages?package_type=helm&package_name=${HELM_PROJECT}" | jq -r --arg JQVERSION "${HELM_PROJECT_VERSION}" '.[] | select( .version == $JQVERSION ) | .version') ]]; then
