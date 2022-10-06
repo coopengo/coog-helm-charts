@@ -1,6 +1,6 @@
 # coog
 
-![Version: 2.12.2237](https://img.shields.io/badge/Version-2.12.2237-informational?style=flat-square) ![AppVersion: coog-2.12](https://img.shields.io/badge/AppVersion-coog--2.12-informational?style=flat-square)
+![Version: 2.12.2239](https://img.shields.io/badge/Version-2.12.2239-informational?style=flat-square) ![AppVersion: coog-2.12](https://img.shields.io/badge/AppVersion-coog--2.12-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -377,7 +377,7 @@ A Helm chart for Coog
 | unoconv.readinessProbe.successThreshold | int | `1` |  |
 | unoconv.readinessProbe.timeoutSeconds | int | `30` |  |
 | unoconv.replicaCount | int | `1` | Number of unoconv Pods to run |
-| unoconv.resources | object | `{"limits":{"cpu":"100m","memory":"300Mi"},"requests":{"cpu":"240m","memory":"240Mi"}}` | unoconv containers' resource requests and limits |
+| unoconv.resources | object | `{"limits":{"cpu":"300m","memory":"300Mi"},"requests":{"cpu":"240m","memory":"240Mi"}}` | unoconv containers' resource requests and limits |
 | unoconv.service.port | int | `5000` |  |
 | unoconv.service.type | string | `"ClusterIP"` |  |
 | unoconv.tolerations | list | `[]` | Tolerations for pod assignment |
