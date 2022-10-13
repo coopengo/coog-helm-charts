@@ -13,6 +13,9 @@ metadata:
   labels:
 {{ include "chart_labels" . | indent 4 }}
   annotations:
+  {{- if .Values.portal.ingress.nginx.rewritetarget }}
+    nginx.ingress.kubernetes.io/rewrite-target: {{ .Values.portal.ingress.nginx.rewritetarget | quote }}
+  {{- end }}
   {{- if $.Values.maintenance_mode.enabled }}
   {{- range $key, $value := $.Values.maintenance_mode.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
