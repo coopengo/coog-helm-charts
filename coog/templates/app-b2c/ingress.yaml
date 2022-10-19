@@ -40,12 +40,12 @@ spec:
             service:
               name: {{ $fullName }}
               port:
-                name: http
+                number: {{ $.Values.app_b2c.service.port }}
         {{ else }}
         - path: {{ . }}
           backend:
             serviceName: {{ $fullName }}
-            servicePort: http
+            servicePort: {{ $.Values.app_b2c.service.port }}
         {{- end }}
         {{- end }}
   {{- end }}
