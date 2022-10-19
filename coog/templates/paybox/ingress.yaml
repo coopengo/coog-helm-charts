@@ -40,12 +40,12 @@ spec:
             service:
               name: {{ $fullName }}
               port:
-                name: http
+                number: {{ $.Values.paybox.service.port }}
         {{ else }}
         - path: {{ . }}
           backend:
             serviceName: {{ $fullName }}
-            servicePort: http
+            servicePort: {{ $.Values.paybox.service.port }}
         {{- end }}
         {{- end }}
   {{- end }}
