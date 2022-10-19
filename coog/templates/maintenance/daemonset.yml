@@ -6,6 +6,8 @@ metadata:
   labels:
 {{ include "chart_labels" . | indent 4 }}
 spec:
+  updateStrategy:
+    type: OnDelete
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "short_name" . }}
