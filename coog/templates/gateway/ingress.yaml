@@ -53,12 +53,12 @@ spec:
             service:
               name: {{ $fullName }}
               port:
-                name: http
+                number: {{ $.Values.gateway.service.port }}
         {{ else }}
         - path: {{ . }}
           backend:
             serviceName: {{ $fullName }}
-            servicePort: http
+            servicePort: {{ $.Values.gateway.service.port }}
         {{- end }}
         {{- end }}
   {{- end }}
