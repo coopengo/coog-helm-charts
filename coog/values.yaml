@@ -30,7 +30,7 @@ maintenance_mode:
       memory: 80Mi
   ingress:
     nginx:
-      customhttperrors: '403'
+      customhttperrors: '401,403,404,500,501,502,503'
       whitelistsourcerange: '127.0.0.1/32'
     annotations: {}
   nodeSelector: {}
