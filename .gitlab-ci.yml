@@ -57,6 +57,9 @@ lint:helm-chart:
         fi
       done
   rules:
+    - changes:
+        - "coog/README.md"
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH'
       changes:
         - "**/*.yaml"
@@ -77,6 +80,9 @@ trigger:automatic-generation:
           https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       done
   rules:
+    - changes:
+        - "coog/README.md"
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 package:automatic-generation:
@@ -104,6 +110,9 @@ package:automatic-generation:
         fi
       done
   rules:
+    - changes:
+        - "coog/README.md"
+      when: never
     - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger|pipeline)$/ && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
 
 package:helm-chart:
@@ -126,6 +135,9 @@ package:helm-chart:
     reports:
       dotenv: upload.env
   rules:
+    - changes:
+        - "coog/README.md"
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
@@ -155,6 +167,9 @@ update:readme:
     paths:
       - "**/README.md"
   rules:
+    - changes:
+        - "coog/README.md"
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
@@ -195,6 +210,9 @@ coreye:synchronize:coog:
         -F "variables[SERVICE]=coog" \
         https://git.coreye.fr/api/v4/projects/434/trigger/pipeline
   rules:
+    - changes:
+        - "coog/README.md"
+      when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
