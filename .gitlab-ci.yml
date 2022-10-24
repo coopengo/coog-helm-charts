@@ -58,7 +58,7 @@ lint:helm-chart:
       done
   rules:
     - changes:
-        - "README.md"
+        - "coog/README.md"
       when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH'
       changes:
@@ -81,7 +81,7 @@ trigger:automatic-generation:
       done
   rules:
     - changes:
-        - "README.md"
+        - "coog/README.md"
       when: never
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
@@ -111,7 +111,7 @@ package:automatic-generation:
       done
   rules:
     - changes:
-        - "README.md"
+        - "coog/README.md"
       when: never
     - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger|pipeline)$/ && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
 
@@ -136,7 +136,7 @@ package:helm-chart:
       dotenv: upload.env
   rules:
     - changes:
-        - "README.md"
+        - "coog/README.md"
       when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
@@ -168,7 +168,7 @@ update:readme:
       - "**/README.md"
   rules:
     - changes:
-        - "README.md"
+        - "coog/README.md"
       when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
@@ -211,7 +211,7 @@ coreye:synchronize:coog:
         https://git.coreye.fr/api/v4/projects/434/trigger/pipeline
   rules:
     - changes:
-        - "README.md"
+        - "coog/README.md"
       when: never
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
