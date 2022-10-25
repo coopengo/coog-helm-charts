@@ -59,7 +59,7 @@ spec:
         - path: {{ . | quote }}
           backend:
             servicename: {{ include "common.names.fullname" $ }}
-            servicePort: http
+            servicePort: 80
         {{- end }}
         {{- end }}
   {{- end }}
