@@ -3,7 +3,7 @@
 
 ## Prérequis :
 - Créer un compte sur [DockerHub](https://hub.docker.com/) et demander des accès aux conteneurs à Coopengo
-- Kubernetes en version 1.21
+- Kubernetes en version 1.21+ (1.25 non supportée)
 - Installer [helm 3](https://helm.sh/)
 - Installer un Controller Ingress :
    - [Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/) (recommandé)
