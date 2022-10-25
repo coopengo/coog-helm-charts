@@ -229,8 +229,7 @@ maintenanceMode:
 #############################################################################################################################
 
 # -- Default database used by backCore
-# Ref: https://artifacthub.io/packages/helm/bitnami/postgresql/10.15.1
-# Current Ref is the last chart version available for kubernetes 1.18 (Cluster version to Coreye)
+# Ref: https://artifacthub.io/packages/helm/bitnami/postgresql/11.9.11
 postgresql:
   isManaged: true
   # -- Mandatory if isManaged is false else 'host' is automatically added
@@ -241,8 +240,8 @@ postgresql:
       postgresql: 5432
 
 # -- Mongodb dependency parameters.
-# Ref: https://artifacthub.io/packages/helm/bitnami/mongodb/10.30.12
-# Current Ref is the last chart version available for kubernetes 1.18 (Cluster version to Coreye)
+# Ref: https://artifacthub.io/packages/helm/bitnami/mongodb/12.1.31
+# Current Ref is the last chart version available with mongodb 5.
 # Mongodb is mandatory if we have front / api components enable
 mongodb:
   # -- Enable to install mongodb on Kubernetes
@@ -274,8 +273,7 @@ mongodb:
         memory: 240Mi
 
 # -- Default message service used by backCore
-# Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/8.26.3
-# Current Ref is the last chart version available for kubernetes 1.18 (Cluster version to Coreye)
+# Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/11.0.4
 rabbitmq:
   persistence:
     enabled: false
