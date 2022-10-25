@@ -54,7 +54,7 @@ spec:
             service:
               name: {{ include "common.names.fullname" $ }}
               port:
-                name: http
+                number: 80
         {{- else -}}
         - path: {{ . | quote }}
           backend:
