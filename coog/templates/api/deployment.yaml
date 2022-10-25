@@ -43,7 +43,7 @@ spec:
             {{- end }}
             {{- if .Values.frontCore.config }}
             - configMapRef:
-                name: {{ printf "%s-%s-frontCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
@@ -53,7 +53,7 @@ spec:
             {{- end }}
             {{- if .Values.secrets.frontCore.config -}}
             - secretRef:
-                name: {{ printf "%s-%s-frontCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}

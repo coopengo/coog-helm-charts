@@ -48,7 +48,7 @@ spec:
             {{- end }}
             {{- if .Values.backCore.config }}
             - configMapRef:
-                name: {{ printf "%s-%s-backCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
@@ -58,7 +58,7 @@ spec:
             {{- end }}
             {{- if .Values.secrets.backCore.config }}
             - secretRef:
-                name: {{ printf "%s-%s-backCore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
