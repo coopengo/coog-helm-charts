@@ -179,7 +179,7 @@ affinity: {}
 dnsConfig: {}
 
 # -- dnsPolicy for pod assignment. It can be customized for each component
-dnsPolicy: {}
+dnsPolicy: ""
 
 #############################################################################################################################
 #                                            Tools / Options                                                                #
