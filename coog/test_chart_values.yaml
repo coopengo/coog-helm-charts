@@ -497,6 +497,8 @@ backCore:
 libroconv:
   # -- Deploy libroconv container(s)
   enabled: true
+  strategy:
+    type: ""
 
   image:
     # -- libroconv image repository
@@ -553,6 +555,9 @@ frontCore:
     JWT_EXPIRATION: 3600
 
   gateway:
+    strategy:
+      type: ""
+
     image:
       # -- gateway image repository
       name: coog-gateway
@@ -593,6 +598,9 @@ frontCore:
 
 
   api:
+    strategy:
+      type: ""
+
     image:
       # -- api-v2 image repository
       name: coog-api
@@ -615,6 +623,9 @@ frontCore:
 
 
   apiIdentityManager:
+    strategy:
+      type: ""
+      
     image:
       # -- api-identity-manager image repository
       name: coog-api-identity-manager
@@ -645,6 +656,8 @@ frontCore:
 
 b2b:
   enabled: true
+  strategy:
+    type: ""
 
   image:
     # -- b2b image repository
@@ -679,6 +692,8 @@ b2b:
 
 web:
   enabled: true
+  strategy:
+    type: ""
 
   image:
     # -- web image repository
@@ -706,6 +721,8 @@ web:
 apiReferential:
   # -- Deploy apiReferential container(s)
   enabled: true
+  strategy:
+    type: ""
 
   image:
     # -- apiReferential image repository
@@ -735,6 +752,8 @@ apiReferential:
 b2c:
   # -- Deploy b2c + apiB2c container(s)
   enabled: true
+  strategy:
+    type: ""
 
   image:
     # -- b2c image repository
@@ -770,6 +789,8 @@ b2c:
 customerBackend:
   # -- Deploy b2b container(s)
   enabled: true
+  strategy:
+    type: ""
 
   image:
     # -- b2b image repository
@@ -818,6 +839,8 @@ customerBackend:
 customerFrontend:
   # -- Deploy customerFrontend container(s)
   enabled: true
+  strategy:
+    type: ""
 
   image:
     # -- customerFrontend image repository
@@ -868,6 +891,9 @@ customerFrontend:
 # - customerBackend
 # - customerFrontend
 apiB2c:
+  strategy:
+    type: ""
+
   image:
     # -- apiB2c image repository
     name: coog-api-b2c
