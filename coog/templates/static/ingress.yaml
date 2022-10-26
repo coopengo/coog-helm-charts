@@ -52,10 +52,10 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: {{ include "common.names.fullname" $ }}
+              name: {{ include "common.ingress.apiVersion" $ }}
               port:
                 number: 80
-        {{- else -}}
+        {{- else }}
         - path: {{ . | quote }}
           backend:
             servicename: {{ include "common.names.fullname" $ }}
