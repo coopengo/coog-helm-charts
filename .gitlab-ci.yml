@@ -158,7 +158,7 @@ update:readme:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.yaml"
-    - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
+    - if: $CI_PIPELINE_SOURCE == "web"
 
   needs:
     - package:helm-chart
