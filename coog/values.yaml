@@ -230,7 +230,8 @@ api_identity_manager:
   # -- 	Number of api_identity_manager Pods to run
   replicaCount: 1
   mongodb:
-    # -- If not empty, Override default value from api.mongodb.database 
+    # -- variable MONGO_IDENTITY_DB_NAME
+    # If not empty, Override default value from api.mongodb.database 
     identity_database: ""
 
   image:
