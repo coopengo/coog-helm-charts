@@ -54,6 +54,8 @@ spec:
             {{- end }}
             - name:  MONGO_DB_NAME
               value: "{{ .Values.api.mongodb.database }}"
+            - name:  MONGO_IDENTITY_DB_NAME
+              value: "{{ default .Values.api.mongodb.database .Values.api.mongodb.api_database }}"
             - name:  MONGO_USER
               valueFrom:
                 secretKeyRef:
