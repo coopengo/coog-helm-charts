@@ -149,6 +149,9 @@ api:
 
   mongodb:
     database: coog-api-v2
+    # -- variable MONGO_IDENTITY_DB_NAME
+    # If not empty, Override default value from api.mongodb.database 
+    api_database: ""
 
   image:
     # -- api image repository
