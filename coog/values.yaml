@@ -100,6 +100,9 @@ api:
 
   mongodb:
     database: coog-api-v2
+    # -- variable MONGO_IDENTITY_DB_NAME
+    # If not empty, Override default value from api.mongodb.database 
+    api_database: ""
 
   image:
     # -- api image repository
@@ -229,10 +232,6 @@ api_identity_manager:
   enabled: true
   # -- 	Number of api_identity_manager Pods to run
   replicaCount: 1
-  mongodb:
-    # -- variable MONGO_IDENTITY_DB_NAME
-    # If not empty, Override default value from api.mongodb.database 
-    identity_database: ""
 
   image:
     # -- api-identity-manager image repository
