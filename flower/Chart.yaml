@@ -2,4 +2,4 @@ apiVersion: v1
 appVersion: "0.9.5"
 description: Flower Helm chart for Kubernetes
 name: flower
-version: '2.12.2242'
+version: '2.12.2244'
