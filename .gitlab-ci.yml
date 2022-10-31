@@ -85,10 +85,10 @@ trigger:automatic-generation:
           https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       done
   rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
     - changes:
         - "coog/README.md"
       when: never
-    - if: '$CI_PIPELINE_SOURCE == "schedule" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 package:automatic-generation:
   stage: package
@@ -115,10 +115,10 @@ package:automatic-generation:
         fi
       done
   rules:
+    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger|pipeline)$/ && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
     - changes:
         - "coog/README.md"
       when: never
-    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger|pipeline)$/ && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
 
 package:helm-chart:
   stage: package
