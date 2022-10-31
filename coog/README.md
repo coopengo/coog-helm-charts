@@ -1,6 +1,6 @@
 # coog
 
-![Version: 2.12.2241-4](https://img.shields.io/badge/Version-2.12.2241--4-informational?style=flat-square) ![AppVersion: coog-2.12](https://img.shields.io/badge/AppVersion-coog--2.12-informational?style=flat-square)
+![Version: 2.12.2243](https://img.shields.io/badge/Version-2.12.2243-informational?style=flat-square) ![AppVersion: coog-2.12](https://img.shields.io/badge/AppVersion-coog--2.12-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -25,6 +25,7 @@ A Helm chart for Coog
 | api.image.repository | string | `"coopengohub/api"` | api image repository |
 | api.image.tag | string | `"coog-2.10.2048"` | api image tag |
 | api.imagePullSecrets | list | `[{"name":"docker-registry"}]` | Specify docker-registry secret names as an array |
+| api.mongodb.api_database | string | `""` | variable MONGO_IDENTITY_DB_NAME If not empty, Override default value from api.mongodb.database  |
 | api.mongodb.database | string | `"coog-api-v2"` |  |
 | api.nameOverride | string | `""` |  |
 | api.nodeSelector | object | `{}` | Node labels for pod assignment |
