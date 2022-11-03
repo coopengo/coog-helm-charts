@@ -42,6 +42,7 @@ spec:
     {{- include "common.tplvalues.render" (dict "value" .Values.ingress.thisTls.configuration "context" $) | nindent 4 }}
     {{- end }}
   {{- end }}
+  ingressClassName: {{ .Values.ingress.className | quote }}
   rules:
   {{- range .Values.customerFrontend.ingress.hosts }}
     - host: {{ default $.Values.ingress.host .host | quote }}
