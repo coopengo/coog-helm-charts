@@ -5,12 +5,12 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 data:
   # Database
-  COOG_POSTGRES_HOST: {{ default (printf "%s-%s" .Release.Name "postgresql") .Values.postgresql.host }}
-  COOG_POSTGRES_PORT: {{ .Values.postgresql.service.ports.postgresql }}
-  COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database }}
-  DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database }} # duplicate of COOG_DB_NAME
+  COOG_POSTGRES_HOST: {{ default (printf "%s-%s" .Release.Name "postgresql") .Values.postgresql.host | quote }}
+  COOG_POSTGRES_PORT: {{ .Values.postgresql.service.ports.postgresql | quote }}
+  COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }}
+  DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }} # duplicate of COOG_DB_NAME
   # Tryton
-  TRYTOND_REPORT__API: {{ printf "http://%s-%s-libroconv:5000/unoconv/{oext}" .Release.Name .Chart.Name }}
+  TRYTOND_REPORT__API: {{ printf "http://%s-%s-libroconv:5000/unoconv/{oext}" .Release.Name .Chart.Name | quote }}
   {{- range $key, $value := .Values.backCore.coog.config }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}

@@ -14,14 +14,24 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 data:
   # URLs
-  PORTAL_URL: {{ printf "http://%s" .Values.ingress.host }}
-  COOG_GATEWAY_URL: {{ printf "http://%s" .Values.ingress.host }}
-  COOG_API_URL: {{ printf "http://%s-%s-web" .Release.Name .Chart.Name }}
-  COOG_API_URL_V2: {{ printf "http://%s-%s-api" .Release.Name .Chart.Name }}
-  COOG_API_B2B_CONFIG_URL: {{ printf "http://%s-%s-api-b2b-config" .Release.Name .Chart.Name }} # ajouter un if pour le composant
-  COOG_API_B2C_URL: {{ printf "http://%s-%s-api-b2c" .Release.Name .Chart.Name }} # ajouter un if pour le composant
-  COOG_API_REFERENTIAL_URL: {{ printf "http://%s-%s-api-referential" .Release.Name .Chart.Name }} # ajouter un if pour le composant
-  COOG_API_IDENTITY_MANAGER_URL: {{ printf "http://%s-%s-api-identity-manager" .Release.Name .Chart.Name }}
+  COOG_GATEWAY_URL: {{ printf "http://%s" .Values.ingress.host | quote }}
+  COOG_API_IDENTITY_MANAGER_URL: {{ printf "http://%s-%s-api-identity-manager" .Release.Name .Chart.Name | quote }}
+  COOG_API_URL_V2: {{ printf "http://%s-%s-api" .Release.Name .Chart.Name | quote }}
+  {{- if .Values.b2b.enabled }}
+  PORTAL_URL: {{ printf "http://%s" .Values.ingress.host | quote }}
+  {{- end }}
+  {{- if .Values.web.enabled }}
+  COOG_API_URL: {{ printf "http://%s-%s-web" .Release.Name .Chart.Name | quote }}
+  {{- end }}
+  {{- if .Values.b2b.enabled }}
+  COOG_API_B2B_CONFIG_URL: {{ printf "http://%s-%s-api-b2b-config" .Release.Name .Chart.Name | quote }}
+  {{- end }}
+  {{- if .Values.b2c.enabled }}
+  COOG_API_B2C_URL: {{ printf "http://%s-%s-api-b2c" .Release.Name .Chart.Name | quote }}
+  {{- end }}
+  {{- if .Values.apiReferential.enabled }}
+  COOG_API_REFERENTIAL_URL: {{ printf "http://%s-%s-api-referential" .Release.Name .Chart.Name | quote }}
+  {{- end }}
   {{- range $key, $value := .Values.frontCore.gateway.config }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}

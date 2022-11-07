@@ -14,11 +14,11 @@ metadata:
   labels: {{- include "common.labels.standard" . | nindent 4 }}
 data:
   # Databases
-  MONGO_HOST: {{ default (printf "%s-mongodb" .Release.Name) .Values.mongodb.host }}
-  MONGO_PORT: {{ .Values.mongodb.service.ports.mongodb}}
-  MONGO_DB_NAME: {{ .Values.mongodb.auth.database}}
-  COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database }}
-  COOG_URL: {{ printf "http://%s-%s" .Release.Name .Chart.Name }}
+  MONGO_HOST: {{ default (printf "%s-mongodb" .Release.Name) .Values.mongodb.host | quote }}
+  MONGO_PORT: {{ .Values.mongodb.service.ports.mongodb | quote }}
+  MONGO_DB_NAME: {{ .Values.mongodb.auth.database | quote }}
+  COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }}
+  COOG_URL: {{ printf "http://%s-%s" .Release.Name .Chart.Name | quote }}
   {{- range $key, $value := .Values.frontCore.config }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
