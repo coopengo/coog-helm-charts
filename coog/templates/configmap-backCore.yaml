@@ -12,5 +12,5 @@ data:
   # Tryton
   TRYTOND_REPORT__API: {{ printf "http://%s-%s-libroconv:5000/unoconv/{oext}" .Release.Name .Chart.Name }}
   {{- range $key, $value := .Values.backCore.coog.config }}
-  {{ $key }}: {{ $value }}
+  {{ $key }}: {{ $value | quote }}
   {{- end }}

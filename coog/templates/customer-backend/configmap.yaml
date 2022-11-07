@@ -10,6 +10,6 @@ data:
   DATABASE_HOST: {{ default (printf "%s-%s" .Release.Name "postgresql") .Values.postgresql.host }}
   DATABASE_PORT: {{ .Values.postgresql.service.ports.postgresql }}
   {{- range $key, $value := .Values.customerBackend.config }}
-  {{ $key }}: {{ $value }}
+  {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}

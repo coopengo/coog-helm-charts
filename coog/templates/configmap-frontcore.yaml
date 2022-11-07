@@ -20,6 +20,6 @@ data:
   COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database }}
   COOG_URL: {{ printf "http://%s-%s" .Release.Name .Chart.Name }}
   {{- range $key, $value := .Values.frontCore.config }}
-  {{ $key }}: {{ $value }}
+  {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}

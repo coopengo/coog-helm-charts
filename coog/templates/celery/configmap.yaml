@@ -7,6 +7,6 @@ metadata:
 data:
   CELERY_MAX_MEMORY_PER_CHILD: {{ .Values.backCore.celery.workers.maximumMemory }}
   {{- range $key, $value := .Values.backCore.celery.config }}
-  {{ $key }}: {{ $value }}
+  {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}

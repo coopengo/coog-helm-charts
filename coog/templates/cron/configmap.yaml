@@ -8,9 +8,9 @@ data:
   COOG_CELERY_WORKERS: {{ default .Values.backCore.workers.number .Values.backCore.coog.workers.number }}
   COOG_SERVER_WORKERS: {{ default .Values.backCore.workers.number .Values.backCore.coog.workers.number }}
   {{- range $key, $value := .Values.backCore.cron.config }}
-  {{ $key }}: {{ $value }}
+  {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- range $key, $value := .Values.backCore.cron.config }}
-  {{ $key }}: {{ $value }}
+  {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}

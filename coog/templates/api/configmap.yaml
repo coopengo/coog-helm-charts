@@ -15,6 +15,6 @@ metadata:
 data:
   COOG_API_V1_URL: {{ printf "http://%s-%s-web" .Release.Name .Chart.Name }}
   {{- range $key, $value := .Values.frontCore.api.config }}
-  {{ $key }}: {{ $value }}
+  {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}

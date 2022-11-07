@@ -9,7 +9,7 @@ data:
   API_URL: {{ printf "http://%s-%s-customer-backend" .Release.Name .Chart.Name }}
   GATSBY_ROOT_URL: {{ printf "https://%s" .Values.ingress.host }}
   {{- range $key, $value := .Values.customerFrontend.config }}
-  {{ $key }}: {{ $value }}
+  {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}
 {{- end }}

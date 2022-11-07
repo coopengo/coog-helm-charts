@@ -11,6 +11,6 @@ data:
   COOG_API_COOG_URL: {{ printf "http://%s-%s:80" .Release.Name .Chart.Name }}
   COOG_API_COOG_DB: {{ default .Release.Name .Values.postgresql.auth.database }}
   {{- range $key, $value := .Values.web.config }}
-  {{ $key }}: {{ $value }}
+  {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}
