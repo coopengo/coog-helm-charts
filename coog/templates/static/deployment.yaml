@@ -40,7 +40,7 @@ spec:
           ports:
             - name: http
               containerPort: 5000
-           startupProbe: {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.static.startupProbe) "context" $) | nindent 12 }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.static.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /doc
