@@ -19,7 +19,7 @@ spec:
       volumes:
         - name: {{ printf "%s-%s" .Release.Name .Values.backCore.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
           persistentVolumeClaim:
-            claimname: {{ printf "%s-%s" .Release.Name .Values.backCore.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+            claimName: {{ printf "%s-%s" .Release.Name .Values.backCore.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
       {{- end }}
       initContainers:
         - name: {{ printf "%s-module-update" (include "common.names.name" .) | trunc 63 | trimSuffix "-" }}
