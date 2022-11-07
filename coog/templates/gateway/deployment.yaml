@@ -27,7 +27,7 @@ spec:
       containers:
         - name: {{ include "common.names.name" . }}
           image: "{{ default .Values.image.repository .Values.frontCore.gateway.image.repository }}/{{ .Values.frontCore.gateway.image.name }}:{{ default .Values.image.tag .Values.frontCore.gateway.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.frontCore.gateway.image.pullPolicy }}
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.frontCore.gateway.image.pullPolicy }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

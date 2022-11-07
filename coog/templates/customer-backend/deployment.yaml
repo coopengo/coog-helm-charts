@@ -24,7 +24,7 @@ spec:
       initContainers:
         - name: {{ printf "%s-build" (include "common.names.name" .) | trunc 63 | trimSuffix "-" }}
           image: "{{ default .Values.image.repository .Values.customerBackend.image.repository }}/{{ .Values.customerBackend.image.name }}:{{ default .Values.image.tag .Values.customerBackend.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customerBackend.image.pullPolicy | quote }}
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.customerBackend.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -55,7 +55,7 @@ spec:
       containers:
         - name: {{ include "common.names.name" . }}
           image: "{{ default .Values.image.repository .Values.customerBackend.image.repository }}/{{ .Values.customerBackend.image.name }}:{{ default .Values.image.tag .Values.customerBackend.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.customerBackend.image.pullPolicy | quote }}
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.customerBackend.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:

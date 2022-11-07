@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: "master"
 description: A Helm chart for Coog
 name: coog
-version: '22.43.2243-infra-v2'
+version: '22.44.2244-infra-v2'
 icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
 
 dependencies:

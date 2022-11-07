@@ -19,7 +19,7 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ default .Values.image.repository .Values.maintenanceMode.image.repository }}/{{ .Values.maintenanceMode.image.name }}:{{ default .Values.image.tag .Values.maintenanceMode.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.maintenanceMode.image.pullPolicy | quote }}
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.maintenanceMode.image.pullPolicy | quote }}
           envFrom:
             {{- if .Values.config }}
             - configMapRef:

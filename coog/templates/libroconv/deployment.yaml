@@ -19,7 +19,7 @@ spec:
       containers:
         - name: {{ include "common.names.name" . }}
           image: "{{ default .Values.image.repository .Values.libroconv.image.repository }}/{{ .Values.libroconv.image.name }}:{{ default .Values.image.tag .Values.libroconv.image.tag }}"
-          imagepullPolicy: {{ default .Values.image.pullPolicy .Values.libroconv.image.pullPolicy | quote }}
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.libroconv.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
