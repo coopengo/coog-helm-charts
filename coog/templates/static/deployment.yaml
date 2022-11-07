@@ -50,7 +50,7 @@ spec:
             httpGet:
               path: /doc
               port: http
-            {{- include "common.tplvalues.render" (default .Values.readinessProbe .Values.backCore.static.readinessProbe) "context" $) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.static.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.backCore.static.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.static.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
