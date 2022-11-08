@@ -74,7 +74,7 @@ spec:
           livenessProbe:
             exec:
               command: ['/bin/bash', '-c', 'ep cron --check']
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe ..Values.backCore.cron.livenessProbe) "context" $) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.cron.livenessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.backCore.cron.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.cron.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
