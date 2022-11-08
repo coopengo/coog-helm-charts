@@ -76,7 +76,11 @@ spec:
           ports:
             - name: http
               containerPort: 1337
-          startupProbe: {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.customerBackend.startupProbe) "context" $) | nindent 12 }}
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.customerBackend.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /

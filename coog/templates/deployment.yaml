@@ -117,7 +117,11 @@ spec:
           ports:
             - name: http
               containerPort: 8000
-          startupProbe: {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.coog.startupProbe) "context" $) | nindent 12 }}
+          startupProbe:
+            httpGet:
+              path: /liveness
+              port: http
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.coog.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /liveness
