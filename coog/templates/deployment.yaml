@@ -117,17 +117,17 @@ spec:
           ports:
             - name: http
               containerPort: 8000
-          startupProbe: {{- toYaml (default .Values.startupProbe .Values.backCore.coog.startupProbe) | nindent 12 }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.coog.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /liveness
               port: http
-            {{- toYaml (default .Values.livenessProbe .Values.backCore.coog.livenessProbe) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.coog.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: "/{{ .Values.postgresql.auth.database }}/readiness"
               port: http
-            {{- toYaml (default .Values.readinessProbe .Values.backCore.coog.readinessProbe) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.coog.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.backCore.coog.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.coog.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

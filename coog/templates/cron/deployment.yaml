@@ -70,11 +70,11 @@ spec:
           startupProbe:
             exec:
               command: ['/bin/bash', '-c', 'ep cron --check']
-            {{- toYaml (default .Values.startupProbe .Values.backCore.cron.startupProbe) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.cron.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             exec:
               command: ['/bin/bash', '-c', 'ep cron --check']
-            {{- toYaml (default .Values.livenessProbe .Values.backCore.cron.livenessProbe) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe ..Values.backCore.cron.livenessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.backCore.cron.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.cron.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

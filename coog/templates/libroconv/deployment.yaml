@@ -41,17 +41,17 @@ spec:
           ports:
             - name: http
               containerPort: 5000
-          startupProbe: {{- toYaml (default .Values.startupProbe .Values.libroconv.startupProbe) | nindent 12 }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.libroconv.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /liveness
               port: http
-            {{- toYaml (default .Values.livenessProbe .Values.libroconv.livenessProbe) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.libroconv.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
-              path: "/liveness"
+              path: /liveness
               port: http
-            {{- toYaml (default .Values.readinessProbe .Values.libroconv.readinessProbe) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.libroconv.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.libroconv.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.libroconv.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

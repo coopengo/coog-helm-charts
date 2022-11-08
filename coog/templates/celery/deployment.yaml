@@ -67,21 +67,21 @@ spec:
           ports:
             - name: http
               containerPort: 8000
-          startupProbe: {{- toYaml (default .Values.startupProbe .Values.backCore.celery.startupProbe) | nindent 12 }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.celery.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /liveness
               port: http
             exec:
               command: ['/bin/bash', '-c', 'celery -A {{ .Values.backCore.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME']
-            {{- toYaml (default .Values.livenessProbe .Values.backCore.celery.livenessProbe) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.celery.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: "/{{ .Values.postgresql.auth.database }}/readiness"
               port: http
             exec:
               command: ['/bin/bash', '-c', 'celery -A {{ .Values.backCore.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME']
-            {{- toYaml (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.backCore.celery.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.celery.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

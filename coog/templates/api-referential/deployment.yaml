@@ -53,17 +53,17 @@ spec:
           ports:
             - name: http
               containerPort: 3000
-          startupProbe: {{- toYaml (default .Values.startupProbe .Values.apiReferential.startupProbe) | nindent 12 }}
+          startupProbe: {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.apiReferential.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /
               port: http
-            {{- toYaml (default .Values.livenessProbe .Values.apiReferential.livenessProbe) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.apiReferential.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /
               port: http
-            {{- toYaml (default .Values.readinessProbe .Values.apiReferential.readinessProbe) | nindent 12 }}
+            {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.apiReferential.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.apiReferential.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.apiReferential.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
