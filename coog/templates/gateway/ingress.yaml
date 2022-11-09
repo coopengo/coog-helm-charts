@@ -15,7 +15,6 @@ metadata:
   annotations:
   {{- if and .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.enabled }}
     cert-manager.io/cluster-issuer: letsencrypt
-    acme.cert-manager.io/http01-edit-in-place: "true"
   {{- end }}
   {{- if $.Values.maintenanceMode.enabled }}
     nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.maintenanceMode.ingress.nginx.customhttperrors }}
