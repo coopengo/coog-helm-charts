@@ -143,8 +143,8 @@ ingress:
 # -- additional startup time on their first initialization
 startupProbe:
   initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 1
+  periodSeconds: 20
+  timeoutSeconds: 30
   failureThreshold: 30
   successThreshold: 1
 
