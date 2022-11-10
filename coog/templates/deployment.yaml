@@ -44,8 +44,10 @@ spec:
             - configMapRef:
                 name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
+            {{- if .Values.backCore.coog.config }}
             - configMapRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             {{- if .Values.secrets.config }}
             - secretRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
@@ -54,8 +56,10 @@ spec:
             - secretRef:
                 name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
+            {{- if .Values.secrets.backCore.coog.config }}
             - secretRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             - secretRef:
                 name: {{ printf "%s-%s-postgresql" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
           ports:

@@ -69,8 +69,10 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+            {{- if .Values.secrets.customerFrontend.config }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 5000

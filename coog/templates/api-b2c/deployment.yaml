@@ -41,7 +41,7 @@ spec:
             - configMapRef:
                 name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.apiB2c.config -}}
+            {{- if .Values.apiB2c.config }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             {{- end }}
@@ -49,11 +49,11 @@ spec:
             - secretRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.frontCore.config -}}
+            {{- if .Values.secrets.frontCore.config }}
             - secretRef:
                 name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.apiB2c.config -}}
+            {{- if .Values.secrets.apiB2c.config }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             {{- end }}

@@ -6,7 +6,7 @@ metadata:
   name: {{ printf "%s-%s" .Release.Name .Values.backCore.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
   {{- if .Values.backCore.coog.persistentVolume.annotations }}
   annotations:
-{{ toYaml .Values.backCore.coog.persistentVolume.annotations | indent 4 }}
+    {{- toYaml .Values.backCore.coog.persistentVolume.annotations | indent 4 }}
   {{- end }}
 spec:
   accessModes:

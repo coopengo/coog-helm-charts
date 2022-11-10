@@ -60,8 +60,10 @@ spec:
             - secretRef:
                 name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
+            {{- if .Values.secrets.backCore.celery.config }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             - secretRef:
                 name: {{ printf "%s-%s-postgresql" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
           ports:

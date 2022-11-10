@@ -46,18 +46,22 @@ spec:
             - configMapRef:
                 name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
+            {{- if .Values.frontCore.apiIdentityManager.config }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             {{- if .Values.secrets.config }}
             - secretRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.frontCore.config -}}
+            {{- if .Values.secrets.frontCore.config }}
             - secretRef:
                 name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
+            {{- if .Values.secrets.frontCore.apiIdentityManager.config }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+            {{- end }}
             - secretRef:
                 name: {{ printf "%s-%s-mongodb" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
           ports:
