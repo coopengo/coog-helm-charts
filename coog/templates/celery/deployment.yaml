@@ -71,15 +71,15 @@ spec:
               containerPort: 8000
           startupProbe:
             exec:
-              command: ['/bin/bash', '-c', 'celery -A {{ .Values.backCore.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME']
+              command: ['/bin/bash', '-c', '"celery -A {{ .Values.backCore.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"']
             {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.celery.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             exec:
-              command: ['/bin/bash', '-c', 'celery -A {{ .Values.backCore.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME']
+              command: ['/bin/bash', '-c', '"celery -A {{ .Values.backCore.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"']
             {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.celery.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             exec:
-              command: ['/bin/bash', '-c', 'celery -A {{ .Values.backCore.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME']
+              command: ['/bin/bash', '-c', '"celery -A {{ .Values.backCore.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"']
             {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.backCore.celery.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.celery.nodeSelector }}
