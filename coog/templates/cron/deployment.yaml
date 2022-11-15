@@ -32,7 +32,6 @@ spec:
               - ALL
             privileged: false
             procMount: Default
-            runAsNonRoot: true
           command: ["/bin/sh","-c"]
           args: ['while [ $(curl -ksw "%{http_code}" "{{ printf "http://%s-%s/%s/readiness" .Release.Name .Chart.Name .Release.Name }}" -o /dev/null) -ne 200 ]; do sleep 5; echo "health check failed . Waiting for coog..."; done']
       containers:
