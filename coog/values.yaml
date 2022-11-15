@@ -271,7 +271,7 @@ mongodb:
         cpu: 100m
         memory: 300Mi
       requests:
-        cpu: 800m
+        cpu: 80m
         memory: 240Mi
 
 # -- Default message service used by backCore
