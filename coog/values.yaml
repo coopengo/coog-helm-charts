@@ -444,19 +444,19 @@ backCore:
     # With this configuration, the kubelet will attempt to open a socket to your container on the specified port. 
     # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
     livenessProbe:
-      initialDelaySeconds: 30
+      initialDelaySeconds: 0
       periodSeconds: 120
-      timeoutSeconds: 10
+      timeoutSeconds: 30
       successThreshold: 1
       failureThreshold: 2
 
     # -- additional startup time on their first initialization
     startupProbe:
       initialDelaySeconds: 30
-      periodSeconds: 120
-      timeoutSeconds: 10
+      periodSeconds: 30
+      timeoutSeconds: 30
       successThreshold: 1
-      failureThreshold: 2
+      failureThreshold: 3
 
 
 
