@@ -7,7 +7,7 @@ metadata:
 data:
   COOG_API_MONGO_HOST: {{ default (printf "%s-mongodb" .Release.Name) .Values.mongodb.host | quote }}
   COOG_API_MONGO_PORT: {{ .Values.mongodb.service.ports.mongodb | quote }}
-  MONGO_DB_NAME: {{ .Values.mongodb.auth.database | quote }}
+  MONGO_DB_NAME: {{ first .Values.mongodb.auth.databases | quote }}
   COOG_API_COOG_URL: {{ printf "http://%s-%s:80" .Release.Name .Chart.Name | quote }}
   COOG_API_COOG_DB: {{ default .Release.Name .Values.postgresql.auth.database | quote }}
   {{- range $key, $value := .Values.web.config }}
