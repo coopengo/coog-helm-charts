@@ -259,20 +259,20 @@ mongodb:
     type: Recreate
   resources:
     limits:
+      cpu: 200m
+      memory: 400Mi
+    requests:
       cpu: 100m
       memory: 300Mi
-    requests:
-      cpu: 80m
-      memory: 240Mi
   volumePermissions:
     enabled: true
     resources:
       limits:
+        cpu: 200m
+        memory: 400Mi
+      requests:
         cpu: 100m
         memory: 300Mi
-      requests:
-        cpu: 80m
-        memory: 240Mi
 
 # -- Default message service used by backCore
 # Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/11.0.4
