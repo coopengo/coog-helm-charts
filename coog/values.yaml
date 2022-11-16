@@ -273,6 +273,11 @@ mongodb:
       requests:
         cpu: 100m
         memory: 300Mi
+  # Need to custom timeoutSeconds parameter due to low resources limits
+  readinessProbe:
+    timeoutSeconds: 30
+  livenessProbe:
+    timeoutSeconds: 30
 
 # -- Default message service used by backCore
 # Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/11.0.4
