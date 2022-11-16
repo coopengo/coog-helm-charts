@@ -249,7 +249,7 @@ mongodb:
   # -- Enable to install mongodb on Kubernetes
   # This is a coog parameter not mongodb
   isManaged: false
-  # -- Mandatory if isManaged is false else 'host' is automatically added
+  # -- Mandatory if isManaged is false and frontCore enabled else 'host' is automatically added
   # Use an external mongodb server (Database not managed by this chart)
   host: ""
   service:
