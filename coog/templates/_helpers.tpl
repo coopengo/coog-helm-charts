@@ -3,7 +3,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "common.names.name" -}}
+{{- define "general.names.name" -}}
 {{- $tplDir := base (dir .Template.Name) -}}
 {{- if eq "templates" $tplDir -}}
 {{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
@@ -17,7 +17,7 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "common.names.fullname" -}}
+{{- define "general.names.fullname" -}}
 {{- $tplDir := base (dir .Template.Name) -}}
 {{- if eq "templates" $tplDir -}}
 {{- printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" -}}
@@ -29,16 +29,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "common.names.chart" -}}
+{{- define "general.names.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
 Kubernetes standard labels
 */}}
-{{- define "common.labels.standard" -}}
-app.kubernetes.io/name: {{ include "common.names.name" . }}
-helm.sh/chart: {{ include "common.names.chart" . }}
+{{- define "general.labels.standard" -}}
+app.kubernetes.io/name: {{ include "general.names.name" . }}
+helm.sh/chart: {{ include "general.names.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- if .Chart.AppVersion }}
@@ -49,16 +49,16 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{/*
 Labels to use on deploy.spec.selector.matchLabels and svc.spec.selector
 */}}
-{{- define "common.labels.matchLabels" -}}
-app.kubernetes.io/name: {{ include "common.names.name" . }}
+{{- define "general.labels.matchLabels" -}}
+app.kubernetes.io/name: {{ include "general.names.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
 Return the proper image name
-{{ include "common.images.image" ( dict "imageRoot" .Values.path.to.the.image "global" $) }}
+{{ include "general.images.image" ( dict "imageRoot" .Values.path.to.the.image "global" $) }}
 */}}
-{{- define "common.images.image" -}}
+{{- define "general.images.image" -}}
 {{- $registryName := .imageRoot.registry -}}
 {{- $repositoryName := .imageRoot.repository -}}
 {{- $tag := .imageRoot.tag | toString -}}
@@ -72,7 +72,7 @@ Return the proper image name
 {{/*
 Ingress dynamic configuration
 */}}
-{{- define "common.ingress.apiVersion" -}}
+{{- define "general.ingress.apiVersion" -}}
 {{- if semverCompare "<1.14.0" .Capabilities.KubeVersion.Version -}}
 {{- print "extensions/v1beta1" -}}
 {{- else if semverCompare "<1.19.0" .Capabilities.KubeVersion.Version -}}
@@ -85,9 +85,9 @@ Ingress dynamic configuration
 {{/*
 Renders a value that contains template.
 Usage:
-{{ include "common.tplvalues.render" ( dict "value" .Values.path.to.the.Value "context" $) }}
+{{ include "general.tplvalues.render" ( dict "value" .Values.path.to.the.Value "context" $) }}
 */}}
-{{- define "common.tplvalues.render" -}}
+{{- define "general.tplvalues.render" -}}
     {{- if typeIs "string" .value }}
         {{- tpl .value .context }}
     {{- else }}

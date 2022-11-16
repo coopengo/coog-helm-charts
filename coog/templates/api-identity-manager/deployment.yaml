@@ -10,17 +10,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "common.names.fullname" . }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
   replicas: {{ default .Values.replicaCount .Values.frontCore.apiIdentityManager.replicaCount }}
   strategy:
     type: {{ default .Values.strategy.type .Values.frontCore.apiIdentityManager.strategy.type }}
   selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
       annotations:
         checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
         checksum/configmap-frontcore: {{ include (printf "%s/%s" $.Template.BasePath "configmap-frontcore.yaml") . | sha256sum  }}
@@ -33,7 +33,7 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.imageCredentials.name }}
       containers:
-        - name: {{ include "common.names.name" . }}
+        - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.frontCore.apiIdentityManager.image.repository }}/{{ .Values.frontCore.apiIdentityManager.image.name }}:{{ default .Values.image.tag .Values.frontCore.apiIdentityManager.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.frontCore.apiIdentityManager.image.pullPolicy | quote }}
           securityContext:
@@ -56,7 +56,7 @@ spec:
             {{- end }}
             {{- if .Values.frontCore.apiIdentityManager.config }}
             - configMapRef:
-                name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             {{- end }}
             {{- if .Values.secrets.config }}
             - secretRef:
@@ -68,7 +68,7 @@ spec:
             {{- end }}
             {{- if .Values.secrets.frontCore.apiIdentityManager.config }}
             - secretRef:
-                name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             {{- end }}
             - secretRef:
                 name: {{ printf "%s-%s-mongodb" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
@@ -79,17 +79,17 @@ spec:
             httpGet:
               path: /
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.frontCore.apiIdentityManager.startupProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.frontCore.apiIdentityManager.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.frontCore.apiIdentityManager.livenessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.frontCore.apiIdentityManager.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.frontCore.apiIdentityManager.readinessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.frontCore.apiIdentityManager.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.frontCore.apiIdentityManager.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.frontCore.apiIdentityManager.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

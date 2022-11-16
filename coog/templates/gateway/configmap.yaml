@@ -10,8 +10,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
   # URLs
   COOG_GATEWAY_URL: {{ printf "http://%s" .Values.ingress.host | quote }}

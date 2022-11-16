@@ -2,17 +2,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "common.names.fullname" . }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
   replicas: {{ default .Values.replicaCount .Values.b2c.replicaCount }}
   strategy:
     type: {{ default .Values.strategy.type .Values.b2c.strategy.type }}
   selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
       annotations:
         checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
         checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
@@ -20,7 +20,7 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.imageCredentials.name }}
       containers:
-        - name: {{ include "common.names.name" . }}
+        - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.b2c.image.repository }}/{{ .Values.b2c.image.name }}:{{ default .Values.image.tag .Values.b2c.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.b2c.image.pullPolicy | quote }}
           securityContext:
@@ -48,17 +48,17 @@ spec:
             httpGet:
               path: /
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.b2c.startupProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.b2c.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.b2c.livenessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.b2c.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.b2c.readinessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.b2c.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.b2c.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.b2c.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

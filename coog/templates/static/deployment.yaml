@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "common.names.fullname" . }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
   replicas: {{ default .Values.replicaCount .Values.backCore.static.replicaCount }}
   strategy:
     type: {{ default .Values.strategy.type .Values.backCore.static.strategy.type }}
   selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
       annotations:
         checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
         checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
@@ -19,7 +19,7 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.imageCredentials.name }}
       containers:
-        - name: {{ include "common.names.name" . }}
+        - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.backCore.static.image.repository }}/{{ .Values.backCore.static.image.name }}:{{ default .Values.image.tag .Values.backCore.static.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.static.image.pullPolicy | quote }}
           securityContext:
@@ -47,17 +47,17 @@ spec:
             httpGet:
               path: /doc
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.static.startupProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.static.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /doc
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.static.livenessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.static.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /doc
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.static.readinessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.static.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.backCore.static.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.static.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

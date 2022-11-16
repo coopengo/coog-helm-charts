@@ -4,8 +4,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
   DATABASE_HOST: {{ default (printf "%s-%s" .Release.Name "postgresql") .Values.postgresql.host | quote }}
   DATABASE_PORT: {{ .Values.postgresql.service.ports.postgresql | quote }}

@@ -2,8 +2,8 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
   COOG_API_MONGO_HOST: {{ default (printf "%s-mongodb" .Release.Name) .Values.mongodb.host | quote }}
   COOG_API_MONGO_PORT: {{ .Values.mongodb.service.ports.mongodb | quote }}

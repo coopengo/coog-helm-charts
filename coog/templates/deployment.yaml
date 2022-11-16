@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "common.names.fullname" . }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
   replicas: {{ default .Values.replicaCount .Values.backCore.coog.replicaCount }}
   strategy:
     type: {{ default .Values.strategy.type .Values.backCore.strategy.type }}
   selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
       annotations:
         checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
         checksum/configmap-backcore: {{ include (printf "%s/%s" $.Template.BasePath "configmap-backcore.yaml") . | sha256sum  }}
@@ -30,7 +30,7 @@ spec:
             claimName: {{ printf "%s-%s" .Release.Name .Values.backCore.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
       {{- end }}
       initContainers:
-        - name: {{ printf "%s-module-update" (include "common.names.name" .) | trunc 63 | trimSuffix "-" }}
+        - name: {{ printf "%s-module-update" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy | quote }}
           securityContext:
@@ -75,7 +75,7 @@ spec:
               containerPort: 8000
           resources: {{- toYaml .Values.backCore.coog.initContainers.resources | nindent 12 }}
       containers:
-        - name: {{ include "common.names.name" . }}
+        - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
           securityContext:
@@ -137,17 +137,17 @@ spec:
             httpGet:
               path: /liveness
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.coog.startupProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.coog.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /liveness
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.coog.livenessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.coog.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: "/{{ .Values.postgresql.auth.database }}/readiness"
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.coog.readinessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.coog.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.backCore.coog.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.coog.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

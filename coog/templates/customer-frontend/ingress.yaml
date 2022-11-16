@@ -1,9 +1,9 @@
 {{- if .Values.customerFrontend.enabled -}}
-apiVersion: {{ include "common.ingress.apiVersion" . }}
+apiVersion: {{ include "general.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ include "common.names.fullname" . }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
   annotations:
   {{- if and .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.enabled }}
     cert-manager.io/cluster-issuer: letsencrypt
@@ -39,7 +39,7 @@ spec:
       secretName: {{ printf "%s-tls" .Values.ingress.host }}
     {{- end }}
     {{- if .Values.ingress.thisTls.configuration }}
-    {{- include "common.tplvalues.render" (dict "value" .Values.ingress.thisTls.configuration "context" $) | nindent 4 }}
+    {{- include "general.tplvalues.render" (dict "value" .Values.ingress.thisTls.configuration "context" $) | nindent 4 }}
     {{- end }}
   {{- end }}
   ingressClassName: {{ .Values.ingress.className | quote }}
@@ -49,18 +49,18 @@ spec:
       http:
         paths:
         {{- range .paths }}
-        {{- if eq (include "common.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+        {{- if eq (include "general.ingress.apiVersion" $) "networking.k8s.io/v1" }}
         - path: {{ . | quote }}
           pathType: Prefix
           backend:
             service:
-              name: {{ include "common.names.fullname" $ }}
+              name: {{ include "general.names.fullname" $ }}
               port:
                 number: 80
         {{- else }}
         - path: {{ . | quote }}
           backend:
-            servicename: {{ include "common.names.fullname" $ }}
+            servicename: {{ include "general.names.fullname" $ }}
             servicePort: 80
         {{- end }}
         {{- end }}

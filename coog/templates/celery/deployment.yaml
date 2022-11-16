@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "common.names.fullname" . }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
   replicas: {{ default .Values.replicaCount .Values.backCore.celery.replicaCount }}
   strategy:
     type: {{ default .Values.strategy.type .Values.backCore.strategy.type }}
   selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
       annotations:
         checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
         checksum/configmap-backcore: {{ include (printf "%s/%s" $.Template.BasePath "configmap-backcore.yaml") . | sha256sum  }}
@@ -30,7 +30,7 @@ spec:
             claimName: {{ printf "%s-%s" .Release.Name .Values.backCore.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
     {{- end }}
       initContainers:
-        - name: {{ printf "%s-waiting-coog" (include "common.names.name" .) | trunc 63 | trimSuffix "-" }}
+        - name: {{ printf "%s-waiting-coog" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
           image: "curlimages/curl"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy | quote }}
           securityContext:
@@ -43,7 +43,7 @@ spec:
           command: ["/bin/sh","-c"]
           args: ['while [ $(curl -ksw "%{http_code}" "{{ printf "http://%s-%s/%s/readiness" .Release.Name .Chart.Name .Release.Name }}" -o /dev/null) -ne 200 ]; do sleep 5; echo "health check failed . Waiting for coog..."; done']
       containers:
-        - name: {{ include "common.names.name" . }}
+        - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
           securityContext:
@@ -72,7 +72,7 @@ spec:
                 name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
             - configMapRef:
-                name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             {{- if .Values.secrets.config }}
             - secretRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
@@ -83,7 +83,7 @@ spec:
             {{- end }}
             {{- if .Values.secrets.backCore.celery.config }}
             - secretRef:
-                name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             {{- end }}
             - secretRef:
                 name: {{ printf "%s-%s-postgresql" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
@@ -96,21 +96,21 @@ spec:
                 - "/bin/bash"
                 - "-c"
                 - "celery -A {{ .Values.backCore.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.celery.startupProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.celery.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             exec:
               command:
                 - "/bin/bash"
                 - "-c"
                 - "celery -A {{ .Values.backCore.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.celery.livenessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.celery.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             exec:
               command:
                 - "/bin/bash"
                 - "-c"
                 - "celery -A {{ .Values.backCore.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.backCore.celery.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.celery.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

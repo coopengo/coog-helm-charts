@@ -11,7 +11,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
   # Databases
   MONGO_HOST: {{ default (printf "%s-mongodb" .Release.Name) .Values.mongodb.host | quote }}

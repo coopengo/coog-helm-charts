@@ -2,17 +2,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "common.names.fullname" . }}
-  labels: {{- include "common.labels.standard" . | nindent 4 }}
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
   replicas: {{ default .Values.replicaCount .Values.web.replicaCount }}
   strategy:
     type: {{ default .Values.strategy.type .Values.web.strategy.type }}
   selector:
-    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
-      labels: {{- include "common.labels.standard" . | nindent 8 }}
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
       annotations:
         checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
         checksum/configmap: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "configmap.yaml") . | sha256sum }}
@@ -22,7 +22,7 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.imageCredentials.name }}
       containers:
-        - name: {{ include "common.names.name" . }}
+        - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.web.image.repository }}/{{ .Values.web.image.name }}:{{ default .Values.image.tag .Values.web.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.web.image.pullPolicy | quote }}
           securityContext:
@@ -40,13 +40,13 @@ spec:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
             - configMapRef:
-                name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             {{- if .Values.secrets.config }}
             - secretRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
             - secretRef:
-                name: {{ printf "%s-configuration" (include "common.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
           ports:
             - name: http
               containerPort: 3000
@@ -54,17 +54,17 @@ spec:
             httpGet:
               path: /auth
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.web.startupProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.web.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /auth
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.web.livenessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.web.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /auth
               port: http
-            {{- include "common.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.web.readinessProbe) "context" $) | nindent 12 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.web.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.web.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.web.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
