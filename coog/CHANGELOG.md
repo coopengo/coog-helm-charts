@@ -36,3 +36,5 @@
   - Api-b2b-config has been removed
   - Paybox has been removed
   - Fix issue with the image registry credentials
+  - Add annotations to update pods when secrets / configmaps are updated
+  - Add initContainer on celery and cron to wait coog container
