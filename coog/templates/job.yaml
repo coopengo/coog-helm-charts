@@ -28,9 +28,9 @@ spec:
                 echo "Database already exists"
             else
                 echo "Create database {{ default .Release.Name .Values.postgresql.auth.database }}..."
-                ${PSQL_CMD} -d postgres -c \"DO  \\$\\$ BEGIN IF NOT EXISTS ( SELECT FROM pg_catalog.pg_roles  WHERE  rolname = {{ default .Release.Name .Values.postgresql.auth.database | quote }}) THEN CREATE ROLE \"{{ default .Release.Name .Values.postgresql.auth.database }}\" LOGIN PASSWORD {{ default "" .Values.postgresql.auth.password | quote }}; END IF; END \\$\\$ ;\"",
-                ${PSQL_CMD} -d postgres -c \"ALTER ROLE \"{{ default .Release.Name .Values.postgresql.auth.database }}\" PASSWORD {{ default "" .Values.postgresql.auth.password | quote }} ;\"",
+                ${PSQL_CMD} -d postgres -c \"DO  \\$\\$ BEGIN IF NOT EXISTS ( SELECT FROM pg_catalog.pg_roles  WHERE  rolname = '{{ default .Release.Name .Values.postgresql.auth.database }}') THEN CREATE ROLE \"{{ default .Release.Name .Values.postgresql.auth.database }}\" LOGIN PASSWORD '{{ default "" .Values.postgresql.auth.password }}'; END IF; END \\$\\$ ;\"",
+                ${PSQL_CMD} -d postgres -c \"ALTER ROLE \"{{ default .Release.Name .Values.postgresql.auth.database }}\" PASSWORD '{{ default "" .Values.postgresql.auth.password }}' ;\"",
                 ${PSQL_CMD} -d postgres -c \"CREATE DATABASE \"{{ default .Release.Name .Values.postgresql.auth.database }}\" OWNER \"{{ default .Release.Name .Values.postgresql.auth.database }}\" ;\"",
-                ${PSQL_CMD} -d {{ default .Release.Name .Values.postgresql.auth.database | quote }} -c \" CREATE EXTENSION IF NOT EXISTS unaccent;\"",
+                ${PSQL_CMD} -d '{{ default .Release.Name .Values.postgresql.auth.database }}' -c \" CREATE EXTENSION IF NOT EXISTS unaccent;\"",
                 echo "Database {{ default .Release.Name .Values.postgresql.auth.database }} has been created."
             fi
