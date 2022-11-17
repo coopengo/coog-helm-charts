@@ -1,4 +1,5 @@
 # Changelog
+
 ## [22.26.2226] - 2022-06-30
 
 ### Changed
@@ -7,6 +8,7 @@
 - Update containers name to match with 'service name'
 
 # Changelog
+
 ## [22.25.2225] - 2022-06-29
 
 ### Added
@@ -24,7 +26,7 @@
 
 ## [2.13.2133] - 2021-08-25
 
-- coog: Fix TRYTOND_CACHE__CLASS
+- coog: Fix TRYTOND_CACHE\_\_CLASS
 - coog: Disable syntax analysis in init container
 - daily: Fix#20143 - Increase number of failed job history
 
@@ -67,15 +69,15 @@
 
 ### Changed
 
--  Celery liveness/readiness optimisation
--  Resources configuration available for specificBatchConcurrency
+- Celery liveness/readiness optimisation
+- Resources configuration available for specificBatchConcurrency
 
 ## [2.3.4] - 2020-12-30
 
 ### Fix
 
--  Batch configuration available for celery
--  Update documentation
+- Batch configuration available for celery
+- Update documentation
 
 # Changelog
 
@@ -83,51 +85,49 @@
 
 ### Fix
 
--  Unoconv liveness/readiness configuration
+- Unoconv liveness/readiness configuration
 
 ## [2.3.1] - 2020-11-29
 
 ### Fix
 
--  Use coopengohub registry + 2.10.2048 default version
+- Use coopengohub registry + 2.10.2048 default version
 
 ## [2.3.0] - 2020-11-29
 
 ### Fix
 
--  Update flower to 0.9.5 + non root mode
+- Update flower to 0.9.5 + non root mode
 
 ## [2.2.2] - 2020-11-17
 
 ### Fix
 
--  Unoconv version to dgw-0.0.1
-
+- Unoconv version to dgw-0.0.1
 
 ## [2.2.1] - 2020-11-17
 
 ### Fix
 
--  Fix default value for libroconv liveness/readiness
-
+- Fix default value for libroconv liveness/readiness
 
 ## [2.2.0] - 2020-11-17
 
 ### Added
 
--  New libroconv realease
+- New libroconv realease
 
 ## [2.1.4] - 2020-11-12
 
 ### Fix
 
--  Fix redis var for celery_single for version < coog-2.10
+- Fix redis var for celery_single for version < coog-2.10
 
 ## [2.1.3] - 2020-11-12
 
 ### Fix
 
--  coogCeleryModule for celery
+- coogCeleryModule for celery
 
 ## [2.1.2] - 2020-11-12
 

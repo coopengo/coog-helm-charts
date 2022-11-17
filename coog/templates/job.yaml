@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+  annotations:
+    helm.sh/hook: pre-install
+    helm.sh/hook-delete-policy: hook-succeeded
+spec:
+  template:
+    metadata:
+      name: {{ include "general.names.fullname" . }}
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: {{ printf "%s-init-database" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
+        image: "alpine:3.16"
+        command:
+          - "/bin/bash"
+          - "-c"
+          - |
+            apk add --no-cache postgresql-client
+            export PGPASSWORD={{ .Values.postgresql.auth.postgresPassword | quote }}
+            PSQL_CMD="psql -h {{ default (printf "%s-%s" .Release.Name "postgresql") .Values.postgresql.host }} -U {{ default "postgres" .Values.postgresql.auth.adminUsername }} -p {{ default "5432" .Values.postgresql.service.ports.postgresql }}"
+            if [[ $(${PSQL_CMD} -tAc 'select 1' -d {{ default .Release.Name .Values.postgresql.auth.database | quote }}) = "1" ]]
+            then
+                echo "Database already exists"
+            else
+                echo "Create database {{ default .Release.Name .Values.postgresql.auth.database }}..."
+                ${PSQL_CMD} -d postgres -c \"DO  \\$\\$ BEGIN IF NOT EXISTS ( SELECT FROM pg_catalog.pg_roles  WHERE  rolname = {{ default .Release.Name .Values.postgresql.auth.database | quote }}) THEN CREATE ROLE \"{{ default .Release.Name .Values.postgresql.auth.database }}\" LOGIN PASSWORD {{ default "" .Values.postgresql.auth.password | quote }}; END IF; END \\$\\$ ;\"",
+                ${PSQL_CMD} -d postgres -c \"ALTER ROLE \"{{ default .Release.Name .Values.postgresql.auth.database }}\" PASSWORD {{ default "" .Values.postgresql.auth.password | quote }} ;\"",
+                ${PSQL_CMD} -d postgres -c \"CREATE DATABASE \"{{ default .Release.Name .Values.postgresql.auth.database }}\" OWNER \"{{ default .Release.Name .Values.postgresql.auth.database }}\" ;\"",
+                ${PSQL_CMD} -d {{ default .Release.Name .Values.postgresql.auth.database | quote }} -c \" CREATE EXTENSION IF NOT EXISTS unaccent;\"",
+                echo "Database {{ default .Release.Name .Values.postgresql.auth.database }} has been created."
+            fi

@@ -1,6 +1,6 @@
-## [22.36.2236] - 2022-09-09
+# [22.45.2245] - 2022-11-17
 
-### Changed
+## Changed
 
 - Rework chart:
   - Add dependencies between components

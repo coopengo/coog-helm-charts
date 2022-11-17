@@ -6,7 +6,7 @@ metadata:
 data:
   # Database
   COOG_POSTGRES_HOST: {{ default (printf "%s-%s" .Release.Name "postgresql") .Values.postgresql.host | quote }}
-  COOG_POSTGRES_PORT: {{ .Values.postgresql.service.ports.postgresql | quote }}
+  COOG_POSTGRES_PORT: {{ default "5432" .Values.postgresql.service.ports.postgresql | quote }}
   COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }}
   DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }} # duplicate of COOG_DB_NAME
   # Tryton

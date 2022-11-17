@@ -239,7 +239,8 @@ postgresql:
   host: ""
   service:
     ports:
-      postgresql: 5432
+      # default: 5432
+      postgresql: ""
 
 # -- Mongodb dependency parameters.
 # Ref: https://artifacthub.io/packages/helm/bitnami/mongodb/12.1.31
