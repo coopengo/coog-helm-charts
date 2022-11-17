@@ -23,7 +23,7 @@ spec:
             apk add --no-cache postgresql-client
             export PGPASSWORD={{ .Values.postgresql.auth.postgresPassword | quote }}
             PSQL_CMD="psql -h {{ default (printf "%s-%s" .Release.Name "postgresql") .Values.postgresql.host }} -U {{ default "postgres" .Values.postgresql.auth.adminUsername }} -p {{ default "5432" .Values.postgresql.service.ports.postgresql }}"
-            if [[ $(${PSQL_CMD} -tAc 'select 1' -d {{ default .Release.Name .Values.postgresql.auth.database | quote }}) = "1" ]]
+            if [[ $(${PSQL_CMD} -tAc 'select 1' -d {{ default .Release.Name .Values.postgresql.auth.database | quote }} || echo 0) = "1" ]]
             then
                 echo "Database already exists"
             else
