@@ -319,6 +319,10 @@ backCore:
   strategy:
     type: ""
 
+  # -- Create Postgres Database for coog
+  # by default, the script create a database defined in postgresql.auth.database
+  initDatabase: true
+
   # -- coog, celery and cron configuration for number of workers. It can be customized for each component
   workers:
     number: 1
