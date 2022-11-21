@@ -23,11 +23,11 @@ spec:
     spec:
       imagePullSecrets:
         - name: {{ .Values.imageCredentials.name }}
-    {{- if .Values.backCore.coog.persistentVolume.enabled }}
+    {{- if .Values.backCore.persistentVolume.enabled }}
       volumes:
-        - name: {{ printf "%s-%s" .Release.Name .Values.backCore.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+        - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
           persistentVolumeClaim:
-            claimName: {{ printf "%s-%s" .Release.Name .Values.backCore.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+            claimName: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
       {{- end }}
       initContainers:
         - name: {{ printf "%s-module-update" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
@@ -88,19 +88,12 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.coog.securityContext.runAsUser }}
           command: ['ep', 'server', '{{ default .Values.backCore.workers.number .Values.backCore.coog.workers.number }}']
-          {{- if or .Values.backCore.coog.persistentVolume.enabled .Values.backCore.coog.configurationFiles }}
+          {{- if or .Values.backCore.persistentVolume.enabled .Values.backCore.coog.configurationFiles }}
           volumeMounts:
-            {{- if .Values.backCore.coog.persistentVolume.enabled }}
-            - name: {{ printf "%s-%s" .Release.Name .Values.backCore.coog.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+            {{- if .Values.backCore.persistentVolume.enabled }}
+            - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
               mountPath: /workspace/io
               readOnly: false
-            {{- end }}
-            {{- if .Values.backCore.coog.configurationFiles }}
-            {{- range $key, $val := .Values.backCore.coog.configurationFiles }}
-            - name: {{ printf "%s-configuration" $.Release.Name | trunc 63 | trimSuffix "-" }}
-              mountPath: /workspace/{{ $key }}
-              subPath: {{ $key }}
-            {{- end }}
             {{- end }}
           {{- end }}
           envFrom:

@@ -1,0 +1,20 @@
+{{- if and .Values.backCore.persistentVolume.enabled (not .Values.backCore.persistentVolume.existingClaim) -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+  {{- if .Values.backCore.persistentVolume.annotations }}
+  annotations:
+    {{- toYaml .Values.backCore.persistentVolume.annotations | indent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: "{{ .Values.backCore.persistentVolume.storageClass }}"
+  {{- if .Values.backCore.persistentVolume.claim.name }}
+  volumeName: "{{ .Values.backCore.persistentVolume.claim.name }}"
+  {{- end }}
+  resources:
+    requests:
+      storage: "{{ .Values.backCore.persistentVolume.size }}"
+{{- end -}}

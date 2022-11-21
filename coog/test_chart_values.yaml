@@ -324,6 +324,15 @@ backCore:
   # by default, the script create a database defined in postgresql.auth.database
   initDatabase: true
 
+  persistentVolume:
+    enabled: true
+    name: workspace-io
+    io: /workspace/io/
+    storageClass: nfs-client
+    size: 50Gi
+    claim:
+      name: "" # Verifier si c'est renseigné par terraform
+
   # -- coog, celery and cron configuration for number of workers. It can be customized for each component
   workers:
     number: 1
@@ -365,15 +374,6 @@ backCore:
     # -- Configure environement variables for this component
     # Each value can be modified without override all or delete other parameters
     config: {}
-
-    persistentVolume:
-      enabled: true
-      name: workspace-io
-      io: /workspace/io/
-      storageClass: nfs-client
-      size: 50Gi
-      claim:
-        name: "" # Verifier si c'est renseigné par terraform
 
     ingress:
       # -- Default host for the ingress resource for coog containers'
