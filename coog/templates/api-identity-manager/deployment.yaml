@@ -39,7 +39,7 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
           env:
-            {{- if .Values.secrets.api.mongodb_uri }}
+            {{- if and .Values.secrets.api .Values.secrets.api.mongodb_uri }}
             - name:  MONGODB_URI
               valueFrom:
                 secretKeyRef:
