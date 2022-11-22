@@ -362,7 +362,7 @@ backCore:
     # ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
     # E.g. for AWS-EFS-CSI-DRIVER
     # volumeMode: Filesystem
-    # persistentVolumeReclaimPolicy: Delete      # Can be deleted, data are stored on the EFS.
+    # persistentVolumeReclaimPolicy: Retain
     # csi:
     #   driver: efs.csi.aws.com
     #   volumeHandle: fs-ae66151a                # Must be the ID of the EFS volume created manually
@@ -378,7 +378,7 @@ backCore:
     # If defined, and no customStorageClass is defined, then
     # PVC must be created manually before volume will be bound
     accessModes: ["ReadWriteMany"]
-    
+
     # -- Provide an existing `PersistentVolumeClaim`
     # Requires persistentVolume.enabled: true
     # If defined, PVC must be created manually before volume will be bound
