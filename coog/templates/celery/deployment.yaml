@@ -27,7 +27,7 @@ spec:
       volumes:
         - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
           persistentVolumeClaim:
-            {{- if not .Values.persistence.existingClaim }}
+            {{- if not .Values.backCore.persistentVolume.existingClaim }}
             claimName: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
             {{- else }}
             claimName: {{ .Values.backCore.persistentVolume.existingClaim }}

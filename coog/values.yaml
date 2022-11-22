@@ -326,7 +326,6 @@ backCore:
     # -- Enable BackCore data persistence using PVC
     enabled: true
     name: workspace-io
-    io: /workspace/io/
     # -- Storage Class & PVC for BackCore data volume
     # If defined, storageClassName: <storageClass>
     # If set to "-", storageClassName: "", which disables dynamic provisioning
