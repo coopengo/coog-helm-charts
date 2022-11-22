@@ -3,18 +3,21 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
-  {{- if .Values.backCore.persistentVolume.annotations }}
-  annotations:
-    {{- toYaml .Values.backCore.persistentVolume.annotations | indent 4 }}
-  {{- end }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
   accessModes:
-    - ReadWriteMany
-  storageClassName: "{{ .Values.backCore.persistentVolume.storageClass }}"
-  {{- if .Values.backCore.persistentVolume.claim.name }}
-  volumeName: "{{ .Values.backCore.persistentVolume.claim.name }}"
+  {{- range .Values.backCore.persistentVolume.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  {{- if .Values.backCore.persistentVolume.customStorageClass }}
+  storageClassName: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.storageClass | quote }}
+  {{- else }}
+  storageClassName: {{ .Values.backCore.persistentVolume.storageClass | quote }}
+  {{- end }}
+  {{- if .Values.backCore.persistentVolume.existingClaim }}
+  volumeName: {{ .Values.backCore.persistentVolume.existingClaim }}
   {{- end }}
   resources:
     requests:
-      storage: "{{ .Values.backCore.persistentVolume.size }}"
+      storage: {{ .Values.backCore.persistentVolume.size }}
 {{- end -}}
