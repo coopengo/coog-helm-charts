@@ -1,5 +1,6 @@
 {{- if and .Values.backCore.persistentVolume.enabled .Values.backCore.persistentVolume.customStorageClass -}}
 apiVersion: storage.k8s.io/v1
+kind: StorageClass
 metadata:
   name: {{ printf "%s-%s" .Release.Name (required ".Values.backCore.persistentVolume.storageClass is required when using customStorageClass!" .Values.backCore.persistentVolume.storageClass) }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
