@@ -3,7 +3,6 @@ apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
   name: {{ required ".Values.backCore.persistentVolume.storageClass is required when using customStorageClass!" .Values.backCore.persistentVolume.storageClass }}
-  labels: {{- include "general.labels.standard" . | nindent 4 }}
   annotations:
     helm.sh/resource-policy: keep
 {{- toYaml .Values.backCore.persistentVolume.customStorageClass | nindent 0 }}
