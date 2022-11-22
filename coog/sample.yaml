@@ -35,7 +35,6 @@
 # Example:
 # config: {}
 
-
 image:
   # -- Tag applied for all components. It can be customized for each component.
   # e.g:
@@ -109,9 +108,9 @@ ingress:
   # e.g:
   # coog:
   #   ingress:
-  #     annotations: 
+  #     annotations:
   #       key: value
-  
+
   # Example:
   # annotations:
   #   nginx.ingress.kubernetes.io/send-timeout: 3600
@@ -138,7 +137,7 @@ ingress:
       # possible values : append or replace
       # append: group trustedCidr + global publicCidr + component publicCidr
       # replace: if publicCidr's component is not empty, it's replace the content of the global public Cidr
-      
+
       # Example:
       # managementMode: append
       trustedCidr:
@@ -162,9 +161,9 @@ ingress:
 #   failureThreshold: 30
 #   successThreshold: 1
 
-# -- Sometimes, applications are temporarily unable to serve traffic. 
-# For example, an application might need to load large data or configuration files during startup, 
-# or depend on external services after startup. In such cases, you don't want to kill the application, 
+# -- Sometimes, applications are temporarily unable to serve traffic.
+# For example, an application might need to load large data or configuration files during startup,
+# or depend on external services after startup. In such cases, you don't want to kill the application,
 # but you don't want to send it requests either
 
 # Example:
@@ -175,7 +174,7 @@ ingress:
 #   successThreshold: 1
 #   failureThreshold: 3
 
-# -- With this configuration, the kubelet will attempt to open a socket to your container on the specified port. 
+# -- With this configuration, the kubelet will attempt to open a socket to your container on the specified port.
 # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
 
 # Example:
@@ -324,12 +323,11 @@ mongodb:
 #   livenessProbe:
 #     initialDelaySeconds: 240
 
-
 #############################################################################################################################
 #                                            Coog minimum components                                                        #
 #############################################################################################################################
 
-# -- Configuration for coog, celery and cron 
+# -- Configuration for coog, celery and cron
 backCore:
   image:
     # -- Image repository to run coog, celery & cron
@@ -342,11 +340,10 @@ backCore:
   # strategy:
   #   type: ""
 
-
   # -- coog, celery and cron configuration for number of workers. It can be customized for each component
   # Example:
   # workers:
-    # number: 1
+  # number: 1
 
   # -- Configure environement variables for backCore components (coog, celery, cron (except static : doesn't need configuration))
   # Each value can be modified without override all or delete other parameters
@@ -358,11 +355,11 @@ backCore:
   # convert to variable :
   # TRYTOND_WEB__LISTEN: localhost:8000
   config:
-  # Following variables must be defined :
-  # start
+    # Following variables must be defined :
+    # start
     TRYTOND_EMAIL__FROM: changeme
     TRYTOND_OPTIONS__TABLE_DIMENSION: changeme
-  # end
+    # end
     COOG_TIMEOUT: 3600
     COOG_IWC: 1
     LOG_LEVEL: INFO
@@ -404,13 +401,13 @@ backCore:
 
     #   annotations:
     #     nginx.ingress.kubernetes.io/use-proxy-protocol: true
-      
+
     #   nginx:
     #     whiteList:
     #       publicCidr: []
 
     # securityContext: {}
-      # runAsUser: ""
+    # runAsUser: ""
 
     # -- coog containers' resource requests and limits
     # resources:
@@ -430,8 +427,6 @@ backCore:
     #       cpu: 400m
     #       memory: 640Mi
 
-
-
   celery:
     workers:
       # -- Number of celery workers to run
@@ -449,8 +444,6 @@ backCore:
     #   requests:
     #     cpu: 320m
     #     memory: 800Mi
-
-
 
   cron:
     # -- Dynamic ConfigMap variables for cron
@@ -475,7 +468,7 @@ backCore:
     # failureThreshold: Failure threshold
     # successThreshold: Success threshold
     #
-    # With this configuration, the kubelet will attempt to open a socket to your container on the specified port. 
+    # With this configuration, the kubelet will attempt to open a socket to your container on the specified port.
     # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
     # livenessProbe:
     #   initialDelaySeconds: 30
@@ -491,8 +484,6 @@ backCore:
     #   timeoutSeconds: 10
     #   successThreshold: 1
     #   failureThreshold: 2
-
-
 
   # static:
   #   image:
@@ -525,7 +516,6 @@ backCore:
   #     requests:
   #       cpu: 40m
   #       memory: 64Mi
-  
 #############################################################################################################################
 #                                            Back Additional components                                                     #
 #############################################################################################################################
@@ -562,7 +552,6 @@ backCore:
 #     timeoutSeconds: 30
 #     successThreshold: 1
 #     failureThreshold: 3
-
 
 #############################################################################################################################
 #                                            Front Minimum components                                                       #
@@ -607,10 +596,10 @@ backCore:
 #       hosts:
 #         - paths:
 #             - /gateway(/|$)(.*)
-      
+
 #       annotations:
 #         nginx.ingress.kubernetes.io/rewrite-target: '/$2'
-      
+
 #       nginx:
 #         whiteList:
 #           publicCidr: []
@@ -626,7 +615,6 @@ backCore:
 #       requests:
 #         cpu: 80m
 #         memory: 80Mi
-
 
 #   api:
 #     image:
@@ -648,13 +636,11 @@ backCore:
 #         cpu: 500m
 #         memory: 100Mi
 
-
-
 #   apiIdentityManager:
 #     image:
 #       # -- api-identity-manager image repository
 #       name: coog-api-identity-manager
-    
+
 #     # -- Configure environement variables for this component
 #     config: {}
 
@@ -669,7 +655,6 @@ backCore:
 #       requests:
 #         cpu: 50m
 #       memory: 56Mi
-
 
 #############################################################################################################################
 #                                            Front Additional components                                                    #
@@ -691,10 +676,10 @@ backCore:
 #     hosts:
 #       - paths:
 #           - /portal(/|$)(.*)
-    
+
 #     annotations:
 #       nginx.ingress.kubernetes.io/rewrite-target: '/$2'
-    
+
 #     nginx:
 #       whiteList:
 #         publicCidr: []
@@ -710,8 +695,6 @@ backCore:
 #     requests:
 #       cpu: 200m
 #       memory: 40Mi
-
-
 
 # web:
 #   enabled: false
@@ -737,8 +720,6 @@ backCore:
 #       cpu: 400m
 #       memory: 160Mi
 
-
-
 # apiReferential:
 #   # -- Deploy apiReferential container(s)
 #   enabled: false
@@ -762,8 +743,6 @@ backCore:
 #       cpu: 160m
 #       memory: 320Mi
 
-
-
 ##############################
 #      Components B2C        #
 ##############################
@@ -781,10 +760,10 @@ backCore:
 #     hosts:
 #       - paths:
 #           - /customers/myspace(/|$)(.*)
-    
+
 #     annotations:
 #       nginx.ingress.kubernetes.io/rewrite-target: '/$2'
-    
+
 #     nginx:
 #       whiteList:
 #         publicCidr: []
@@ -800,8 +779,6 @@ backCore:
 #     requests:
 #       cpu: 50m
 #       memory: 40Mi
-
-
 
 # customerBackend:
 #   # -- Deploy b2b container(s)
@@ -820,7 +797,7 @@ backCore:
 #     hosts:
 #       - paths:
 #           - /v1/customer(/|$)(.*)
-    
+
 #     annotations:
 #       nginx.ingress.kubernetes.io/rewrite-target: '/$2'
 
@@ -848,8 +825,6 @@ backCore:
 #       requests:
 #         cpu: 320m
 #         memory: 400Mi
-  
-
 
 # customerFrontend:
 #   # -- Deploy customerFrontend container(s)
@@ -868,7 +843,7 @@ backCore:
 #     hosts:
 #       - paths:
 #           - /customer(/|$)(.*)
-    
+
 #     annotations:
 #       nginx.ingress.kubernetes.io/rewrite-target: '/$2'
 
@@ -896,8 +871,6 @@ backCore:
 #       requests:
 #         cpu: 320m
 #         memory: 1600Mi
-
-
 
 # -- Is enable if one off following front component is enable :
 # - b2c

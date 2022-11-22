@@ -100,7 +100,7 @@ ingress:
   # e.g:
   # coog:
   #   ingress:
-  #     annotations: 
+  #     annotations:
   #       key: value
   annotations:
     nginx.ingress.kubernetes.io/send-timeout: 3600
@@ -148,9 +148,9 @@ startupProbe:
   failureThreshold: 30
   successThreshold: 1
 
-# -- Sometimes, applications are temporarily unable to serve traffic. 
-# For example, an application might need to load large data or configuration files during startup, 
-# or depend on external services after startup. In such cases, you don't want to kill the application, 
+# -- Sometimes, applications are temporarily unable to serve traffic.
+# For example, an application might need to load large data or configuration files during startup,
+# or depend on external services after startup. In such cases, you don't want to kill the application,
 # but you don't want to send it requests either
 readinessProbe:
   initialDelaySeconds: 5
@@ -159,7 +159,7 @@ readinessProbe:
   successThreshold: 1
   failureThreshold: 3
 
-# With this configuration, the kubelet will attempt to open a socket to your container on the specified port. 
+# With this configuration, the kubelet will attempt to open a socket to your container on the specified port.
 # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
 livenessProbe:
   initialDelaySeconds: 15
@@ -301,12 +301,11 @@ rabbitmq:
   livenessProbe:
     initialDelaySeconds: 240
 
-
 #############################################################################################################################
 #                                            Coog minimum components                                                        #
 #############################################################################################################################
 
-# -- Configuration for coog, celery and cron 
+# -- Configuration for coog, celery and cron
 backCore:
   image:
     # -- Image repository to run coog, celery & cron
@@ -380,11 +379,11 @@ backCore:
   # convert to variable :
   # TRYTOND_WEB__LISTEN: localhost:8000
   config:
-  # Following variables must be defined :
-  # start
+    # Following variables must be defined :
+    # start
     TRYTOND_EMAIL__FROM: changeme
     TRYTOND_OPTIONS__TABLE_DIMENSION: changeme
-  # end
+    # end
     COOG_TIMEOUT: 3600
     COOG_IWC: 1
     LOG_LEVEL: INFO
@@ -416,12 +415,13 @@ backCore:
 
       annotations:
         nginx.ingress.kubernetes.io/use-proxy-protocol: true
-      
+
       nginx:
         whiteList:
           publicCidr: []
 
-    securityContext: {}
+    securityContext:
+      {}
       # runAsUser: ""
 
     # -- coog containers' resource requests and limits
@@ -442,8 +442,6 @@ backCore:
           cpu: 400m
           memory: 640Mi
 
-
-
   celery:
     workers:
       # -- Number of celery workers to run
@@ -461,8 +459,6 @@ backCore:
       requests:
         cpu: 320m
         memory: 800Mi
-
-
 
   cron:
     # -- Dynamic ConfigMap variables for cron
@@ -487,7 +483,7 @@ backCore:
     # failureThreshold: Failure threshold
     # successThreshold: Success threshold
     #
-    # With this configuration, the kubelet will attempt to open a socket to your container on the specified port. 
+    # With this configuration, the kubelet will attempt to open a socket to your container on the specified port.
     # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
     livenessProbe:
       initialDelaySeconds: 0
@@ -503,8 +499,6 @@ backCore:
       timeoutSeconds: 30
       successThreshold: 1
       failureThreshold: 3
-
-
 
   static:
     image:
@@ -526,7 +520,8 @@ backCore:
         whiteList:
           publicCidr: []
 
-    securityContext: {}
+    securityContext:
+      {}
       # runAsUser: ""
 
     # -- static containers' resource requests and limits
@@ -537,7 +532,7 @@ backCore:
       requests:
         cpu: 40m
         memory: 64Mi
-  
+
 #############################################################################################################################
 #                                            Back Additional components                                                     #
 #############################################################################################################################
@@ -552,7 +547,8 @@ libroconv:
     # -- libroconv image repository
     name: coog-libroconv
 
-  securityContext: {}
+  securityContext:
+    {}
     # runAsUser: ""
 
   # -- libroconv containers' resource requests and limits
@@ -576,7 +572,6 @@ libroconv:
     timeoutSeconds: 30
     successThreshold: 1
     failureThreshold: 3
-
 
 #############################################################################################################################
 #                                            Front Minimum components                                                       #
@@ -624,15 +619,16 @@ frontCore:
       hosts:
         - paths:
             - /gateway(/|$)(.*)
-      
+
       annotations:
-        nginx.ingress.kubernetes.io/rewrite-target: '/$2'
-      
+        nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+
       nginx:
         whiteList:
           publicCidr: []
 
-    securityContext: {}
+    securityContext:
+      {}
       # runAsUser: ""
 
     # -- gateway containers resource requests and limits
@@ -643,7 +639,6 @@ frontCore:
       requests:
         cpu: 80m
         memory: 80Mi
-
 
   api:
     strategy:
@@ -656,7 +651,8 @@ frontCore:
     # -- Configure environement variables for this component
     config: {}
 
-    securityContext: {}
+    securityContext:
+      {}
       # runAsUser: ""
 
     # -- api containers resource requests and limits
@@ -668,8 +664,6 @@ frontCore:
         cpu: 500m
         memory: 100Mi
 
-
-
   apiIdentityManager:
     strategy:
       type: ""
@@ -677,11 +671,12 @@ frontCore:
     image:
       # -- api-identity-manager image repository
       name: coog-api-identity-manager
-    
+
     # -- Configure environement variables for this component
     config: {}
 
-    securityContext: {}
+    securityContext:
+      {}
       # runAsUser: ""
 
     # -- apiIdentityManager containers' resource requests and limits
@@ -692,7 +687,6 @@ frontCore:
       requests:
         cpu: 50m
         memory: 56Mi
-
 
 #############################################################################################################################
 #                                            Front Additional components                                                    #
@@ -716,15 +710,16 @@ b2b:
     hosts:
       - paths:
           - /portal(/|$)(.*)
-    
+
     annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
-    
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+
     nginx:
       whiteList:
         publicCidr: []
 
-  securityContext: {}
+  securityContext:
+    {}
     # runAsUser: ""
 
   # -- b2b containers' resource requests and limits
@@ -735,8 +730,6 @@ b2b:
     requests:
       cpu: 200m
       memory: 40Mi
-
-
 
 web:
   enabled: false
@@ -752,7 +745,8 @@ web:
     COOG_API_API_PATH: /web/api
     COOG_API_APP_PATH: /web
 
-  securityContext: {}
+  securityContext:
+    {}
     # runAsUser: ""
 
   # -- web containers' resource requests and limits
@@ -763,8 +757,6 @@ web:
     requests:
       cpu: 400m
       memory: 160Mi
-
-
 
 apiReferential:
   # -- Deploy apiReferential container(s)
@@ -779,7 +771,8 @@ apiReferential:
   # -- Configure environement variables for this component
   config: {}
 
-  securityContext: {}
+  securityContext:
+    {}
     # runAsUser: ""
 
   # -- apiReferential containers' resource requests and limits
@@ -790,8 +783,6 @@ apiReferential:
     requests:
       cpu: 160m
       memory: 320Mi
-
-
 
 ##############################
 #      Components B2C        #
@@ -812,15 +803,16 @@ b2c:
     hosts:
       - paths:
           - /customers/myspace(/|$)(.*)
-    
+
     annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
-    
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+
     nginx:
       whiteList:
         publicCidr: []
 
-  securityContext: {}
+  securityContext:
+    {}
     # runAsUser: ""
 
   # -- b2c containers' resource requests and limits
@@ -831,8 +823,6 @@ b2c:
     requests:
       cpu: 50m
       memory: 40Mi
-
-
 
 customerBackend:
   # -- Deploy b2b container(s)
@@ -853,15 +843,16 @@ customerBackend:
     hosts:
       - paths:
           - /v1/customer(/|$)(.*)
-    
+
     annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
 
     nginx:
       whiteList:
         publicCidr: []
 
-  securityContext: {}
+  securityContext:
+    {}
     # runAsUser: ""
 
   # -- b2b containers' resource requests and limits
@@ -881,8 +872,6 @@ customerBackend:
       requests:
         cpu: 320m
         memory: 400Mi
-  
-
 
 customerFrontend:
   # -- Deploy customerFrontend container(s)
@@ -903,15 +892,16 @@ customerFrontend:
     hosts:
       - paths:
           - /customer(/|$)(.*)
-    
+
     annotations:
-      nginx.ingress.kubernetes.io/rewrite-target: '/$2'
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
 
     nginx:
       whiteList:
         publicCidr: []
 
-  securityContext: {}
+  securityContext:
+    {}
     # runAsUser: ""
 
   # -- customerFrontend containers' resource requests and limits
@@ -932,8 +922,6 @@ customerFrontend:
         cpu: 320m
         memory: 1600Mi
 
-
-
 # -- Is enable if one off following front component is enable :
 # - b2c
 # - customerBackend
@@ -949,7 +937,8 @@ apiB2c:
   # -- Configure environement variables for this component
   config: {}
 
-  securityContext: {}
+  securityContext:
+    {}
     # runAsUser: ""
 
   # -- apiB2c containers' resource requests and limits
