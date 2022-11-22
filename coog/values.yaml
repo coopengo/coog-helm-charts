@@ -333,16 +333,17 @@ backCore:
     # If undefined (the default) or set to null, no storageClassName spec is
     # set, choosing the default provisioner.
     #
-    storageClass: "efs-sc"
+    storageClass: ""
     # -- Create a custom storage class
     # Requires persistentVolume.enabled: true
     # Requires persistentVolume.storageClass: name
+    # Requires persistentVolume.customPersistentVolume: {}
     # ref: https://kubernetes.io/docs/concepts/storage/storage-classes/
     # E.g. for AWS-EFS-CSI-DRIVER
     # provisioner: efs.csi.aws.com
     # parameters:
-    #   provisioningMode: efs-ap          # must be `efs-ap` to enable dynamic provisioning
-    #   fileSystemId: fs-12345678         # must be the ID of the EFS volume created manually
+    #   provisioningMode: efs-ap          # Must be `efs-ap` to enable dynamic provisioning
+    #   fileSystemId: fs-12345678         # Must be the ID of the EFS volume created manually
     #   directoryPerms: "777"             # Default permission of the root directory of the volume
     #   gidRangeStart: "1000"             # optional - Set the range of POSIX Group IDs (GIDs) that are used to set the GID of the AWS access point. If not specified, the default range is 50000-7000000. Each provisioned volume, and thus AWS access point, is assigned a unique GID from this range.
     #   gidRangeEnd: "2000"               # optional - Set the range of POSIX Group IDs (GIDs) that are used to set the GID of the AWS access point. If not specified, the default range is 50000-7000000. Each provisioned volume, and thus AWS access point, is assigned a unique GID from this range.
@@ -353,6 +354,21 @@ backCore:
     # allowVolumeExpansion: true
     # volumeBindingMode: Immediate
     customStorageClass: {}
+    # -- Create a custom persistent volume
+    # Requires persistentVolume.enabled: true
+    # Requires persistentVolume.customStorageClass: {}
+    # capacity.storage is configured with persistentVolume.size
+    # accessModes is configured with persistentVolume.access.Modes
+    # ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+    # E.g. for AWS-EFS-CSI-DRIVER
+    # volumeMode: Filesystem
+    # persistentVolumeReclaimPolicy: Delete      # Can be deleted, data are stored on the EFS.
+    # csi:
+    #   driver: efs.csi.aws.com
+    #   volumeHandle: fs-ae66151a                # Must be the ID of the EFS volume created manually
+    #   volumeAttributes:
+    #       encryptInTransit: false              # By default, this value is true (encrypt network traffic)
+    customPersistentVolume: {}
     # -- PVC Storage Request for BackCoog
     size: 50Gi
     # -- PVC Access Mode for BackCore
