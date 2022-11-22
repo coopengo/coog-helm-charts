@@ -11,8 +11,6 @@ spec:
   {{- range .Values.backCore.persistentVolume.accessModes }}
     - {{ . | quote }}
   {{- end }}
-  {{ if .Values.backCore.persistentVolume.storageClass }}
-  storageClassName: {{ .Values.backCore.persistentVolume.storageClass | quote }}
-  {{- end }}
+  storageClassName: {{ default "" .Values.backCore.persistentVolume.storageClass | quote }}
 {{- toYaml .Values.backCore.persistentVolume.customPersistentVolume | nindent 2 }}
 {{- end -}}
