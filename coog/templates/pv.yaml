@@ -1,4 +1,4 @@
-{{- if and .Values.backCore.persistentVolume.enabled  (not .Values.backCore.persistentVolume.customStorageClass) .Values.backCore.persistentVolume.customPersistentVolume -}}
+{{- if and .Values.backCore.persistentVolume.enabled .Values.backCore.persistentVolume.customPersistentVolume -}}
 apiVersion: v1
 kind: PersistentVolume
 metadata:

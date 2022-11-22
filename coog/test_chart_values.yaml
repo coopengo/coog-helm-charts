@@ -333,12 +333,11 @@ backCore:
     # If set to "-", storageClassName: "", which disables dynamic provisioning
     # If undefined (the default) or set to null, no storageClassName spec is
     # set, choosing the default provisioner.
-    #
     storageClass: ""
+
     # -- Create a custom storage class
     # Requires persistentVolume.enabled: true
     # Requires persistentVolume.storageClass: name
-    # Requires persistentVolume.customPersistentVolume: {}
     # ref: https://kubernetes.io/docs/concepts/storage/storage-classes/
     # E.g. for AWS-EFS-CSI-DRIVER
     # provisioner: efs.csi.aws.com
@@ -355,9 +354,9 @@ backCore:
     # allowVolumeExpansion: true
     # volumeBindingMode: Immediate
     customStorageClass: {}
+
     # -- Create a custom persistent volume
     # Requires persistentVolume.enabled: true
-    # Requires persistentVolume.customStorageClass: {}
     # capacity.storage is configured with persistentVolume.size
     # accessModes is configured with persistentVolume.access.Modes
     # ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
@@ -370,13 +369,16 @@ backCore:
     #   volumeAttributes:
     #       encryptInTransit: false              # By default, this value is true (encrypt network traffic)
     customPersistentVolume: {}
+
     # -- PVC Storage Request for BackCoog
     size: 50Gi
+
     # -- PVC Access Mode for BackCore
     # Requires persistentVolume.enabled: true
     # If defined, and no customStorageClass is defined, then
     # PVC must be created manually before volume will be bound
     accessModes: ["ReadWriteMany"]
+
     # -- Provide an existing `PersistentVolumeClaim`
     # Requires persistentVolume.enabled: true
     # If defined, PVC must be created manually before volume will be bound
