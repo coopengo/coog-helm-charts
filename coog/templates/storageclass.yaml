@@ -1,4 +1,4 @@
-{{- if and .Values.backCore.persistentVolume.enabled .Values.backCore.persistentVolume.customStorageClass -}}
+{{- if and .Values.backCore.persistentVolume.enabled (not .Values.backCore.persistentVolume.customPersistentVolume) .Values.backCore.persistentVolume.customStorageClass -}}
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:

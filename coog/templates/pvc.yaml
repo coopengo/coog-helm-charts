@@ -9,9 +9,9 @@ spec:
   {{- range .Values.backCore.persistentVolume.accessModes }}
     - {{ . | quote }}
   {{- end }}
-  {{- if .Values.backCore.persistentVolume.customStorageClass }}
+  {{- if and .Values.backCore.persistentVolume.storageClass .Values.backCore.persistentVolume.customStorageClass }}
   storageClassName: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.storageClass | quote }}
-  {{- else }}
+  {{- else if .Values.backCore.persistentVolume.storageClass }}
   storageClassName: {{ .Values.backCore.persistentVolume.storageClass | quote }}
   {{- end }}
   {{- if .Values.backCore.persistentVolume.existingClaim }}

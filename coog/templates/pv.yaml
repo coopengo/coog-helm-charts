@@ -1,0 +1,15 @@
+{{- if and .Values.backCore.persistentVolume.enabled  (not .Values.backCore.persistentVolume.customStorageClass) .Values.backCore.persistentVolume.customPersistentVolume -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  capacity: 
+    storage: {{ .Values.backCore.persistentVolume.size }}
+  accessModes:
+  {{- range .Values.backCore.persistentVolume.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+{{- toYaml .Values.backCore.persistentVolume.customPersistentVolume | nindent 2 }}
+{{- end -}}
