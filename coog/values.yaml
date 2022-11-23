@@ -275,10 +275,26 @@ mongodb:
         cpu: 100m
         memory: 300Mi
   persistence:
+    enabled: true
     storageClass: ""
     accessModes: ["ReadWriteOnce"]
-    size: 8Gi
+    size: 5Gi
+    # -- Create a custom persistent volume
     # This is a coog parameter not mongodb
+    # Requires mongodb.persistence.enabled: true
+    # Requires mongodb.persistence.size: XXGi
+    # Requires mongodb.persistence.accessModes: ["XXXX"]
+    # capacity.storage is configured with persistentVolume.size
+    # accessModes is configured with mongodb.persistence.accessModes
+    # ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+    # E.g. for AWS-EFS-CSI-DRIVER
+    # volumeMode: Filesystem
+    # persistentVolumeReclaimPolicy: Retain
+    # csi:
+    #   driver: efs.csi.aws.com
+    #   volumeHandle: fs-ae66151a                # Must be the ID of the EFS volume created manually
+    #   volumeAttributes:
+    #       encryptInTransit: false              # By default, this value is true (encrypt network traffic)
     customPersistentVolume: {}
   # Need to custom timeoutSeconds parameter due to low resources limits
   readinessProbe:
