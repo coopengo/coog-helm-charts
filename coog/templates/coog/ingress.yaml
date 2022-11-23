@@ -1,7 +1,7 @@
 apiVersion: {{ include "general.ingress.apiVersion" . }}
 kind: Ingress
 metadata:
-  name: {{ include "general.names.fullname" . }}
+  name: {{ printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
   annotations:
   {{- if and .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.enabled }}
@@ -53,13 +53,13 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: {{ include "general.names.fullname" $ }}
+              name: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
               port:
                 number: 80
         {{- else }}
         - path: {{ . | quote }}
           backend:
-            servicename: {{ include "general.names.fullname" $ }}
+            servicename: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
             servicePort: 80
         {{- end }}
         {{- end }}

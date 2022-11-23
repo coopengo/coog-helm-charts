@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "general.names.fullname" . }}
+  name: {{ printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
   annotations:
     helm.sh/hook: pre-install
@@ -10,12 +10,12 @@ metadata:
 spec:
   template:
     metadata:
-      name: {{ include "general.names.fullname" . }}
+      name: {{ printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
       labels: {{- include "general.labels.standard" . | nindent 8 }}
     spec:
       restartPolicy: Never
       containers:
-      - name: {{ printf "%s-init-database" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
+      - name: {{ printf "%s-%s-init-database" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
         image: "alpine:3.16"
         command:
           - "/bin/sh"

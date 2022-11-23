@@ -336,7 +336,6 @@ backCore:
     # -- Create a custom storage class
     # Requires persistentVolume.enabled: true
     # Requires persistentVolume.storageClass: name
-    # Requires persistentVolume.customPersistentVolume: {}
     # ref: https://kubernetes.io/docs/concepts/storage/storage-classes/
     # E.g. for AWS-EFS-CSI-DRIVER
     # provisioner: efs.csi.aws.com
@@ -356,7 +355,8 @@ backCore:
 
     # -- Create a custom persistent volume
     # Requires persistentVolume.enabled: true
-    # Requires persistentVolume.customStorageClass: {}
+    # Requires persistentVolume.size: XXGi
+    # Requires persistentVolume.accessModes: ["XXXX"]
     # capacity.storage is configured with persistentVolume.size
     # accessModes is configured with persistentVolume.access.Modes
     # ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/

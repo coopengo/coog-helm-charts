@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "general.names.fullname" . }}
+  name: {{ printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
   replicas: {{ default .Values.replicaCount .Values.backCore.coog.replicaCount }}
@@ -15,10 +15,10 @@ spec:
       annotations:
         checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
         checksum/configmap-backcore: {{ include (printf "%s/%s" $.Template.BasePath "configmap-backcore.yaml") . | sha256sum  }}
-        checksum/configmap: {{ include (printf "%s/%s" $.Template.BasePath "configmap.yaml") . | sha256sum }}
+        checksum/configmap: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "configmap.yaml") . | sha256sum }}
         checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
         checksum/secret-backcore: {{ include (printf "%s/%s" $.Template.BasePath "secret-backcore.yaml") . | sha256sum  }}
-        checksum/secret: {{ include (printf "%s/%s" $.Template.BasePath "secret.yaml") . | sha256sum }}
+        checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
         checksum/secret-postgresql: {{ include (printf "%s/%s" $.Template.BasePath "secret-postgresql.yaml") . | sha256sum  }}
     spec:
       imagePullSecrets:
@@ -34,7 +34,7 @@ spec:
             {{- end }}
       {{- end }}
       initContainers:
-        - name: {{ printf "%s-module-update" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
+        - name: {{ printf "%s-%s-module-update" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy | quote }}
           securityContext:
@@ -79,7 +79,7 @@ spec:
               containerPort: 8000
           resources: {{- toYaml .Values.backCore.coog.initContainers.resources | nindent 12 }}
       containers:
-        - name: {{ include "general.names.name" . }}
+        - name: {{ printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
           securityContext:
