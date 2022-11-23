@@ -275,7 +275,7 @@ mongodb:
         cpu: 100m
         memory: 300Mi
   persistence:
-    storageClass: ""
+    storageClass: "efs-sc"
     accessModes: ["ReadWriteOnce"]
     size: 5Gi
     # -- Create a custom persistent volume
