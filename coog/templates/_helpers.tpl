@@ -96,7 +96,7 @@ Usage:
 {{- end -}}
 
 {{/*
-Return  the proper Storage Class
+Return  the proper backCore Storage Class
 {{ include "backCore.storage.class" . | nindent 2 }}
 */}}
 {{- define "backCore.storage.class" -}}
@@ -108,7 +108,21 @@ Return  the proper Storage Class
 {{- printf "storageClassName: %s" $storageClass -}}
 {{- end -}}
 {{- end -}}
+{{- end -}}
 
+{{/*
+Return  the proper mongodb Storage Class
+{{ include "mongodb.storage.class" . | nindent 2 }}
+*/}}
+{{- define "mongodb.storage.class" -}}
+{{- $storageClass := .Values.mongodb.persistence.storageClass -}}
+{{- if $storageClass -}}
+{{- if (eq "-" $storageClass) -}}
+{{- printf "storageClassName: \"\"" -}}
+{{- else }}
+{{- printf "storageClassName: %s" $storageClass -}}
+{{- end -}}
+{{- end -}}
 {{- end -}}
 
 #####################################################

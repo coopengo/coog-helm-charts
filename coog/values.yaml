@@ -274,6 +274,12 @@ mongodb:
       requests:
         cpu: 100m
         memory: 300Mi
+  persistence:
+    storageClass: ""
+    accessModes: ["ReadWriteOnce"]
+    size: 8Gi
+    # This is a coog parameter not mongodb
+    customPersistentVolume: {}
   # Need to custom timeoutSeconds parameter due to low resources limits
   readinessProbe:
     timeoutSeconds: 30
