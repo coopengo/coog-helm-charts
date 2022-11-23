@@ -88,13 +88,28 @@ Usage:
 {{ include "general.tplvalues.render" ( dict "value" .Values.path.to.the.Value "context" $) }}
 */}}
 {{- define "general.tplvalues.render" -}}
-    {{- if typeIs "string" .value }}
-        {{- tpl .value .context }}
-    {{- else }}
-        {{- tpl (.value | toYaml) .context }}
-    {{- end }}
+{{- if typeIs "string" .value }}
+{{- tpl .value .context }}
+{{- else }}
+{{- tpl (.value | toYaml) .context }}
+{{- end }}
 {{- end -}}
 
+{{/*
+Return  the proper Storage Class
+{{ include "backCore.storage.class" . | nindent 2 }}
+*/}}
+{{- define "backCore.storage.class" -}}
+{{- $storageClass := .Values.backCore.persistentVolume.storageClass -}}
+{{- if $storageClass -}}
+{{- if (eq "-" $storageClass) -}}
+{{- printf "storageClassName: \"\"" -}}
+{{- else }}
+{{- printf "storageClassName: %s" $storageClass -}}
+{{- end -}}
+{{- end -}}
+
+{{- end -}}
 
 #####################################################
 

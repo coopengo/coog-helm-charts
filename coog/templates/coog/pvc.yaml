@@ -9,11 +9,11 @@ spec:
   {{- range .Values.backCore.persistentVolume.accessModes }}
     - {{ . | quote }}
   {{- end }}
-  storageClassName: {{ default "" .Values.backCore.persistentVolume.storageClass | quote }}
   {{- if .Values.backCore.persistentVolume.existingClaim }}
   volumeName: {{ .Values.backCore.persistentVolume.existingClaim }}
   {{- end }}
   resources:
     requests:
       storage: {{ .Values.backCore.persistentVolume.size }}
+  {{- include "backCore.storage.class" . | nindent 2 }}
 {{- end -}}
