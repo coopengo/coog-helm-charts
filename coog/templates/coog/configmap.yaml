@@ -4,7 +4,7 @@ metadata:
   name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
-  TRYTOND_WEB__CORS: {{ printf "https://%s" (default .Values.ingress.host (include "backcore.coog.hosts" .)) | quote }}
+  TRYTOND_WEB__CORS: {{ printf "https://%s" (join ",https://" (list .Values.ingress.host (include "backcore.coog.hosts" . ))) | quote }}
   {{- if (or .Values.customerBackend.enabled .Values.customerFrontend.enabled) }}
   TRYTOND_STRAPI__URL: {{ printf "http://%s-%s-customer-backend" .Release.Name .Chart.Name | quote }}
   {{- end }}

@@ -2,11 +2,9 @@
 Join components hosts in string format
 */}}
 {{- define "backcore.coog.hosts" -}}
-{{- $map := dict }}
+{{- $hosts := list -}}
 {{- range .Values.backCore.coog.ingress.hosts }}
-{{- if .host }}
-{{- $_ := set $map .host "" }}
-{{- end }}
-{{- keys $map | join ",https://" }}
-{{- end }}
-{{- end }}
+{{- $hosts = .host | append $hosts -}}
+{{- end -}}
+{{- join ",https://"  $hosts }}
+{{- end -}}
