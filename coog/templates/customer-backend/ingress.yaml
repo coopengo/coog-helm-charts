@@ -46,12 +46,27 @@ spec:
   {{- end }}
   ingressClassName: {{ .Values.ingress.className | quote }}
   rules:
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+        {{- range .Values.customerBackend.ingress.defaultPaths }}
+        {{- if eq (include "general.ingress.apiVersion" $) "networking.k8s.io/v1" }}
+        - path: {{ . | quote }}
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
+              port:
+                number: 80
+        {{- else }}
+        - path: {{ . | quote }}
+          backend:
+            servicename: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
+            servicePort: 80
+        {{- end }}
+        {{- end }}
   {{- range .Values.customerBackend.ingress.hosts }}
-    {{- if not .host }}
-    - host: {{ $.Values.ingress.host | quote }}
-    {{- else }}
     - host: {{ .host | quote }}
-    {{- end }}
       http:
         paths:
         {{- range .paths }}

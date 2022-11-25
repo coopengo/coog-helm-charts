@@ -452,9 +452,11 @@ backCore:
 
     ingress:
       # -- Default host for the ingress resource for coog containers'
-      hosts:
-        - paths:
-            - /
+      defaultPaths:
+        - /
+
+      # -- additionals hosts & paths
+      hosts: []
 
       annotations:
         nginx.ingress.kubernetes.io/use-proxy-protocol: true
@@ -554,11 +556,14 @@ backCore:
 
     ingress:
       # -- Default host for the ingress resource for static containers'
-      hosts:
-        - paths:
-            - /sao
-            - /bench
-            - /doc
+      defaultPaths:
+        - /sao
+        - /bench
+        - /doc
+
+      # -- additionals hosts & paths
+      hosts: []
+
       nginx:
         whiteList:
           publicCidr: []
@@ -660,9 +665,11 @@ frontCore:
 
     ingress:
       # -- Default host for the ingress resource for gateway containers
-      hosts:
-        - paths:
-            - /gateway(/|$)(.*)
+      defaultPaths:
+        - /gateway(/|$)(.*)
+
+      # -- additionals hosts & paths
+      hosts: []
 
       annotations:
         nginx.ingress.kubernetes.io/rewrite-target: "/$2"
@@ -751,9 +758,11 @@ b2b:
 
   ingress:
     # -- Default host for the ingress resource for gateway containers
-    hosts:
-      - paths:
-          - /portal(/|$)(.*)
+    defaultPaths:
+      - /portal(/|$)(.*)
+
+    # -- additionals hosts & paths
+    hosts: []
 
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: "/$2"
@@ -844,9 +853,11 @@ b2c:
 
   ingress:
     # -- Default host for the ingress resource for gateway containers
-    hosts:
-      - paths:
-          - /customers/myspace(/|$)(.*)
+    defaultPaths:
+      - /customers/myspace(/|$)(.*)
+
+    # -- additionals hosts & paths
+    hosts: []
 
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: "/$2"
@@ -884,9 +895,11 @@ customerBackend:
 
   ingress:
     # -- Default host for the ingress resource for gateway containers
-    hosts:
-      - paths:
-          - /v1/customer(/|$)(.*)
+    defaultPaths:
+      - /v1/customer(/|$)(.*)
+
+    # -- additionals hosts & paths
+    hosts: []
 
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: "/$2"
@@ -933,10 +946,11 @@ customerFrontend:
 
   ingress:
     # -- Default host for the ingress resource for gateway containers
-    hosts:
-      - host: ""
-        paths:
-          - /customer(/|$)(.*)
+    defaultPaths:
+      - /customer(/|$)(.*)
+
+    # -- additionals hosts & paths
+    hosts: []
 
     annotations:
       nginx.ingress.kubernetes.io/rewrite-target: "/$2"

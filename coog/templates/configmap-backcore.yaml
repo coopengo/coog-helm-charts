@@ -11,6 +11,6 @@ data:
   DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }} # duplicate of COOG_DB_NAME
   # Tryton
   TRYTOND_REPORT__API: {{ printf "http://%s-%s-libroconv:5000/unoconv/{oext}" .Release.Name .Chart.Name | quote }}
-  {{- range $key, $value := .Values.backCore.coog.config }}
+  {{- range $key, $value := .Values.backCore.config }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
