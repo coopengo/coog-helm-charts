@@ -31,7 +31,7 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
-{{- if and .Values.ingress.thisTls.enabled (or .Values.ingress.thisTls.letsencrypt .Values.ingress.hosts) }}
+{{- if and .Values.ingress.thisTls.enabled (or .Values.ingress.thisTls.letsencrypt .Values.ingress.host) }}
   tls:
     {{- if and .Values.ingress.thisTls.enabled .Values.ingress.thisTls.letsencrypt }}
     - hosts:
@@ -45,7 +45,11 @@ spec:
   ingressClassName: {{ .Values.ingress.className | quote }}
   rules:
   {{- range .Values.customerFrontend.ingress.hosts }}
-    - host: {{ default $.Values.ingress.host .host | quote }}
+    {{- if not .host }}
+    - host: {{ $.Values.ingress.host | quote }}
+    {{- else }}
+    - host: {{ .host | quote }}
+    {{- end }}
       http:
         paths:
         {{- range .paths }}

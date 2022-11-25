@@ -425,19 +425,21 @@ backCore:
     TRYTOND_EMAIL__FROM: changeme
     TRYTOND_OPTIONS__TABLE_DIMENSION: changeme
     # end
-    COOG_TIMEOUT: 3600
     COOG_IWC: 1
+    COOG_TIMEOUT: 3600
     LOG_LEVEL: INFO
-    TRYTOND_DATABASE__LANGUAGE: fr
-    TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
     TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: 1
-    TRYTOND_TZ: Europe/Paris
+    TRYTOND_CACHE__CLEAN_TIMEOUT: 0
+    TRYTOND_CACHE__RECORD: 50000
+    TRYTOND_DATABASE__LANGUAGE: fr
     TRYTOND_DATABASE__PATH: "/workspace/io/edm"
+    TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
+    TRYTOND_DEBUG__VIEWS: false
     TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_EXPIRATION_MINUTES: 864000
     TRYTOND_PASSWORD__ENTROPY: "0.1"
-    TRYTOND_CACHE__RECORD: 50000
-    TRYTOND_CACHE__CLEAN_TIMEOUT: 0
-    TRYTOND_DEBUG__VIEWS: false
+    TRYTOND_SEPA_PAYMENT__OUT_DIR: "/workspace/io/batch/sepa/sepa_out"
+    TRYTOND_TZ: Europe/Paris
+    TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: "1"
 
   coog:
     # -- coog, celery and batch configuration for number of workers
@@ -648,12 +650,13 @@ frontCore:
 
     # -- Configure environement variables for this component
     config:
-      COOG_MODULE: true
-      GOOGLE_MODULE: false
-      FACEBOOK_MODULE: false
-      COOG_TOKEN_MODULE: true
+      BASE_PATH: "/gateway"
+      COOG_GATEWAY_BASE_PATH: "/gateway"
       COOG_GATEWAY_PORT: 8000
-      COOG_GATEWAY_BASE_PATH: /gateway
+      COOG_MODULE: true
+      COOG_TOKEN_MODULE: true
+      FACEBOOK_MODULE: false
+      GOOGLE_MODULE: false
 
     ingress:
       # -- Default host for the ingress resource for gateway containers
@@ -931,7 +934,8 @@ customerFrontend:
   ingress:
     # -- Default host for the ingress resource for gateway containers
     hosts:
-      - paths:
+      - host: ""
+        paths:
           - /customer(/|$)(.*)
 
     annotations:
