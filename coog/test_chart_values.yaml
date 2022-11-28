@@ -449,6 +449,12 @@ backCore:
     workers:
       number: ""
 
+    # -- Add Web Cors to defaults values defined
+    # Muse be in format "https://<URL>,https://<URL>"
+    # E.g.
+    # trytonWebCorsAdditionals: "https://test1.example.com,https://test2.example.com"
+    trytonWebCorsAdditionals: ""
+
     # -- Configure environement variables for this component
     # Each value can be modified without override all or delete other parameters
     config: {}
