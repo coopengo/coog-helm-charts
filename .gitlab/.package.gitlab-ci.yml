@@ -29,6 +29,10 @@ lint:helm-chart:
       done
   rules:
     - changes:
+        - ".gitlab/**/*.{yml,yaml}"
+        - ".gitlab-ci.{yml,yaml}"
+      when: never
+    - changes:
         - "**/*.{yaml,yml}"
 
 package:helm-chart:
