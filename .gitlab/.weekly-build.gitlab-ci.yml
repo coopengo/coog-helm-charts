@@ -11,7 +11,7 @@ trigger:weekly-build:
         echo " "
         curl -X POST \
           --fail \
-          -F "token=${CI_TRIGGER_TOKEN}" \
+          -F "token=${CI_JOB_TOKEN}" \
           -F "ref=${BRANCH}" \
           "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline"
       done
@@ -25,22 +25,20 @@ package:weekly-build:
     - !reference [.git_with_ssh:debian, before_script]
     - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
     - |-
-      if [[ ${WEEKLY_BUILD} == "true" ]]; then
-        if [[ ${MINOR_VERSION} =~ ^(([[:digit:]]{4})(.[[:digit:]]{1,2})?)$ ]]; then
-          if [[ ${CI_COMMIT_BRANCH} == "${CI_DEFAULT_BRANCH}" ]]; then
-            VERSION="$(echo "$MINOR_VERSION" | grep -Eo "([[:digit:]]{4})" | sed 's/\(.\{2\}\)/\1./g; s/.$//').${MINOR_VERSION}"
-          else
-            VERSION="${CI_COMMIT_BRANCH#coog-}.${MINOR_VERSION}"
-          fi
+      if [[ ${MINOR_VERSION} =~ ^(([[:digit:]]{4})(.[[:digit:]]{1,2})?)$ ]]; then
+        if [[ ${CI_COMMIT_BRANCH} == "${CI_DEFAULT_BRANCH}" ]]; then
+          VERSION="$(echo "$MINOR_VERSION" | grep -Eo "([[:digit:]]{4})" | sed 's/\(.\{2\}\)/\1./g; s/.$//').${MINOR_VERSION}"
         else
-          if [[ ${CI_COMMIT_BRANCH} == "${CI_DEFAULT_BRANCH}" ]]; then
-            VERSION="$(date +%y.%V.%y%V)"
-          else
-            VERSION="${CI_COMMIT_BRANCH#coog-}.$(date +%y%V)"
-          fi
+          VERSION="${CI_COMMIT_BRANCH#coog-}.${MINOR_VERSION}"
         fi
-        echo "Version to generate: ${VERSION}"
+      else
+        if [[ ${CI_COMMIT_BRANCH} == "${CI_DEFAULT_BRANCH}" ]]; then
+          VERSION="$(date +%y.%V.%y%V)"
+        else
+          VERSION="${CI_COMMIT_BRANCH#coog-}.$(date +%y%V)"
+        fi
       fi
+      echo "Version to generate: ${VERSION}"
   script:
     - |-
       for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".git" -exec basename {} \;)
