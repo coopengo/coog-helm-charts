@@ -62,6 +62,7 @@ lint:helm-chart:
         fi
       done
   rules:
+    - if: $CI_PIPELINE_SOURCE =~ /^(trigger|pipeline)$/
     - changes:
         - "coog/README.md"
       when: never
@@ -81,6 +82,7 @@ trigger:automatic-generation:
         echo "Working on ${BRANCH}..."
         echo " "
         curl -X POST \
+          --fail \
           -F "token=${CI_JOB_TOKEN}" \
           -F "ref=${BRANCH}" \
           https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
@@ -141,6 +143,7 @@ package:helm-chart:
     reports:
       dotenv: upload.env
   rules:
+    - if: $CI_PIPELINE_SOURCE =~ /^(trigger|pipeline)$/
     - changes:
         - "coog/README.md"
       when: never
@@ -173,6 +176,7 @@ update:readme:
     paths:
       - "**/README.md"
   rules:
+    - if: $CI_PIPELINE_SOURCE =~ /^(trigger|pipeline)$/
     - changes:
         - "coog/README.md"
       when: never
@@ -216,6 +220,7 @@ coreye:synchronize:coog:
         -F "variables[SERVICE]=coog" \
         https://git.coreye.fr/api/v4/projects/434/trigger/pipeline
   rules:
+    - if: $CI_PIPELINE_SOURCE =~ /^(trigger|pipeline)$/
     - changes:
         - "coog/README.md"
       when: never
