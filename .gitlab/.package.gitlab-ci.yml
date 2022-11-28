@@ -1,7 +1,3 @@
-# Executer quand:
-# - Lint
-# ** Toutes les modifications dans les .yaml / .yml
-
 lint:helm-chart:
   stage: lint
   image:
@@ -59,6 +55,8 @@ package:helm-chart:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.{yaml,yml}"
+  needs:
+    - lint:helm-chart
 
 update:readme:
   stage: update
@@ -88,7 +86,6 @@ update:readme:
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
         - "**/Chart.{yaml,yml}"
-
   needs:
     - package:helm-chart
   allow_failure: true
