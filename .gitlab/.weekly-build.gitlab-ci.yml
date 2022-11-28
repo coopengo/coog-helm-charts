@@ -5,7 +5,7 @@ trigger:weekly-build:
     - apt update
     - apt install -y curl
     - |-
-      for BRANCH in $(git ls-remote --head "${CI_REPOSITORY_URL}" -l "coog-*" | cut -d '/' -f3 | grep -E '^(coog-[[:digit:]]{1,2}.[[:digit:]]{1,3})$' | sort -Vr | head -n 4)
+      for BRANCH in $(git ls-remote --head "${CI_REPOSITORY_URL}" | cut -d '/' -f3 | grep -E '^(master|coog-[[:digit:]]{1,2}.[[:digit:]]{1,3})$' | sort -Vr | head -n 5)
       do
         echo "Working on ${BRANCH}..."
         echo " "
@@ -13,6 +13,7 @@ trigger:weekly-build:
           --fail \
           -F "token=${CI_JOB_TOKEN}" \
           -F "ref=${BRANCH}" \
+          -F "variables[WEEKLY_BUILD]=true"
           "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline"
       done
   rules:
@@ -52,4 +53,4 @@ package:weekly-build:
         fi
       done
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "trigger"'
+    - if: '$WEEKLY_BUILD && $CI_PIPELINE_SOURCE =~ /^(trigger|pipeline)$/'
