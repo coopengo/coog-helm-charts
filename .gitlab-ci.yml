@@ -78,6 +78,8 @@ trigger:automatic-generation:
     - |-
       for BRANCH in $(git ls-remote --head "${CI_REPOSITORY_URL}" -l "coog-*" | cut -d '/' -f3 | grep -E '^(coog-[[:digit:]]{1,2}.[[:digit:]]{1,3})$' | sort -Vr | head -n 4)
       do
+        echo "Working on ${BRANCH}..."
+        echo " "
         curl -X POST \
           --fail \
           -F "token=${CI_JOB_TOKEN}" \
