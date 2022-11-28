@@ -11,7 +11,7 @@ trigger:weekly-build:
         echo " "
         curl -X POST \
           --fail \
-          -F "token=${CI_JOB_TOKEN}" \
+          -F "token=${CI_TRIGGER_TOKEN}" \
           -F "ref=${BRANCH}" \
           -F "variables[WEEKLY_BUILD]=true" \
           "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline"
