@@ -12,6 +12,6 @@ include:
     file: 
       - '/Jobs/reference.debian.gitlab-ci.yml'
       - '/Jobs/reference.alpine.gitlab-ci.yml'
-  - local: .synchronization.gitlab-ci.yml
-  - local: .gitlab/package.gitlab-ci.yml
-  - local: .weekly-build.gitlab-ci.yml
+  - local: .gitlab/.synchronization.gitlab-ci.yml
+  - local: .gitlab/.package.gitlab-ci.yml
+  - local: .gitlab/.weekly-build.gitlab-ci.yml
