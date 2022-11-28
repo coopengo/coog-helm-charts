@@ -11,9 +11,9 @@ trigger:weekly-build:
         echo " "
         curl -X POST \
           --fail \
-          -F "token=${CI_JOB_TOKEN}" \
+          -F "token=glptt-b2f27c574bc0a60cc18c0ef83dd0d25f58848063" \
           -F "ref=${BRANCH}" \
-          https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+          "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline"
       done
   rules:
     - if: $WEEKLY_BUILD && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
