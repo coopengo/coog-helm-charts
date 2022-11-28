@@ -11,7 +11,7 @@ trigger:weekly-build:
         echo " "
         curl -X POST \
           --fail \
-          -F "token=glptt-b2f27c574bc0a60cc18c0ef83dd0d25f58848063" \
+          -F "token=${CI_TRIGGER_TOKEN}" \
           -F "ref=${BRANCH}" \
           "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline"
       done
@@ -54,4 +54,4 @@ package:weekly-build:
         fi
       done
   rules:
-    - if: '$WEEKLY_BUILD'
+    - if: '$CI_PIPELINE_SOURCE == "trigger"'
