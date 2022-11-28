@@ -14,6 +14,7 @@ trigger:weekly-build:
           -F "token=${CI_TRIGGER_TOKEN}" \
           -F "ref=${BRANCH}" \
           -F "variables[WEEKLY_BUILD]=true" \
+          -F "variables[MINOR_VERSION]=${MINOR_VERSION:-0}" \
           "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline"
       done
   rules:
