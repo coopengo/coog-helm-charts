@@ -17,7 +17,7 @@ trigger:weekly-build:
           "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline"
       done
   rules:
-    - if: $WEEKLY_BUILD && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule)$/ && $WEEKLY_BUILD && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
 
 package:weekly-build:
   stage: package
