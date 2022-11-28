@@ -13,6 +13,7 @@ trigger:weekly-build:
           --fail \
           -F "token=${CI_JOB_TOKEN}" \
           -F "ref=${BRANCH}" \
+          -F "variables[WEEKLY_BUILD]=true"
           "https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline"
       done
   rules:
@@ -52,4 +53,4 @@ package:weekly-build:
         fi
       done
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "trigger"'
+    - if: '$WEEKLY_BUILD && $CI_PIPELINE_SOURCE =~ /^(trigger|pipeline)$/'
