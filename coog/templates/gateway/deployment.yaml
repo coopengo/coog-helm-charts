@@ -69,7 +69,7 @@ spec:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             {{- end }}
             - secretRef:
-                name: {{ printf "%s-%s-mongodb" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-%s-mongodb-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
           ports:
             - name: http
               containerPort: 8000
