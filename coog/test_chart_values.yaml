@@ -142,11 +142,11 @@ ingress:
 #
 # -- additional startup time on their first initialization
 startupProbe:
-  initialDelaySeconds: 10
-  periodSeconds: 10
-  timeoutSeconds: 1
-  failureThreshold: 30
+  initialDelaySeconds: 2
+  periodSeconds: 30
+  timeoutSeconds: 30
   successThreshold: 1
+  failureThreshold: 3
 
 # -- Sometimes, applications are temporarily unable to serve traffic.
 # For example, an application might need to load large data or configuration files during startup,
@@ -162,7 +162,7 @@ readinessProbe:
 # With this configuration, the kubelet will attempt to open a socket to your container on the specified port.
 # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
 livenessProbe:
-  initialDelaySeconds: 15
+  initialDelaySeconds: 5
   periodSeconds: 30
   timeoutSeconds: 30
   successThreshold: 1
@@ -274,6 +274,22 @@ mongodb:
       requests:
         cpu: 100m
         memory: 300Mi
+  initdbScripts:
+    coog_init_script.sh: |
+      #!/bin/sh
+      echo "Create non-root user on admin database..."
+      mongo --port ${MONGODB_PORT_NUMBER} -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_PASSWORD} --authenticationDatabase admin <<EOF
+      use admin;
+      db.createUser(
+        {
+          user: "${MONGODB_EXTRA_USERNAMES%%,*}",
+          pwd: "${MONGODB_EXTRA_PASSWORDS%%,*}",
+          roles: [
+            { role: "read", db: "admin" }
+          ]
+        }
+      );
+      EOF
   persistence:
     storageClass: "efs-sc"
     accessModes: ["ReadWriteOnce"]
@@ -897,9 +913,13 @@ customerBackend:
     # -- b2b image repository
     name: coog-customer-backend
 
+  # -- Database configuration for the component
+  database:
+    # -- Default : strapi-{{ .Release.Name }}
+    name: ""
+
   # -- Configure environement variables for this component
-  config:
-    DATABASE_NAME: strapi
+  config: {}
 
   ingress:
     # -- Default host for the ingress resource for gateway containers
