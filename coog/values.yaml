@@ -274,6 +274,22 @@ mongodb:
       requests:
         cpu: 100m
         memory: 300Mi
+  initdbScripts:
+    coog_init_script.sh: |
+      #!/bin/sh
+      echo "Create non-root user on admin database..."
+      mongo --port ${MONGODB_PORT_NUMBER} -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_PASSWORD} --authenticationDatabase admin <<EOF
+      use admin;
+      db.createUser(
+        {
+          user: "${MONGODB_EXTRA_USERNAMES%%,*}",
+          pwd: "${MONGODB_EXTRA_PASSWORDS%%,*}",
+          roles: [
+            { role: "read", db: "admin" }
+          ]
+        }
+      );
+      EOF
   persistence:
     enabled: true
     storageClass: ""
