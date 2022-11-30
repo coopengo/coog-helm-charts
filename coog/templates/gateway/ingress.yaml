@@ -61,13 +61,13 @@ spec:
           pathType: Prefix
           backend:
             service:
-              name: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
+              name: {{ include "general.names.fullname" $ }}
               port:
                 number: 80
         {{- else }}
         - path: {{ . | quote }}
           backend:
-            servicename: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
+            servicename: {{ include "general.names.fullname" $ }}
             servicePort: 80
         {{- end }}
         {{- end }}
