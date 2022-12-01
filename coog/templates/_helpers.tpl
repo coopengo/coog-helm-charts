@@ -96,11 +96,11 @@ Usage:
 {{- end -}}
 
 {{/*
-Return  the proper backCore Storage Class
-{{ include "backCore.storage.class" . | nindent 2 }}
+Return  the proper Storage Class
+{{ include "storage.class" (dict "value" .Values.path.to.the.Value) | nindent X }}
 */}}
-{{- define "backCore.storage.class" -}}
-{{- $storageClass := .Values.backCore.persistentVolume.storageClass -}}
+{{- define "storage.class" -}}
+{{- $storageClass := .value -}}
 {{- if $storageClass -}}
 {{- if (eq "-" $storageClass) -}}
 {{- printf "storageClassName: \"\"" -}}
@@ -111,18 +111,14 @@ Return  the proper backCore Storage Class
 {{- end -}}
 
 {{/*
-Return  the proper mongodb Storage Class
-{{ include "mongodb.storage.class" . | nindent 2 }}
+Return  the proper Storage Class
+{{ include "secret.token.generator" (dict "value" .Values.path.to.the.Value) | nindent X }}
 */}}
-{{- define "mongodb.storage.class" -}}
-{{- $storageClass := .Values.mongodb.persistence.storageClass -}}
-{{- if $storageClass -}}
-{{- if (eq "-" $storageClass) -}}
-{{- printf "storageClassName: \"\"" -}}
-{{- else }}
-{{- printf "storageClassName: %s" $storageClass -}}
-{{- end -}}
-{{- end -}}
+{{- define "secret.token.generator" -}}
+{{- $secretObj := (lookup "v1" "Secret" "" (.value | toString) ) | default dict -}}
+{{- $secretData := (get $secretObj "stringData") | default dict -}}
+{{- $secretValue := (get $secretData (.value | toString)) | default (randAlphaNum 32) -}}
+{{- $secretValue -}}
 {{- end -}}
 
 #####################################################

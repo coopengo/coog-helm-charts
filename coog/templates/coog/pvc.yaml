@@ -15,5 +15,5 @@ spec:
   resources:
     requests:
       storage: {{ .Values.backCore.persistentVolume.size }}
-  {{- include "backCore.storage.class" . | nindent 2 }}
+  {{- include "storage.class" (dict "value" .Values.backCore.persistentVolume.storageClass) | nindent 2 }}
 {{- end -}}

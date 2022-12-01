@@ -11,6 +11,6 @@ spec:
   {{- range .Values.backCore.persistentVolume.accessModes }}
     - {{ . | quote }}
   {{- end }}
-  {{- include "backCore.storage.class" . | nindent 2 }}
+  {{- include "storage.class" (dict "value" .Values.backCore.persistentVolume.storageClass) | nindent 2 }}
 {{- toYaml .Values.backCore.persistentVolume.customPersistentVolume | nindent 2 }}
 {{- end -}}

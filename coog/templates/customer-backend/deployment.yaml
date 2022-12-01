@@ -45,13 +45,13 @@ spec:
             - name: builddir
               mountPath: "/workdir/build"
           envFrom:
-            {{- if .Values.config }}
+            {{- if .Values.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
-            {{- if .Values.secrets.config }}
+            {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}

@@ -8,6 +8,6 @@ data:
   {{- if (or .Values.customerBackend.enabled .Values.customerFrontend.enabled) }}
   TRYTOND_STRAPI__URL: {{ printf "http://%s-%s-customer-backend" .Release.Name .Chart.Name | quote }}
   {{- end }}
-  {{- range $key, $value := .Values.backCore.coog.config }}
+  {{- range $key, $value := .Values.backCore.coog.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}

@@ -5,6 +5,6 @@ metadata:
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
   CELERY_MAX_MEMORY_PER_CHILD: {{ .Values.backCore.celery.workers.maximumMemory | quote }}
-  {{- range $key, $value := .Values.backCore.celery.config }}
+  {{- range $key, $value := .Values.backCore.celery.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}

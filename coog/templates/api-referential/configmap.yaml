@@ -1,12 +1,12 @@
 {{- if .Values.apiReferential.enabled -}}
-{{- if .Values.apiReferential.config -}}
+{{- if .Values.apiReferential.extraEnvVar -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
-  {{- range $key, $value := .Values.apiReferential.config }}
+  {{- range $key, $value := .Values.apiReferential.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}

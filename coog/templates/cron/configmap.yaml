@@ -6,9 +6,9 @@ metadata:
 data:
   COOG_CELERY_WORKERS: {{ default .Values.backCore.workers.number .Values.backCore.coog.workers.number | quote }}
   COOG_SERVER_WORKERS: {{ default .Values.backCore.workers.number .Values.backCore.coog.workers.number | quote }}
-  {{- range $key, $value := .Values.backCore.cron.config }}
+  {{- range $key, $value := .Values.backCore.cron.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
-  {{- range $key, $value := .Values.backCore.cron.config }}
+  {{- range $key, $value := .Values.backCore.cron.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}

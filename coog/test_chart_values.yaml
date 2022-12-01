@@ -27,7 +27,7 @@ securityContext:
   runAsUser: 1000
 
 # -- Setup variables shared to all components.
-config: {}
+extraEnvVar: {}
 
 image:
   # -- Tag applied for all components. It can be customized for each component.
@@ -191,7 +191,7 @@ dnsPolicy: ""
 # Ref: https://kubernetes.io/docs/concepts/policy/resource-quotas/
 quota:
   enabled: false
-  config:
+  extraEnvVar:
     cpuRequest: 0
     memoryRequest: 0
     cpuLimit: 0
@@ -206,7 +206,7 @@ maintenanceMode:
     name: nginx-custom-error-pages
     tag: latest
 
-  config: {}
+  extraEnvVar: {}
   #   TEMPLATE_NAME: "coopengo"
   #   DEFAULT_ERROR_PAGE: 404
   #   DEFAULT_HTTP_CODE: 404
@@ -440,7 +440,7 @@ backCore:
   #
   # convert to variable :
   # TRYTOND_WEB__LISTEN: localhost:8000
-  config:
+  extraEnvVar:
     # Following variables must be defined :
     # start
     TRYTOND_EMAIL__FROM: changeme
@@ -473,7 +473,7 @@ backCore:
 
     # -- Configure environement variables for this component
     # Each value can be modified without override all or delete other parameters
-    config: {}
+    extraEnvVar: {}
 
     ingress:
       # -- Default host for the ingress resource for coog containers'
@@ -519,7 +519,7 @@ backCore:
       maximumMemory: 512000
 
     # -- Configure environement variables for this component
-    config: {}
+    extraEnvVar: {}
 
     # -- celery containers' resource requests and limits
     resources:
@@ -532,7 +532,7 @@ backCore:
 
   cron:
     # -- Dynamic ConfigMap variables for cron
-    config: {}
+    extraEnvVar: {}
 
     coogCeleryModule: coog_async.coog_celery
 
@@ -667,7 +667,7 @@ libroconv:
 # If you enable one front component, you must set mongodb.isManaged: true
 frontCore:
   enabled: true
-  config:
+  extraEnvVar:
     JWT_EXPIRATION: 3600
 
   gateway:
@@ -679,7 +679,7 @@ frontCore:
       name: coog-gateway
 
     # -- Configure environement variables for this component
-    config:
+    extraEnvVar:
       COOG_MODULE: true
       GOOGLE_MODULE: false
       FACEBOOK_MODULE: false
@@ -724,7 +724,7 @@ frontCore:
       name: coog-api
 
     # -- Configure environement variables for this component
-    config: {}
+    extraEnvVar: {}
 
     securityContext:
       {}
@@ -748,7 +748,7 @@ frontCore:
       name: coog-api-identity-manager
 
     # -- Configure environement variables for this component
-    config: {}
+    extraEnvVar: {}
 
     securityContext:
       {}
@@ -818,7 +818,7 @@ web:
     name: coog-web
 
   # -- Configure environement variables for this component
-  config:
+  extraEnvVar:
     COOG_API_API_PATH: /web/api
     COOG_API_APP_PATH: /web
 
@@ -846,7 +846,7 @@ apiReferential:
     name: coog-api-referential
 
   # -- Configure environement variables for this component
-  config: {}
+  extraEnvVar: {}
 
   securityContext:
     {}
@@ -919,7 +919,7 @@ customerBackend:
     name: ""
 
   # -- Configure environement variables for this component
-  config: {}
+  extraEnvVar: {}
 
   ingress:
     # -- Default host for the ingress resource for gateway containers
@@ -969,7 +969,7 @@ customerFrontend:
     name: coog-customer-frontend
 
   # -- Configure environement variables for this component
-  config:
+  extraEnvVar:
     GATSBY_API_URL: "/v1/customer"
 
   ingress:
@@ -1022,7 +1022,7 @@ apiB2c:
     name: coog-api-b2c
 
   # -- Configure environement variables for this component
-  config: {}
+  extraEnvVar: {}
 
   securityContext:
     {}

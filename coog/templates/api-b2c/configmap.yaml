@@ -2,14 +2,14 @@
           .Values.customerBackend.enabled
           .Values.customerFrontend.enabled)
 -}}
-{{- if .Values.apiB2c.config -}}
+{{- if .Values.apiB2c.extraEnvVar -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
-  {{- range $key, $value := .Values.apiB2c.config }}
+  {{- range $key, $value := .Values.apiB2c.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}

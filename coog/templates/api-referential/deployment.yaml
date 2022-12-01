@@ -37,27 +37,27 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.apiReferential.securityContext.runAsUser }}
           envFrom:
-            {{- if .Values.config }}
+            {{- if .Values.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.frontCore.config }}
+            {{- if .Values.frontCore.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.apiReferential.config }}
+            {{- if .Values.apiReferential.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.config }}
+            {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.frontCore.config }}
+            {{- if .Values.secrets.frontCore.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.apiReferential.config }}
+            {{- if .Values.secrets.apiReferential.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
             {{- end }}

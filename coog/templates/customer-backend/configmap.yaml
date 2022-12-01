@@ -11,7 +11,7 @@ data:
   DATABASE_PORT: {{ default "5432" .Values.postgresql.service.ports.postgresql | quote }}
   DATABASE_NAME: {{ default (printf "strapi-%s" .Release.Name) .Values.customerBackend.database.name | quote }}
   URL: {{ printf "https://%s/v1/customer" .Values.ingress.host | quote }}
-  {{- range $key, $value := .Values.customerBackend.config }}
+  {{- range $key, $value := .Values.customerBackend.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}

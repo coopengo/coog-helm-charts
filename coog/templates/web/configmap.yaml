@@ -10,7 +10,7 @@ data:
   MONGO_DB_NAME: {{ first .Values.mongodb.auth.databases | quote }}
   COOG_API_COOG_URL: {{ printf "http://%s-%s:80" .Release.Name .Chart.Name | quote }}
   COOG_API_COOG_DB: {{ default .Release.Name .Values.postgresql.auth.database | quote }}
-  {{- range $key, $value := .Values.web.config }}
+  {{- range $key, $value := .Values.web.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}

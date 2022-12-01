@@ -11,6 +11,6 @@ spec:
   {{- range .Values.mongodb.persistence.accessModes }}
     - {{ . | quote }}
   {{- end }}
-  {{- include "mongodb.storage.class" . | nindent 2 }}
+  {{- include "storage.class" (dict "value" .Values.mongodb.persistence.storageClass) | nindent 2 }}
 {{- toYaml .Values.mongodb.persistence.customPersistentVolume | nindent 2 }}
 {{- end -}}

@@ -48,27 +48,27 @@ spec:
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.coog.securityContext.runAsUser }}
           command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies']
           envFrom:
-            {{- if .Values.config }}
+            {{- if .Values.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.backCore.config }}
+            {{- if .Values.backCore.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.backCore.coog.config }}
+            {{- if .Values.backCore.coog.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.config }}
+            {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.backCore.config }}
+            {{- if .Values.secrets.backCore.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.backCore.coog.config }}
+            {{- if .Values.secrets.backCore.coog.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
@@ -101,27 +101,27 @@ spec:
             {{- end }}
           {{- end }}
           envFrom:
-            {{- if .Values.config }}
+            {{- if .Values.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.backCore.config }}
+            {{- if .Values.backCore.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.backCore.coog.config }}
+            {{- if .Values.backCore.coog.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.config }}
+            {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.backCore.config }}
+            {{- if .Values.secrets.backCore.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}
-            {{- if .Values.secrets.backCore.coog.config }}
+            {{- if .Values.secrets.backCore.coog.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
             {{- end }}

@@ -7,14 +7,14 @@
           .Values.customerFrontend.enabled
           .Values.web.enabled)
 -}}
-{{- if .Values.frontCore.apiIdentityManager.config -}}
+{{- if .Values.frontCore.apiIdentityManager.extraEnvVar -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
-  {{- range $key, $value := .Values.frontCore.apiIdentityManager.config }}
+  {{- range $key, $value := .Values.frontCore.apiIdentityManager.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
 {{- end }}
