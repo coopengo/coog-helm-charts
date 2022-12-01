@@ -38,3 +38,5 @@
   - Fix issue with the image registry credentials
   - Add annotations to update pods when secrets / configmaps are updated
   - Add initContainer on celery and cron to wait coog container
+  - Generate some mandatory token parameters if not define in extraEnvVar
+  - Add Job on chart installation to setup postgres database (can be disabled)
