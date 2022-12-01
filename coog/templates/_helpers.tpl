@@ -111,8 +111,10 @@ Return  the proper Storage Class
 {{- end -}}
 
 {{/*
-Return  the proper Storage Class
-{{ include "secret.token.generator" (dict "value" .Values.path.to.the.Value) | nindent X }}
+Generate tokens for some variables
+{{- if not .Values.secrets.backCore.extraEnvVar.TRYTOND_SESSION__PASSPHRASE }}
+TRYTOND_SESSION__PASSPHRASE: {{ include "secret.token.generator" (dict "value" .Values.secrets.backCore.extraEnvVar.TRYTOND_SESSION__PASSPHRASE) | quote }}
+{{- end }}
 */}}
 {{- define "secret.token.generator" -}}
 {{- $secretObj := (lookup "v1" "Secret" "" (.value | toString) ) | default dict -}}
