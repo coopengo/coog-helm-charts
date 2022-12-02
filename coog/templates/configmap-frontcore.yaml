@@ -10,7 +10,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+  name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
   # Databases
@@ -20,7 +20,7 @@ data:
   MONGO_DB_NAME: {{ first .Values.mongodb.auth.databases | quote }}
   {{- end }}
   COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }}
-  COOG_URL: {{ printf "http://%s-%s" .Release.Name .Chart.Name | quote }}
+  COOG_URL: {{ printf "http://%s" (include "general.names.short" .) | quote }}
   {{- range $key, $value := .Values.frontCore.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}

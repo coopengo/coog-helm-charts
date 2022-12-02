@@ -48,30 +48,30 @@ spec:
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.frontCore.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.frontCore.apiIdentityManager.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
             {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.secrets.frontCore.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.secrets.frontCore.apiIdentityManager.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
             - secretRef:
-                name: {{ printf "%s-%s-mongodb-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-mongodb-configuration" (include "general.names.short" .) }}
           ports:
             - name: http
               containerPort: 3000

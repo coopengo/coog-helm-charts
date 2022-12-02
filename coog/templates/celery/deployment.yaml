@@ -45,7 +45,7 @@ spec:
             privileged: false
             procMount: Default
           command: ["/bin/sh","-c"]
-          args: ['while [ $(curl -ksw "%{http_code}" "{{ printf "http://%s-%s/%s/readiness" .Release.Name .Chart.Name .Release.Name }}" -o /dev/null) -ne 200 ]; do sleep 5; echo "health check failed . Waiting for coog..."; done']
+          args: ['while [ $(curl -ksw "%{http_code}" "{{ printf "http://%s/%s/readiness" (include "general.names.short" .) .Release.Name }}" -o /dev/null) -ne 200 ]; do sleep 5; echo "health check failed . Waiting for coog..."; done']
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
@@ -69,28 +69,28 @@ spec:
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.backCore.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
             {{- end }}
             - configMapRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.secrets.backCore.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-%s-backcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.secrets.backCore.celery.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
             - secretRef:
-                name: {{ printf "%s-%s-postgresql" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{  printf "%s-postgresql" (include "general.names.short" .) }}
           ports:
             - name: http
               containerPort: 8000

@@ -35,11 +35,11 @@ spec:
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
           ports:
             - name: http

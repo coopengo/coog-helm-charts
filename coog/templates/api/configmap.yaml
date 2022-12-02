@@ -10,10 +10,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+  name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
-  COOG_API_V1_URL: {{ printf "http://%s-%s-web" .Release.Name .Chart.Name | quote }}
+  COOG_API_V1_URL: {{ printf "http://%s-web" (include "general.names.short" .) | quote }}
   {{- range $key, $value := .Values.frontCore.api.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}

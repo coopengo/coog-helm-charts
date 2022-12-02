@@ -27,6 +27,13 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Expand the name of the chart.
+*/}}
+{{- define "general.names.short" -}}
+{{- printf "%s-%s" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "general.names.chart" -}}
@@ -112,14 +119,15 @@ Return  the proper Storage Class
 
 {{/*
 Generate tokens for some variables
+Usage
 {{- if not .Values.secrets.backCore.extraEnvVar.TRYTOND_SESSION__PASSPHRASE }}
-TRYTOND_SESSION__PASSPHRASE: {{ include "secret.token.generator" (dict "value" .Values.secrets.backCore.extraEnvVar.TRYTOND_SESSION__PASSPHRASE) | quote }}
+TRYTOND_SESSION__PASSPHRASE: {{ include "secret.token.generator" (dict "value" "TRYTOND_SESSION__PASSPHRASE" "secretName" (printf "%s-backcore-configuration" (include "general.names.short" .))) | quote }}
 {{- end }}
 */}}
 {{- define "secret.token.generator" -}}
-{{- $secretObj := (lookup "v1" "Secret" .namespace (.value | toString)) -}}
+{{- $secretObj := (lookup "v1" "Secret" "" .secretName) | default dict -}}
 {{- $secretData := (get $secretObj "stringData") | default dict -}}
-{{- $secretValue := (get $secretData (.value | toString)) | default (randAlphaNum 32) -}}
+{{- $secretValue := (get $secretData .value) | default (randAlphaNum 32) -}}
 {{- $secretValue -}}
 {{- end -}}
 

@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+  name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
-  API_URL: {{ printf "http://%s-%s-customer-backend" .Release.Name .Chart.Name | quote }}
+  API_URL: {{ printf "http://%s-customer-backend" (include "general.names.short" .) | quote }}
   GATSBY_ROOT_URL: {{ printf "https://%s" .Values.ingress.host | quote }}
   {{- range $key, $value := .Values.customerFrontend.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}

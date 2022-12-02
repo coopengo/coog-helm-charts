@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ printf "%s-%s-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+  name: {{ printf "%s-configuration" (include "general.names.short" .) }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
   TRYTOND_WEB__CORS: {{ include "backcore.coog.trytonWebCors" . |quote }}
   {{- if (or .Values.customerBackend.enabled .Values.customerFrontend.enabled) }}
-  TRYTOND_STRAPI__URL: {{ printf "http://%s-%s-customer-backend" .Release.Name .Chart.Name | quote }}
+  TRYTOND_STRAPI__URL: {{ printf "http://%s-customer-backend" (include "general.names.short" .) | quote }}
   {{- end }}
   {{- range $key, $value := .Values.backCore.coog.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}

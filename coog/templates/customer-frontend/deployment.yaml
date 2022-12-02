@@ -45,16 +45,16 @@ spec:
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
             - configMapRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
             - secretRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.customerFrontend.image.repository }}/{{ .Values.customerFrontend.image.name }}:{{ default .Values.image.tag .Values.customerFrontend.image.tag }}"
@@ -73,10 +73,10 @@ spec:
               mountPath: "/workdir/public"
           envFrom:
             - configMapRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- if .Values.secrets.customerFrontend.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
           ports:
             - name: http

@@ -9,7 +9,7 @@ metadata:
   {{- end }}
   {{- if $.Values.maintenanceMode.enabled }}
     nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.maintenanceMode.ingress.nginx.customhttperrors }}
-    nginx.ingress.kubernetes.io/default-backend: {{ printf "%s-%s-maintenance" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+    nginx.ingress.kubernetes.io/default-backend: {{ printf "%s-maintenance" (include "general.names.short" .) }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (.Values.ingress.nginx.whiteList.trustedCidr) }}
   {{- range $key, $value := $.Values.maintenanceMode.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}

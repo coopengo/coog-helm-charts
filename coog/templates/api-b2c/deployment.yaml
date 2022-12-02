@@ -42,27 +42,27 @@ spec:
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.frontCore.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.apiB2c.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
             {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.secrets.frontCore.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-%s-frontcore-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.secrets.apiB2c.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
           ports:
             - name: http

@@ -23,18 +23,18 @@ spec:
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
             {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
-                name: {{ printf "%s-%s-global-configuration" .Release.Name .Chart.Name | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
           ports:
             - name: http
               containerPort: 8080
           envFrom:
             - configMapRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) | trunc 63 | trimSuffix "-" }}
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
           resources: {{- toYaml .Values.maintenanceMode.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.maintenanceMode.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
