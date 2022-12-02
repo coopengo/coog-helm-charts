@@ -128,7 +128,7 @@ TRYTOND_SESSION__PASSPHRASE: {{ include "secret.token.generator" (dict "value" "
 {{- $secretObj := (lookup "v1" "Secret" .namespace .secretName) | default dict -}}
 {{- $secretData := (get $secretObj "data") | default dict -}}
 {{- $secretValue := (get $secretData .key) | default (randAlphaNum 32) -}}
-{{ .key }}: {{ $secretValue | quote }}
+{{ .key }}: {{ $secretValue | base64dec | quote }}
 {{- end -}}
 
 {{/*
