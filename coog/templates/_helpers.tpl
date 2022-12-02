@@ -125,14 +125,11 @@ TRYTOND_SESSION__PASSPHRASE: {{ include "secret.token.generator" (dict "value" "
 {{- end }}
 */}}
 {{- define "secret.token.generator" -}}
-{{- $secretObj := (lookup "v1" "Secret" "" .secretName) | default dict -}}
+{{- $secretObj := (lookup "v1" "Secret" .namespace .secretName) | default dict -}}
 {{- $secretData := (get $secretObj "stringData") | default dict -}}
-{{- $secretValue := (get $secretData .value) | default (randAlphaNum 32) -}}
-{{- $secretValue -}}
+{{- $secretValue := (get $secretData .key) | default (randAlphaNum 32) -}}
+{{ .key }}: {{ $secretValue | quote }}
 {{- end -}}
-
-#####################################################
-
 
 {{/*
 Create image pull secret string.
