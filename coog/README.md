@@ -1,6 +1,6 @@
 # coog
 
-![Version: 22.48.2248](https://img.shields.io/badge/Version-22.48.2248-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 22.49.2249](https://img.shields.io/badge/Version-22.49.2249-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
