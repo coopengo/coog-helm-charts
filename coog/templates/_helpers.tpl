@@ -136,12 +136,12 @@ Join mongodb hosts in string format
 */}}
 {{- define "mongodb.uri" -}}
 {{- $options := list -}}
-{{- range .Values.mongodb.auth.uri.options -}}
+{{- range .Values.mongodb.uriOptions -}}
 {{- $options = printf "%s" . | append $options -}}
 {{- end -}}
-{{- if .Values.mongodb.auth.uri.hosts -}}
+{{- if .Values.mongodb.hosts -}}
 {{- $hosts := list -}}
-{{- range .Values.mongodb.auth.uri.hosts -}}
+{{- range .Values.mongodb.hosts -}}
 {{- $hosts = printf "%s:%d" . ($.Values.mongodb.service.ports.mongodb | int) | append $hosts -}}
 {{- end -}}
 {{- printf "mongodb://%s:%s@%s/%s" (first $.Values.mongodb.auth.usernames) (first $.Values.mongodb.auth.passwords) (join "," $hosts) (first $.Values.mongodb.auth.databases) }}
