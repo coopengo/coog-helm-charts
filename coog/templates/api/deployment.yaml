@@ -39,13 +39,11 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           env:
-            {{- if and .Values.secrets.api .Values.secrets.api.mongodb_uri }}
             - name:  MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: coog-api-mongo-db-secret
                   key: MONGODB_URI
-            {{ else }}
             - name:  MONGO_HOST
             {{- if not .Values.gateway.external_mongodb.enabled }}
               value: "{{ .Release.Name }}-mongodb"
@@ -58,11 +56,20 @@ spec:
             {{- else }}
               value: "{{ .Values.gateway.external_mongodb.port }}"
             {{- end }}
+            - name:  MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: coog-gateway-mongo-db-secret
+                  key: USER
+            - name:  MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: coog-gateway-mongo-db-secret
+                  key: PASSWORD
             - name:  MONGO_DB_NAME
               value: "{{ .Values.api.mongodb.database }}"
             - name:  MONGO_IDENTITY_DB_NAME
               value: "{{ default .Values.api.mongodb.database .Values.api.mongodb.api_database }}"
-            {{ end }}
             - name: COOG_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
             - name: COOG_DB_NAME
