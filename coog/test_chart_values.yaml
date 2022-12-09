@@ -252,7 +252,13 @@ mongodb:
   isManaged: true
   # -- Mandatory if isManaged is false and frontCore enabled else 'host' is automatically added
   # Use an external mongodb server (Database not managed by this chart)
-  host: ""
+  # if set, replace default URI
+  # default : mongodb://(.Values.mongodb.auth.usernames[0]):(.Values.mongodb.auth.password[0])@(.Release.Name)-mongodb:(.Values.mongodb.service.ports.mongodb)/(.Values.mongodb.auth.databases[0])
+  hosts: []
+  # This is a coog parameter not mongodb
+  # If set, add URI options
+  # Applied on default host AND custom hosts
+  uriOptions: []
   service:
     ports:
       mongodb: 27017

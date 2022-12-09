@@ -132,6 +132,28 @@ TRYTOND_SESSION__PASSPHRASE: {{ include "secret.token.generator" (dict "value" "
 {{- end -}}
 
 {{/*
+Join mongodb hosts in string format
+*/}}
+{{- define "mongodb.uri" -}}
+{{- $options := list -}}
+{{- range .Values.mongodb.auth.uri.options -}}
+{{- $options = printf "%s" . | append $options -}}
+{{- end -}}
+{{- if .Values.mongodb.auth.uri.hosts -}}
+{{- $hosts := list -}}
+{{- range .Values.mongodb.auth.uri.hosts -}}
+{{- $hosts = printf "%s:%d" . ($.Values.mongodb.service.ports.mongodb | int) | append $hosts -}}
+{{- end -}}
+{{- printf "mongodb://%s:%s@%s/%s" (first $.Values.mongodb.auth.usernames) (first $.Values.mongodb.auth.passwords) (join "," $hosts) (first $.Values.mongodb.auth.databases) }}
+{{- else -}}
+{{- printf "mongodb://%s:%s@%s-mongodb:%d/%s" (first .Values.mongodb.auth.usernames) (first .Values.mongodb.auth.passwords) .Release.Name (.Values.mongodb.service.ports.mongodb | int) (first .Values.mongodb.auth.databases) }}
+{{- end -}}
+{{- if $options -}}
+{{- printf "?%s" (join "?" $options) }}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create image pull secret string.
 */}}
 {{- define "imagePullSecret" }}

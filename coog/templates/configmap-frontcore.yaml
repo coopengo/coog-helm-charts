@@ -13,12 +13,6 @@ metadata:
   name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
-  # Databases
-  {{ if not .Values.mongodb.auth.uri }}
-  MONGO_HOST: {{ default (printf "%s-mongodb" .Release.Name) .Values.mongodb.host | quote }}
-  MONGO_PORT: {{ .Values.mongodb.service.ports.mongodb | quote }}
-  MONGO_DB_NAME: {{ first .Values.mongodb.auth.databases | quote }}
-  {{- end }}
   COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }}
   COOG_URL: {{ printf "http://%s" (include "general.names.short" .) | quote }}
   {{- range $key, $value := .Values.frontCore.extraEnvVar }}
