@@ -49,9 +49,9 @@ package:weekly-build:
         then
           git checkout ${CI_COMMIT_BRANCH}
           sed -i "/version: /c\version: \'${VERSION}\'" "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml"
-          git commit -am "Packaging ${VERSION}" || echo "Nothing to commit"
-          git push
         fi
       done
+    - git commit -am "Packaging ${VERSION}" || echo "Nothing to commit"
+    - git push
   rules:
     - if: '$WEEKLY_BUILD && $CI_PIPELINE_SOURCE =~ /^(trigger|pipeline)$/'
