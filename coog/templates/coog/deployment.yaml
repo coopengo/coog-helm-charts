@@ -100,6 +100,14 @@ spec:
               readOnly: false
             {{- end }}
           {{- end }}
+          {{- if or .Values.customerBackend.enabled .Values.customerFrontend.enabled }}
+          env:
+            - name:  TRYTOND_B2C_API__SHARED_SECRET
+              valueFrom:
+                  secretKeyRef:
+                    name: {{ printf "%s-customer-backend-configuration" (include "general.names.short" .) }}
+                    key: COOG_TOKEN_SHARED_SECRET
+          {{- end }}
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:
