@@ -14,10 +14,14 @@ Join components hosts in string format
 {{/*
 Setup TRYTOND_WEB__CORS variable which has a dynamically generated part with the possibility of defining additional URLs
 */}}
-{{- define "backcore.coog.trytonWebCors" -}}
+{{- define "backcore.coog.cors" -}}
 {{- printf "https://%s" .Values.ingress.host -}}
 {{- include "backcore.coog.hosts" . -}}
-{{- if .Values.backCore.coog.trytonWebCorsAdditionals -}}
-{{- printf ",%s" .Values.backCore.coog.trytonWebCorsAdditionals -}}
+{{- if .Values.backCore.coog.ingress.nginx.whiteList.cors -}}
+{{- $cors := list -}}
+{{- range .Values.backCore.coog.ingress.nginx.whiteList.cors }}
+{{- $cors = . | append $cors -}}
+{{- end -}}
+{{- printf ",%s" (join "," $cors) }}
 {{- end -}}
 {{- end -}}

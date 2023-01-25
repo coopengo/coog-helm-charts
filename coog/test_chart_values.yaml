@@ -471,12 +471,6 @@ backCore:
     workers:
       number: ""
 
-    # -- Add Web Cors to defaults values defined
-    # Muse be in format "https://<URL>,https://<URL>"
-    # E.g.
-    # trytonWebCorsAdditionals: "https://test1.example.com,https://test2.example.com"
-    trytonWebCorsAdditionals: ""
-
     # -- Configure environement variables for this component
     # Each value can be modified without override all or delete other parameters
     extraEnvVar: {}
@@ -487,6 +481,13 @@ backCore:
         - /
 
       # -- additionals hosts & paths
+      # host : required
+      # path : optionnal
+      # e.g:
+      # hosts:
+      #   - host: test1.example.com
+      #     path: /
+      #   - host: test2.example.com
       hosts: []
 
       annotations:
@@ -494,6 +495,14 @@ backCore:
 
       nginx:
         whiteList:
+          # -- Add cors (TRYTOND_WEB_CORS variable) to defaults values defined
+          # default values :
+          #   - https://<.Values.ingress.host>
+          # E.g.
+          # cors:
+          #   - https://test1.example.com
+          #   - https://test2.example.com
+          cors: []
           publicCidr: []
 
     securityContext:
@@ -593,6 +602,13 @@ backCore:
         - /doc
 
       # -- additionals hosts & paths
+      # host : required
+      # path : optionnal
+      # e.g:
+      # hosts:
+      #   - host: test1.example.com
+      #     path: /
+      #   - host: test2.example.com
       hosts: []
 
       nginx:
@@ -699,6 +715,13 @@ frontCore:
         - /gateway(/|$)(.*)
 
       # -- additionals hosts & paths
+      # host : required
+      # path : optionnal
+      # e.g:
+      # hosts:
+      #   - host: test1.example.com
+      #     path: /
+      #   - host: test2.example.com
       hosts: []
 
       annotations:
@@ -706,7 +729,15 @@ frontCore:
 
       nginx:
         whiteList:
-          publicCidr: []
+          # -- Add cors (WHITELIST variable) to defaults values defined
+          # default values :
+          #   - http://localhost:4000
+          #   - https://<.Values.ingress.host>
+          # E.g.
+          # cors:
+          #   - https://test1.example.com
+          #   - https://test2.example.com
+          cors: []
 
     securityContext:
       {}
@@ -792,6 +823,13 @@ b2b:
       - "/portal(/|$)(.*)"
 
     # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     path: /
+    #   - host: test2.example.com
     hosts: []
 
     annotations:
@@ -887,6 +925,13 @@ b2c:
       - /customers/myspace(/|$)(.*)
 
     # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     path: /
+    #   - host: test2.example.com
     hosts: []
 
     annotations:
@@ -933,6 +978,13 @@ customerBackend:
       - /v1/customer(/|$)(.*)
 
     # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     path: /
+    #   - host: test2.example.com
     hosts: []
 
     annotations:
@@ -984,6 +1036,13 @@ customerFrontend:
       - /customer(/|$)(.*)
 
     # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     path: /
+    #   - host: test2.example.com
     hosts: []
 
     annotations:

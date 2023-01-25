@@ -4,7 +4,7 @@ metadata:
   name: {{ printf "%s-configuration" (include "general.names.short" .) }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
-  TRYTOND_WEB__CORS: {{ include "backcore.coog.trytonWebCors" . | quote }}
+  TRYTOND_WEB__CORS: {{ include "backcore.coog.cors" . | quote }}
   {{- if (or .Values.customerBackend.enabled .Values.customerFrontend.enabled) }}
   TRYTOND_STRAPI__URL: {{ printf "http://%s-customer-backend" (include "general.names.short" .) | quote }}
   {{- end }}
