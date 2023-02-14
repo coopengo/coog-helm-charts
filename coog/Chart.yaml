@@ -1,5 +1,5 @@
 apiVersion: v2
-appVersion: coog-23.06
+appVersion: "coog-23.06"
 description: A Helm chart for Coog
 name: coog
 version: 23.06.2306-infra-v2
