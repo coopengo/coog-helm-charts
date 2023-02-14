@@ -52,22 +52,14 @@ spec:
             - configMapRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
-            {{- if .Values.backCore.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
-            {{- end }}
-            {{- if .Values.backCore.coog.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "general.names.short" .) }}
-            {{- end }}
-            {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
-            {{- end }}
-            {{- if .Values.secrets.backCore.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
-            {{- end }}
             {{- if .Values.secrets.backCore.coog.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.short" .) }}
@@ -113,22 +105,14 @@ spec:
             - configMapRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
-            {{- if .Values.backCore.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
-            {{- end }}
-            {{- if .Values.backCore.coog.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "general.names.short" .) }}
-            {{- end }}
-            {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
-            {{- end }}
-            {{- if .Values.secrets.backCore.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
-            {{- end }}
             {{- if .Values.secrets.backCore.coog.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.short" .) }}

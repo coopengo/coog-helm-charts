@@ -41,18 +41,14 @@ spec:
             - configMapRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
-            {{- if .Values.frontCore.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
-            {{- end }}
             {{- if .Values.apiReferential.extraEnvVar }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
-            {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
-            {{- end }}
             {{- if .Values.secrets.frontCore.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}

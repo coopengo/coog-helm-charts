@@ -49,10 +49,8 @@ spec:
             {{- end }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
-            {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
-            {{- end }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
       containers:

@@ -262,7 +262,9 @@ mongodb:
   # This is a coog parameter not mongodb
   # If set, add URI options
   # Applied on default host AND custom hosts
-  uriOptions: []
+  uriOptions:
+    # Option to solve right issue
+    - authSource=admin
   service:
     ports:
       mongodb: 27017

@@ -37,10 +37,8 @@ spec:
             - configMapRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
-            {{- if .Values.secrets.extraEnvVar }}
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
-            {{- end }}
           ports:
             - name: http
               containerPort: 5000
