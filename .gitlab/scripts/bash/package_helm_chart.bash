@@ -24,7 +24,7 @@ for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".git" -exe
         helm repo index --url "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/stable" .
         echo "HELM_NEW_CHART=true" > upload.env
         echo "HELM_PROJECT_VERSION=${HELM_PROJECT_VERSION}" >> upload.env
-        curl -s --fail --request POST --user gitlab-ci-token:${CI_JOB_TOKEN} --form "chart=@${HELM_PROJECT}-${HELM_PROJECT_VERSION}.tgz" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/stable/charts"
+        curl --request POST --user gitlab-ci-token:${CI_JOB_TOKEN} --form "chart=@${HELM_PROJECT}-${HELM_PROJECT_VERSION}.tgz" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/stable/charts"
       fi
     fi
   else
