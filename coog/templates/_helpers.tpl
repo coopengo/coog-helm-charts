@@ -62,21 +62,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end -}}
 
 {{/*
-Return the proper image name
-{{ include "general.images.image" ( dict "imageRoot" .Values.path.to.the.image "global" $) }}
-*/}}
-{{- define "general.images.image" -}}
-{{- $registryName := .imageRoot.registry -}}
-{{- $repositoryName := .imageRoot.repository -}}
-{{- $tag := .imageRoot.tag | toString -}}
-{{- if $registryName }}
-{{- printf "%s/%s:%s" $registryName $repositoryName $tag -}}
-{{- else -}}
-{{- printf "%s:%s" $repositoryName $tag -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Ingress dynamic configuration
 */}}
 {{- define "general.ingress.apiVersion" -}}
@@ -152,6 +137,20 @@ Join mongodb hosts in string format
 {{- printf "?%s" (join "?" $options) }}
 {{- end -}}
 {{- end -}}
+
+
+{{/*
+Create Random value for TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET and COOG_DOCUMENT_TOKEN_SECRET.
+*/}}
+{{- define "secret.token.documentTokenSecret" -}}
+{{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.extraEnvVar .Values.secrets.backCore.extraEnvVar.TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET) -}}
+{{- .Values.secrets.backCore.extraEnvVar.TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET -}}
+{{- else -}}
+{{- $randomValue := randAlphaNum 32 -}}
+{{- $randomValue -}}
+{{- end -}}
+{{- end -}}
+
 
 {{/*
 Create image pull secret string.

@@ -31,7 +31,7 @@ spec:
         checksum/secret-mongodb: {{ include (printf "%s/%s" $.Template.BasePath "secret-mongodb.yaml") . | sha256sum  }}
     spec:
       imagePullSecrets:
-        - name: {{ .Values.imageCredentials.name }}
+        - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.frontCore.gateway.image.repository }}/{{ .Values.frontCore.gateway.image.name }}:{{ default .Values.image.tag .Values.frontCore.gateway.image.tag }}"
@@ -56,11 +56,11 @@ spec:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
-            {{- if .Values.secrets.frontCore.extraEnvVar }}
+            {{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.extraEnvVar) }}
             - secretRef:
                 name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
             {{- end }}
-            {{- if .Values.secrets.frontCore.gateway.extraEnvVar }}
+            {{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.gateway .Values.secrets.frontCore.gateway.extraEnvVar) }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}

@@ -22,7 +22,7 @@ spec:
         checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
-        - name: {{ .Values.imageCredentials.name }}
+        - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.apiReferential.image.repository }}/{{ .Values.apiReferential.image.name }}:{{ default .Values.image.tag .Values.apiReferential.image.tag }}"
@@ -49,11 +49,11 @@ spec:
             {{- end }}
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
-            {{- if .Values.secrets.frontCore.extraEnvVar }}
+            {{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.extraEnvVar) }}
             - secretRef:
                 name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
             {{- end }}
-            {{- if .Values.secrets.apiReferential.extraEnvVar }}
+            {{- if (and .Values.secrets .Values.secrets.apiReferential .Values.secrets.apiReferential.extraEnvVar) }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}

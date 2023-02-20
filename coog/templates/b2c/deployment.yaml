@@ -18,7 +18,7 @@ spec:
         checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
     spec:
       imagePullSecrets:
-        - name: {{ .Values.imageCredentials.name }}
+        - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.b2c.image.repository }}/{{ .Values.b2c.image.name }}:{{ default .Values.image.tag .Values.b2c.image.tag }}"

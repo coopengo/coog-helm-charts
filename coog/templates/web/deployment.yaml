@@ -20,7 +20,7 @@ spec:
         checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
     spec:
       imagePullSecrets:
-        - name: {{ .Values.imageCredentials.name }}
+        - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.web.image.repository }}/{{ .Values.web.image.name }}:{{ default .Values.image.tag .Values.web.image.tag }}"
