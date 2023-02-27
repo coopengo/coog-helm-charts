@@ -41,6 +41,13 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Define general namespace
+*/}}
+{{- define "general.namespace" -}}
+    {{- print .Release.Namespace -}}
+{{- end -}}
+
+{{/*
 Kubernetes standard labels
 */}}
 {{- define "general.labels.standard" -}}
@@ -120,18 +127,30 @@ TRYTOND_SESSION__PASSPHRASE: {{ include "secret.token.generator" (dict "value" "
 Join mongodb hosts in string format
 */}}
 {{- define "mongodb.uri" -}}
+{{- $replicaCount := int .Values.mongodb.replicaCount }}
+{{- $portNumber := int .Values.mongodb.service.ports.mongodb }}
+{{- $fullname := printf "%s-mongodb" .Release.Name }}
+{{- $releaseNamespace := include "general.namespace" . }}
+{{- $clusterDomain := .Values.clusterDomain }}
+{{- $hosts := list -}}
 {{- $options := list -}}
 {{- range .Values.mongodb.uriOptions -}}
 {{- $options = printf "%s" . | append $options -}}
 {{- end -}}
 {{- if .Values.mongodb.hosts -}}
-{{- $hosts := list -}}
 {{- range .Values.mongodb.hosts -}}
-{{- $hosts = printf "%s:%d" . ($.Values.mongodb.service.ports.mongodb | int) | append $hosts -}}
+{{- $hosts = printf "%s:%d" . $portNumber | append $hosts -}}
 {{- end -}}
 {{- printf "mongodb://%s:%s@%s/%s" (first $.Values.mongodb.auth.usernames) (first $.Values.mongodb.auth.passwords) (join "," $hosts) (first $.Values.mongodb.auth.databases) }}
 {{- else -}}
-{{- printf "mongodb://%s:%s@%s-mongodb:%d/%s" (first .Values.mongodb.auth.usernames) (first .Values.mongodb.auth.passwords) .Release.Name (.Values.mongodb.service.ports.mongodb | int) (first .Values.mongodb.auth.databases) }}
+{{- if eq .Values.mongodb.architecture "replicaset" -}}
+{{- range $e, $i := until $replicaCount }}
+{{- $hosts = printf "%s-%d.%s-headless.%s.svc.%s:%d" $fullname $i $fullname $releaseNamespace $clusterDomain $portNumber | append $hosts }}
+{{- end }}
+{{- printf "mongodb://%s:%s@%s/%s?replicaSet=%s" (first .Values.mongodb.auth.usernames) (first .Values.mongodb.auth.passwords) (join "," $hosts) (first .Values.mongodb.auth.databases) .Values.mongodb.replicaSetName }}
+{{- else -}}
+{{- printf "mongodb://%s:%s@%s:%d/%s" (first .Values.mongodb.auth.usernames) (first .Values.mongodb.auth.passwords) $fullname $portNumber (first .Values.mongodb.auth.databases) }}
+{{- end -}}
 {{- end -}}
 {{- if $options -}}
 {{- printf "?%s" (join "?" $options) }}

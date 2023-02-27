@@ -249,11 +249,22 @@ postgresql:
 mongodb:
   # -- Enable to install mongodb on Kubernetes
   # This is a coog parameter not mongodb
-  isManaged: true
-  # -- Mandatory if isManaged is false and frontCore enabled else 'host' is automatically added
+  isManaged: false
+  # -- Enable architecture type
+  # Should not been changed after first installation !
+  # Possibles values: standalone / replicaset
+  architecture: standalone
+  # -- Define number of mongodb replicaSet to create
+  # only when `architecture=replicaset`
+  replicaCount: 2
+  ## Name of the replica set (only when `architecture=replicaset`)
+  ## Ignored when mongodb.architecture=standalone
+  replicaSetName: rs0
+  # -- Mandatory if isManaged is false and frontCore enabled else 'hosts' is automatically added
   # Use an external mongodb server (Database not managed by this chart)
   # if set, replace default URI
   # default : mongodb://(.Values.mongodb.auth.usernames[0]):(.Values.mongodb.auth.password[0])@(.Release.Name)-mongodb:(.Values.mongodb.service.ports.mongodb)/(.Values.mongodb.auth.databases[0])
+  # default for replicaset : mongodb://(.Values.mongodb.auth.usernames[0]):(.Values.mongodb.auth.password[0])@(.Release.Name)-mongodb-0.(.Release.Name)-mongodb-headless.svc.cluster.local:(.Values.mongodb.service.ports.mongodb)/(.Values.mongodb.auth.databases[0])
   hosts: []
   # This is a coog parameter not mongodb
   # If set, add URI options
