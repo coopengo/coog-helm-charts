@@ -34,7 +34,6 @@ tests:
       - equal:
           path: spec.ingressClassName
           value: nginx
-      
 
 
   - it: Test lets encrypt configuration
