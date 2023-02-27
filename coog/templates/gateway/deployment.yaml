@@ -74,11 +74,13 @@ spec:
               value: "false"
             - name:  FACEBOOK_MODULE
               value: "false"
+            {{- if .Values.secrets.gateway.mongodb_uri }}
             - name:  MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: coog-gateway-mongo-db-secret
                   key: MONGODB_URI
+            {{ else }}
             - name:  MONGO_DB_NAME
               value: "{{ .Values.gateway.mongodb.database }}"
             - name:  MONGO_USER
@@ -103,6 +105,7 @@ spec:
             {{- else }}
               value: "{{ .Values.gateway.external_mongodb.port }}"
             {{- end }}
+            {{ end }}
             - name:  COOG_GATEWAY_URL
               value: "{{ .Values.gateway.gateway_url }}"
             - name:  COOG_GATEWAY_BASE_PATH

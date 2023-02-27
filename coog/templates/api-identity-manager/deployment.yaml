@@ -39,11 +39,13 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
           env:
+            {{- if and .Values.secrets.api .Values.secrets.api.mongodb_uri }}
             - name:  MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: coog-api-mongo-db-secret
                   key: MONGODB_URI
+            {{ else }}
             - name:  MONGO_HOST
             {{- if not .Values.gateway.external_mongodb.enabled }}
               value: "{{ .Release.Name }}-mongodb"
@@ -68,6 +70,7 @@ spec:
                 secretKeyRef:
                   name: coog-gateway-mongo-db-secret
                   key: PASSWORD
+            {{ end }}
             - name: COOG_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
             - name: COOG_DB_NAME
