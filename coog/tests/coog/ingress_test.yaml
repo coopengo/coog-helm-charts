@@ -1,0 +1,217 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test coog ingress
+templates:
+  - coog/ingress.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 24
+tests:
+  - it: Test metadata & global configurations
+    set:
+      ingress:
+        className: "nginx"
+    asserts:
+      - isKind:
+          of: Ingress
+      - equal:
+          path: metadata.name
+          value: test-coog
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: coog-coog
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: coog-.*$
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+      
+
+
+  - it: Test lets encrypt configuration
+    set:
+      ingress:
+        host: test.local
+        thisTls:
+          enabled: true
+          letsencrypt: true
+          configuration:
+            - hosts:
+                - test-custom.local
+              secretName: test.local-tls
+    asserts:
+      - equal:
+          path: metadata.annotations["cert-manager.io/cluster-issuer"]
+          value: letsencrypt
+      - contains:
+          path: spec.tls
+          any: false
+          content:
+            hosts:
+              - test.local
+            secretName: test.local-tls
+      - contains:
+          path: spec.tls
+          any: false
+          content:
+            hosts:
+              - test-custom.local
+            secretName: test.local-tls
+
+
+  - it: Test annotations
+    set:
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/client-body-buffer-size: "100m"
+      backCore:
+        coog:
+          ingress:
+            annotations:
+              nginx.ingress.kubernetes.io/use-proxy-protocol: "true"
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/client-body-buffer-size"]
+          value: 100m
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/use-proxy-protocol"]
+          value: "true"
+
+  - it: Test maintenance mode
+    set:
+      maintenanceMode:
+        enabled: true
+        ingress:
+          annotations:
+            maintenanceMode/test: foo
+      ingress:
+        nginx:
+          whiteList:
+            trustedCidr:
+              - 127.0.0.1/32
+              - 127.0.0.2/32
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/custom-http-errors"]
+          value: 403
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/default-backend"]
+          value: test-coog-maintenance
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+          value: 127.0.0.1/32,127.0.0.2/32
+      - equal:
+          path: metadata.annotations["maintenanceMode/test"]
+          value: foo
+
+
+  - it: Test append mode
+    set:
+      ingress:
+        nginx:
+          whiteList:
+            managementMode: append
+            trustedCidr:
+              - 127.0.0.1/32
+              - 127.0.0.2/32
+            publicCidr:
+              - 127.0.0.3/32
+              - 127.0.0.4/32
+      backCore:
+        coog:
+          ingress:
+            nginx:
+              whiteList:
+                publicCidr:
+                  - 127.0.0.5/32
+                  - 127.0.0.6/32
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+          value: 127.0.0.1/32,127.0.0.2/32,127.0.0.3/32,127.0.0.4/32,127.0.0.5/32,127.0.0.6/32
+
+
+  - it: Case 1 - Test backCore replace mode
+    set:
+      ingress:
+        nginx:
+          whiteList:
+            managementMode: replace
+            trustedCidr:
+              - 127.0.0.1/32
+              - 127.0.0.2/32
+            publicCidr:
+              - 127.0.0.3/32
+              - 127.0.0.4/32
+      backCore:
+        coog:
+          ingress:
+            nginx:
+              whiteList:
+                publicCidr:
+                  - 127.0.0.5/32
+                  - 127.0.0.6/32
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+          value: 127.0.0.1/32,127.0.0.2/32,127.0.0.5/32,127.0.0.6/32
+
+
+  - it: Case 2 - Test global replace mode
+    set:
+      ingress:
+        nginx:
+          whiteList:
+            managementMode: replace
+            trustedCidr:
+              - 127.0.0.1/32
+              - 127.0.0.2/32
+            publicCidr:
+              - 127.0.0.3/32
+              - 127.0.0.4/32
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+          value: 127.0.0.1/32,127.0.0.2/32,127.0.0.3/32,127.0.0.4/32
+
+
+  - it: Case 3 - Test global replace mode
+    set:
+      ingress:
+        nginx:
+          whiteList:
+            managementMode: foo
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+          value: 127.0.0.1/32
+
+
+  - it: Test rules
+    set:
+      ingress:
+        host: test.local
+    asserts:
+      - contains:
+          path: spec.rules
+          content:
+            host: test.local
+            http:
+              paths:
+              - path: "/"
+                pathType: Prefix
+                backend:
+                  service:
+                    name: test-coog
+                    port:
+                      number: 80
+
