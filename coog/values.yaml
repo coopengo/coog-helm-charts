@@ -250,10 +250,6 @@ mongodb:
   # -- Enable to install mongodb on Kubernetes
   # This is a coog parameter not mongodb
   isManaged: false
-  # -- Use URI authentication methode when true
-  # Else use old authentication methode (MONGO_USER, MONGO_PASSWORD and MONGO_HOST variables)
-  # This is a coog parameter not mongodb
-  uriEnabled: false
   # -- Mandatory if isManaged is false and frontCore enabled else 'hosts' is automatically added
   # Use an external mongodb server (Database not managed by this chart)
   # if set, replace default URI
@@ -263,7 +259,7 @@ mongodb:
   # If set, add URI options
   # Applied on default host AND custom hosts
   uriOptions:
-    # Option to solve right issue
+    # Option to solve rights issue
     - authSource=admin
   service:
     ports:
