@@ -41,20 +41,6 @@ spec:
           env:
             - name:  COOG_PORTAL_URL
               value: "{{ .Values.gateway.portal_url }}"
-            - name:  MONGO_HOST
-            {{- if not .Values.gateway.external_mongodb.enabled }}
-              value: "{{ .Release.Name }}-mongodb"
-            {{- else }}
-              value: "{{ .Values.gateway.external_mongodb.host }}"
-            {{- end }}
-            - name:  MONGO_PORT
-            {{- if not .Values.gateway.external_mongodb.enabled }}
-              value: "{{ .Values.mongodb.service.port }}"
-            {{- else }}
-              value: "{{ .Values.gateway.external_mongodb.port }}"
-            {{- end }}
-            - name:  MONGO_DB_NAME
-              value: "{{ .Values.gateway.mongodb.database }}"
             - name:  JWT_ENCRYPTION
               value: "{{ .Values.gateway.jwt.encryption }}"
             - name:  JWT_INTERNAL_ENCRYPTION
@@ -88,6 +74,15 @@ spec:
               value: "false"
             - name:  FACEBOOK_MODULE
               value: "false"
+            {{- if .Values.secrets.gateway.mongodb_uri }}
+            - name:  MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: coog-gateway-mongo-db-secret
+                  key: MONGODB_URI
+            {{ else }}
+            - name:  MONGO_DB_NAME
+              value: "{{ .Values.gateway.mongodb.database }}"
             - name:  MONGO_USER
               valueFrom:
                 secretKeyRef:
@@ -98,6 +93,19 @@ spec:
                 secretKeyRef:
                   name: coog-gateway-mongo-db-secret
                   key: PASSWORD
+            - name:  MONGO_HOST
+            {{- if not .Values.gateway.external_mongodb.enabled }}
+              value: "{{ .Release.Name }}-mongodb"
+            {{- else }}
+              value: "{{ .Values.gateway.external_mongodb.host }}"
+            {{- end }}
+            - name:  MONGO_PORT
+            {{- if not .Values.gateway.external_mongodb.enabled }}
+              value: "{{ .Values.mongodb.service.port }}"
+            {{- else }}
+              value: "{{ .Values.gateway.external_mongodb.port }}"
+            {{- end }}
+            {{ end }}
             - name:  COOG_GATEWAY_URL
               value: "{{ .Values.gateway.gateway_url }}"
             - name:  COOG_GATEWAY_BASE_PATH
