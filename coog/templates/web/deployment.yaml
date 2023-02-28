@@ -87,14 +87,6 @@ spec:
               value: "/web/api"
             - name: COOG_API_APP_PATH
               value: "/web"
-            - name: COOG_API_COOG_URL
-              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog:{{ .Values.coog.service.port }}"
-            - name: COOG_API_COOG_DB
-              value: "{{ .Values.secrets.coog.postgres.database }}"
-            - name: COOG_API_API_PATH
-              value: "/web/api"
-            - name: COOG_API_APP_PATH
-              value: "/web"
             {{- if .Values.web.extraEnv }}
             {{- range $key, $value := .Values.web.extraEnv }}
             - name:  {{ $key }}
