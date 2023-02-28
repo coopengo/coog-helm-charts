@@ -16,7 +16,7 @@ spec:
       restartPolicy: Never
       containers:
       - name: {{ printf "%s-init-database" (include "general.names.short" .) }}
-        image: "alpine:3.16"
+        image: "alpine:3.17"
         command:
           - "/bin/sh"
           - "-c"
