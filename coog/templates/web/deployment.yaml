@@ -39,6 +39,38 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ .Values.coog.securityContext.runAsUser }}
           env:
+            {{- if and .Values.secrets.web .Values.secrets.web.mongodb_uri }}
+            - name: COOG_API_MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: coog-web-mongo-db-secret
+                  key: MONGODB_URI
+            {{ else }}
+            - name: COOG_API_MONGO_HOST
+            {{- if not .Values.gateway.external_mongodb.enabled }}
+              value: "{{ .Release.Name }}-mongodb"
+            {{ else }}
+              value: "{{ .Values.gateway.external_mongodb.host }}"
+            {{- end }}
+            - name: COOG_API_MONGO_PORT
+            {{- if not .Values.gateway.external_mongodb.enabled }}
+              value: "{{ .Values.mongodb.service.port }}"
+            {{ else }}
+              value: "{{ .Values.gateway.external_mongodb.port }}"
+            {{- end }}
+            {{- if .Values.gateway.enabled }}
+            - name:  COOG_API_MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: coog-gateway-mongo-db-secret
+                  key: USER
+            - name:  COOG_API_MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: coog-gateway-mongo-db-secret
+                  key: PASSWORD
+            {{- end }}
+            {{ end }}
             - name: COOG_API_REDIS_URL
               {{- if .Values.redis.enabled }}
               value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}"
@@ -55,18 +87,6 @@ spec:
               value: "/web/api"
             - name: COOG_API_APP_PATH
               value: "/web"
-            {{- if .Values.gateway.enabled }}
-            - name:  COOG_API_MONGO_USER
-              valueFrom:
-                secretKeyRef:
-                  name: coog-gateway-mongo-db-secret
-                  key: USER
-            - name:  COOG_API_MONGO_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: coog-gateway-mongo-db-secret
-                  key: PASSWORD
-            {{- end }}
             {{- if .Values.web.extraEnv }}
             {{- range $key, $value := .Values.web.extraEnv }}
             - name:  {{ $key }}

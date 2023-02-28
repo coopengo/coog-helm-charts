@@ -39,7 +39,13 @@ spec:
             runAsNonRoot: true
             runAsUser: 1000
           env:
-            {{- if .Values.gateway.enabled }}
+            {{- if and .Values.secrets.api_identity_manager .Values.secrets.api_identity_manager.mongodb_uri }}
+            - name:  MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: coog-api-identity-manager-mongo-db-secret
+                  key: MONGODB_URI
+            {{ else }}
             - name:  MONGO_HOST
             {{- if not .Values.gateway.external_mongodb.enabled }}
               value: "{{ .Release.Name }}-mongodb"
