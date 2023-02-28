@@ -43,7 +43,7 @@ spec:
             - name:  MONGODB_URI
               valueFrom:
                 secretKeyRef:
-                  name: coog-api-mongo-db-secret
+                  name: coog-api-identity-manager-mongo-db-secret
                   key: MONGODB_URI
             {{ else }}
             - name:  MONGO_HOST
