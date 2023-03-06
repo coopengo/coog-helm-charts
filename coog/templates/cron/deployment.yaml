@@ -32,11 +32,7 @@ spec:
       volumes:
         - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
           persistentVolumeClaim:
-            {{- if not .Values.backCore.persistentVolume.existingClaim }}
-            claimName: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
-            {{- else }}
-            claimName: {{ .Values.backCore.persistentVolume.existingClaim }}
-            {{- end }}
+            claimName: {{ default (printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-") .Values.backCore.persistentVolume.existingClaim }}
     {{- end }}
       initContainers:
         - name: {{ printf "%s-waiting-coog" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
