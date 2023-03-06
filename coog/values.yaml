@@ -870,6 +870,30 @@ b2b:
       cpu: 200m
       memory: 40Mi
 
+b2bConfig:
+  enabled: false
+  strategy:
+    type: ""
+
+  image:
+    # -- b2bConfig image repository
+    name: coog-api-b2b-config
+
+  extraEnvVar: {}
+
+  securityContext:
+    {}
+    # runAsUser: ""
+
+  # -- b2bConfig container's resource requests and limits
+  resources:
+    limits:
+      cpu: 50m
+      memory: 80Mi
+    requests:
+      cpu: 40m
+      memory: 64Mi
+
 web:
   enabled: false
   strategy:

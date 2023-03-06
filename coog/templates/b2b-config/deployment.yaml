@@ -1,0 +1,98 @@
+{{- if (or .Values.b2bConfig.enabled
+          .Values.b2b.enabled)
+-}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  replicas: {{ default .Values.replicaCount .Values.b2bConfig.replicaCount }}
+  strategy:
+    type: {{ default .Values.strategy.type .Values.b2bConfig.strategy.type }}
+  selector:
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
+      annotations:
+        {{- if .Values.extraEnvVar }}
+        checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
+        {{- end }}
+        checksum/configmap-frontcore: {{ include (printf "%s/%s" $.Template.BasePath "configmap-frontcore.yaml") . | sha256sum  }}
+        {{- if .Values.b2bConfig.extraEnvVar }}
+        checksum/configmap: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "configmap.yaml") . | sha256sum }}
+        {{- end }}
+        checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
+    spec:
+      imagePullSecrets:
+        - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
+      containers:
+        - name: {{ include "general.names.name" . }}
+          image: "{{ default .Values.image.repository .Values.b2bConfig.image.repository }}/{{ .Values.b2bConfig.image.name }}:{{ default .Values.image.tag .Values.b2bConfig.image.tag }}"
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.b2bConfig.image.pullPolicy | quote }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+              - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.b2bConfig.securityContext.runAsUser }}
+          envFrom:
+            {{- if .Values.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            - configMapRef:
+                name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
+            {{- if .Values.b2bConfig.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- end }}
+            - secretRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            {{- if (and .Values.secrets .Values.secrets.b2bConfig .Values.secrets.b2bConfig.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: 3000
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.b2bConfig.startupProbe) "context" $) | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.b2bConfig.livenessProbe) "context" $) | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.b2bConfig.readinessProbe) "context" $) | nindent 12 }}
+          resources: {{- toYaml .Values.b2bConfig.resources | nindent 12 }}
+      {{- with default .Values.nodeSelector .Values.b2bConfig.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.affinity .Values.b2bConfig.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.tolerations .Values.b2bConfig.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if default .Values.dnsPolicy .Values.b2bConfig.dnsPolicy }}
+      dnsPolicy: {{ default .Values.dnsPolicy .Values.b2bConfig.dnsPolicy }}
+      {{- end }}
+      {{- if default .Values.dnsConfig .Values.b2bConfig.dnsConfig }}
+      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.b2bConfig.dnsConfig | indent 8 }}
+      {{- end }}
+{{- end }}

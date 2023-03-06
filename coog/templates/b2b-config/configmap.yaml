@@ -1,0 +1,15 @@
+{{- if (or .Values.b2bConfig.enabled
+          .Values.b2b.enabled)
+-}}
+{{- if .Values.b2bConfig.extraEnvVar-}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+data:
+  {{- range $key, $value := .Values.b2bConfig.extraEnvVar }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
+{{- end }}
