@@ -5,14 +5,14 @@ appVersion: "coog-master"
 description: A Helm chart for Coog
 icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
 dependencies:
-- name: mongodb
-  version: 12.1.31
-  repository: https://charts.bitnami.com/bitnami
-  condition: mongodb.isManaged
-- name: rabbitmq
-  version: 11.0.4
-  repository: https://charts.bitnami.com/bitnami
-- name: postgresql
-  version: 11.9.11
-  repository: https://charts.bitnami.com/bitnami
-  condition: postgresql.isManaged
+  - name: mongodb
+    version: 12.1.31
+    repository: https://charts.bitnami.com/bitnami
+    condition: mongodb.isManaged
+  - name: rabbitmq
+    version: 11.10.2
+    repository: https://charts.bitnami.com/bitnami
+  - name: postgresql
+    version: 11.9.11
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.isManaged
