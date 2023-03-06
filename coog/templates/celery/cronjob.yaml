@@ -1,0 +1,76 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ printf "%s-daily" (include "general.names.fullname" .) }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  concurrencyPolicy: Forbid
+  schedule: {{ .Values.backCore.celery.cronJob.schedule | quote }}
+  failedJobsHistoryLimit: {{ .Values.backCore.celery.cronJob.failedJobsHistoryLimit }}
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        spec:
+          imagePullSecrets:
+            - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
+          restartPolicy: Never
+        {{- if .Values.backCore.persistentVolume.enabled }}
+          volumes:
+            - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+              persistentVolumeClaim:
+                {{- if not .Values.backCore.persistentVolume.existingClaim }}
+                claimName: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+                {{- else }}
+                claimName: {{ .Values.backCore.persistentVolume.existingClaim }}
+                {{- end }}
+        {{- end }}
+          containers:
+            - name: {{ printf "%s-daily" (include "general.names.fullname" .) }}
+              image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
+              imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                privileged: false
+                procMount: Default
+                runAsNonRoot: true
+                runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.coog.securityContext.runAsUser }}
+              command:
+              {{- if .Values.backCore.celery.cronJob.backendConfiguration }}
+                - ep
+                - daily_v2
+              {{- else }}
+                - ep
+                - daily
+                - {{ .Values.celery.cronJob.workDays | quote }}
+                - {{ .Values.celery.cronJob.workDaysConfig }}
+              {{- end }}
+            {{- if .Values.backCore.persistentVolume.enabled }}
+              volumeMounts:
+                - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+                  mountPath: /workspace/io
+                  readOnly: false
+            {{- end }}
+              envFrom:
+                {{- if .Values.extraEnvVar }}
+                - configMapRef:
+                    name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+                {{- end }}
+                - configMapRef:
+                    name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+                - configMapRef:
+                    name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+                - secretRef:
+                    name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+                - secretRef:
+                    name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+                {{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.celery .Values.secrets.backCore.celery.extraEnvVar) }}
+                - secretRef:
+                    name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+                {{- end }}
+                - secretRef:
+                    name: {{  printf "%s-postgresql" (include "general.names.short" .) }}
+              resources: {{- toYaml .Values.backCore.celery.cronJob.resources | nindent 16 }}

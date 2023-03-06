@@ -563,6 +563,22 @@ backCore:
         cpu: 320m
         memory: 800Mi
 
+    cronJob:
+      schedule: "0 20 * * 1-5"
+      failedJobsHistoryLimit: 5
+      backendConfiguration: true
+      # -- workDays: Configuration used when .Values.backCore.celery.cronJob.backendConfiguration = false
+      workDays: 4
+      # -- workDaysConfig: Configuration used when .Values.backCore.celery.cronJob.backendConfiguration = false
+      workDaysConfig: french_work_days
+      resources:
+        limits:
+          cpu: 200m
+          memory: 300Mi
+        requests:
+          cpu: 160m
+          memory: 240Mi
+
   static:
     image:
       # -- static image name
