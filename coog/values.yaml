@@ -561,46 +561,6 @@ backCore:
         cpu: 320m
         memory: 800Mi
 
-  cron:
-    # -- Dynamic ConfigMap variables for cron
-    extraEnvVar: {}
-
-    coogCeleryModule: coog_async.coog_celery
-
-    # -- cron containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 200m
-        memory: 500Mi
-      requests:
-        cpu: 160m
-        memory: 400Mi
-
-    # -- Configure options applied to cron deployment, liveness, readiness and startup probes
-    # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
-    # initialDelaySeconds: Initial delay seconds e
-    # periodSeconds: Period seconds
-    # timeoutSeconds: Timeout seconds
-    # failureThreshold: Failure threshold
-    # successThreshold: Success threshold
-    #
-    # With this configuration, the kubelet will attempt to open a socket to your container on the specified port.
-    # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
-    livenessProbe:
-      initialDelaySeconds: 0
-      periodSeconds: 120
-      timeoutSeconds: 30
-      successThreshold: 1
-      failureThreshold: 2
-
-    # -- additional startup time on their first initialization
-    startupProbe:
-      initialDelaySeconds: 30
-      periodSeconds: 30
-      timeoutSeconds: 30
-      successThreshold: 1
-      failureThreshold: 3
-
   static:
     image:
       # -- static image name
@@ -647,6 +607,49 @@ backCore:
 #############################################################################################################################
 #                                            Back Additional components                                                     #
 #############################################################################################################################
+
+cron:
+  enabled: false
+  strategy:
+    type: ""
+  # -- Dynamic ConfigMap variables for cron
+  extraEnvVar: {}
+
+  coogCeleryModule: coog_async.coog_celery
+
+  # -- cron containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 200m
+      memory: 500Mi
+    requests:
+      cpu: 160m
+      memory: 400Mi
+
+  # -- Configure options applied to cron deployment, liveness, readiness and startup probes
+  # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+  # initialDelaySeconds: Initial delay seconds e
+  # periodSeconds: Period seconds
+  # timeoutSeconds: Timeout seconds
+  # failureThreshold: Failure threshold
+  # successThreshold: Success threshold
+  #
+  # With this configuration, the kubelet will attempt to open a socket to your container on the specified port.
+  # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
+  livenessProbe:
+    initialDelaySeconds: 0
+    periodSeconds: 120
+    timeoutSeconds: 30
+    successThreshold: 1
+    failureThreshold: 2
+
+  # -- additional startup time on their first initialization
+  startupProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 30
+    successThreshold: 1
+    failureThreshold: 3
 
 libroconv:
   # -- Deploy libroconv container(s)
@@ -698,6 +701,7 @@ libroconv:
 # - apiReferential
 # - b2c
 # - b2b
+# - b2bConfig
 # - customerBackend
 # - customerFrontend
 # - web
