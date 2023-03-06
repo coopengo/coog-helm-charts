@@ -549,6 +549,8 @@ backCore:
       number: ""
       maximumMemory: 512000
 
+    coogCeleryModule: coog_async.coog_celery
+
     # -- Configure environement variables for this component
     extraEnvVar: {}
 
@@ -564,8 +566,6 @@ backCore:
   cron:
     # -- Dynamic ConfigMap variables for cron
     extraEnvVar: {}
-
-    coogCeleryModule: coog_async.coog_celery
 
     # -- cron containers' resource requests and limits
     resources:
