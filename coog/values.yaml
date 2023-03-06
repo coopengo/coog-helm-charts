@@ -563,6 +563,16 @@ backCore:
         cpu: 320m
         memory: 800Mi
 
+    single:
+      enabled: false
+      resources:
+        limits:
+          cpu: 200m
+          memory: 700Mi
+        requests:
+          cpu: 160m
+          memory: 560Mi
+
     cronJob:
       schedule: "0 20 * * 1-5"
       failedJobsHistoryLimit: 5

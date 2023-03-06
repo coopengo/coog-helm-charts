@@ -562,43 +562,31 @@ backCore:
         cpu: 320m
         memory: 800Mi
 
-  cron:
-    # -- Dynamic ConfigMap variables for cron
-    extraEnvVar: {}
+    single:
+      enabled: true
+      resources:
+        limits:
+          cpu: 200m
+          memory: 700Mi
+        requests:
+          cpu: 160m
+          memory: 560Mi
 
-    # -- cron containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 200m
-        memory: 500Mi
-      requests:
-        cpu: 160m
-        memory: 400Mi
-
-    # -- Configure options applied to cron deployment, liveness, readiness and startup probes
-    # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
-    # initialDelaySeconds: Initial delay seconds e
-    # periodSeconds: Period seconds
-    # timeoutSeconds: Timeout seconds
-    # failureThreshold: Failure threshold
-    # successThreshold: Success threshold
-    #
-    # With this configuration, the kubelet will attempt to open a socket to your container on the specified port.
-    # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
-    livenessProbe:
-      initialDelaySeconds: 30
-      periodSeconds: 120
-      timeoutSeconds: 10
-      successThreshold: 1
-      failureThreshold: 2
-
-    # -- additional startup time on their first initialization
-    startupProbe:
-      initialDelaySeconds: 30
-      periodSeconds: 120
-      timeoutSeconds: 10
-      successThreshold: 1
-      failureThreshold: 2
+    cronJob:
+      schedule: "0 20 * * 1-5"
+      failedJobsHistoryLimit: 5
+      backendConfiguration: true
+      # -- workDays: Configuration used when .Values.backCore.celery.cronJob.backendConfiguration = false
+      workDays: 4
+      # -- workDaysConfig: Configuration used when .Values.backCore.celery.cronJob.backendConfiguration = false
+      workDaysConfig: french_work_days
+      resources:
+        limits:
+          cpu: 200m
+          memory: 300Mi
+        requests:
+          cpu: 160m
+          memory: 240Mi
 
   static:
     image:
@@ -646,6 +634,47 @@ backCore:
 #############################################################################################################################
 #                                            Back Additional components                                                     #
 #############################################################################################################################
+
+cron:
+  enabled: true
+  strategy:
+    type: ""
+  # -- Dynamic ConfigMap variables for cron
+  extraEnvVar: {}
+
+  # -- cron containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 200m
+      memory: 500Mi
+    requests:
+      cpu: 160m
+      memory: 400Mi
+
+  # -- Configure options applied to cron deployment, liveness, readiness and startup probes
+  # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+  # initialDelaySeconds: Initial delay seconds e
+  # periodSeconds: Period seconds
+  # timeoutSeconds: Timeout seconds
+  # failureThreshold: Failure threshold
+  # successThreshold: Success threshold
+  #
+  # With this configuration, the kubelet will attempt to open a socket to your container on the specified port.
+  # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
+  livenessProbe:
+    initialDelaySeconds: 0
+    periodSeconds: 120
+    timeoutSeconds: 30
+    successThreshold: 1
+    failureThreshold: 2
+
+  # -- additional startup time on their first initialization
+  startupProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    timeoutSeconds: 30
+    successThreshold: 1
+    failureThreshold: 3
 
 libroconv:
   # -- Deploy libroconv container(s)
