@@ -346,7 +346,7 @@ mongodb:
     periodSeconds: 30
 
 # -- Default message service used by backCore
-# Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/11.0.4
+# Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/11.10.2
 rabbitmq:
   persistence:
     enabled: false
