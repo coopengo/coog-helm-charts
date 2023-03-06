@@ -13,7 +13,9 @@ spec:
     metadata:
       labels: {{- include "general.labels.standard" . | nindent 8 }}
       annotations:
+        {{- if .Values.extraEnvVar }}
         checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
+        {{- end }}
         checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
     spec:
       imagePullSecrets:
