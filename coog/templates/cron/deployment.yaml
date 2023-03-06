@@ -42,7 +42,7 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             privileged: false
             procMount: Default
           command: ["/bin/sh","-c"]
@@ -55,7 +55,7 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             privileged: false
             procMount: Default
             runAsNonRoot: true

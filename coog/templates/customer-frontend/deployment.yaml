@@ -34,7 +34,7 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             privileged: false
             procMount: Default
             runAsNonRoot: true
@@ -63,7 +63,7 @@ spec:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             privileged: false
             procMount: Default
             runAsNonRoot: true
