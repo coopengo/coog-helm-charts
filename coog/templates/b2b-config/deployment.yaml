@@ -1,6 +1,4 @@
-{{- if (or .Values.b2bConfig.enabled
-          .Values.b2b.enabled)
--}}
+{{- if .Values.b2bConfig.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,11 +17,9 @@ spec:
         {{- if .Values.extraEnvVar }}
         checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
         {{- end }}
-        checksum/configmap-frontcore: {{ include (printf "%s/%s" $.Template.BasePath "configmap-frontcore.yaml") . | sha256sum  }}
         {{- if .Values.b2bConfig.extraEnvVar }}
         checksum/configmap: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "configmap.yaml") . | sha256sum }}
         {{- end }}
-        checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
     spec:
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
@@ -45,20 +41,8 @@ spec:
             - configMapRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
-            - configMapRef:
-                name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
             {{- if .Values.b2bConfig.extraEnvVar }}
             - configMapRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
-            {{- end }}
-            - secretRef:
-                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
-            {{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.extraEnvVar) }}
-            - secretRef:
-                name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
-            {{- end }}
-            {{- if (and .Values.secrets .Values.secrets.b2bConfig .Values.secrets.b2bConfig.extraEnvVar) }}
-            - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
           ports:

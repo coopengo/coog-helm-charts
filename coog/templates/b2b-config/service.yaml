@@ -1,6 +1,4 @@
-{{- if (or .Values.b2bConfig.enabled
-          .Values.b2b.enabled)
--}}
+{{- if .Values.b2bConfig.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
