@@ -20,6 +20,8 @@
 | Static     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |           |
 | Libroconv  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |           |
 
+PostgreSQL est nécessaire pour cette partie
+
 ### Frontend - B2B
 
 | Composants           | API                | API-identity-manager | Gateway API-referential | B2B                | Web | API-B2C | Customer-backend | Customer-frontend | B2C |
@@ -30,6 +32,8 @@
 | API-referential      | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      |                    |     |         |                  |                   |     |
 | B2B                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      |                    |     |         |                  |                   |     |
 | Web                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      | :white_check_mark: |     |         |                  |                   |     |
+
+MongoDB est necessaire pour cette partie
 
 ### Frontend- B2C
 
@@ -43,6 +47,7 @@
 | Customer-frontend    | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |         |                    |                    |     |
 | B2C                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |         |                    |                    |     |
 
+MongoDB est necessaire pour cette partie
 
 ## Injecter les secrets pour loader les images de dockerhub (login/password)
 
