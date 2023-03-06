@@ -1,5 +1,5 @@
 {{- if .Values.b2bConfig.enabled -}}
-{{- if .Values.b2bConfig.extraEnvVar-}}
+{{- if .Values.b2bConfig.extraEnvVar -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
