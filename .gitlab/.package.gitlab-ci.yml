@@ -30,6 +30,7 @@ lint:helm-chart:
       when: never
     - changes:
         - "**/*.{yaml,yml}"
+    - if: $CI_PIPELINE_SOURCE =~ /^(web)$/
 
 package:helm-chart:
   stage: package
