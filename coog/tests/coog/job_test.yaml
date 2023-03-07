@@ -18,7 +18,7 @@ tests:
           value: test-coog
       - equal:
           path: metadata.labels["app.kubernetes.io/name"]
-          value: coog-coog
+          value: coog
       - equal:
           path: metadata.labels["app.kubernetes.io/instance"]
           value: test
