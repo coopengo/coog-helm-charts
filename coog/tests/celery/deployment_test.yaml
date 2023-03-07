@@ -19,6 +19,13 @@ tests:
   - it: Test metadata & template
     template: celery/deployment.yaml
     set:
+      extraEnvVar:
+        ENABLE_GLOBAL_CONFIGMAP: foo
+      secrets:
+        backCore:
+          celery:
+            extraEnvVar:
+              ENABLE_CELERY_SECRET: foo
       imageCredentials:
         name: test-registry
     asserts:
@@ -74,68 +81,68 @@ tests:
         ENABLE_GLOBAL_CONFIGMAP: foo
       secrets:
         backCore:
-          coog:
+          celery:
             extraEnvVar:
-              ENABLE_COOG_SECRET: foo
+              ENABLE_CELERY_SECRET: foo
     asserts:
       # Check Containers pod image
       - equal:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].image
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].image
           value: cooghub/coog:changeme
       # [Start] Check environment files - apply variables on initContainer from configmap & secrets
       - contains:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].envFrom
           content:
             configMapRef:
               name: test-coog-global-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].envFrom
           content:
             configMapRef:
               name: test-coog-backcore-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].envFrom
           content:
             configMapRef:
-              name: test-coog-configuration
+              name: test-coog-celery-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].envFrom
           content:
             secretRef:
               name: test-coog-global-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].envFrom
           content:
             secretRef:
               name: test-coog-backcore-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].envFrom
           content:
             secretRef:
-              name: test-coog-configuration
+              name: test-coog-celery-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].envFrom
           content:
             secretRef:
               name: test-coog-postgresql
       # [End] Check environment files - apply variables on initContainer from configmap & secrets
       - contains:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].ports
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].ports
           content:
             name: http
             containerPort: 8000
       # [Start] Check resources limites & requests
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].resources.limits.cpu
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.limits.cpu
           pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].resources.limits.memory
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.limits.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].resources.requests.cpu
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.requests.cpu
           pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].resources.requests.memory
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.requests.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
 
@@ -152,25 +159,8 @@ tests:
           path: spec.template.spec.volumes[?(@.name == "test-workspace-io")].persistentVolumeClaim.claimName
           value: test-workspace-io
       - contains:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].volumeMounts
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].volumeMounts
           content:
             name: test-workspace-io
             mountPath: /workspace/io
             readOnly: false
-
-  - it: Test specific environment variables
-    template: celery/deployment.yaml
-    set:
-      customerBackend:
-        enabled: true
-      customerFrontend:
-        enabled: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[?(@.name == "test-coog")].env
-          content:
-            name: TRYTOND_B2C_API__SHARED_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: test-coog-customer-backend-configuration
-                key: COOG_TOKEN_SHARED_SECRET

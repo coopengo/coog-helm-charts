@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
-suite: Test coog configmap
+suite: Test celery configmap
 templates:
-  - coog/configmap.yaml
+  - celery/configmap.yaml
 release:
   name: test # Do not edit
   namespace: test
@@ -15,10 +15,10 @@ tests:
           of: ConfigMap
       - equal:
           path: metadata.name
-          value: test-coog-configuration
+          value: test-coog-celery-configuration
       - equal:
           path: metadata.labels["app.kubernetes.io/name"]
-          value: coog
+          value: coog-celery
       - equal:
           path: metadata.labels["app.kubernetes.io/instance"]
           value: test
@@ -33,21 +33,10 @@ tests:
     set:
       host: test.local
       backCore:
-        coog:
-          extraEnvVar:
-            ENABLE_COOG_DYNAMIC_CONFIG: foo
-          ingress:
-            hosts:
-              - host: test0.local
-      customerBackend:
-        enabled: true
+        celery:
+          workers:
+            maximumMemory: 100
     asserts:
       - equal:
-          path: data.TRYTOND_WEB__CORS
-          value: https://coog.local,https://test0.local
-      - equal:
-          path: data.TRYTOND_STRAPI__URL
-          value: http://test-coog-customer-backend
-      - equal:
-          path: data.ENABLE_COOG_DYNAMIC_CONFIG
-          value: foo
+          path: data.CELERY_MAX_MEMORY_PER_CHILD
+          value: "100"
