@@ -24,13 +24,13 @@ lint:helm-chart:
         fi
       done
   rules:
+    - if: $CI_PIPELINE_SOURCE =~ /^(web)$/
     - changes:
         - ".gitlab/**/*.{yml,yaml}"
         - ".gitlab-ci.{yml,yaml}"
       when: never
     - changes:
         - "**/*.{yaml,yml}"
-    - if: $CI_PIPELINE_SOURCE =~ /^(web)$/
 
 package:helm-chart:
   stage: package
