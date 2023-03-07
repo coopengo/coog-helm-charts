@@ -480,7 +480,6 @@ backCore:
     TRYTOND_PASSWORD__ENTROPY: "0.1"
     TRYTOND_SEPA_PAYMENT__OUT_DIR: "/workspace/io/batch/sepa/sepa_out"
     TRYTOND_TZ: Europe/Paris
-    TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: "1"
 
   coog:
     # -- coog, celery and batch configuration for number of workers
