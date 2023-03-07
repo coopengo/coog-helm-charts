@@ -1,9 +1,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
-suite: Test coog deployment
+suite: Test celery deployment
 templates:
-  - coog/configmap.yaml
-  - coog/deployment.yaml
-  - coog/secret.yaml
+  - celery/configmap.yaml
+  - celery/deployment.yaml
+  - celery/secret.yaml
   - configmap-global.yaml
   - configmap-backcore.yaml
   - secret-global.yaml
@@ -17,7 +17,7 @@ capabilities:
   minorVersion: 24
 tests:
   - it: Test metadata & template
-    template: coog/deployment.yaml
+    template: celery/deployment.yaml
     set:
       imageCredentials:
         name: test-registry
@@ -30,10 +30,10 @@ tests:
             name: test-registry
       - equal:
           path: metadata.name
-          value: test-coog
+          value: test-coog-celery
       - equal:
           path: metadata.labels["app.kubernetes.io/name"]
-          value: coog-coog
+          value: coog-celery
       - equal:
           path: metadata.labels["app.kubernetes.io/instance"]
           value: test
@@ -45,7 +45,7 @@ tests:
           pattern: coog-.*$
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/name"]
-          value: coog-coog
+          value: coog-celery
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/instance"]
           value: test
@@ -67,81 +67,8 @@ tests:
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
 
 
-  - it: Test InitContainer
-    template: coog/deployment.yaml
-    set:
-      extraEnvVar:
-        ENABLE_GLOBAL_CONFIGMAP: foo
-      secrets:
-        backCore:
-          coog:
-            extraEnvVar:
-              ENABLE_COOG_SECRET: foo
-    asserts:
-      # Check initContainers pod image
-      - equal:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].image
-          value: cooghub/coog:changeme
-      # [Start] Check environment files - apply variables on initContainer from configmap & secrets
-      - contains:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].envFrom
-          content:
-            configMapRef:
-              name: test-coog-global-configuration
-      - contains:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].envFrom
-          content:
-            configMapRef:
-              name: test-coog-backcore-configuration
-      - contains:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].envFrom
-          content:
-            configMapRef:
-              name: test-coog-configuration
-      - contains:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].envFrom
-          content:
-            secretRef:
-              name: test-coog-global-configuration
-      - contains:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].envFrom
-          content:
-            secretRef:
-              name: test-coog-backcore-configuration
-      - contains:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].envFrom
-          content:
-            secretRef:
-              name: test-coog-configuration
-      - contains:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].envFrom
-          content:
-            secretRef:
-              name: test-coog-postgresql
-      # [End] Check environment files - apply variables on initContainer from configmap & secrets
-      - contains:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].ports
-          content:
-            name: http
-            containerPort: 8000
-      # [Start] Check resources limites & requests
-      - matchRegex:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].resources.limits.cpu
-          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
-      - matchRegex:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].resources.limits.memory
-          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
-      - matchRegex:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].resources.requests.cpu
-          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
-      - matchRegex:
-          path: spec.template.spec.initContainers[?(@.name == "test-coog-module-update")].resources.requests.memory
-          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
-      # [End] Check resources limites & requests
-
-
   - it: Test Container
-    template: coog/deployment.yaml
+    template: celery/deployment.yaml
     set:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
@@ -214,7 +141,7 @@ tests:
 
 
   - it: Test Volumes
-    template: coog/deployment.yaml
+    template: celery/deployment.yaml
     set:
       backCore:
         persistentVolume:
@@ -232,7 +159,7 @@ tests:
             readOnly: false
 
   - it: Test specific environment variables
-    template: coog/deployment.yaml
+    template: celery/deployment.yaml
     set:
       customerBackend:
         enabled: true

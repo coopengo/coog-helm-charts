@@ -213,4 +213,3 @@ tests:
                     name: test-coog
                     port:
                       number: 80
-
