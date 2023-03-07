@@ -34,7 +34,7 @@ spec:
             claimName: {{ default (printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-") .Values.backCore.persistentVolume.existingClaim }}
       {{- end }}
       initContainers:
-        - name: {{ printf "%s-module-update" (include "general.names.short" .) }}
+        - name: {{ printf "%s-module-update" (include "general.names.name" .) }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy | quote }}
           securityContext:
@@ -71,7 +71,7 @@ spec:
               containerPort: 8000
           resources: {{- toYaml .Values.backCore.coog.initContainers.resources | nindent 12 }}
       containers:
-        - name: {{ printf "%s" (include "general.names.short" .) }}
+        - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
           securityContext:

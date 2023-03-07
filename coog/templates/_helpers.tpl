@@ -5,7 +5,7 @@ Expand the name of the chart.
 */}}
 {{- define "general.names.name" -}}
 {{- $tplDir := base (dir .Template.Name) -}}
-{{- if eq "templates" $tplDir -}}
+{{- if or (eq "templates" $tplDir) (eq "coog" $tplDir) -}}
 {{- .Chart.Name | trunc 63 | trimSuffix "-" -}}
 {{- else -}}
 {{- printf "%s-%s" .Chart.Name $tplDir | trunc 63 | trimSuffix "-" -}}
