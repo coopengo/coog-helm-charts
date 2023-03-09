@@ -9,8 +9,8 @@ spec:
   {{- range .Values.backCore.persistentVolume.accessModes }}
     - {{ . | quote }}
   {{- end }}
-  {{- if .Values.backCore.persistentVolume.existingClaim }}
-  volumeName: {{ .Values.backCore.persistentVolume.existingClaim }}
+  {{- if .Values.backCore.persistentVolume.existingPersistentVolumeName }}
+  volumeName: {{ .Values.backCore.persistentVolume.existingPersistentVolumeName }}
   {{- end }}
   resources:
     requests:
