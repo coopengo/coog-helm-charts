@@ -45,8 +45,8 @@ spec:
               {{- else }}
                 - ep
                 - daily
-                - {{ .Values.celery.cronJob.workDays | quote }}
-                - {{ .Values.celery.cronJob.workDaysConfig }}
+                - {{ .Values.backCore.celery.cronJob.workDays | quote }}
+                - {{ .Values.backCore.celery.cronJob.workDaysConfig }}
               {{- end }}
             {{- if .Values.backCore.persistentVolume.enabled }}
               volumeMounts:
