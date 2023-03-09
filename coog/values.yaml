@@ -433,6 +433,14 @@ backCore:
     #       encryptInTransit: false              # By default, this value is true (encrypt network traffic)
     customPersistentVolume: {}
 
+    # -- Link to an existing persistent volume
+    # size parameter must be equal to existing volume.
+    # E.g.
+    # backCore:
+    #   persistentVolume:
+    #     existingPersistentVolumeName: "my-existing-persistent-volume"
+    existingPersistentVolumeName: ""
+
     # -- PVC Storage Request for BackCoog
     size: 50Gi
 
