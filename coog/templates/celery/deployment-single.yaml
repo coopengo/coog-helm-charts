@@ -18,12 +18,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ printf "%s-single" (include "general.names.name" .) }}
-      helm.sh/chart: {{ include "general.names.chart" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/managed-by: {{ .Release.Service }}
-      {{- if .Chart.AppVersion }}
-      app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-      {{- end }}
   template:
     metadata:
       labels:
