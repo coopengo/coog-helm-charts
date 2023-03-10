@@ -571,7 +571,7 @@ backCore:
         memory: 800Mi
 
     single:
-      enabled: false
+      enabled: true
       resources:
         limits:
           cpu: 200m
