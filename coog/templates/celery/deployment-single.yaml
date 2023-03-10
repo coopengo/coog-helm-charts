@@ -89,6 +89,9 @@ spec:
             {{- end }}
             - secretRef:
                 name: {{  printf "%s-postgresql" (include "general.names.short" .) }}
+          env:
+            - name: TRYTOND_CONCURRENCY_CONTRACT_INVOICE_BULK___SET___NUMBER
+              value: "1"
           ports:
             - name: http
               containerPort: 8000
