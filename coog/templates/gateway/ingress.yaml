@@ -7,7 +7,7 @@
           .Values.customerFrontend.enabled
           .Values.web.enabled)
 -}}
-apiVersion: {{ include "general.ingress.apiVersion" . }}
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "general.names.fullname" . }}
@@ -56,7 +56,6 @@ spec:
       http:
         paths:
         {{- range .Values.frontCore.gateway.ingress.defaultPaths }}
-        {{- if eq (include "general.ingress.apiVersion" $) "networking.k8s.io/v1" }}
         - path: {{ . | quote }}
           pathType: Prefix
           backend:
@@ -64,19 +63,12 @@ spec:
               name: {{ include "general.names.fullname" $ }}
               port:
                 number: 80
-        {{- else }}
-        - path: {{ . | quote }}
-          backend:
-            servicename: {{ include "general.names.fullname" $ }}
-            servicePort: 80
-        {{- end }}
         {{- end }}
   {{- range .Values.frontCore.gateway.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
         {{- range .paths }}
-        {{- if eq (include "general.ingress.apiVersion" $) "networking.k8s.io/v1" }}
         - path: {{ . | quote }}
           pathType: Prefix
           backend:
@@ -84,12 +76,6 @@ spec:
               name: {{ include "general.names.fullname" $ }}
               port:
                 number: 80
-        {{- else }}
-        - path: {{ . | quote }}
-          backend:
-            servicename: {{ include "general.names.fullname" $ }}
-            servicePort: 80
-        {{- end }}
         {{- end }}
   {{- end }}
 {{- end }}
