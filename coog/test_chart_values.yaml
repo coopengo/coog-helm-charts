@@ -351,6 +351,8 @@ mongodb:
 rabbitmq:
   persistence:
     enabled: false
+  service:
+    port: 5672
   resources:
     limits:
       cpu: 600m
