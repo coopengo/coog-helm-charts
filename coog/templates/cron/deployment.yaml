@@ -45,7 +45,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.coog.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
           command: ['ep', 'cron']
         {{- if .Values.backCore.persistentVolume.enabled }}
           volumeMounts:

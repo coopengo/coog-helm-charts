@@ -383,6 +383,10 @@ backCore:
   strategy:
     type: ""
 
+  # -- coog, celery and cron security Context.
+  securityContext: {}
+  # runAsUser: ""
+
   # -- Create Postgres Database for coog
   # by default, the script create a database defined in postgresql.auth.database
   initDatabase: true
@@ -529,10 +533,6 @@ backCore:
           #   - https://test2.example.com
           cors: []
           publicCidr: []
-
-    securityContext:
-      {}
-      # runAsUser: ""
 
     # -- coog containers' resource requests and limits
     resources:

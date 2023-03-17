@@ -5,7 +5,7 @@ metadata:
   name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
-  capacity: 
+  capacity:
     storage: {{ .Values.backCore.persistentVolume.size }}
   accessModes:
   {{- range .Values.backCore.persistentVolume.accessModes }}

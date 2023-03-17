@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test api-referential configmap
+templates:
+  - api-referential/configmap.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 24
+tests:
+  - it: Test metadata & template
+    set:
+      apiReferential:
+        enabled: true
+        extraEnvVar:
+          API_REFERNTIAL_DYNAMIC_CONFIG: foo
+    asserts:
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: test-coog-api-referential-configuration
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: coog-api-referential
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: coog-.*$
+
+  - it: Test variables
+    set:
+      apiReferential:
+        enabled: true
+        extraEnvVar:
+          API_REFERNTIAL_DYNAMIC_CONFIG: foo
+    asserts:
+      - equal:
+          path: data.API_REFERNTIAL_DYNAMIC_CONFIG
+          value: foo
+
+  - it: Test apiReferential enabled configmap
+    set:
+      apiReferential:
+        enabled: true
+        extraEnvVar:
+          API_REFERNTIAL_DYNAMIC_CONFIG: foo
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test not enabled configmap (1/2)
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled configmap (2/2)
+    set:
+      apiReferential:
+        enabled: false
+        extraEnvVar: {}
+    asserts:
+      - hasDocuments:
+          count: 0

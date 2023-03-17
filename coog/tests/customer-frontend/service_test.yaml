@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.jsonsuite
-suite: Test coog service
+suite: Test customer-frontend service
 templates:
-  - coog/service.yaml
+  - customer-frontend/service.yaml
 release:
   name: test
   namespace: test
@@ -10,15 +10,18 @@ capabilities:
   minorVersion: 24
 tests:
   - it: Test metadata
+    set:
+      customerFrontend:
+        enabled: true
     asserts:
       - isKind:
           of: Service
       - equal:
           path: metadata.name
-          value: test-coog
+          value: test-coog-customer-frontend
       - equal:
           path: metadata.labels["app.kubernetes.io/name"]
-          value: coog
+          value: coog-customer-frontend
       - equal:
           path: metadata.labels["app.kubernetes.io/instance"]
           value: test
@@ -30,12 +33,15 @@ tests:
           pattern: coog-.*$
       - equal:
           path: spec.selector["app.kubernetes.io/name"]
-          value: coog
+          value: coog-customer-frontend
       - equal:
           path: spec.selector["app.kubernetes.io/instance"]
           value: test
 
   - it: Test network configuration
+    set:
+      customerFrontend:
+        enabled: true
     asserts:
       - contains:
           path: spec.ports
@@ -43,3 +49,24 @@ tests:
             name: http
             port: 80
             targetPort: http
+
+  - it: Test customerFrontend enabled service
+    set:
+      customerFrontend:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test not enabled service (1/2)
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled service (2/2)
+    set:
+      customerFrontend:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
