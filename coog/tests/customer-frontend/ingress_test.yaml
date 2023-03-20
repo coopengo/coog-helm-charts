@@ -1,0 +1,241 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test customer-frontend ingress
+templates:
+  - customer-frontend/ingress.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 24
+tests:
+  - it: Test metadata & global configurations
+    set:
+      customerFrontend:
+        enabled: true
+      ingress:
+        className: "nginx"
+    asserts:
+      - isKind:
+          of: Ingress
+      - equal:
+          path: metadata.name
+          value: test-coog-customer-frontend
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: coog-customer-frontend
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: coog-.*$
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+
+  - it: Test lets encrypt configuration
+    set:
+      customerFrontend:
+        enabled: true
+      ingress:
+        host: test.local
+        thisTls:
+          enabled: true
+          letsencrypt: true
+          configuration:
+            - hosts:
+                - test-custom.local
+              secretName: test.local-tls
+    asserts:
+      - equal:
+          path: metadata.annotations["cert-manager.io/cluster-issuer"]
+          value: letsencrypt
+      - contains:
+          path: spec.tls
+          any: false
+          content:
+            hosts:
+              - test.local
+            secretName: test.local-tls
+      - contains:
+          path: spec.tls
+          any: false
+          content:
+            hosts:
+              - test-custom.local
+            secretName: test.local-tls
+
+  - it: Test annotations
+    set:
+      customerFrontend:
+        enabled: true
+        ingress:
+          annotations:
+            nginx.ingress.kubernetes.io/use-proxy-protocol: "true"
+      ingress:
+        annotations:
+          nginx.ingress.kubernetes.io/client-body-buffer-size: "100m"
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/client-body-buffer-size"]
+          value: 100m
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/use-proxy-protocol"]
+          value: "true"
+
+  - it: Test maintenance mode
+    set:
+      customerFrontend:
+        enabled: true
+      maintenanceMode:
+        enabled: true
+        ingress:
+          annotations:
+            maintenanceMode/test: foo
+      ingress:
+        nginx:
+          whiteList:
+            trustedCidr:
+              - 127.0.0.1/32
+              - 127.0.0.2/32
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/custom-http-errors"]
+          value: 403
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/default-backend"]
+          value: test-coog-maintenance
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+          value: 127.0.0.1/32,127.0.0.2/32
+      - equal:
+          path: metadata.annotations["maintenanceMode/test"]
+          value: foo
+
+  - it: Test append mode
+    set:
+      ingress:
+        nginx:
+          whiteList:
+            managementMode: append
+            trustedCidr:
+              - 127.0.0.1/32
+              - 127.0.0.2/32
+            publicCidr:
+              - 127.0.0.3/32
+              - 127.0.0.4/32
+      customerFrontend:
+        enabled: true
+        ingress:
+          nginx:
+            whiteList:
+              publicCidr:
+                - 127.0.0.5/32
+                - 127.0.0.6/32
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+          value: 127.0.0.1/32,127.0.0.2/32,127.0.0.3/32,127.0.0.4/32,127.0.0.5/32,127.0.0.6/32
+
+  - it: Case 1 - Test customer-frontend replace mode
+    set:
+      ingress:
+        nginx:
+          whiteList:
+            managementMode: replace
+            trustedCidr:
+              - 127.0.0.1/32
+              - 127.0.0.2/32
+            publicCidr:
+              - 127.0.0.3/32
+              - 127.0.0.4/32
+      customerFrontend:
+        enabled: true
+        ingress:
+          nginx:
+            whiteList:
+              publicCidr:
+                - 127.0.0.5/32
+                - 127.0.0.6/32
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+          value: 127.0.0.1/32,127.0.0.2/32,127.0.0.5/32,127.0.0.6/32
+
+  - it: Case 2 - Test global replace mode
+    set:
+      customerFrontend:
+        enabled: true
+      ingress:
+        nginx:
+          whiteList:
+            managementMode: replace
+            trustedCidr:
+              - 127.0.0.1/32
+              - 127.0.0.2/32
+            publicCidr:
+              - 127.0.0.3/32
+              - 127.0.0.4/32
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+          value: 127.0.0.1/32,127.0.0.2/32,127.0.0.3/32,127.0.0.4/32
+
+  - it: Case 3 - Test global replace mode
+    set:
+      customerFrontend:
+        enabled: true
+      ingress:
+        nginx:
+          whiteList:
+            managementMode: foo
+    asserts:
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/whitelist-source-range"]
+          value: 127.0.0.1/32
+
+  - it: Test rules
+    set:
+      customerFrontend:
+        enabled: true
+      ingress:
+        host: test.local
+    asserts:
+      - contains:
+          path: spec.rules
+          content:
+            host: test.local
+            http:
+              paths:
+                - path: "/customer(/|$)(.*)"
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: test-coog-customer-frontend
+                      port:
+                        number: 80
+
+  - it: Test customer-frontend enabled ingress
+    set:
+      customerFrontend:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test not enabled ingress (1/2)
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled ingress (2/2)
+    set:
+      customerFrontend:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

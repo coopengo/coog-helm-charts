@@ -9,6 +9,3 @@ data:
   {{- range $key, $value := .Values.backCore.cron.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
-  {{- range $key, $value := .Values.backCore.cron.extraEnvVar }}
-  {{ $key }}: {{ $value | quote }}
-  {{- end }}

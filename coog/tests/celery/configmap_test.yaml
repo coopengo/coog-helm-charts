@@ -36,7 +36,12 @@ tests:
         celery:
           workers:
             maximumMemory: 100
+          extraEnvVar:
+            ENABLE_CELERY_DYNAMIC_CONFIG: foo
     asserts:
       - equal:
           path: data.CELERY_MAX_MEMORY_PER_CHILD
           value: "100"
+      - equal:
+          path: data.ENABLE_CELERY_DYNAMIC_CONFIG
+          value: foo

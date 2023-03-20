@@ -190,12 +190,14 @@ dnsPolicy: ""
 # -- Limite total Resource usage
 # Ref: https://kubernetes.io/docs/concepts/policy/resource-quotas/
 quota:
-  enabled: false
-  extraEnvVar:
-    cpuRequest: 0
-    memoryRequest: 0
-    cpuLimit: 0
-    memoryLimit: 0
+  enabled: true
+  hard:
+    requests:
+      cpu: "1"
+      memory: "1Gi"
+    limits:
+      cpu: "2"
+      memory: "2Gi"
 
 # -- Create a container to receive unauthorized traffic.
 # Allow only "TrustedCIDR" to access to the environment (for tests & confirm that everything work)
@@ -383,6 +385,10 @@ backCore:
   # values: Recreate or RollingUpdate
   strategy:
     type: ""
+
+  # -- coog, celery and cron security Context.
+  securityContext: {}
+  # runAsUser: ""
 
   # -- Create Postgres Database for coog
   # by default, the script create a database defined in postgresql.auth.database

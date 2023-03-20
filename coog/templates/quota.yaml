@@ -6,8 +6,10 @@ metadata:
   namespace: {{ .Release.Name }}
 spec:
   hard:
-    requests.cpu: {{ .Values.quota.extraEnvVar.cpuRequest }}
-    requests.memory: {{ .Values.quota.extraEnvVar.memoryRequest }}
-    limits.cpu: {{ .Values.quota.extraEnvVar.cpuLimit }}
-    limits.memory: {{ .Values.quota.extraEnvVar.memoryLimit }}
+    requests:
+      cpu: {{ .Values.quota.hard.requests.cpu | quote }}
+      memory: {{ .Values.quota.hard.requests.memory | quote }}
+    limits:
+      cpu: {{ .Values.quota.hard.limits.cpu | quote }}
+      memory: {{ .Values.quota.hard.limits.memory | quote }}
 {{- end }}
