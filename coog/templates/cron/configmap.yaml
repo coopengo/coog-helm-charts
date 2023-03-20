@@ -10,7 +10,4 @@ data:
   {{- range $key, $value := .Values.cron.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
-  {{- range $key, $value := .Values.cron.extraEnvVar }}
-  {{ $key }}: {{ $value | quote }}
-  {{- end }}
 {{- end }}

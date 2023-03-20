@@ -38,6 +38,11 @@ tests:
       - equal:
           path: metadata.name
           value: test-coog
+      - isNotNull:
+          path: spec.replicas
+      - matchRegex:
+          path: spec.strategy.type
+          pattern: ^(RollingUpdate|Recreate)$
       - equal:
           path: metadata.labels["app.kubernetes.io/name"]
           value: coog
@@ -160,6 +165,9 @@ tests:
       - equal:
           path: spec.template.spec.containers[?(@.name == "coog")].image
           value: cooghub/coog:changeme
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog")].imagePullPolicy
+          pattern: ^(Always|Never|IfNotPresent)$
       # [Start] Check environment files - apply variables on initContainer from configmap & secrets
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog")].envFrom
@@ -252,3 +260,62 @@ tests:
                 name: test-coog-customer-backend-configuration
                 key: COOG_TOKEN_SHARED_SECRET
 
+  - it: Test Global components configuration
+    template: coog/deployment.yaml
+    set:
+      replicaCount: 2
+      strategy:
+        type: Recreate
+      image:
+        repository: global-docker-repository
+        tag: global-docker-tag
+        pullPolicy: Always
+      securityContext:
+        runAsUser: 1000
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 2
+      - equal:
+          path: spec.strategy.type
+          value: Recreate
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].image
+          value: global-docker-repository/coog:global-docker-tag
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].imagePullPolicy
+          value: Always
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].securityContext.runAsUser
+          value: 1000
+
+  - it: Test specific component configuration
+    template: coog/deployment.yaml
+    set:
+      backCore:
+        strategy:
+          type: RollingUpdate
+        image:
+          repository: specific-docker-repository
+          tag: specific-docker-tag
+          pullPolicy: Never
+        securityContext:
+          runAsUser: 1001
+        coog:
+          replicaCount: 3
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+      - equal:
+          path: spec.strategy.type
+          value: RollingUpdate
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].image
+          value: specific-docker-repository/coog:specific-docker-tag
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].imagePullPolicy
+          value: Never
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].securityContext.runAsUser
+          value: 1001

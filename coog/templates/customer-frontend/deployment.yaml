@@ -72,12 +72,16 @@ spec:
             - name: builddir
               mountPath: "/workdir/public"
           envFrom:
+            {{- if .Values.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
-            {{- if (and .Values.secrets .Values.secrets.customerFrontend .Values.secrets.customerFrontend.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
-            {{- end }}
           ports:
             - name: http
               containerPort: 5000

@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.jsonsuite
+suite: Test libroconv service
+templates:
+  - libroconv/service.yaml
+release:
+  name: test
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 24
+tests:
+  - it: Test metadata
+    set:
+      libroconv:
+        enabled: true
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: metadata.name
+          value: test-coog-libroconv
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: coog-libroconv
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: coog-.*$
+      - equal:
+          path: spec.selector["app.kubernetes.io/name"]
+          value: coog-libroconv
+      - equal:
+          path: spec.selector["app.kubernetes.io/instance"]
+          value: test
+
+  - it: Test network configuration
+    set:
+      libroconv:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: http
+            port: 5000
+            targetPort: http
+
+  - it: Test not enabled service
+    set:
+      libroconv:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
