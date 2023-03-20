@@ -51,3 +51,16 @@ tests:
       - equal:
           path: data.CRON_DYNAMIC_CONFIG
           value: foo
+
+  - it: Test not enabled configmap (1/2)
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled configmap (2/2)
+    set:
+      cron:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

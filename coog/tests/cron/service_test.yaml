@@ -49,3 +49,16 @@ tests:
             name: http
             port: 80
             targetPort: http
+
+  - it: Test not enabled service (1/2)
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled service (2/2)
+    set:
+      cron:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

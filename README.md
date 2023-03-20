@@ -1,15 +1,53 @@
 # coog-helm-charts
-
-
 ## Prérequis :
+
 - Créer un compte sur [DockerHub](https://hub.docker.com/) et demander des accès aux conteneurs à Coopengo
 - Kubernetes en version 1.21+
 - Installer [helm 3](https://helm.sh/)
 - Installer un Controller Ingress :
-   - [Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/) (recommandé)
-   - [Traefik](https://doc.traefik.io/traefik/getting-started/install-traefik/)
+  - [Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/) (recommandé)
+  - [Traefik](https://doc.traefik.io/traefik/getting-started/install-traefik/)
 - Configurer des [PersistentVolumes](https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/) pour la persistence des données - Indispensable en production
 
+## Dépendances
+### Backend
+
+| Composants | Coog               | Celery             | Cron               | Static             | Libroconv |
+| :--------- | :----------------- | :----------------- | :----------------- | :----------------- | :-------- |
+| Coog       |                    | :heavy_check_mark: |                    | :heavy_check_mark: |           |
+| Celery     | :heavy_check_mark: |                    |                    | :heavy_check_mark: |           |
+| Cron       | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |           |
+| Static     | :heavy_check_mark: | :heavy_check_mark: |                    |                    |           |
+| Libroconv  | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |           |
+
+PostgreSQL est nécessaire pour cette partie
+
+### Frontend - B2B
+
+| Composants           | API                | API-identity-manager | Gateway API-referential | B2B                | Web | API-B2C | Customer-backend | Customer-frontend | B2C |
+| :------------------- | :----------------- | :------------------- | :---------------------- | :----------------- | :-- | :------ | :--------------- | :---------------- | :-- |
+| API                  |                    | :heavy_check_mark:   | :heavy_check_mark:      |                    |     |         |                  |                   |     |
+| API-identity-manager | :heavy_check_mark: |                      | :heavy_check_mark:      |                    |     |         |                  |                   |     |
+| Gateway              | :heavy_check_mark: | :heavy_check_mark:   |                         |                    |     |         |                  |                   |     |
+| API-referential      | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      |                    |     |         |                  |                   |     |
+| B2B                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      |                    |     |         |                  |                   |     |
+| Web                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      | :white_check_mark: |     |         |                  |                   |     |
+
+MongoDB est necessaire pour cette partie
+
+### Frontend- B2C
+
+| Composants           | API                | API-identity-manager | Gateway            | API-B2C | Customer-backend   | Customer-frontend  | B2C |
+| :------------------- | :----------------- | :------------------- | :----------------- | :------ | :----------------- | :----------------- | :-- |
+| API                  |                    | :heavy_check_mark:   | :heavy_check_mark: |         |                    |                    |     |
+| API-identity-manager | :heavy_check_mark: |                      | :heavy_check_mark: |         |                    |                    |     |
+| Gateway              | :heavy_check_mark: | :heavy_check_mark:   |                    |         |                    |                    |     |
+| API-B2C              | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |         | :heavy_check_mark: | :heavy_check_mark: |     |
+| Customer-backend     | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |         |                    | :heavy_check_mark: |     |
+| Customer-frontend    | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |         |                    |                    |     |
+| B2C                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |         |                    |                    |     |
+
+MongoDB est necessaire pour cette partie
 
 ## Injecter les secrets pour loader les images de dockerhub (login/password)
 
@@ -22,6 +60,7 @@ kubectl create secret docker-registry docker-registry --docker-server="https://i
 Dans un fichier de configuration au format YAML (recommandé) :
 
 1. Mettre en forme les identifiants ainsi que le json au format base64
+
 ```bash
 $ echo "<login>:<password>" | base64
 PGxvZ2luPjo8cGFzc3dvcmQ+Cg==
@@ -31,8 +70,8 @@ eyJhdXRocyI6IHsiZG9ja2VyLmlvIjogeyAiYXV0aCI6ICJQR3h2WjJsdVBqbzhjR0Z6YzNkdmNt
 UStDZz09IiB9fX0K # Résultat de la commande à mettre à la place de "monsecretenbase64" dans le bloc suivant.
 ```
 
-
 2. Récupérer le résultat de la derniere ligne de commande de l'étape précente pour la mettre à la place de "monsecretenbase64"
+
 ```yaml
 apiVersion: v1
 data:
@@ -44,18 +83,17 @@ metadata:
 type: kubernetes.io/dockerconfigjson
 ```
 
-
 3. Appliquer la configuration dans Kubernetes
+
 ```bash
 kubectl apply -f docker-registry.yml
 ```
 
 Vous pourrez trouver plus d'informations sur [la documentation Kubernetes](https://kubernetes.io/fr/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials).
 
-
 ## optionnel : Configuration specifique clients
-Il faut créer un fichier client_values.yml (standard helm) si l'on souhaite apporter des configurations spécifiques liées à l'environnement.
 
+Il faut créer un fichier client_values.yml (standard helm) si l'on souhaite apporter des configurations spécifiques liées à l'environnement.
 
 ## Installation de Coog
 
@@ -70,9 +108,8 @@ helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
 helm install stable/nginx-ingress
 ```
 
-
 ## Router les erreurs vers sentry
 
-  Il faut ajouter la variable d'environnement au niveau du conteneur coog :
+Il faut ajouter la variable d'environnement au niveau du conteneur coog :
 
-  TRYTOND_SENTRY_DSN : The dsn to a sentry instance that can be used to handle errors
+TRYTOND_SENTRY_DSN : The dsn to a sentry instance that can be used to handle errors
