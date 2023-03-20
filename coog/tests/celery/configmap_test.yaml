@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
-suite: Test coog Job
+suite: Test celery configmap
 templates:
-  - coog/job.yaml
+  - celery/configmap.yaml
 release:
   name: test # Do not edit
   namespace: test
@@ -12,13 +12,13 @@ tests:
   - it: Test metadata & template
     asserts:
       - isKind:
-          of: Job
+          of: ConfigMap
       - equal:
           path: metadata.name
-          value: test-coog
+          value: test-coog-celery-configuration
       - equal:
           path: metadata.labels["app.kubernetes.io/name"]
-          value: coog
+          value: coog-celery
       - equal:
           path: metadata.labels["app.kubernetes.io/instance"]
           value: test
@@ -28,11 +28,20 @@ tests:
       - matchRegex:
           path: metadata.labels["app.kubernetes.io/version"]
           pattern: coog-.*$
-      # Execute "task" only before first installation
+
+  - it: Test variables
+    set:
+      host: test.local
+      backCore:
+        celery:
+          workers:
+            maximumMemory: 100
+          extraEnvVar:
+            ENABLE_CELERY_DYNAMIC_CONFIG: foo
+    asserts:
       - equal:
-          path: metadata.annotations["helm.sh/hook"]
-          value: pre-install
-      # Delete Job before chart installation and when the task has been executed succesfully
+          path: data.CELERY_MAX_MEMORY_PER_CHILD
+          value: "100"
       - equal:
-          path: metadata.annotations["helm.sh/hook-delete-policy"]
-          value: before-hook-creation,hook-succeeded
+          path: data.ENABLE_CELERY_DYNAMIC_CONFIG
+          value: foo

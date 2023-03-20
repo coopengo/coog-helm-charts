@@ -34,6 +34,8 @@ tests:
       host: test.local
       backCore:
         coog:
+          extraEnvVar:
+            ENABLE_COOG_DYNAMIC_CONFIG: foo
           ingress:
             hosts:
               - host: test0.local
@@ -46,3 +48,6 @@ tests:
       - equal:
           path: data.TRYTOND_STRAPI__URL
           value: http://test-coog-customer-backend
+      - equal:
+          path: data.ENABLE_COOG_DYNAMIC_CONFIG
+          value: foo
