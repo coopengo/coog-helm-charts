@@ -22,7 +22,7 @@ spec:
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.maintenanceMode.image.repository }}/{{ .Values.maintenanceMode.image.name }}:{{ default .Values.image.tag .Values.maintenanceMode.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.maintenanceMode.image.pullPolicy | quote }}
           envFrom:
@@ -39,9 +39,6 @@ spec:
           ports:
             - name: http
               containerPort: 8080
-          envFrom:
-            - configMapRef:
-                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
           resources: {{- toYaml .Values.maintenanceMode.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.maintenanceMode.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}

@@ -195,11 +195,13 @@ dnsPolicy: ""
 # Ref: https://kubernetes.io/docs/concepts/policy/resource-quotas/
 quota:
   enabled: false
-  extraEnvVar:
-    cpuRequest: 0
-    memoryRequest: 0
-    cpuLimit: 0
-    memoryLimit: 0
+  hard:
+    requests:
+      cpu: 6
+      memory: 4Gi
+    limits:
+      cpu: 8
+      memory: 6Gi
 
 # -- Create a container to receive unauthorized traffic.
 # Allow only "TrustedCIDR" to access to the environment (for tests & confirm that everything work)

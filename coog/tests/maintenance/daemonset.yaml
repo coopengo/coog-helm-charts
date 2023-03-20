@@ -1,0 +1,180 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test maintenance daemonset
+templates:
+  - maintenance/configmap.yaml
+  - maintenance/daemonset.yaml
+  - configmap-global.yaml
+  - secret-global.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 24
+tests:
+  - it: Test metadata & template
+    template: maintenance/daemonset.yaml
+    set:
+      extraEnvVar:
+        ENABLE_GLOBAL_CONFIGMAP: foo
+      maintenanceMode:
+        enabled: true
+        extraEnvVar:
+          MAINTENANCE_DYNAMIC_CONFIG: foo
+      imageCredentials:
+        name: test-registry
+    asserts:
+      - isKind:
+          of: DaemonSet
+      - contains:
+          path: spec.template.spec.imagePullSecrets
+          content:
+            name: test-registry
+      - equal:
+          path: metadata.name
+          value: test-coog-maintenance
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: coog-maintenance
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: coog-.*$
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: coog-maintenance
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/instance"]
+          value: test
+      # [Start] Check checksum configuration - auto update pods when there is a change in configmap & secrets
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret-global"]
+      # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
+
+
+  - it: Test Container
+    template: maintenance/daemonset.yaml
+    set:
+      extraEnvVar:
+        ENABLE_GLOBAL_CONFIGMAP: foo
+      maintenanceMode:
+        enabled: true
+        extraEnvVar:
+          MAINTENANCE_DYNAMIC_CONFIG: foo
+    asserts:
+      # Check Containers pod image
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].image
+          value: cooghub/nginx-custom-error-pages:latest
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].imagePullPolicy
+          pattern: ^(Always|Never|IfNotPresent)$
+      # [Start] Check environment files - apply variables on initContainer from configmap & secrets
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-maintenance-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      # [End] Check environment files - apply variables on initContainer from configmap & secrets
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].ports
+          content:
+            name: http
+            containerPort: 8080
+      # [Start] Check resources limites & requests
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].resources.limits.cpu
+          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].resources.limits.memory
+          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].resources.requests.cpu
+          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].resources.requests.memory
+          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      # [End] Check resources limites & requests
+
+  - it: Test Global components configuration
+    template: maintenance/daemonset.yaml
+    set:
+      maintenanceMode:
+        enabled: true
+        extraEnvVar:
+          MAINTENANCE_DYNAMIC_CONFIG: foo
+        image:
+          tag: ""
+      image:
+        repository: global-docker-repository
+        tag: global-docker-tag
+        pullPolicy: Always
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].image
+          value: global-docker-repository/nginx-custom-error-pages:global-docker-tag
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].imagePullPolicy
+          value: Always
+
+  - it: Test specific component configuration
+    template: maintenance/daemonset.yaml
+    set:
+      maintenanceMode:
+        enabled: true
+        extraEnvVar:
+          MAINTENANCE_DYNAMIC_CONFIG: foo
+        image:
+          repository: specific-docker-repository
+          tag: specific-docker-tag
+          pullPolicy: Never
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].image
+          value: specific-docker-repository/nginx-custom-error-pages:specific-docker-tag
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-maintenance")].imagePullPolicy
+          value: Never
+
+  - it: Test maintenance enabled daemonset
+    template: maintenance/daemonset.yaml
+    set:
+      maintenanceMode:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test not enabled daemonset (1/2)
+    template: maintenance/daemonset.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled daemonset (2/2)
+    template: maintenance/daemonset.yaml
+    set:
+      maintenanceMode:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
