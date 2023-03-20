@@ -10,6 +10,9 @@ capabilities:
   minorVersion: 24
 tests:
   - it: Test metadata
+    set:
+      cron:
+        enabled: true
     asserts:
       - isKind:
           of: Service
@@ -36,6 +39,9 @@ tests:
           value: test
 
   - it: Test network configuration
+    set:
+      cron:
+        enabled: true
     asserts:
       - contains:
           path: spec.ports

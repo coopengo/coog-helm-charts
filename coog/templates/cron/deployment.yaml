@@ -21,7 +21,7 @@ spec:
         checksum/configmap: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "configmap.yaml") . | sha256sum }}
         checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
         checksum/secret-backcore: {{ include (printf "%s/%s" $.Template.BasePath "secret-backcore.yaml") . | sha256sum  }}
-        {{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.cron .Values.secrets.backCore.cron.extraEnvVar) }}
+        {{- if (and .Values.secrets .Values.secrets.cron .Values.secrets.cron.extraEnvVar) }}
         checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
         {{- end }}
         checksum/secret-postgresql: {{ include (printf "%s/%s" $.Template.BasePath "secret-postgresql.yaml") . | sha256sum  }}
@@ -36,8 +36,8 @@ spec:
     {{- end }}
       containers:
         - name: {{ include "general.names.name" . }}
-          image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
-          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy | quote }}
+          image: "{{ default .Values.image.repository .Values.cron.image.repository }}/{{ .Values.cron.image.name }}:{{ default .Values.image.tag .Values.cron.image.tag }}"
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.cron.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
@@ -46,7 +46,7 @@ spec:
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.cron.securityContext.runAsUser }}
           command: ['ep', 'cron']
         {{- if .Values.backCore.persistentVolume.enabled }}
           volumeMounts:

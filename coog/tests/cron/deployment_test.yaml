@@ -21,11 +21,12 @@ tests:
     set:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
+      cron:
+        enabled: true
       secrets:
-        backCore:
-          cron:
-            extraEnvVar:
-              ENABLE_CRON_SECRET: foo
+        cron:
+          extraEnvVar:
+            ENABLE_CRON_SECRET: foo
       imageCredentials:
         name: test-registry
     asserts:
@@ -84,11 +85,12 @@ tests:
     set:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
+      cron:
+        enabled: true
       secrets:
-        backCore:
-          cron:
-            extraEnvVar:
-              ENABLE_CRON_SECRET: foo
+        cron:
+          extraEnvVar:
+            ENABLE_CRON_SECRET: foo
     asserts:
       # Check Containers pod image
       - equal:
@@ -158,6 +160,8 @@ tests:
   - it: Test Volumes
     template: cron/deployment.yaml
     set:
+      cron:
+        enabled: true
       backCore:
         persistentVolume:
           enabled: true
@@ -176,6 +180,8 @@ tests:
   - it: Test Global components configuration
     template: cron/deployment.yaml
     set:
+      cron:
+        enabled: true
       replicaCount: 2
       strategy:
         type: Recreate
@@ -205,7 +211,9 @@ tests:
   - it: Test specific component configuration
     template: cron/deployment.yaml
     set:
-      backCore:
+      cron:
+        enabled: true
+        replicaCount: 3
         strategy:
           type: RollingUpdate
         image:
@@ -214,8 +222,6 @@ tests:
           pullPolicy: Never
         securityContext:
             runAsUser: 1001
-        cron:
-          replicaCount: 3
     asserts:
       - equal:
           path: spec.replicas

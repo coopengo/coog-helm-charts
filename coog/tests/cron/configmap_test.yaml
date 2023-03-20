@@ -10,6 +10,9 @@ capabilities:
   minorVersion: 24
 tests:
   - it: Test metadata & template
+    set:
+      cron:
+        enabled: true
     asserts:
       - isKind:
           of: ConfigMap
@@ -31,12 +34,13 @@ tests:
 
   - it: Test variables
     set:
+      cron:
+        enabled: true
+        extraEnvVar:
+          CRON_DYNAMIC_CONFIG: foo
       backCore:
         workers:
           number: 1
-        cron:
-          extraEnvVar:
-            CRON_DYNAMIC_CONFIG: foo
     asserts:
       - equal:
           path: data.COOG_CELERY_WORKERS

@@ -649,10 +649,24 @@ backCore:
 
 cron:
   enabled: false
+
   strategy:
     type: ""
+
+  image:
+    # -- cron image repository
+    name: coog
+  
+  securityContext:
+    {}
+    # runAsUser: ""
+
   # -- Dynamic ConfigMap variables for cron
   extraEnvVar: {}
+
+  # -- cron configuration for number of workers. It can be customized for each component
+  workers:
+    number: ""
 
   # -- cron containers' resource requests and limits
   resources:
