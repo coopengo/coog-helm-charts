@@ -1,4 +1,4 @@
 include:
   - project: $CI_PROJECT_PATH
-    ref: $CI_DEFAULT_BRANCH
+    ref: infra_v2 # $CI_DEFAULT_BRANCH
     file: .gitlab/.main.gitlab-ci.yml
