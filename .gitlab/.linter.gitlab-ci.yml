@@ -1,0 +1,45 @@
+lint:helm-chart:
+  stage: lint
+  image:
+    name: alpine/helm
+    entrypoint: [""] # avoid error message on start : Error: unknown command "sh" for "helm"
+  before_script:
+    - K8S_TO_TEST="v1.21.0 v1.23.0 $(curl -L -s https://dl.k8s.io/release/stable.txt)"
+  script:
+    - |-
+      for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".git" -exec basename {} \;)
+      do
+        if [ -e "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml" ]; then
+          helm dependency update ${HELM_PROJECT} || true
+          if [[ -e "${HELM_PROJECT}/test_chart_values.yaml" ]]; then
+            TEST_FILE="test_chart_values"
+          else
+            TEST_FILE="values"
+          fi
+          for K8S_VERSION in ${K8S_TO_TEST}
+          do
+            echo "Test for kubernetes version ${K8S_VERSION}..."
+            if [[ -e "${HELM_PROJECT}/values_secrets.yaml" ]]; then
+              helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/${TEST_FILE}.yaml" -f "${HELM_PROJECT}/values_secrets.yaml"
+              helm template --kube-version "${K8S_VERSION}" -f "${HELM_PROJECT}/${TEST_FILE}.yaml" -f "${HELM_PROJECT}/values_secrets.yaml" "${HELM_PROJECT}" > "${HELM_PROJECT}.template"
+            else
+              helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/${TEST_FILE}.yaml"
+              helm template --kube-version "${K8S_VERSION}" -f "${HELM_PROJECT}/${TEST_FILE}.yaml" "${HELM_PROJECT}" > "${HELM_PROJECT}.template"
+            fi
+          echo " "
+          done
+        fi
+      done
+
+lint:unittest:coog:
+  stage: lint
+  image:
+    name: helmunittest/helm-unittest:latest
+    entrypoint: ["helm", "unittest", "-t", "JUnit", "-o", "unit_test_report.xml", "-f", "tests/**/*.yaml", "-f", "tests/*", "coog"]
+  artifacts:
+    reports:
+      junit:
+        - "unit_test_report.xml"
+    paths:
+      - "unit_test_report.xml"
+  
