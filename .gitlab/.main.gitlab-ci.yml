@@ -12,11 +12,11 @@ include:
       - "/Jobs/reference.alpine.gitlab-ci.yml"
   - local: ".gitlab/.linter.gitlab-ci.yml"
     rules:
-      - if: $CI_PIPELINE_SOURCE =~ /^(web)$/
+      - if: "$CI_PIPELINE_SOURCE =~ /^(web)$/"
       - changes:
           - ".gitlab/**/*.{yml,yaml}"
           - ".gitlab-ci.{yml,yaml}"
-        when: never
+        when: "never"
       - changes:
           - "**/*.{yaml,yml}"
   - local: ".gitlab/.build.gitlab-ci.yml"
