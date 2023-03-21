@@ -1,16 +1,16 @@
 # coog-helm-charts
-## Prérequis :
+## Prérequis
 
-- Créer un compte sur [DockerHub](https://hub.docker.com/) et demander des accès aux conteneurs à Coopengo
-- Kubernetes en version 1.21+
-- Installer [helm 3](https://helm.sh/)
-- Installer un Controller Ingress :
-  - [Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/) (recommandé)
-  - [Traefik](https://doc.traefik.io/traefik/getting-started/install-traefik/)
-- Configurer des [PersistentVolumes](https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/) pour la persistence des données - Indispensable en production
+- Un compte sur [DockerHub](https://hub.docker.com/)
+- Cluster Kubernetes en version 1.21+
+- Installer [helm 3.10+](https://helm.sh/)
+- Installer [Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/)
+- Configurer des [volumes persistants](https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/) pour la persistence des données - Indispensable en production
 
 ## Dépendances
 ### Backend
+
+PostgreSQL est installé par defaut par defaut pour cette partie
 
 | Composants | Coog               | Celery             | Cron               | Static             | Libroconv |
 | :--------- | :----------------- | :----------------- | :----------------- | :----------------- | :-------- |
@@ -20,9 +20,9 @@
 | Static     | :heavy_check_mark: | :heavy_check_mark: |                    |                    |           |
 | Libroconv  | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |           |
 
-PostgreSQL est nécessaire pour cette partie
-
 ### Frontend - B2B
+
+La valeur `mongodb.isManaged` doit être à `true` pour installer MongoDB par le chart, laisser à `false` si vous avez un serveur MongoDB externe.
 
 | Composants           | API                | API-identity-manager | Gateway API-referential | B2B                | Web | API-B2C | Customer-backend | Customer-frontend | B2C |
 | :------------------- | :----------------- | :------------------- | :---------------------- | :----------------- | :-- | :------ | :--------------- | :---------------- | :-- |
@@ -33,9 +33,9 @@ PostgreSQL est nécessaire pour cette partie
 | B2B                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      |                    |     |         |                  |                   |     |
 | Web                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      | :white_check_mark: |     |         |                  |                   |     |
 
-MongoDB est necessaire pour cette partie
-
 ### Frontend- B2C
+
+La valeur `mongodb.isManaged` doit être à true pour installer MongoDB par le chart, laisser à false si vous avez un serveur MongoDB externe.
 
 | Composants           | API                | API-identity-manager | Gateway            | API-B2C | Customer-backend   | Customer-frontend  | B2C |
 | :------------------- | :----------------- | :------------------- | :----------------- | :------ | :----------------- | :----------------- | :-- |
@@ -47,69 +47,60 @@ MongoDB est necessaire pour cette partie
 | Customer-frontend    | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |         |                    |                    |     |
 | B2C                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |         |                    |                    |     |
 
-MongoDB est necessaire pour cette partie
+## Configurer l'accès à la registry (DockerHub, GitLab Package Registry, etc...)
 
-## Injecter les secrets pour loader les images de dockerhub (login/password)
-
-En ligne de commande :
-
-```bash
-kubectl create secret docker-registry docker-registry --docker-server="https://index.docker.io/v1/" --docker-username=login --docker-password=password --docker-email=email
-```
-
-Dans un fichier de configuration au format YAML (recommandé) :
-
-1. Mettre en forme les identifiants ainsi que le json au format base64
-
-```bash
-$ echo "<login>:<password>" | base64
-PGxvZ2luPjo8cGFzc3dvcmQ+Cg==
-
-$ echo '{"auths": {"docker.io": { "auth": "PGxvZ2luPjo8cGFzc3dvcmQ+Cg==" }}}' | base64
-eyJhdXRocyI6IHsiZG9ja2VyLmlvIjogeyAiYXV0aCI6ICJQR3h2WjJsdVBqbzhjR0Z6YzNkdmNt
-UStDZz09IiB9fX0K # Résultat de la commande à mettre à la place de "monsecretenbase64" dans le bloc suivant.
-```
-
-2. Récupérer le résultat de la derniere ligne de commande de l'étape précente pour la mettre à la place de "monsecretenbase64"
+Dans votre fichier de configuration des valeurs (exemple : client_values.yml) :
 
 ```yaml
-apiVersion: v1
-data:
-  .dockerconfigjson: monsecretenbase64
-kind: Secret
-metadata:
-  name: docker-registry
-  # namespace: coog-client
-type: kubernetes.io/dockerconfigjson
+imageCredentials:
+  registry: docker.io
+  username: user-1234
+  password: password-1234
+  email: my-email@my-company.com
 ```
 
-3. Appliquer la configuration dans Kubernetes
-
-```bash
-kubectl apply -f docker-registry.yml
-```
-
-Vous pourrez trouver plus d'informations sur [la documentation Kubernetes](https://kubernetes.io/fr/docs/tasks/configure-pod-container/pull-image-private-registry/#registry-secret-existing-credentials).
-
-## optionnel : Configuration specifique clients
-
-Il faut créer un fichier client_values.yml (standard helm) si l'on souhaite apporter des configurations spécifiques liées à l'environnement.
-
-## Installation de Coog
+## Installer Coog
 
 ```bash
 helm repo add coopengo https://gitlab.com/api/v4/projects/35933718/packages/helm/stable
 helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
 ```
+## Configurer des volumes persistants
 
-## Installation de nginx ingress via helm
+Dans votre fichier de configuration des valeurs (exemple : client_values.yml) :
 
-```bash
-helm install stable/nginx-ingress
+### Exemple AWS avec des EFS
+
+Les EFS doivent être crée manuellement à l'avance.
+
+Volume principal pour coog:
+```yaml
+backCore:
+  persistentVolume:
+    enabled: true
+    name: "workspace-io"
+    storageClass: "efs-sc"
+    size: 10Gi
+    customPersistentVolume:
+      mountOptions:
+        - "tls"
+      persistentVolumeReclaimPolicy: "Retain"
+      csi:
+        driver: "efs.csi.aws.com"
+        volumeHandle: "fs-123456789"
 ```
 
-## Router les erreurs vers sentry
-
-Il faut ajouter la variable d'environnement au niveau du conteneur coog :
-
-TRYTOND_SENTRY_DSN : The dsn to a sentry instance that can be used to handle errors
+Si composants Front activés :
+```yaml
+mongodb:
+  persistence:
+    storageClass: "efs-sc"
+    size: 10Gi
+    customPersistentVolume:
+      mountOptions:
+        - "tls"
+      persistentVolumeReclaimPolicy: "Retain"
+      csi:
+        driver: "efs.csi.aws.com"
+        volumeHandle: "fs-987654321"
+```
