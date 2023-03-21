@@ -12,15 +12,15 @@ include:
       - "/Jobs/reference.alpine.gitlab-ci.yml"
   - local: ".gitlab/.linter.gitlab-ci.yml"
     rules:
-      - if: $CI_PIPELINE_SOURCE == "web"
-      - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH
+      - if: "$CI_PIPELINE_SOURCE == 'web'"
+      - if: "$CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH"
         changes:
           - "**/*.yaml"
   - local: ".gitlab/.build.gitlab-ci.yml"
     rules:
-      - if: $CI_PIPELINE_SOURCE == "web"
-      - if: $CI_PIPELINE_SOURCE =~ /^(schedule|trigger|pipeline)$/ && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/
-      - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/
+      - if: "$CI_PIPELINE_SOURCE == 'web'"
+      - if: "$CI_PIPELINE_SOURCE =~ /^(schedule|trigger|pipeline)$/ && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/"
+      - if: "$CI_PIPELINE_SOURCE == 'push' && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/"
         changes:
           - "**/Chart.yaml"
 
@@ -38,4 +38,4 @@ trigger:automatic-generation:
           https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       done
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule" && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+    - if: "$CI_PIPELINE_SOURCE == 'schedule' && $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH"
