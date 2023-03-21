@@ -1,32 +1,5 @@
-build:update:version:
+build:helm-chart:
   stage: build
-  image: bitnami/git
-  before_script:
-    - !reference [.git_with_ssh:debian, before_script]
-    - git remote set-url origin git@${CI_SERVER_HOST}:${CI_PROJECT_PATH}.git
-    - |-
-      if [[ ${CI_COMMIT_BRANCH} == "${CI_DEFAULT_BRANCH}" ]]; then
-        VERSION=$(date +%y.%V.%y%V)
-      else
-        VERSION="${CI_COMMIT_BRANCH#coog-}.$(date +%y%V)"
-      fi
-  script:
-    - |-
-      for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".git" -exec basename {} \;)
-      do
-        if [ -f "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml" ]
-        then
-          git checkout ${CI_COMMIT_BRANCH}
-          sed -i "/version: /c\version: ${VERSION}" "${CI_PROJECT_DIR}/${HELM_PROJECT}/Chart.yaml"
-          git commit -am "Packaging ${VERSION}" || echo "Nothing to commit"
-          git push
-        fi
-      done
-  rules:
-    - if: '$CI_PIPELINE_SOURCE =~ /^(schedule|trigger|pipeline)$/ && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
-
-deploy:helm-chart:
-  stage: deploy
   image:
     name: alpine/helm
     entrypoint: [""] # avoid error message on start : Error: unknown command "sh" for "helm"
@@ -45,13 +18,16 @@ deploy:helm-chart:
     reports:
       dotenv: upload.env
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: $CI_PIPELINE_SOURCE =~ /^(web)$/
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
-        - "**/Chart.yaml"
+        - "**/Chart.{yaml,yml}"
+  needs:
+    - lint:helm-chart
+    - lint:unittest:coog
 
-deploy:update:readme:
-  stage: deploy
+build:update:readme:
+  stage: build
   image: golang:alpine
   variables:
     GO111MODULE: "on"
@@ -77,9 +53,9 @@ deploy:update:readme:
     - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
-        - "**/Chart.yaml"
+        - "**/Chart.{yaml,yml}"
   needs:
-    - deploy:helm-chart
+    - build:helm-chart
   allow_failure: true
 
 deploy:coreye:coog:
@@ -116,7 +92,7 @@ deploy:coreye:coog:
     - if: '$CI_PIPELINE_SOURCE == "web" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
     - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_BRANCH =~ /^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$/'
       changes:
-        - "**/Chart.yaml"
+        - "**/Chart.{yaml,yml}"
   needs:
-    - deploy:helm-chart
-    - deploy:update:readme
+    - build:helm-chart
+    - build:update:readme
