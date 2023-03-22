@@ -78,7 +78,6 @@ Volume principal pour coog:
 backCore:
   persistentVolume:
     enabled: true
-    name: "workspace-io"
     storageClass: "efs-sc"
     size: 10Gi
     customPersistentVolume:
