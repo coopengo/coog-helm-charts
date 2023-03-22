@@ -1,4 +1,5 @@
 # coog-helm-charts
+
 ## Prérequis
 
 - Un compte sur [DockerHub](https://hub.docker.com/)
@@ -8,6 +9,7 @@
 - Configurer des [volumes persistants](https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/) pour la persistence des données - Indispensable en production
 
 ## Dépendances
+
 ### Backend
 
 PostgreSQL est installé par defaut pour cette partie
@@ -24,14 +26,14 @@ PostgreSQL est installé par defaut pour cette partie
 
 La valeur `mongodb.isManaged` doit être à `true` pour installer MongoDB par le chart, laisser à `false` si vous avez un serveur MongoDB externe.
 
-| Composants           | API                | API-identity-manager | Gateway API-referential | B2B                | Web | API-B2C | Customer-backend | Customer-frontend | B2C |
-| :------------------- | :----------------- | :------------------- | :---------------------- | :----------------- | :-- | :------ | :--------------- | :---------------- | :-- |
-| API                  |                    | :heavy_check_mark:   | :heavy_check_mark:      |                    |     |         |                  |                   |     |
-| API-identity-manager | :heavy_check_mark: |                      | :heavy_check_mark:      |                    |     |         |                  |                   |     |
-| Gateway              | :heavy_check_mark: | :heavy_check_mark:   |                         |                    |     |         |                  |                   |     |
-| API-referential      | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      |                    |     |         |                  |                   |     |
-| B2B                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      |                    |     |         |                  |                   |     |
-| Web                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      | :heavy_check_mark: |     |         |                  |                   |     |
+| Composants           | API                | API-identity-manager | Gateway            | API-referential    | B2B | Web | API-B2C | Customer-backend | Customer-frontend | B2C |
+| :------------------- | :----------------- | :------------------- | :----------------- | :----------------- | :-- | :-- | :------ | :--------------- | :---------------- | --- |
+| API                  |                    | :heavy_check_mark:   | :heavy_check_mark: |                    |     |     |         |                  |                   |
+| API-identity-manager | :heavy_check_mark: |                      | :heavy_check_mark: |                    |     |     |         |                  |                   |
+| Gateway              | :heavy_check_mark: | :heavy_check_mark:   |                    |                    |     |     |         |                  |                   |
+| API-referential      | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |                    |     |     |         |                  |                   |
+| B2B                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |                    |     |     |         |                  |                   |
+| Web                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark: |     |     |         |                  |                   |
 
 ### Frontend- B2C
 
@@ -65,6 +67,7 @@ imageCredentials:
 helm repo add coopengo https://gitlab.com/api/v4/projects/35933718/packages/helm/stable
 helm upgrade -i coog coopengo/coog --namespace=coog-client -f client_values.yml
 ```
+
 ## Configurer des volumes persistants
 
 Dans votre fichier de configuration des valeurs (exemple : client_values.yml) :
@@ -74,6 +77,7 @@ Dans votre fichier de configuration des valeurs (exemple : client_values.yml) :
 Les EFS doivent être crée manuellement à l'avance.
 
 Volume principal pour coog:
+
 ```yaml
 backCore:
   persistentVolume:
@@ -90,6 +94,7 @@ backCore:
 ```
 
 Si composants Front activés :
+
 ```yaml
 mongodb:
   persistence:
