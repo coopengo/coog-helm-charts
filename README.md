@@ -26,14 +26,14 @@ PostgreSQL est installé par defaut pour cette partie
 
 La valeur `mongodb.isManaged` doit être à `true` pour installer MongoDB par le chart, laisser à `false` si vous avez un serveur MongoDB externe.
 
-| Composants           | API                | API-identity-manager | Gateway            | API-referential    | B2B | Web | API-B2C | Customer-backend | Customer-frontend | B2C |
-| :------------------- | :----------------- | :------------------- | :----------------- | :----------------- | :-- | :-- | :------ | :--------------- | :---------------- | --- |
-| API                  |                    | :heavy_check_mark:   | :heavy_check_mark: |                    |     |     |         |                  |                   |
-| API-identity-manager | :heavy_check_mark: |                      | :heavy_check_mark: |                    |     |     |         |                  |                   |
-| Gateway              | :heavy_check_mark: | :heavy_check_mark:   |                    |                    |     |     |         |                  |                   |
-| API-referential      | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |                    |     |     |         |                  |                   |
-| B2B                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |                    |     |     |         |                  |                   |
-| Web                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark: |     |     |         |                  |                   |
+| Composants           | API                | API-identity-manager | Gateway            | API-referential    | B2B | Web |
+| :------------------- | :----------------- | :------------------- | :----------------- | :----------------- | :-- | :-- |
+| API                  |                    | :heavy_check_mark:   | :heavy_check_mark: |                    |     |     |
+| API-identity-manager | :heavy_check_mark: |                      | :heavy_check_mark: |                    |     |     |
+| Gateway              | :heavy_check_mark: | :heavy_check_mark:   |                    |                    |     |     |
+| API-referential      | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |                    |     |     |
+| B2B                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: |                    |     |     |
+| Web                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark: | :heavy_check_mark: |     |     |
 
 ### Frontend- B2C
 
