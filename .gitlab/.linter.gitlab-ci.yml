@@ -41,7 +41,9 @@ lint:helm-chart:
 
 lint:unittest:coog:
   stage: lint
-  image: helmunittest/helm-unittest:latest
+  image:
+    name: helmunittest/helm-unittest:latest
+    entrypoint: [""] # avoid error message on start
   script:
     - helm unittest -t JUnit -o unit_test_report.xml -f "tests/**/*.yaml" -f "tests/*.yaml" coog
   artifacts:
