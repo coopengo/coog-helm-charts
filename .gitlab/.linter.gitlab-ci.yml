@@ -45,7 +45,7 @@ lint:unittest:coog:
     name: helmunittest/helm-unittest:latest
     entrypoint: [""] # avoid error message on start
   script:
-    - helm unittest -t JUnit -o unit_test_report.xml -f "tests/**/*.yaml" -f "tests/*.yaml" coog
+    - helm unittest --color -t JUnit -o unit_test_report.xml -f "tests/**/*.yaml" -f "tests/*.yaml" coog
   artifacts:
     reports:
       junit:
