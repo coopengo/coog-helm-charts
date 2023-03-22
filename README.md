@@ -10,7 +10,7 @@
 ## Dépendances
 ### Backend
 
-PostgreSQL est installé par defaut par defaut pour cette partie
+PostgreSQL est installé par defaut pour cette partie
 
 | Composants | Coog               | Celery             | Cron               | Static             | Libroconv |
 | :--------- | :----------------- | :----------------- | :----------------- | :----------------- | :-------- |
@@ -31,7 +31,7 @@ La valeur `mongodb.isManaged` doit être à `true` pour installer MongoDB par le
 | Gateway              | :heavy_check_mark: | :heavy_check_mark:   |                         |                    |     |         |                  |                   |     |
 | API-referential      | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      |                    |     |         |                  |                   |     |
 | B2B                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      |                    |     |         |                  |                   |     |
-| Web                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      | :white_check_mark: |     |         |                  |                   |     |
+| Web                  | :heavy_check_mark: | :heavy_check_mark:   | :heavy_check_mark:      | :heavy_check_mark: |     |         |                  |                   |     |
 
 ### Frontend- B2C
 
