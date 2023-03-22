@@ -41,9 +41,9 @@ lint:helm-chart:
 
 lint:unittest:coog:
   stage: lint
-  image:
-    name: helmunittest/helm-unittest:latest
-    entrypoint: ["helm", "unittest", "-t", "JUnit", "-o", "unit_test_report.xml", "-f", "tests/**/*.yaml", "-f", "tests/*", "coog"]
+  image: helmunittest/helm-unittest:latest
+  script:
+    - helm unittest -t JUnit -o unit_test_report.xml -f "tests/**/*.yaml" -f "tests/*.yaml" coog
   artifacts:
     reports:
       junit:
