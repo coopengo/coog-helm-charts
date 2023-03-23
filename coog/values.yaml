@@ -275,9 +275,10 @@ mongodb:
   # This is a coog parameter not mongodb
   # If set, add URI options
   # Applied on default host AND custom hosts
-  uriOptions:
+  uriOptions: []
     # Option to solve rights issue
-    - authSource=admin
+    # Must be equal to mongodb.auth.databases[0]
+    #- authSource=api-core-services
   service:
     ports:
       mongodb: 27017
@@ -302,21 +303,21 @@ mongodb:
   initdbScripts:
     coog_init_script.sh: |
       #!/bin/sh
-      echo "Create non-root user on admin database..."
+      echo "Create data in ${MONGODB_EXTRA_DATABASES%%,*}..."
       mongo --port ${MONGODB_PORT_NUMBER} -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_PASSWORD} --authenticationDatabase admin <<EOF
       use ${MONGODB_EXTRA_DATABASES%%,*};
       db.salesroutes.insert({});
-      use admin;
-      db.createUser(
-        {
-          user: "${MONGODB_EXTRA_USERNAMES%%,*}",
-          pwd: "${MONGODB_EXTRA_PASSWORDS%%,*}",
-          roles: [
-            { role: "read", db: "admin" }
-          ]
-        }
-      );
-      EOF
+      # use admin;
+      # db.createUser(
+      #   {
+      #     user: "${MONGODB_EXTRA_USERNAMES%%,*}",
+      #     pwd: "${MONGODB_EXTRA_PASSWORDS%%,*}",
+      #     roles: [
+      #       { role: "read", db: "admin" }
+      #     ]
+      #   }
+      # );
+      # EOF
   persistence:
     enabled: true
     storageClass: ""
