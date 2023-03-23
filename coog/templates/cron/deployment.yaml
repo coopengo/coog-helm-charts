@@ -86,6 +86,8 @@ spec:
                 secretKeyRef:
                   name: coog-postgres-db-secret
                   key: PASSWORD
+            - name: TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING
+              value: "1"
             {{- if .Values.coog.extraEnv }}
             {{- range $key, $value := .Values.coog.extraEnv }}
             - name:  {{ $key }}
