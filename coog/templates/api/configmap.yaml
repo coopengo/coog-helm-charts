@@ -14,6 +14,7 @@ metadata:
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
   COOG_API_V1_URL: {{ printf "http://%s-web" (include "general.names.short" .) | quote }}
+  MONGO_IDENTITY_DB_NAME: {{ first $.Values.mongodb.auth.databases | quote }}
   {{- range $key, $value := .Values.frontCore.api.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
