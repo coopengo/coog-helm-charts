@@ -126,7 +126,7 @@ Join mongodb hosts in string format
 {{- end -}}
 {{- if .Values.mongodb.hosts -}}
 {{- range .Values.mongodb.hosts -}}
-{{- $hosts = printf "%s:%d" . $portNumber | append $hosts -}}
+{{- $hosts = printf "%s" . | append $hosts -}}
 {{- end -}}
 {{- printf "mongodb://%s:%s@%s/%s" (first $.Values.mongodb.auth.usernames) (first $.Values.mongodb.auth.passwords) (join "," $hosts) (first $.Values.mongodb.auth.databases) }}
 {{- else -}}

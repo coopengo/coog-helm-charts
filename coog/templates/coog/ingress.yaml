@@ -30,12 +30,12 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
-  {{- if and .Values.ingress.thisTls.enabled (or .Values.ingress.thisTls.letsencrypt .Values.ingress.host) }}
+  {{- if and .Values.ingress.thisTls.enabled .Values.ingress.host (or .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.externalCertificate.enabled) }}
   tls:
-    {{- if and .Values.ingress.thisTls.enabled .Values.ingress.thisTls.letsencrypt }}
+    {{- if or .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.externalCertificate.enabled }}
     - hosts:
         - {{ .Values.ingress.host | quote }}
-      secretName: {{ printf "%s-tls" .Values.ingress.host }}
+      secretName: {{ default (printf "%s-tls" .Values.ingress.host) .Values.ingress.thisTls.externalCertificate.name }}
     {{- end }}
     {{- if .Values.ingress.thisTls.configuration }}
     {{- include "general.tplvalues.render" (dict "value" .Values.ingress.thisTls.configuration "context" $) | nindent 4 }}

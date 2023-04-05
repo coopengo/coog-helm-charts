@@ -67,25 +67,34 @@ ingress:
   # Can't set key as "tls", else warning for Rabbitmq dependencie
   thisTls:
     # -- Enable TLS configuration for the host defined at `ingress.host` parameter
-    # TLS certificates will be retrieved from a TLS secret with name: `{{- printf "%s-tls" .Values.ingress.host }}`
+    # TLS certificates will be retrieved from a TLS secret with name: `{{- default (printf "%s-tls" .Values.ingress.host) .Values.ingress.thisTls.externalCertificate.name }}`
     # You can:
     #   - Create a secret with your own certificates.
-    #     e.g:
-    #     apiVersion: v1
-    #     kind: Secret
-    #     metadata:
-    #       name: coog.local-tls
-    #     type: kubernetes.io/tls
-    #     data:
-    #       server.crt: |
-    #            <crt contents here>
-    #       server.key: |
-    #            <private key contents here>
     #   - Rely on cert-manager to create it by setting the corresponding annotations
     #
     enabled: true
 
     letsencrypt: true
+    
+    # -- Use certificates manually created in a secret.
+    # - Create a secret with your own certificates with the secret name in format `{{- default (printf "%s-tls" .Values.ingress.host) .Values.ingress.thisTls.externalCertificate.name }}`
+    #   e.g:
+    #   apiVersion: v1
+    #   kind: Secret
+    #   metadata:
+    #     name: coog.local-tls
+    #   type: kubernetes.io/tls
+    #   data:
+    #     server.crt: |
+    #          <crt contents here>
+    #     server.key: |
+    #          <private key contents here>
+    externalCertificate:
+      enabled: false
+      # -- If your host is "coog.local" you have to create a secret in the same namespace called "coog.local-tls"
+      # You can customize the secret name by editing this value
+      name: ""
+
     # -- TLS configuration for additional hostname(s) to be covered with this ingress record
     # ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
     # e.g:
@@ -267,13 +276,20 @@ mongodb:
   # if set, replace default URI
   # default : mongodb://(.Values.mongodb.auth.usernames[0]):(.Values.mongodb.auth.password[0])@(.Release.Name)-mongodb:(.Values.mongodb.service.ports.mongodb)/(.Values.mongodb.auth.databases[0])
   # default for replicaset : mongodb://(.Values.mongodb.auth.usernames[0]):(.Values.mongodb.auth.password[0])@(.Release.Name)-mongodb-0.(.Release.Name)-mongodb-headless.svc.cluster.local:(.Values.mongodb.service.ports.mongodb)/(.Values.mongodb.auth.databases[0])
+  # E.g:
+  # hosts:
+  #   - test0.com:27017
+  #   - test1.com:27017
+  #   - test2.com:27018
   hosts: []
   # This is a coog parameter not mongodb
   # If set, add URI options
-  # Applied on default host AND custom hosts
+  # Applied on default host AND custom hosts.
+  # Option to solve rights issue
+  # Must be equal to mongodb.auth.databases[0]
+  #- authSource=api-core-services
   uriOptions:
-    # Option to solve right issue
-    - authSource=admin
+    []
   service:
     ports:
       mongodb: 27017
@@ -485,18 +501,18 @@ backCore:
     # end
     COOG_IWC: "1"
     COOG_TIMEOUT: "3600"
-    LOG_LEVEL: "INFO"
+    LOG_LEVEL: INFO
     TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: "1"
     TRYTOND_CACHE__CLEAN_TIMEOUT: "0"
     TRYTOND_CACHE__RECORD: "50000"
-    TRYTOND_DATABASE__LANGUAGE: "fr"
-    TRYTOND_DATABASE__PATH: "/workspace/io/edm"
+    TRYTOND_DATABASE__LANGUAGE: fr
+    TRYTOND_DATABASE__PATH: /workspace/io/edm
     TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
     TRYTOND_DEBUG__VIEWS: false
     TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_EXPIRATION_MINUTES: "864000"
     TRYTOND_PASSWORD__ENTROPY: "0.1"
-    TRYTOND_SEPA_PAYMENT__OUT_DIR: "/workspace/io/batch/sepa/sepa_out"
-    TRYTOND_TZ: "Europe/Paris"
+    TRYTOND_SEPA_PAYMENT__OUT_DIR: /workspace/io/batch/sepa/sepa_out
+    TRYTOND_TZ: Europe/Paris
 
   coog:
     # -- coog, celery and batch configuration for number of workers
