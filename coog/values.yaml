@@ -322,17 +322,7 @@ mongodb:
       mongo --port ${MONGODB_PORT_NUMBER} -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_PASSWORD} --authenticationDatabase admin <<EOF
       use ${MONGODB_EXTRA_DATABASES%%,*};
       db.salesroutes.insert({});
-      # use admin;
-      # db.createUser(
-      #   {
-      #     user: "${MONGODB_EXTRA_USERNAMES%%,*}",
-      #     pwd: "${MONGODB_EXTRA_PASSWORDS%%,*}",
-      #     roles: [
-      #       { role: "read", db: "admin" }
-      #     ]
-      #   }
-      # );
-      # EOF
+      EOF
   persistence:
     enabled: true
     storageClass: ""
