@@ -19,6 +19,7 @@ data:
   COOG_API_URL_V2: {{ printf "http://%s-api" (include "general.names.short" .) | quote }}
   COOG_PORTAL_URL: {{ printf "https://%s" .Values.ingress.host | quote }}
   COOG_API_URL: {{ printf "http://%s-web" (include "general.names.short" .) | quote }}
+  COOG_API_B2B_CONFIG_URL: {{ printf "http://%s-api-b2b-config" (include "general.names.short" .) | quote }}
   COOG_API_B2C_URL: {{ printf "http://%s-api-b2c" (include "general.names.short" .) | quote }}
   COOG_API_REFERENTIAL_URL: {{ printf "http://%s-api-referential" (include "general.names.short" .) | quote }}
   WHITELIST: {{ include "frontcore.gateway.cors" . }}

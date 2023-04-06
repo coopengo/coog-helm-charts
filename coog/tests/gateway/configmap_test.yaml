@@ -58,6 +58,9 @@ tests:
           path: data.COOG_API_URL
           value: "http://test-coog-web"
       - equal:
+          path: data.COOG_API_B2B_CONFIG_URL
+          value: "http://test-coog-api-b2b-config"
+      - equal:
           path: data.COOG_API_B2C_URL
           value: "http://test-coog-api-b2c"
       - equal:
