@@ -1,13 +1,14 @@
+
 {{- if .Values.cron.enabled -}}
+{{- if (and .Values.cron .Values.cron.extraEnvVar) -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
-  COOG_CELERY_WORKERS: {{ default .Values.backCore.workers.number .Values.cron.workers.number | quote }}
-  COOG_SERVER_WORKERS: {{ default .Values.backCore.workers.number .Values.cron.workers.number | quote }}
   {{- range $key, $value := .Values.cron.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
+{{- end }}
 {{- end }}

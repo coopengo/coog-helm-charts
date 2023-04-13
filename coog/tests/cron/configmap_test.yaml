@@ -13,6 +13,8 @@ tests:
     set:
       cron:
         enabled: true
+        extraEnvVar:
+            ENABLED_CRON_CONFIGMAP: foo
     asserts:
       - isKind:
           of: ConfigMap
@@ -39,15 +41,10 @@ tests:
         extraEnvVar:
           CRON_DYNAMIC_CONFIG: foo
       backCore:
-        workers:
-          number: 1
+        cron:
+          extraEnvVar:
+            CRON_DYNAMIC_CONFIG: foo
     asserts:
-      - equal:
-          path: data.COOG_CELERY_WORKERS
-          value: "1"
-      - equal:
-          path: data.COOG_SERVER_WORKERS
-          value: "1"
       - equal:
           path: data.CRON_DYNAMIC_CONFIG
           value: foo
