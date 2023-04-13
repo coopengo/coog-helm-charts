@@ -27,9 +27,6 @@ tests:
         frontCore:
           extraEnvVar:
             ENABLE_FRONTCORE_SECRET: foo
-          gateway:
-            extraEnvVar:
-              ENABLE_GATEWAY_SECRET: foo
       imageCredentials:
         name: test-registry
     asserts:
@@ -94,9 +91,6 @@ tests:
         frontCore:
           extraEnvVar:
             ENABLE_FRONTCORE_SECRET: foo
-          gateway:
-            extraEnvVar:
-              ENABLE_GATEWAY_SECRET: foo
     asserts:
       # Check Containers pod image
       - equal:
