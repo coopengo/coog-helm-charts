@@ -29,19 +29,34 @@ tests:
           path: metadata.labels["app.kubernetes.io/version"]
           pattern: coog-.*$
 
-  - it: Test variables
+  - it: Test variables (1/2)
     set:
       host: test.local
       backCore:
         celery:
           workers:
             maximumMemory: 100
+            number: 3
           extraEnvVar:
             ENABLE_CELERY_DYNAMIC_CONFIG: foo
     asserts:
+      - equal:
+          path: data.COOG_CELERY_WORKERS
+          value: "3"
       - equal:
           path: data.CELERY_MAX_MEMORY_PER_CHILD
           value: "100"
       - equal:
           path: data.ENABLE_CELERY_DYNAMIC_CONFIG
           value: foo
+
+  - it: Test variables (2/2)
+    set:
+      host: test.local
+      backCore:
+        workers:
+          number: 4
+    asserts:
+      - equal:
+          path: data.COOG_CELERY_WORKERS
+          value: "4"

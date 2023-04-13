@@ -29,11 +29,13 @@ tests:
           path: metadata.labels["app.kubernetes.io/version"]
           pattern: coog-.*$
 
-  - it: Test variables
+  - it: Test variables (1/2)
     set:
       host: test.local
       backCore:
         coog:
+          workers:
+            number: 2
           extraEnvVar:
             ENABLE_COOG_DYNAMIC_CONFIG: foo
           ingress:
@@ -43,6 +45,9 @@ tests:
         enabled: true
     asserts:
       - equal:
+          path: data.COOG_SERVER_WORKERS
+          value: "2"
+      - equal:
           path: data.TRYTOND_WEB__CORS
           value: https://coog.local,https://test0.local
       - equal:
@@ -51,3 +56,14 @@ tests:
       - equal:
           path: data.ENABLE_COOG_DYNAMIC_CONFIG
           value: foo
+
+  - it: Test variables (2/2)
+    set:
+      host: test.local
+      backCore:
+        workers:
+          number: 5
+    asserts:
+      - equal:
+          path: data.COOG_SERVER_WORKERS
+          value: "5"
