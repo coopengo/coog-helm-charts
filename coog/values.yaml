@@ -28,7 +28,7 @@ strategy:
 # ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 # @param securityContext.runAsUser Set components containers' Security Context runAsUser
 securityContext:
-  runAsUser: 1000
+  runAsUser: 1003
 
 # -- Setup variables shared to all components.
 extraEnvVar: {}
@@ -525,7 +525,8 @@ backCore:
       # e.g:
       # hosts:
       #   - host: test1.example.com
-      #     path: /
+      #     paths:
+      #       - /
       #   - host: test2.example.com
       hosts: []
 
