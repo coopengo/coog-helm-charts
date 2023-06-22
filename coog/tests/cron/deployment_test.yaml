@@ -190,7 +190,7 @@ tests:
         tag: global-docker-tag
         pullPolicy: Always
       securityContext:
-        runAsUser: 1000
+        runAsUser: 1003
     asserts:
       - equal:
           path: spec.replicas
@@ -206,7 +206,7 @@ tests:
           value: Always
       - equal:
           path: spec.template.spec.containers[?(@.name == "coog-cron")].securityContext.runAsUser
-          value: 1000
+          value: 1003
 
   - it: Test specific component configuration
     template: cron/deployment.yaml
