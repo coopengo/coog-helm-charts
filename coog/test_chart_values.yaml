@@ -753,12 +753,13 @@ frontCore:
 
     # -- Configure environement variables for this component
     extraEnvVar:
-      COOG_MODULE: true
-      GOOGLE_MODULE: false
-      FACEBOOK_MODULE: false
-      COOG_TOKEN_MODULE: true
+      BASE_PATH: "/gateway"
+      COOG_GATEWAY_BASE_PATH: "/gateway"
       COOG_GATEWAY_PORT: 8000
-      COOG_GATEWAY_BASE_PATH: /gateway
+      COOG_MODULE: true
+      COOG_TOKEN_MODULE: true
+      FACEBOOK_MODULE: false
+      GOOGLE_MODULE: false
 
     ingress:
       # -- Default host for the ingress resource for gateway containers
