@@ -202,7 +202,7 @@ tests:
           value: Always
       - equal:
           path: spec.template.spec.containers[?(@.name == "coog-celery-single")].securityContext.runAsUser
-          value: 1000
+          value: 1003
 
   - it: Test specific component configuration
     template: celery/deployment-single.yaml
