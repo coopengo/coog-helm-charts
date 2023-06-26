@@ -400,6 +400,8 @@ backCore:
   # -- Create Postgres Database for coog
   # by default, the script create a database defined in postgresql.auth.database
   initDatabase: true
+  # -- append default database on TRYTOND_DATABASE_NAMES's variable
+  extraDatabases: []
 
   persistentVolume:
     # -- Enable BackCore data persistence using PVC

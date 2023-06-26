@@ -11,6 +11,7 @@ data:
   DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }} # duplicate of COOG_DB_NAME
   # Tryton
   TRYTOND_REPORT__API: {{ printf "http://%s-libroconv:5000/unoconv/{oext}" (include "general.names.short" .) | quote }}
+  TRYTOND_DATABASE_NAMES: {{ default .Release.Name (include "postgres.databases" .) | quote }}
   {{- range $key, $value := .Values.backCore.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
