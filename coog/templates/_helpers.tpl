@@ -110,6 +110,22 @@ TRYTOND_SESSION__PASSPHRASE: {{ include "secret.token.generator" (dict "value" "
 {{ .key }}: {{ $secretValue | quote }}
 {{- end -}}
 
+
+{{/*
+Join TRYTOND_DATABASE_NAMES in string format
+*/}}
+{{- define "postgres.databases" -}}
+{{ .Values.postgresql.auth.database }}
+{{- if .Values.backCore.extraDatabases }}
+{{- $databases := list -}}
+{{- range .Values.backCore.extraDatabases }}
+{{- $databases = . | append $databases -}}
+{{- end -}}
+{{- printf ",%s" (join "," $databases) }}
+{{- end -}}
+{{- end -}}
+
+
 {{/*
 Join mongodb hosts in string format
 */}}
