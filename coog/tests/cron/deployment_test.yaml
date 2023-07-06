@@ -87,6 +87,8 @@ tests:
         ENABLE_GLOBAL_CONFIGMAP: foo
       cron:
         enabled: true
+        extraEnvVar:
+          ENABLE_CRON_CONFIGMAP: foo
       secrets:
         cron:
           extraEnvVar:
