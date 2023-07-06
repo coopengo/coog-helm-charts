@@ -61,7 +61,7 @@ spec:
             {{- end }}
             - configMapRef:
                 name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
-            {{- if (and .Values.cron .Values.cron.extraEnvVar) -}}
+            {{- if (and .Values.cron .Values.cron.extraEnvVar) }}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
