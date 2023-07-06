@@ -1,4 +1,3 @@
-
 {{- if .Values.cron.enabled -}}
 {{- if (and .Values.cron .Values.cron.extraEnvVar) -}}
 apiVersion: v1

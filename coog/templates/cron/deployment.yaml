@@ -61,8 +61,10 @@ spec:
             {{- end }}
             - configMapRef:
                 name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+            {{- if (and .Values.cron .Values.cron.extraEnvVar) -}}
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- end }}
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             - secretRef:
