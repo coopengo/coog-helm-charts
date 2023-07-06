@@ -84,6 +84,10 @@ tests:
     set:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
+      backCore:
+        cron:
+          extraEnvVar:
+            ENABLE_CRON_CONFIGMAP: foo
       secrets:
         backCore:
           cron:
