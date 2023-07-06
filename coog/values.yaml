@@ -278,8 +278,8 @@ mongodb:
   # -- Mandatory if isManaged is false and frontCore enabled else 'hosts' is automatically added
   # Use an external mongodb server (Database not managed by this chart)
   # if set, replace default URI
-  # default : mongodb://(.Values.mongodb.auth.usernames[0]):(.Values.mongodb.auth.password[0])@(.Release.Name)-mongodb:(.Values.mongodb.service.ports.mongodb)/(.Values.mongodb.auth.databases[0])
-  # default for replicaset : mongodb://(.Values.mongodb.auth.usernames[0]):(.Values.mongodb.auth.password[0])@(.Release.Name)-mongodb-0.(.Release.Name)-mongodb-headless.svc.cluster.local:(.Values.mongodb.service.ports.mongodb)/(.Values.mongodb.auth.databases[0])
+  # default : mongodb://(.Values.mongodb.auth.usernames[0]):(.Values.mongodb.auth.passwords[0])@(.Release.Name)-mongodb:(.Values.mongodb.service.ports.mongodb)/(.Values.mongodb.auth.databases[0])
+  # default for replicaset : mongodb://(.Values.mongodb.auth.usernames[0]):(.Values.mongodb.auth.passwords[0])@(.Release.Name)-mongodb-0.(.Release.Name)-mongodb-headless.svc.cluster.local:(.Values.mongodb.service.ports.mongodb)/(.Values.mongodb.auth.databases[0])
   # E.g:
   # hosts:
   #   - test0.com:27017
