@@ -23,6 +23,8 @@ tests:
         ENABLE_GLOBAL_CONFIGMAP: foo
       cron:
         enabled: true
+        extraEnvVar:
+          ENABLE_CRON_CONFIGMAP: foo
       secrets:
         cron:
           extraEnvVar:
@@ -83,11 +85,13 @@ tests:
     template: cron/deployment.yaml
     set:
       extraEnvVar: {}
+      cron:
+        enabled: true
+        extraEnvVar: {}
       secrets:
         extraEnvVar: {}
-        backCore:
-          cron:
-            extraEnvVar: {}
+        cron:
+          extraEnvVar: {}
     asserts:
       - notExists:
           path: spec.template.metadata.annotations["checksum/configmap-global"]
