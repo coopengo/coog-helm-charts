@@ -66,6 +66,48 @@ tests:
           path: spec.template.metadata.annotations["checksum/secret-mongodb"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
 
+  - it: Test disabled configmaps, secrets & checksums
+    template: web/deployment.yaml
+    set:
+      extraEnvVar: {}
+      web:
+        enabled: true
+        extraEnvVar: {}
+      secrets:
+        extraEnvVar: {}
+        web:
+          extraEnvVar: {}
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/configmap-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret-mongodb"]
+      # [Start] Check environment files
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-web")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-web")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-web-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-web")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-web")].envFrom
+          content:
+            secretRef:
+              name: test-coog-mongodb-configuration
+      # [End] Check environment files
 
   - it: Test Container
     template: web/deployment.yaml
@@ -82,7 +124,7 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[?(@.name == "coog-web")].imagePullPolicy
           pattern: ^(Always|Never|IfNotPresent)$
-      # [Start] Check environment files - apply variables on initContainer from configmap & secrets
+      # [Start] Check environment files
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-web")].envFrom
           content:
@@ -103,7 +145,7 @@ tests:
           content:
             secretRef:
               name: test-coog-mongodb-configuration
-      # [End] Check environment files - apply variables on initContainer from configmap & secrets
+      # [End] Check environment files
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-web")].ports
           content:

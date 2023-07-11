@@ -55,15 +55,35 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test not enabled configmap (1/2)
+  - it: Test not enabled configmap (1/4)
     asserts:
       - hasDocuments:
           count: 0
 
-  - it: Test not enabled configmap (2/2)
+  - it: Test not enabled configmap (2/4)
     set:
       maintenanceMode:
         enabled: false
+        extraEnvVar: {}
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled configmap (3/4)
+    set:
+      maintenanceMode:
+        enabled: false
+        extraEnvVar:
+          CONFIRM_DISABLED: foo
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled configmap (4/4)
+    set:
+      maintenanceMode:
+        enabled: true
+        extraEnvVar: {}
     asserts:
       - hasDocuments:
           count: 0

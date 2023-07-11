@@ -21,6 +21,10 @@ tests:
     set:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
+      backCore:
+        cron:
+          extraEnvVar:
+            ENABLE_CRON_SECRET: foo
       secrets:
         backCore:
           cron:
@@ -78,6 +82,67 @@ tests:
           path: spec.template.metadata.annotations["checksum/secret-postgresql"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
 
+  - it: Test disabled configmaps, secrets & checksums
+    template: cron/deployment.yaml
+    set:
+      extraEnvVar: {}
+      secrets:
+        extraEnvVar: {}
+        backCore:
+          cron:
+            extraEnvVar: {}
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/configmap-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap-backcore"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/configmap"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret-backcore"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/secret"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret-postgresql"]
+      # [Start] Check environment files
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-backcore-configuration
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-cron-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          content:
+            secretRef:
+              name: test-coog-backcore-configuration
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          content:
+            secretRef:
+              name: test-coog-cron-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          content:
+            secretRef:
+              name: test-coog-postgresql
+      # [End] Check environment files
 
   - it: Test Container
     template: cron/deployment.yaml
@@ -101,7 +166,7 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[?(@.name == "coog-cron")].imagePullPolicy
           pattern: ^(Always|Never|IfNotPresent)$
-      # [Start] Check environment files - apply variables on initContainer from configmap & secrets
+      # [Start] Check environment files
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
           content:
@@ -137,7 +202,7 @@ tests:
           content:
             secretRef:
               name: test-coog-postgresql
-      # [End] Check environment files - apply variables on initContainer from configmap & secrets
+      # [End] Check environment files
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-cron")].ports
           content:

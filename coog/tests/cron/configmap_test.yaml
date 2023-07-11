@@ -46,6 +46,10 @@ tests:
           value: foo
 
   - it: Test not enabled configmap
+    set:
+      backCore:
+        cron:
+          extraEnvVar: {}
     asserts:
       - hasDocuments:
           count: 0

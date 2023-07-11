@@ -66,6 +66,43 @@ tests:
           path: spec.template.metadata.annotations["checksum/secret"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
 
+  - it: Test disabled configmaps, secrets & checksums
+    template: customer-frontend/deployment.yaml
+    set:
+      extraEnvVar: {}
+      customerFrontend:
+        enabled: true
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/configmap-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret"]
+      # [Start] Check environment files
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-customer-frontend-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].envFrom
+          content:
+            secretRef:
+              name: test-coog-customer-frontend-configuration
+      # [End] Check environment files
 
   - it: Test Container
     template: customer-frontend/deployment.yaml
@@ -82,7 +119,7 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].imagePullPolicy
           pattern: ^(Always|Never|IfNotPresent)$
-      # [Start] Check environment files - apply variables on initContainer from configmap & secrets
+      # [Start] Check environment files
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].envFrom
           content:
@@ -103,7 +140,7 @@ tests:
           content:
             secretRef:
               name: test-coog-customer-frontend-configuration
-      # [End] Check environment files - apply variables on initContainer from configmap & secrets
+      # [End] Check environment files
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].ports
           content:
@@ -139,7 +176,7 @@ tests:
       - matchRegex:
           path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].imagePullPolicy
           pattern: ^(Always|Never|IfNotPresent)$
-      # [Start] Check environment files - apply variables on initContainer from configmap & secrets
+      # [Start] Check environment files
       - contains:
           path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].envFrom
           content:
@@ -160,7 +197,7 @@ tests:
           content:
             secretRef:
               name: test-coog-customer-frontend-configuration
-      # [End] Check environment files - apply variables on initContainer from configmap & secrets
+      # [End] Check environment files
       # [Start] Check resources limites & requests
       - matchRegex:
           path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].resources.limits.cpu
