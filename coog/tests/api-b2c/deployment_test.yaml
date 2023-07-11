@@ -82,6 +82,65 @@ tests:
           path: spec.template.metadata.annotations["checksum/secret"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
 
+  - it: Test disabled configmaps, secrets & checksums
+    template: api-b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+      apiB2c:
+        extraEnvVar: {}
+      extraEnvVar: {}
+      secrets:
+        extraEnvVar: {}
+        frontCore:
+          extraEnvVar: {}
+        apiB2c:
+          extraEnvVar: {}
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/configmap-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap-frontcore"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/configmap"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret-global"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/secret-frontcore"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/secret"]
+      # [Start] Check environment files
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-frontcore-configuration
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-api-b2c-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            secretRef:
+              name: test-coog-frontcore-configuration
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            secretRef:
+              name: test-coog-api-b2c-configuration
+      # [End] Check environment files
 
   - it: Test Container
     template: api-b2c/deployment.yaml
@@ -108,7 +167,7 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].imagePullPolicy
           pattern: ^(Always|Never|IfNotPresent)$
-      # [Start] Check environment files - apply variables on initContainer from configmap & secrets
+      # [Start] Check environment files
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
           content:
@@ -139,7 +198,7 @@ tests:
           content:
             secretRef:
               name: test-coog-api-b2c-configuration
-      # [End] Check environment files - apply variables on initContainer from configmap & secrets
+      # [End] Check environment files
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].ports
           content:
