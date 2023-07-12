@@ -65,26 +65,6 @@ spec:
               value: "{{ .Values.coog.timeout }}"
             - name:  LOG_LEVEL
               value: "{{ .Values.coog.log_level }}"
-            {{- if not .Values.rabbitmq.enabled }}
-            - name:  COOG_REDIS_HOST
-              {{- if .Values.redis.enabled }}
-              value: "{{ .Release.Name }}-redis-master"
-              {{- else }}
-              value: {{ .Values.externalRedis.host | quote }}
-              {{- end }}
-            - name:  COOG_REDIS_PORT
-              {{- if .Values.redis.enabled }}
-              value: "{{ .Values.redis.redisPort }}"
-              {{- else }}
-              value: {{ .Values.externalRedis.port | quote }}
-              {{- end }}
-            - name:  TRYTOND_CACHE__URI
-              {{- if .Values.redis.enabled }}
-              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}/0"
-              {{- else }}
-              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}/0"
-              {{- end }}
-            {{- end }}
             - name:  COOG_POSTGRES_HOST
             {{- if not .Values.coog.external_postgres.enabled }}
               value: "{{ .Release.Name }}-postgresql"

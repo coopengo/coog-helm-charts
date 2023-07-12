@@ -11,7 +11,6 @@ A Helm chart for Coog
 | https://charts.bitnami.com/bitnami | mongodb | 7.14.1 |
 | https://charts.bitnami.com/bitnami | postgresql | 8.9.6 |
 | https://charts.bitnami.com/bitnami | rabbitmq | 7.6.8 |
-| https://charts.bitnami.com/bitnami | redis | 10.5.0 |
 
 ## Values
 
@@ -243,8 +242,6 @@ A Helm chart for Coog
 | customer_frontend.service.port | int | `80` |  |
 | customer_frontend.service.type | string | `"ClusterIP"` |  |
 | customer_frontend.tolerations | list | `[]` | Tolerations for pod assignment |
-| externalRedis.host | string | `"localhost"` |  |
-| externalRedis.port | int | `6379` |  |
 | gateway.affinity | object | `{}` | Affinity for pod assignment |
 | gateway.enabled | bool | `true` | Deploy gateway container(s) |
 | gateway.entrypoint | string | `"/gateway"` |  |
@@ -357,20 +354,6 @@ A Helm chart for Coog
 | rabbitmq.resources.requests.cpu | string | `"480m"` |  |
 | rabbitmq.resources.requests.memory | string | `"320Mi"` |  |
 | rabbitmq.updateStrategyType | string | `"RollingUpdate"` |  |
-| redis.cluster.enabled | bool | `false` |  |
-| redis.enabled | bool | `true` |  |
-| redis.master.disableCommands | list | `[]` |  |
-| redis.master.persistence.enabled | bool | `false` |  |
-| redis.master.resources.limits.cpu | string | `"200m"` |  |
-| redis.master.resources.limits.memory | string | `"250Mi"` |  |
-| redis.master.resources.requests.cpu | string | `"100m"` |  |
-| redis.master.resources.requests.memory | string | `"150Mi"` |  |
-| redis.metrics.enabled | bool | `false` |  |
-| redis.metrics.prometheusRule.enabled | bool | `false` |  |
-| redis.podSecurityPolicy.create | bool | `false` |  |
-| redis.port | int | `27017` |  |
-| redis.rbac.create | bool | `true` |  |
-| redis.usePassword | bool | `false` |  |
 | static.affinity | object | `{}` | Affinity for pod assignment |
 | static.enabled | bool | `true` | Deploy static container(s) |
 | static.fullnameOverride | string | `""` |  |

@@ -53,46 +53,6 @@ rabbitmq:
   livenessProbe:
     initialDelaySeconds: 240
 
-##
-## Redis chart configuration
-##
-redis:
-  enabled: true
-  usePassword: false
-  cluster:
-    enabled: false
-  rbac:
-    create: true
-  master:
-    persistence:
-      enabled: false
-    disableCommands: []
-    resources:
-      limits:
-        cpu: 200m
-        memory: 250Mi
-      requests:
-        cpu: 100m
-        memory: 150Mi
-  port: 27017
-  podSecurityPolicy:
-    create: false
-  metrics:
-    enabled: false
-    prometheusRule:
-      enabled: false
-
-externalRedis:
-  ## All of these values are only used when redis.enabled is set to false
-  ## Redis host
-  ##
-  host: localhost
-  ## Redis port number
-  ##
-  port: 6379
-  ## Redis password
-  ##
-
 mongodb:
   enabled: true
   strategyType: Recreate

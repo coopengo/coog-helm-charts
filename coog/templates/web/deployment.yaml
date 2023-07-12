@@ -71,14 +71,6 @@ spec:
                   key: PASSWORD
             {{- end }}
             {{- end }}
-            - name: COOG_API_REDIS_URL
-              {{- if .Values.redis.enabled }}
-              value: "redis://{{ .Release.Name }}-redis-master:{{ .Values.redis.redisPort }}"
-              {{- else }}
-              value: "redis://{{ .Values.externalRedis.host }}:{{ .Values.externalRedis.port }}"
-              {{- end }}
-            - name: COOG_API_REDIS_DB
-              value: "7"
             - name: COOG_API_COOG_URL
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog:{{ .Values.coog.service.port }}"
             - name: COOG_API_COOG_DB

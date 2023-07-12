@@ -1,4 +1,9 @@
-# Changelog
+## [2.14.2328] - 2023-07-12
+
+### Removed
+
+- Redis Chart has been removed
+
 ## [2.14.2226] - 2022-06-30
 
 ### Changed
@@ -6,7 +11,6 @@
 - flower Chart has been removed
 - Update containers name to match with 'service name'
 
-# Changelog
 ## [2.14.2225] - 2022-06-29
 
 ### Added
@@ -14,23 +18,17 @@
 - Manage apiVersion for Ingress. Depend on Kubernetes Cluster version
 - Added mode maintenance to redirect traffic to a maintenance web page
 
-# Changelog
-
 ## [2.13.2133] - 2021-08-25
 
 - coog: Fix TRYTOND_CACHE__CLASS
 - coog: Disable syntax analysis in init container
 - daily: Fix#20143 - Increase number of failed job history
 
-# Changelog
-
 ## [2.4.2] - 2021-01-22
 
 ### Changed
 
 - celery: Fix health check command to comply with Celery 5.0
-
-# Changelog
 
 ## [2.4.1] - 2021-01-19
 
@@ -70,8 +68,6 @@
 
 -  Batch configuration available for celery
 -  Update documentation
-
-# Changelog
 
 ## [2.3.2] - 2020-12-01
 
