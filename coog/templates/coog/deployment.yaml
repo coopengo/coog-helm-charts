@@ -66,6 +66,9 @@ spec:
             {{- end }}
             - secretRef:
                 name: {{  printf "%s-postgresql" (include "general.names.short" .) }}
+          env:
+            - name: LOG_LEVEL
+              value: "INFO"
           ports:
             - name: http
               containerPort: 8000
@@ -92,13 +95,17 @@ spec:
               readOnly: false
             {{- end }}
           {{- end }}
-          {{- if or .Values.customerBackend.enabled .Values.customerFrontend.enabled }}
           env:
+          {{- if or .Values.customerBackend.enabled .Values.customerFrontend.enabled }}
             - name:  TRYTOND_B2C_API__SHARED_SECRET
               valueFrom:
                   secretKeyRef:
                     name: {{ printf "%s-customer-backend-configuration" (include "general.names.short" .) }}
                     key: COOG_TOKEN_SHARED_SECRET
+          {{- end }}
+          {{- if .Values.backCore.coog.extraEnvVar.LOG_LEVEL }}
+            - name: LOG_LEVEL
+              value: {{ .Values.backCore.coog.extraEnvVar.LOG_LEVEL }}
           {{- end }}
           envFrom:
             {{- if .Values.extraEnvVar }}

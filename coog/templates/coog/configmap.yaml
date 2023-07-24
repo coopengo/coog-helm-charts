@@ -10,5 +10,7 @@ data:
   TRYTOND_STRAPI__URL: {{ printf "http://%s-customer-backend" (include "general.names.short" .) | quote }}
   {{- end }}
   {{- range $key, $value := .Values.backCore.coog.extraEnvVar }}
+  {{- if ne $key "LOG_LEVEL" }}
   {{ $key }}: {{ $value | quote }}
+  {{- end }}
   {{- end }}
