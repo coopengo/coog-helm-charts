@@ -68,12 +68,6 @@ spec:
             - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
-          env:
-            - name: COOG_DOCUMENT_TOKEN_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
-                  key: TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET
           ports:
             - name: http
               containerPort: 3000
