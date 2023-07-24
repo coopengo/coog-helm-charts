@@ -56,6 +56,8 @@ tests:
       - equal:
           path: data.BACKCORE_DYNAMIC_CONFIG
           value: foo
+      - notExists:
+          path: data.LOG_LEVEL
 
   - it: Test variables (2/2)
     set:

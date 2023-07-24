@@ -190,6 +190,12 @@ tests:
       - equal:
           path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].image
           value: cooghub/coog:changeme
+      # Test LOG_LEVEL variable
+      - contains:
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].env
+          content:
+            name: LOG_LEVEL
+            value: "INFO"
       # [Start] Check environment files
       - contains:
           path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].envFrom
@@ -252,6 +258,9 @@ tests:
     set:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
+      backCore:
+        extraEnvVar:
+          LOG_LEVEL: test
       secrets:
         backCore:
           coog:
@@ -265,6 +274,12 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[?(@.name == "coog")].imagePullPolicy
           pattern: ^(Always|Never|IfNotPresent)$
+      # Test LOG_LEVEL variable
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog")].env
+          content:
+            name: LOG_LEVEL
+            value: "test"
       # [Start] Check environment files
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog")].envFrom
@@ -343,11 +358,16 @@ tests:
   - it: Test specific environment variables
     template: coog/deployment.yaml
     set:
+      backCore:
+        extraEnvVar:
+          LOG_LEVEL: ""
       customerBackend:
         enabled: true
       customerFrontend:
         enabled: true
     asserts:
+      - notExists:
+          path: spec.template.spec.containers[?(@.name == "coog")].env[?(@.name == "LOG_LEVEL")]
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog")].env
           content:
