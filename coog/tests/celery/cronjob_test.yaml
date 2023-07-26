@@ -142,7 +142,13 @@ tests:
         tag: global-docker-tag
         pullPolicy: Always
       securityContext:
-        runAsUser: 1000
+        runAsUser: 1003
+        runAsGroup: 1003
+      # Remove default values in backCore to test global value
+      backCore:
+        securityContext:
+          runAsUser: ""
+          runAsGroup: ""
     asserts:
       - equal:
           path: spec.schedule
@@ -157,7 +163,10 @@ tests:
           path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].imagePullPolicy
           value: Always
       - equal:
-          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].securityContext.runAsUser
+          path: spec.jobTemplate.spec.template.spec.securityContext.runAsUser
+          value: 1003
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.securityContext.runAsGroup
           value: 1003
       - equal:
           path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].command
@@ -175,6 +184,7 @@ tests:
           pullPolicy: Never
         securityContext:
           runAsUser: 1001
+          runAsGroup: 1001
         celery:
           cronJob:
             schedule: "0 18 * * *"
@@ -196,7 +206,10 @@ tests:
           path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].imagePullPolicy
           value: Never
       - equal:
-          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].securityContext.runAsUser
+          path: spec.jobTemplate.spec.template.spec.securityContext.runAsUser
+          value: 1001
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.securityContext.runAsGroup
           value: 1001
       - equal:
           path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].command

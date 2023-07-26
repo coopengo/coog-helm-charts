@@ -27,6 +27,16 @@ spec:
     spec:
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        procMount: Default
+        runAsNonRoot: true
+        runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
+        runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.securityContext.runAsGroup }}
     {{- if .Values.backCore.persistentVolume.enabled }}
       volumes:
         - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
@@ -37,15 +47,6 @@ spec:
         - name: {{ printf "%s-module-update" (include "general.names.name" .) }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy | quote }}
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            procMount: Default
-            runAsNonRoot: true
-            runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
           command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies']
           envFrom:
             {{- if .Values.extraEnvVar }}
@@ -77,15 +78,6 @@ spec:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            procMount: Default
-            runAsNonRoot: true
-            runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
           command: ['ep', 'server', '{{ default .Values.backCore.workers.number .Values.backCore.coog.workers.number }}']
           {{- if or .Values.backCore.persistentVolume.enabled .Values.backCore.coog.configurationFiles }}
           volumeMounts:

@@ -23,6 +23,16 @@ spec:
     spec:
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        procMount: Default
+        runAsNonRoot: true
+        runAsUser: {{ default .Values.securityContext.runAsUser .Values.customerFrontend.securityContext.runAsUser }}
+        runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.customerFrontend.securityContext.runAsGroup }}
       volumes:
         - name: builddir
           emptyDir: {}
@@ -30,15 +40,6 @@ spec:
         - name: {{ printf "%s-build" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
           image: "{{ default .Values.image.repository .Values.customerFrontend.image.repository }}/{{ .Values.customerFrontend.image.name }}:{{ default .Values.image.tag .Values.customerFrontend.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.customerFrontend.image.pullPolicy | quote }}
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            procMount: Default
-            runAsNonRoot: true
-            runAsUser: {{ default .Values.securityContext.runAsUser .Values.customerFrontend.securityContext.runAsUser }}
           resources: {{- toYaml .Values.customerFrontend.initContainers.resources | nindent 12 }}
           command: ['sh', '-c', 'yarn', 'build', '--prefix-paths']
           volumeMounts:
@@ -59,15 +60,6 @@ spec:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.customerFrontend.image.repository }}/{{ .Values.customerFrontend.image.name }}:{{ default .Values.image.tag .Values.customerFrontend.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.customerFrontend.image.pullPolicy | quote }}
-          securityContext:
-            allowPrivilegeEscalation: false
-            capabilities:
-              drop:
-                - ALL
-            privileged: false
-            procMount: Default
-            runAsNonRoot: true
-            runAsUser: {{ default .Values.securityContext.runAsUser .Values.customerFrontend.securityContext.runAsUser }}
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/public"
