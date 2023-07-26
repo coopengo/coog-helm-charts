@@ -246,6 +246,7 @@ tests:
         pullPolicy: Always
       securityContext:
         runAsUser: 1003
+        runAsGroup: 1003
     asserts:
       - equal:
           path: spec.replicas
@@ -260,7 +261,10 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].imagePullPolicy
           value: Always
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-celery")].securityContext.runAsUser
+          path: spec.template.spec.securityContext.runAsUser
+          value: 1003
+      - equal:
+          path: spec.template.spec.securityContext.runAsGroup
           value: 1003
 
   - it: Test specific component configuration
@@ -275,6 +279,7 @@ tests:
           pullPolicy: Never
         securityContext:
             runAsUser: 1001
+            runAsGroup: 1001
         celery:
           replicaCount: 3
     asserts:
@@ -291,5 +296,8 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].imagePullPolicy
           value: Never
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-celery")].securityContext.runAsUser
+          path: spec.template.spec.securityContext.runAsUser
+          value: 1001
+      - equal:
+          path: spec.template.spec.securityContext.runAsGroup
           value: 1001
