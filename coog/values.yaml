@@ -501,9 +501,8 @@ backCore:
     TRYTOND_CACHE__RECORD: "50000"
     TRYTOND_DATABASE__LANGUAGE: fr
     TRYTOND_DATABASE__PATH: /workspace/io/edm
-    TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
     TRYTOND_DEBUG__VIEWS: false
-    TRYTOND_PASSWORD__ENTROPY: "0.1"
+    TRYTOND_REPORT__EXPORT_ROOT_DIR: /workspace/io/batch/report
     TRYTOND_SEPA_PAYMENT__OUT_DIR: /workspace/io/batch/sepa/sepa_out
     TRYTOND_TZ: Europe/Paris
 
