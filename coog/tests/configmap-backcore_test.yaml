@@ -47,9 +47,8 @@ tests:
       - equal:
           path: data.DB_NAME
           value: test
-      - equal:
+      - notExists:
           path: data.TRYTOND_REPORT__API
-          value: http://test-coog-libroconv:5000/unoconv/{oext}
       - equal:
           path: data.TRYTOND_DATABASE_NAMES
           value: test
@@ -72,6 +71,8 @@ tests:
         extraDatabases:
           - test1
           - test2
+      libroconv:
+        enabled: true
     asserts:
       - equal:
           path: data.COOG_POSTGRES_HOST
@@ -88,3 +89,6 @@ tests:
       - equal:
           path: data.TRYTOND_DATABASE_NAMES
           value: test0,test1,test2
+      - equal:
+          path: data.TRYTOND_REPORT__API
+          value: http://test-coog-libroconv:5000/unoconv/{oext}
