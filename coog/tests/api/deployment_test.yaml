@@ -257,10 +257,10 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-api")].imagePullPolicy
           value: Always
       - equal:
-          path: spec.template.spec.securityContext.runAsUser
+          path: spec.template.spec.containers[?(@.name == "coog-api")].securityContext.runAsUser
           value: 1003
       - equal:
-          path: spec.template.spec.securityContext.runAsGroup
+          path: spec.template.spec.containers[?(@.name == "coog-api")].securityContext.runAsGroup
           value: 1003
 
   - it: Test specific component configuration
@@ -293,10 +293,10 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-api")].imagePullPolicy
           value: Never
       - equal:
-          path: spec.template.spec.securityContext.runAsUser
+          path: spec.template.spec.containers[?(@.name == "coog-api")].securityContext.runAsUser
           value: 1001
       - equal:
-          path: spec.template.spec.securityContext.runAsGroup
+          path: spec.template.spec.containers[?(@.name == "coog-api")].securityContext.runAsGroup
           value: 1001
 
   - it: Test frontCore enabled deployment

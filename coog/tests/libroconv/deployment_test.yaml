@@ -162,10 +162,10 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-libroconv")].imagePullPolicy
           value: Always
       - equal:
-          path: spec.template.spec.securityContext.runAsUser
+          path: spec.template.spec.containers[?(@.name == "coog-libroconv")].securityContext.runAsUser
           value: 1003
       - equal:
-          path: spec.template.spec.securityContext.runAsGroup
+          path: spec.template.spec.containers[?(@.name == "coog-libroconv")].securityContext.runAsGroup
           value: 1003
 
   - it: Test specific component configuration
@@ -197,10 +197,10 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-libroconv")].imagePullPolicy
           value: Never
       - equal:
-          path: spec.template.spec.securityContext.runAsUser
+          path: spec.template.spec.containers[?(@.name == "coog-libroconv")].securityContext.runAsUser
           value: 1001
       - equal:
-          path: spec.template.spec.securityContext.runAsGroup
+          path: spec.template.spec.containers[?(@.name == "coog-libroconv")].securityContext.runAsGroup
           value: 1001
 
   - it: Test not enabled deployment

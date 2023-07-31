@@ -23,20 +23,20 @@ spec:
     spec:
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
-        privileged: false
-        procMount: Default
-        runAsNonRoot: true
-        runAsUser: {{ default .Values.securityContext.runAsUser .Values.web.securityContext.runAsUser }}
-        runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.web.securityContext.runAsGroup }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.web.image.repository }}/{{ .Values.web.image.name }}:{{ default .Values.image.tag .Values.web.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.web.image.pullPolicy | quote }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.web.securityContext.runAsUser }}
+            runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.web.securityContext.runAsGroup }}
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:
