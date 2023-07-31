@@ -409,10 +409,16 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog")].imagePullPolicy
           value: Always
       - equal:
-          path: spec.template.spec.securityContext.runAsUser
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].securityContext.runAsUser
           value: 1003
       - equal:
-          path: spec.template.spec.securityContext.runAsGroup
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].securityContext.runAsGroup
+          value: 1003
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].securityContext.runAsUser
+          value: 1003
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].securityContext.runAsGroup
           value: 1003
 
   - it: Test specific component configuration
@@ -444,8 +450,14 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog")].imagePullPolicy
           value: Never
       - equal:
-          path: spec.template.spec.securityContext.runAsUser
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].securityContext.runAsUser
           value: 1001
       - equal:
-          path: spec.template.spec.securityContext.runAsGroup
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].securityContext.runAsGroup
+          value: 1001
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].securityContext.runAsUser
+          value: 1001
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].securityContext.runAsGroup
           value: 1001

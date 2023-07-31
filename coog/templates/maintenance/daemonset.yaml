@@ -25,6 +25,14 @@ spec:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.maintenanceMode.image.repository }}/{{ .Values.maintenanceMode.image.name }}:{{ default .Values.image.tag .Values.maintenanceMode.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.maintenanceMode.image.pullPolicy | quote }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:

@@ -34,20 +34,20 @@ spec:
     spec:
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
-      securityContext:
-        allowPrivilegeEscalation: false
-        capabilities:
-          drop:
-            - ALL
-        privileged: false
-        procMount: Default
-        runAsNonRoot: true
-        runAsUser: {{ default .Values.securityContext.runAsUser .Values.apiB2c.securityContext.runAsUser }}
-        runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.apiB2c.securityContext.runAsGroup }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.apiB2c.image.repository }}/{{ .Values.apiB2c.image.name }}:{{ default .Values.image.tag .Values.apiB2c.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.apiB2c.image.pullPolicy | quote }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.apiB2c.securityContext.runAsUser }}
+            runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.apiB2c.securityContext.runAsGroup }}
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:

@@ -242,10 +242,16 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].imagePullPolicy
           value: Always
       - equal:
-          path: spec.template.spec.securityContext.runAsUser
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].securityContext.runAsUser
           value: 1003
       - equal:
-          path: spec.template.spec.securityContext.runAsGroup
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].securityContext.runAsGroup
+          value: 1003
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].securityContext.runAsUser
+          value: 1003
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].securityContext.runAsGroup
           value: 1003
 
   - it: Test specific component configuration
@@ -277,10 +283,16 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].imagePullPolicy
           value: Never
       - equal:
-          path: spec.template.spec.securityContext.runAsUser
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].securityContext.runAsUser
           value: 1001
       - equal:
-          path: spec.template.spec.securityContext.runAsGroup
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].securityContext.runAsGroup
+          value: 1001
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].securityContext.runAsUser
+          value: 1001
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].securityContext.runAsGroup
           value: 1001
 
   - it: Test customerFrontend enabled deployment
