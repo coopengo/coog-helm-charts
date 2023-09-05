@@ -52,43 +52,14 @@ tests:
           path: spec.selector.matchLabels["app.kubernetes.io/instance"]
           value: test
       # [Start] Check checksum configuration - auto update pods when there is a change in configmap & secrets
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/configmap-global"]
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
 
-  - it: Test disabled configmaps, secrets & checksums
-    template: static/deployment.yaml
-    set:
-      extraEnvVar: {}
-      static:
-        enabled: true
-      secrets:
-        extraEnvVar: {}
-    asserts:
-      - notExists:
-          path: spec.template.metadata.annotations["checksum/configmap-global"]
-      - isNotEmpty:
-          path: spec.template.metadata.annotations["checksum/secret-global"]
-      # [Start] Check environment files
-      - notContains:
-          path: spec.template.spec.containers[?(@.name == "coog-static")].envFrom
-          content:
-            configMapRef:
-              name: test-coog-global-configuration
-      - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-static")].envFrom
-          content:
-            secretRef:
-              name: test-coog-global-configuration
-      # [End] Check environment files
-
   - it: Test Container
     template: static/deployment.yaml
-    set:
-      extraEnvVar:
-        ENABLE_GLOBAL_CONFIGMAP: foo
     asserts:
       # Check Containers pod image
       - equal:
@@ -97,18 +68,6 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[?(@.name == "coog-static")].imagePullPolicy
           pattern: ^(Always|Never|IfNotPresent)$
-      # [Start] Check environment files
-      - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-static")].envFrom
-          content:
-            configMapRef:
-              name: test-coog-global-configuration
-      - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-static")].envFrom
-          content:
-            secretRef:
-              name: test-coog-global-configuration
-      # [End] Check environment files
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-static")].ports
           content:

@@ -12,11 +12,6 @@ spec:
   template:
     metadata:
       labels: {{- include "general.labels.standard" . | nindent 8 }}
-      annotations:
-        {{- if .Values.extraEnvVar }}
-        checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
-        {{- end }}
-        checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
     spec:
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
@@ -34,13 +29,6 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.static.securityContext.runAsUser }}
             runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.static.securityContext.runAsGroup }}
-          envFrom:
-            {{- if .Values.extraEnvVar }}
-            - configMapRef:
-                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
-            {{- end }}
-            - secretRef:
-                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
           ports:
             - name: http
               containerPort: 5000
