@@ -510,7 +510,6 @@ backCore:
     TRYTOND_CACHE__RECORD: "50000"
     TRYTOND_DATABASE__LANGUAGE: fr
     TRYTOND_DATABASE__PATH: /workspace/io/edm
-    TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
     TRYTOND_DEBUG__VIEWS: false
     TRYTOND_PASSWORD__ENTROPY: "0.1"
     TRYTOND_SEPA_PAYMENT__OUT_DIR: /workspace/io/batch/sepa/sepa_out
@@ -523,7 +522,8 @@ backCore:
 
     # -- Configure environement variables for this component
     # Each value can be modified without override all or delete other parameters
-    extraEnvVar: {}
+    extraEnvVar:
+      TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
 
     ingress:
       # -- Default host for the ingress resource for coog containers'
