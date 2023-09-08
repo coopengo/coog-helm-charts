@@ -513,7 +513,8 @@ backCore:
 
     # -- Configure environement variables for this component
     # Each value can be modified without override all or delete other parameters
-    extraEnvVar: {}
+    extraEnvVar:
+      TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS: true
 
     ingress:
       # -- Default host for the ingress resource for coog containers'
