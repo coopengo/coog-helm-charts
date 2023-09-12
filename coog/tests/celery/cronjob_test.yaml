@@ -163,10 +163,10 @@ tests:
           path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].imagePullPolicy
           value: Always
       - equal:
-          path: spec.jobTemplate.spec.template.spec.securityContext.runAsUser
+          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].securityContext.runAsUser
           value: 1003
       - equal:
-          path: spec.jobTemplate.spec.template.spec.securityContext.runAsGroup
+          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].securityContext.runAsGroup
           value: 1003
       - equal:
           path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].command
@@ -206,10 +206,10 @@ tests:
           path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].imagePullPolicy
           value: Never
       - equal:
-          path: spec.jobTemplate.spec.template.spec.securityContext.runAsUser
+          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].securityContext.runAsUser
           value: 1001
       - equal:
-          path: spec.jobTemplate.spec.template.spec.securityContext.runAsGroup
+          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].securityContext.runAsGroup
           value: 1001
       - equal:
           path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].command
