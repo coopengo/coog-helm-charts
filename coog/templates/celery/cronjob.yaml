@@ -14,16 +14,6 @@ spec:
         spec:
           imagePullSecrets:
             - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
-          securityContext:
-                allowPrivilegeEscalation: false
-                capabilities:
-                  drop:
-                    - ALL
-                privileged: false
-                procMount: Default
-                runAsNonRoot: true
-                runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
-                runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.securityContext.runAsGroup }}
           restartPolicy: Never
         {{- if .Values.backCore.persistentVolume.enabled }}
           volumes:
@@ -39,6 +29,15 @@ spec:
             - name: {{ printf "%s-daily" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
               image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
               imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+                privileged: false
+                procMount: Default
+                runAsNonRoot: true
+                runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
               command:
               {{- if .Values.backCore.celery.cronJob.backendConfiguration }}
                 - ep
