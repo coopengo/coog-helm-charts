@@ -783,8 +783,7 @@ libroconv:
 # If you enable one front component, you must set mongodb.isManaged: true
 frontCore:
   enabled: true
-  extraEnvVar:
-    JWT_EXPIRATION: 3600
+  extraEnvVar: {}
 
   gateway:
     strategy:
@@ -803,6 +802,7 @@ frontCore:
       COOG_TOKEN_MODULE: true
       FACEBOOK_MODULE: false
       GOOGLE_MODULE: false
+      JWT_EXPIRATION: 3600
 
     ingress:
       # -- Default host for the ingress resource for gateway containers
