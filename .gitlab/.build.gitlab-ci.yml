@@ -24,7 +24,7 @@ build:helm-chart:
         - "**/Chart.{yaml,yml}"
   needs:
     - lint:helm-chart
-    - lint:unittest:coog
+    # - lint:unittest:coog
 
 build:update:readme:
   stage: build

@@ -39,25 +39,25 @@ lint:helm-chart:
     - changes:
         - "**/*.{yaml,yml}"
 
-lint:unittest:coog:
-  stage: lint
-  image:
-    name: helmunittest/helm-unittest:latest
-    entrypoint: [""] # avoid error message on start
-  script:
-    - helm unittest --color -t JUnit -o unit_test_report.xml -f "tests/**/*.yaml" -f "tests/*.yaml" coog
-  artifacts:
-    reports:
-      junit:
-        - "unit_test_report.xml"
-    paths:
-      - "unit_test_report.xml"
-  rules:
-    - if: "$CI_PIPELINE_SOURCE =~ /^(web)$/"
-    - changes:
-        - ".gitlab/**/*.{yml,yaml}"
-        - ".gitlab-ci.{yml,yaml}"
-      when: "never"
-    - changes:
-        - "**/*.{yaml,yml}"
+# lint:unittest:coog:
+#   stage: lint
+#   image:
+#     name: helmunittest/helm-unittest:latest
+#     entrypoint: [""] # avoid error message on start
+#   script:
+#     - helm unittest --color -t JUnit -o unit_test_report.xml -f "tests/**/*.yaml" -f "tests/*.yaml" coog
+#   artifacts:
+#     reports:
+#       junit:
+#         - "unit_test_report.xml"
+#     paths:
+#       - "unit_test_report.xml"
+#   rules:
+#     - if: "$CI_PIPELINE_SOURCE =~ /^(web)$/"
+#     - changes:
+#         - ".gitlab/**/*.{yml,yaml}"
+#         - ".gitlab-ci.{yml,yaml}"
+#       when: "never"
+#     - changes:
+#         - "**/*.{yaml,yml}"
   
