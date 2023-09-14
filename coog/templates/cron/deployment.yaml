@@ -20,7 +20,9 @@ spec:
         {{- if (and .Values.backCore .Values.backCore.cron .Values.backCore.cron.extraEnvVar) }}
         checksum/configmap: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "configmap.yaml") . | sha256sum }}
         {{- end }}
+        {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
         checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
+        {{- end }}
         checksum/secret-backcore: {{ include (printf "%s/%s" $.Template.BasePath "secret-backcore.yaml") . | sha256sum  }}
         {{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.cron .Values.secrets.backCore.cron.extraEnvVar) }}
         checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
@@ -67,8 +69,10 @@ spec:
             - configMapRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
+            {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
             - secretRef:
                 name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
             {{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.cron .Values.secrets.backCore.cron.extraEnvVar) }}

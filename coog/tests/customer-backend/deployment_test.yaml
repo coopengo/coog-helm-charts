@@ -22,6 +22,9 @@ tests:
         enabled: true
       imageCredentials:
         name: test-registry
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
     asserts:
       - isKind:
           of: Deployment
@@ -72,12 +75,14 @@ tests:
       extraEnvVar: {}
       customerBackend:
         enabled: true
+      secrets:
+        extraEnvVar: {}
     asserts:
       - notExists:
           path: spec.template.metadata.annotations["checksum/configmap-global"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/configmap"]
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret"]
@@ -111,6 +116,9 @@ tests:
         ENABLE_GLOBAL_CONFIGMAP: foo
       customerBackend:
         enabled: true
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
     asserts:
       # Check Containers pod image
       - equal:
@@ -168,6 +176,9 @@ tests:
         ENABLE_GLOBAL_CONFIGMAP: foo
       customerBackend:
         enabled: true
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
     asserts:
       # Check Containers pod image
       - equal:

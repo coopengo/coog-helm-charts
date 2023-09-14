@@ -22,6 +22,8 @@ tests:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
       secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
         backCore:
           celery:
             extraEnvVar:
@@ -94,7 +96,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap-backcore"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/configmap"]
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret-backcore"]
@@ -118,7 +120,7 @@ tests:
           content:
             configMapRef:
               name: test-coog-celery-configuration
-      - contains:
+      - notContains:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].envFrom
           content:
             secretRef:
@@ -146,6 +148,8 @@ tests:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
       secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
         backCore:
           celery:
             extraEnvVar:

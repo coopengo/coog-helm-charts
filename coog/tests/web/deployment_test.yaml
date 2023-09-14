@@ -22,6 +22,9 @@ tests:
         enabled: true
       imageCredentials:
         name: test-registry
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
     asserts:
       - isKind:
           of: Deployment
@@ -82,7 +85,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap-global"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/configmap"]
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret-mongodb"]
@@ -97,7 +100,7 @@ tests:
           content:
             configMapRef:
               name: test-coog-web-configuration
-      - contains:
+      - notContains:
           path: spec.template.spec.containers[?(@.name == "coog-web")].envFrom
           content:
             secretRef:
@@ -116,6 +119,9 @@ tests:
         ENABLE_GLOBAL_CONFIGMAP: foo
       web:
         enabled: true
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
     asserts:
       # Check Containers pod image
       - equal:

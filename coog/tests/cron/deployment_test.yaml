@@ -26,6 +26,8 @@ tests:
           extraEnvVar:
             ENABLE_CRON_SECRET: foo
       secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
         backCore:
           cron:
             extraEnvVar:
@@ -98,7 +100,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap-backcore"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/configmap"]
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret-backcore"]
@@ -122,7 +124,7 @@ tests:
           content:
             configMapRef:
               name: test-coog-cron-configuration
-      - contains:
+      - notContains:
           path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
           content:
             secretRef:
@@ -154,6 +156,8 @@ tests:
           extraEnvVar:
             ENABLE_CRON_CONFIGMAP: foo
       secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
         backCore:
           cron:
             extraEnvVar:

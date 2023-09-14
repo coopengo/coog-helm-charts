@@ -25,6 +25,8 @@ tests:
         extraEnvVar:
           ENABLE_API_REFERNTIAL_CONFIGMAP: foo
       secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
         frontCore:
           extraEnvVar:
             ENABLE_FRONTCORE_SECRET: foo
@@ -101,7 +103,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap-frontcore"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/configmap"]
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/secret-frontcore"]
@@ -123,7 +125,7 @@ tests:
           content:
             configMapRef:
               name: test-coog-api-referential-configuration
-      - contains:
+      - notContains:
           path: spec.template.spec.containers[?(@.name == "coog-api-referential")].envFrom
           content:
             secretRef:
@@ -150,6 +152,8 @@ tests:
         extraEnvVar:
           ENABLE_API_REFERNTIAL_CONFIGMAP: foo
       secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
         frontCore:
           extraEnvVar:
             ENABLE_FRONTCORE_SECRET: foo
