@@ -1,4 +1,5 @@
 include:
-  - project: $CI_PROJECT_PATH
-    ref: infra_v2 # $CI_DEFAULT_BRANCH
-    file: .gitlab/.main.gitlab-ci.yml
+  - project: "coopengo/devops/gitlab-ci-template"
+    ref: master
+    file:
+      - "/Project/${CI_PROJECT_NAME}/.gitlab-ci.yml"
