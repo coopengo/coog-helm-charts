@@ -22,6 +22,9 @@ tests:
         enabled: true
       imageCredentials:
         name: test-registry
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
     asserts:
       - isKind:
           of: Deployment
@@ -72,16 +75,38 @@ tests:
       extraEnvVar: {}
       customerFrontend:
         enabled: true
+      secrets:
+        extraEnvVar: {}
     asserts:
       - notExists:
           path: spec.template.metadata.annotations["checksum/configmap-global"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/configmap"]
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret"]
       # [Start] Check environment files
+      - notContains:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-customer-frontend-configuration
+      - notContains:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].envFrom
+          content:
+            secretRef:
+              name: test-coog-customer-frontend-configuration
       - notContains:
           path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].envFrom
           content:
@@ -92,7 +117,7 @@ tests:
           content:
             configMapRef:
               name: test-coog-customer-frontend-configuration
-      - contains:
+      - notContains:
           path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].envFrom
           content:
             secretRef:
@@ -111,6 +136,9 @@ tests:
         ENABLE_GLOBAL_CONFIGMAP: foo
       customerFrontend:
         enabled: true
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
     asserts:
       # Check Containers pod image
       - equal:
@@ -168,6 +196,9 @@ tests:
         ENABLE_GLOBAL_CONFIGMAP: foo
       customerFrontend:
         enabled: true
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
     asserts:
       # Check Containers pod image
       - equal:

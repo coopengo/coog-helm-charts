@@ -23,6 +23,9 @@ tests:
           MAINTENANCE_DYNAMIC_CONFIG: foo
       imageCredentials:
         name: test-registry
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
     asserts:
       - isKind:
           of: DaemonSet
@@ -74,20 +77,20 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap-global"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/configmap"]
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
       # [Start] Check environment files
-      - notContains:
+      - notExists:
           path: spec.template.spec.containers[?(@.name == "coog-maintenance")].envFrom
           content:
             configMapRef:
               name: test-coog-global-configuration
-      - notContains:
+      - notExists:
           path: spec.template.spec.containers[?(@.name == "coog-maintenance")].envFrom
           content:
             configMapRef:
               name: test-coog-maintenance-configuration
-      - contains:
+      - notExists:
           path: spec.template.spec.containers[?(@.name == "coog-maintenance")].envFrom
           content:
             secretRef:
@@ -103,6 +106,9 @@ tests:
         enabled: true
         extraEnvVar:
           MAINTENANCE_DYNAMIC_CONFIG: foo
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
     asserts:
       # Check Containers pod image
       - equal:

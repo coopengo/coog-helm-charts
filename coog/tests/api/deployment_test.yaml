@@ -24,6 +24,8 @@ tests:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
       secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
         frontCore:
           extraEnvVar:
             ENABLE_FRONTCORE_SECRET: foo
@@ -103,7 +105,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap-frontcore"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/configmap"]
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/secret-frontcore"]
@@ -127,7 +129,7 @@ tests:
           content:
             configMapRef:
               name: test-coog-api-configuration
-      - contains:
+      - notContains:
           path: spec.template.spec.containers[?(@.name == "coog-api")].envFrom
           content:
             secretRef:
@@ -157,6 +159,8 @@ tests:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
       secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
         frontCore:
           extraEnvVar:
             ENABLE_FRONTCORE_SECRET: foo

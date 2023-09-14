@@ -18,6 +18,9 @@ tests:
         ENABLE_GLOBAL_CONFIGMAP: foo
       imageCredentials:
         name: test-registry
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
     asserts:
       - isKind:
           of: Deployment
