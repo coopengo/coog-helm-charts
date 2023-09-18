@@ -143,6 +143,10 @@ spec:
                   name: coog-trytond-secret
                   key: TRYTOND_MIGRATION__PASSWORD
             {{- end }}
+            - name: TRYTOND_ACCOUNT_PAYMENT_SEPA__FILESTORE
+              value: "true"
+            - name: TRYTOND_ACCOUNT_PAYMENT_SEPA__STORE_PREFIX
+              value: "sepa_message"
           ports:
             - name: http
               containerPort: 8000
@@ -350,6 +354,10 @@ spec:
               value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-unoconv:5000/unoconv/{oext}"
             - name: COOG_IWC
               value: "1"
+            - name: TRYTOND_ACCOUNT_PAYMENT_SEPA__FILESTORE
+              value: "true"
+            - name: TRYTOND_ACCOUNT_PAYMENT_SEPA__STORE_PREFIX
+              value: "sepa_message"
           ports:
             - name: http
               containerPort: 8000

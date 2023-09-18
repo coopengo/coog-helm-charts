@@ -151,6 +151,10 @@ spec:
               value: "1"
             - name: TRYTOND_DATABASE__LANGUAGE
               value: fr
+            - name: TRYTOND_ACCOUNT_PAYMENT_SEPA__FILESTORE
+              value: "true"
+            - name: TRYTOND_ACCOUNT_PAYMENT_SEPA__STORE_PREFIX
+              value: "sepa_message"
           ports:
             - name: http
               containerPort: 8000
