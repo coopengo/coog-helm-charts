@@ -1,6 +1,6 @@
 # coog
 
-![Version: 23.34.2334](https://img.shields.io/badge/Version-23.34.2334-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
+![Version: 23.38.2338](https://img.shields.io/badge/Version-23.38.2338-informational?style=flat-square) ![AppVersion: master](https://img.shields.io/badge/AppVersion-master-informational?style=flat-square)
 
 A Helm chart for Coog
 
@@ -427,3 +427,4 @@ A Helm chart for Coog
 | web.service.port | int | `80` |  |
 | web.service.type | string | `"ClusterIP"` |  |
 | web.tolerations | list | `[]` | Tolerations for pod assignment |
+
