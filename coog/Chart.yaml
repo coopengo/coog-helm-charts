@@ -2,5 +2,5 @@ apiVersion: v1
 appVersion: "master"
 description: A Helm chart for Coog
 name: coog
-version: '23.14.2341'
+version: '23.14.2342'
 icon: http://coopengo.com/img/tn_coog_v2-6_edith.png
