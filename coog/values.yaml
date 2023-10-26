@@ -354,7 +354,7 @@ mongodb:
     periodSeconds: 30
 
 # -- Default message service used by backCore
-# Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/12.2.5
+# Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/12.3.0
 rabbitmq:
   persistence:
     enabled: false
@@ -498,8 +498,6 @@ backCore:
     TRYTOND_ACCOUNT_PAYMENT_SEPA__FILESTORE: true
     # PINTE-25254
     TRYTOND_ACCOUNT_PAYMENT_SEPA__STORE_PREFIX: sepa_message
-    TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: "1"
-    TRYTOND_BATCH__ROOT_DIR: /workspace/io/batch
     TRYTOND_CACHE__MODEL: "400"
     TRYTOND_CACHE__CLEAN_TIMEOUT: "0"
     TRYTOND_CACHE__RECORD: "50000"
@@ -577,7 +575,9 @@ backCore:
     coogCeleryModule: coog_async.coog_celery
 
     # -- Configure environement variables for this component
-    extraEnvVar: {}
+    extraEnvVar:
+      TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: "1"
+      TRYTOND_BATCH__ROOT_DIR: /workspace/io/batch
 
     # -- celery containers' resource requests and limits
     resources:
