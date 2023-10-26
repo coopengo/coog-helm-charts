@@ -106,14 +106,6 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test web enabled service
-    set:
-      web:
-        enabled: true
-    asserts:
-      - hasDocuments:
-          count: 1
-
   - it: Test not enabled service (1/2)
     asserts:
       - hasDocuments:
@@ -134,8 +126,6 @@ tests:
       customerBackend:
         enabled: false
       customerFrontend:
-        enabled: false
-      web:
         enabled: false
     asserts:
       - hasDocuments:

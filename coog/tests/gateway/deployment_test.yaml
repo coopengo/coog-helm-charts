@@ -297,7 +297,7 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-gateway")].securityContext.runAsGroup
           value: 1001
 
-  - it: Test gateway enabled deployment (1/8)
+  - it: Test gateway enabled deployment (1/7)
     template: gateway/deployment.yaml
     set:
       frontCore:
@@ -306,7 +306,7 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled deployment (2/8)
+  - it: Test gateway enabled deployment (2/7)
     template: gateway/deployment.yaml
     set:
       apiB2c:
@@ -315,7 +315,7 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled deployment (3/8)
+  - it: Test gateway enabled deployment (3/7)
     template: gateway/deployment.yaml
     set:
       apiReferential:
@@ -324,7 +324,7 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled deployment (4/8)
+  - it: Test gateway enabled deployment (4/7)
     template: gateway/deployment.yaml
     set:
       b2c:
@@ -333,7 +333,7 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled deployment (5/8)
+  - it: Test gateway enabled deployment (5/7)
     template: gateway/deployment.yaml
     set:
       b2b:
@@ -342,7 +342,7 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled deployment (6/8)
+  - it: Test gateway enabled deployment (6/7)
     template: gateway/deployment.yaml
     set:
       customerBackend:
@@ -351,19 +351,10 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled deployment (7/8)
+  - it: Test gateway enabled deployment (7/7)
     template: gateway/deployment.yaml
     set:
       customerFrontend:
-        enabled: true
-    asserts:
-      - hasDocuments:
-          count: 1
-
-  - it: Test gateway enabled deployment (8/8)
-    template: gateway/deployment.yaml
-    set:
-      web:
         enabled: true
     asserts:
       - hasDocuments:
@@ -391,8 +382,6 @@ tests:
       customerBackend:
         enabled: false
       customerFrontend:
-        enabled: false
-      web:
         enabled: false
     asserts:
       - hasDocuments:

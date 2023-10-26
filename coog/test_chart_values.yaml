@@ -737,7 +737,6 @@ libroconv:
 # - b2b
 # - customerBackend
 # - customerFrontend
-# - web
 #
 # If you enable one front component, you must set mongodb.isManaged: true
 frontCore:
@@ -905,33 +904,6 @@ b2b:
     requests:
       cpu: 200m
       memory: 40Mi
-
-web:
-  enabled: true
-  strategy:
-    type: ""
-
-  image:
-    # -- web image repository
-    name: coog-web
-
-  # -- Configure environement variables for this component
-  extraEnvVar:
-    COOG_API_API_PATH: /web/api
-    COOG_API_APP_PATH: /web
-
-  securityContext:
-    {}
-    # runAsUser: ""
-
-  # -- web containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 500m
-      memory: 200Mi
-    requests:
-      cpu: 400m
-      memory: 160Mi
 
 apiReferential:
   # -- Deploy apiReferential container(s)

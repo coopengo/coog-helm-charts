@@ -366,15 +366,6 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test web enabled deployment
-    template: api/deployment.yaml
-    set:
-      web:
-        enabled: true
-    asserts:
-      - hasDocuments:
-          count: 1
-
   - it: Test not enabled deployment (1/2)
     template: api/deployment.yaml
     asserts:
@@ -397,8 +388,6 @@ tests:
       customerBackend:
         enabled: false
       customerFrontend:
-        enabled: false
-      web:
         enabled: false
     asserts:
       - hasDocuments:

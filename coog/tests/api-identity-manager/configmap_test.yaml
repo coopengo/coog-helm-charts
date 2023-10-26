@@ -130,18 +130,6 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test web enabled configmap
-    set:
-      web:
-        enabled: true
-      frontCore:
-        apiIdentityManager:
-          extraEnvVar:
-            API_IDENTITY_MANAGER_DYNAMIC_CONFIG: foo
-    asserts:
-      - hasDocuments:
-          count: 1
-
   - it: Test not enabled configmap (1/4)
     asserts:
       - hasDocuments:
@@ -166,8 +154,6 @@ tests:
         enabled: false
       customerFrontend:
         enabled: false
-      web:
-        enabled: false
     asserts:
       - hasDocuments:
           count: 0
@@ -190,8 +176,6 @@ tests:
         enabled: false
       customerFrontend:
         enabled: false
-      web:
-        enabled: false
     asserts:
       - hasDocuments:
           count: 0
@@ -213,8 +197,6 @@ tests:
       customerBackend:
         enabled: true
       customerFrontend:
-        enabled: true
-      web:
         enabled: true
     asserts:
       - hasDocuments:

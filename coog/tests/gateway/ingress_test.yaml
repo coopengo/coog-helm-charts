@@ -222,7 +222,7 @@ tests:
                       port:
                         number: 80
 
-  - it: Test gateway enabled ingress (1/8)
+  - it: Test gateway enabled ingress (1/7)
     set:
       frontCore:
         enabled: true
@@ -230,7 +230,7 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled ingress (2/8)
+  - it: Test gateway enabled ingress (2/7)
     set:
       apiB2c:
         enabled: true
@@ -238,7 +238,7 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled ingress (3/8)
+  - it: Test gateway enabled ingress (3/7)
     set:
       apiReferential:
         enabled: true
@@ -246,7 +246,7 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled ingress (4/8)
+  - it: Test gateway enabled ingress (4/7)
     set:
       b2c:
         enabled: true
@@ -254,7 +254,7 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled ingress (5/8)
+  - it: Test gateway enabled ingress (5/7)
     set:
       b2b:
         enabled: true
@@ -262,7 +262,7 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled ingress (6/8)
+  - it: Test gateway enabled ingress (6/7)
     set:
       customerBackend:
         enabled: true
@@ -270,17 +270,9 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test gateway enabled ingress (7/8)
+  - it: Test gateway enabled ingress (7/7)
     set:
       customerFrontend:
-        enabled: true
-    asserts:
-      - hasDocuments:
-          count: 1
-
-  - it: Test gateway enabled ingress (8/8)
-    set:
-      web:
         enabled: true
     asserts:
       - hasDocuments:
@@ -306,8 +298,6 @@ tests:
       customerBackend:
         enabled: false
       customerFrontend:
-        enabled: false
-      web:
         enabled: false
     asserts:
       - hasDocuments:

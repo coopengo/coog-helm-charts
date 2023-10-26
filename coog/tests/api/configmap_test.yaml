@@ -41,9 +41,6 @@ tests:
             API_DYNAMIC_CONFIG: foo
     asserts:
       - equal:
-          path: data.COOG_API_V1_URL
-          value: http://test-coog-web
-      - equal:
           path: data.API_DYNAMIC_CONFIG
           value: foo
 
@@ -103,14 +100,6 @@ tests:
       - hasDocuments:
           count: 1
 
-  - it: Test web enabled configmap
-    set:
-      web:
-        enabled: true
-    asserts:
-      - hasDocuments:
-          count: 1
-
   - it: Test not enabled configmap (1/2)
     asserts:
       - hasDocuments:
@@ -131,8 +120,6 @@ tests:
       customerBackend:
         enabled: false
       customerFrontend:
-        enabled: false
-      web:
         enabled: false
     asserts:
       - hasDocuments:
