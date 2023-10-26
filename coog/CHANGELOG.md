@@ -1,3 +1,8 @@
+# [23.41.2343] - 2023-10-26
+- Delete the "Web" component, which is no longer supported
+- Update RabbitMQ dependency to 12.3.0
+- Move variables starting with `TRYTOND_BATCH_` in the celery configuration
+
 # [22.45.2245] - 2022-11-17
 
 ## Changed
