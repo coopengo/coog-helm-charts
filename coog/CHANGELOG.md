@@ -1,3 +1,6 @@
+# [2.14.2343] - 2023-10-26
+- Add Ingress on web component (Disabled by default)
+
 # [22.45.2245] - 2022-11-17
 
 ## Changed

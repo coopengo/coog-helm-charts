@@ -978,6 +978,30 @@ web:
     COOG_API_API_PATH: /web/api
     COOG_API_APP_PATH: /web
 
+  ingress:
+    enabled: false
+    # -- Default host for the ingress resource for web containers'
+    defaultPaths:
+        - /web/api(/|$)(.*)
+
+    # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     paths:
+    #       - /
+    #   - host: test2.example.com
+    hosts: []
+
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+
+    nginx:
+      whiteList:
+        publicCidr: []
+
   securityContext:
     {}
     # runAsUser: ""
