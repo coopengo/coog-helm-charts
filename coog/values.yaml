@@ -367,6 +367,10 @@ rabbitmq:
     requests:
       cpu: 480m
       memory: 320Mi
+  memoryHighWatermark:
+    enabled: true
+    type: relative
+    value: 0.8
   updateStrategyType: RollingUpdate
   extraConfiguration: |-
     consumer_timeout = 172800000
@@ -939,7 +943,20 @@ b2b:
     requests:
       cpu: 200m
       memory: 40Mi
+ress:
+    enabled: false
+    # -- Default host for the ingress resource for web containers'
+    defaultPaths:
+        - /web/api(/|$)(.*)
 
+    # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     paths:
+    #
 b2bConfig:
   enabled: false
   strategy:
@@ -973,7 +990,20 @@ web:
     # -- web image repository
     name: coog-web
 
-  # -- Configure environement variables for this component
+  # -ress:
+    enabled: false
+    # -- Default host for the ingress resource for web containers'
+    defaultPaths:
+        - /web/api(/|$)(.*)
+
+    # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     paths:
+    #- Configure environement variables for this component
   extraEnvVar:
     COOG_API_API_PATH: /web/api
     COOG_API_APP_PATH: /web
