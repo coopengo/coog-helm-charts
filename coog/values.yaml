@@ -367,6 +367,10 @@ rabbitmq:
     requests:
       cpu: 480m
       memory: 320Mi
+  memoryHighWatermark:
+    enabled: true
+    type: relative
+    value: 0.8
   updateStrategyType: RollingUpdate
   extraConfiguration: |-
     consumer_timeout = 172800000
