@@ -246,9 +246,12 @@ maintenanceMode:
 #############################################################################################################################
 
 # -- Default database used by backCore
-# Ref: https://artifacthub.io/packages/helm/bitnami/postgresql/11.9.11
+# Ref: https://artifacthub.io/packages/helm/bitnami/postgresql/13.1.5
 postgresql:
   isManaged: true
+  # Ref : https://hub.docker.com/r/bitnami/postgresql/tags
+  image:
+    tag: 14.9.0-debian-11-r58
   # -- Mandatory if isManaged is false else 'host' is automatically added
   # Use an external postgresql server (Database not managed by this chart)
   host: ""
@@ -265,6 +268,8 @@ mongodb:
   # -- Enable to install mongodb on Kubernetes
   # This is a coog parameter not mongodb
   isManaged: false
+  image:
+    tag: 5.0.10-debian-11-r3
   # -- Enable architecture type
   # Should not been changed after first installation !
   # Possibles values: standalone / replicaset
