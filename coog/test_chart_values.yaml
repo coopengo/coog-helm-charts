@@ -242,7 +242,7 @@ maintenanceMode:
 #############################################################################################################################
 
 # -- Default database used by backCore
-# Ref: https://artifacthub.io/packages/helm/bitnami/postgresql/11.9.11
+# Ref: https://artifacthub.io/packages/helm/bitnami/postgresql/13.1.5
 postgresql:
   isManaged: true
   # -- Mandatory if isManaged is false else 'host' is automatically added
