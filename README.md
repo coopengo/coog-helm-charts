@@ -1,5 +1,7 @@
 # coog-helm-charts
 
+:warning: : **A new version has been introduced, starting with version 23.14.2344. This new version is incompatible with configurations of versions lower than 2344.** :warning:
+
 ## Prérequis
 
 - Un compte sur [DockerHub](https://hub.docker.com/)
