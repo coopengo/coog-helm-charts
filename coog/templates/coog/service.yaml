@@ -1,18 +1,12 @@
-{{- if .Values.coog.enabled -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "full_name" . }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ printf "%s" (include "general.names.short" .) }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
-  type: {{ .Values.coog.service.type }}
+  type: ClusterIP
   ports:
-    - port: {{ .Values.coog.service.port }}
+    - name: http
+      port: 80
       targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: {{ include "short_name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
+  selector: {{- include "general.labels.matchLabels" . | nindent 4 }}

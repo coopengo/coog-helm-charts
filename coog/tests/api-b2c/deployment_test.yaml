@@ -1,0 +1,351 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test api-b2c deployment
+templates:
+  - api-b2c/configmap.yaml
+  - api-b2c/deployment.yaml
+  - api-b2c/secret.yaml
+  - configmap-global.yaml
+  - configmap-frontcore.yaml
+  - secret-global.yaml
+  - secret-frontcore.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 24
+tests:
+  - it: Test metadata & template
+    template: api-b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+      extraEnvVar:
+        ENABLE_GLOBAL_CONFIGMAP: foo
+      apiB2c:
+        extraEnvVar:
+          ENABLE_API_B2C_CONFIGMAP: foo
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
+        frontCore:
+          extraEnvVar:
+            ENABLE_FRONTCORE_SECRET: foo
+        apiB2c:
+          extraEnvVar:
+            ENABLE_API_B2C_SECRET: foo
+      imageCredentials:
+        name: test-registry
+    asserts:
+      - isKind:
+          of: Deployment
+      - contains:
+          path: spec.template.spec.imagePullSecrets
+          content:
+            name: test-registry
+      - equal:
+          path: metadata.name
+          value: test-coog-api-b2c
+      - isNotNull:
+          path: spec.replicas
+      - matchRegex:
+          path: spec.strategy.type
+          pattern: ^(RollingUpdate|Recreate)$
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: coog-api-b2c
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: coog-.*$
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: coog-api-b2c
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/instance"]
+          value: test
+      # [Start] Check checksum configuration - auto update pods when there is a change in configmap & secrets
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap-frontcore"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret-frontcore"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret"]
+      # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
+
+  - it: Test disabled configmaps, secrets & checksums
+    template: api-b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+      apiB2c:
+        extraEnvVar: {}
+      extraEnvVar: {}
+      secrets:
+        extraEnvVar: {}
+        frontCore:
+          extraEnvVar: {}
+        apiB2c:
+          extraEnvVar: {}
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/configmap-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap-frontcore"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/configmap"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/secret-global"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/secret-frontcore"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/secret"]
+      # [Start] Check environment files
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-frontcore-configuration
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-api-b2c-configuration
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            secretRef:
+              name: test-coog-frontcore-configuration
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            secretRef:
+              name: test-coog-api-b2c-configuration
+      # [End] Check environment files
+
+  - it: Test Container
+    template: api-b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+      extraEnvVar:
+        ENABLE_GLOBAL_CONFIGMAP: foo
+      apiB2c:
+        extraEnvVar:
+          ENABLE_API_B2C_CONFIGMAP: foo
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
+        frontCore:
+          extraEnvVar:
+            ENABLE_FRONTCORE_SECRET: foo
+        apiB2c:
+          extraEnvVar:
+            ENABLE_API_B2C_SECRET: foo
+    asserts:
+      # Check Containers pod image
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].image
+          value: cooghub/coog-api-b2c:changeme
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].imagePullPolicy
+          pattern: ^(Always|Never|IfNotPresent)$
+      # [Start] Check environment files
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-frontcore-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-api-b2c-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            secretRef:
+              name: test-coog-frontcore-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
+          content:
+            secretRef:
+              name: test-coog-api-b2c-configuration
+      # [End] Check environment files
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].ports
+          content:
+            name: http
+            containerPort: 3000
+      # [Start] Check resources limites & requests
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].resources.limits.cpu
+          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].resources.limits.memory
+          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].resources.requests.cpu
+          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].resources.requests.memory
+          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      # [End] Check resources limites & requests
+
+  - it: Test Global components configuration
+    template: api-b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+      replicaCount: 2
+      strategy:
+        type: Recreate
+      image:
+        repository: global-docker-repository
+        tag: global-docker-tag
+        pullPolicy: Always
+      securityContext:
+        runAsUser: 1003
+        runAsGroup: 1003
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 2
+      - equal:
+          path: spec.strategy.type
+          value: Recreate
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].image
+          value: global-docker-repository/coog-api-b2c:global-docker-tag
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].imagePullPolicy
+          value: Always
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].securityContext.runAsUser
+          value: 1003
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].securityContext.runAsGroup
+          value: 1003
+
+  - it: Test specific component configuration
+    template: api-b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+      apiB2c:
+        replicaCount: 3
+        strategy:
+          type: RollingUpdate
+        image:
+          repository: specific-docker-repository
+          tag: specific-docker-tag
+          pullPolicy: Never
+        securityContext:
+          runAsUser: 1001
+          runAsGroup: 1001
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+      - equal:
+          path: spec.strategy.type
+          value: RollingUpdate
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].image
+          value: specific-docker-repository/coog-api-b2c:specific-docker-tag
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].imagePullPolicy
+          value: Never
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].securityContext.runAsUser
+          value: 1001
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].securityContext.runAsGroup
+          value: 1001
+
+  - it: Test b2c enabled deployment
+    template: api-b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test customerBackend enabled deployment
+    template: api-b2c/deployment.yaml
+    set:
+      customerBackend:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test customerFrontend enabled deployment
+    template: api-b2c/deployment.yaml
+    set:
+      customerFrontend:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test not enabled deployment (1/2)
+    template: api-b2c/deployment.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled deployment (2/2)
+    template: api-b2c/deployment.yaml
+    set:
+      frontCore:
+        enabled: false
+      api-b2cB2c:
+        enabled: false
+      api-b2cReferential:
+        enabled: false
+      b2c:
+        enabled: false
+      b2b:
+        enabled: false
+      customerBackend:
+        enabled: false
+      customerFrontend:
+        enabled: false
+      web:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

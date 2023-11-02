@@ -1,0 +1,87 @@
+{{- if .Values.b2c.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  replicas: {{ default .Values.replicaCount .Values.b2c.replicaCount }}
+  strategy:
+    type: {{ default .Values.strategy.type .Values.b2c.strategy.type }}
+  selector:
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
+      {{- if (or .Values.extraEnvVar (and .Values.secrets .Values.secrets.extraEnvVar)) }}
+      annotations:
+        {{- if .Values.extraEnvVar }}
+        checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
+        {{- end }}
+        {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+        checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
+        {{- end }}
+      {{- end }}
+    spec:
+      imagePullSecrets:
+        - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
+      containers:
+        - name: {{ include "general.names.name" . }}
+          image: "{{ default .Values.image.repository .Values.b2c.image.repository }}/{{ .Values.b2c.image.name }}:{{ default .Values.image.tag .Values.b2c.image.tag }}"
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.b2c.image.pullPolicy | quote }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.b2c.securityContext.runAsUser }}
+            runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.b2c.securityContext.runAsGroup }}
+          {{- if (or .Values.extraEnvVar (and .Values.secrets .Values.secrets.extraEnvVar)) }}
+          envFrom:
+            {{- if .Values.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+          {{- end }}
+          ports:
+            - name: http
+              containerPort: 5000
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.b2c.startupProbe) "context" $) | nindent 12 }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.b2c.livenessProbe) "context" $) | nindent 12 }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.b2c.readinessProbe) "context" $) | nindent 12 }}
+          resources: {{- toYaml .Values.b2c.resources | nindent 12 }}
+      {{- with default .Values.nodeSelector .Values.b2c.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.affinity .Values.b2c.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.tolerations .Values.b2c.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if default .Values.dnsPolicy .Values.b2c.dnsPolicy }}
+      dnsPolicy: {{ default .Values.dnsPolicy .Values.b2c.dnsPolicy }}
+      {{- end }}
+      {{- if default .Values.dnsConfig .Values.b2c.dnsConfig }}
+      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.b2c.dnsConfig | indent 8 }}
+      {{- end }}
+{{- end }}

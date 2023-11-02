@@ -1,118 +1,127 @@
-{{- if .Values.customer_frontend.enabled -}}
+{{- if .Values.customerFrontend.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "full_name" . }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.customer_frontend.replicaCount }}
-{{- if not .Values.quota.rolling_update }}
+  replicas: {{ default .Values.replicaCount .Values.customerFrontend.replicaCount }}
   strategy:
-    type: Recreate
-{{- end }}
+    type: {{ default .Values.strategy.type .Values.customerFrontend.strategy.type }}
   selector:
-    matchLabels:
-      app.kubernetes.io/name: {{ include "short_name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
-      labels:
-        app.kubernetes.io/name: {{ include "short_name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
+      annotations:
+        {{- if .Values.extraEnvVar }}
+        checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
+        {{- end }}
+        checksum/configmap: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "configmap.yaml") . | sha256sum }}
+        {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+        checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
+        {{- end }}
+        checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
     spec:
-    {{- with .Values.customer_frontend.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+        - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       volumes:
         - name: builddir
           emptyDir: {}
       initContainers:
-        - name: "{{ .Chart.Name }}-build"
-          image: "{{ .Values.customer_frontend.image.repository }}:{{ .Values.customer_frontend.image.tag }}"
-          imagePullPolicy: {{ .Values.customer_frontend.image.pullPolicy }}
+        - name: {{ printf "%s-build" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
+          image: "{{ default .Values.image.repository .Values.customerFrontend.image.repository }}/{{ .Values.customerFrontend.image.name }}:{{ default .Values.image.tag .Values.customerFrontend.image.tag }}"
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.customerFrontend.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
-          resources:
-            {{- toYaml .Values.customer_frontend.initContainers.resources | nindent 12 }}
-          command: ['yarn', 'build', '--prefix-paths']
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.customerFrontend.securityContext.runAsUser }}
+            runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.customerFrontend.securityContext.runAsGroup }}
+          resources: {{- toYaml .Values.customerFrontend.initContainers.resources | nindent 12 }}
+          command: ['sh', '-c', 'yarn', 'build', '--prefix-paths']
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/public"
-          {{- if .Values.customer_frontend.extraEnv }}
-          env:
-            {{- range $key, $value := .Values.customer_frontend.extraEnv }}
-            - name:  {{ $key }}
-              value: {{ $value | quote }}
+          envFrom:
+            {{- if .Values.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
-          {{- end }}
+            - configMapRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            - secretRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
       containers:
-        - name: {{ include "short_name" . }}
-          image: "{{ .Values.customer_frontend.image.repository }}:{{ .Values.customer_frontend.image.tag }}"
-          imagePullPolicy: {{ .Values.customer_frontend.image.pullPolicy }}
+        - name: {{ include "general.names.name" . }}
+          image: "{{ default .Values.image.repository .Values.customerFrontend.image.repository }}/{{ .Values.customerFrontend.image.name }}:{{ default .Values.image.tag .Values.customerFrontend.image.tag }}"
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.customerFrontend.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.customerFrontend.securityContext.runAsUser }}
+            runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.customerFrontend.securityContext.runAsGroup }}
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/public"
-          env:
-            - name:  GATSBY_GEOAPIFY_API_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: coog-customer-frontend-configuration
-                  key: GATSBY_GEOAPIFY_API_KEY
-            {{- if .Values.customer_frontend.extraEnv }}
-            {{- range $key, $value := .Values.customer_frontend.extraEnv }}
-            - name:  {{ $key }}
-              value: {{ $value | quote }}
+          envFrom:
+            {{- if .Values.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
-          {{- end }}
+            - configMapRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            - secretRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
           ports:
             - name: http
               containerPort: 5000
-              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.customerFrontend.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /
               port: http
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.customerFrontend.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /
               port: http
-          resources:
-            {{- toYaml .Values.customer_frontend.resources | nindent 12 }}
-      {{- with .Values.customer_frontend.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.customerFrontend.readinessProbe) "context" $) | nindent 12 }}
+          resources: {{- toYaml .Values.customerFrontend.resources | nindent 12 }}
+      {{- with default .Values.nodeSelector .Values.customerFrontend.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.customer_frontend.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.customer_frontend.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-{{- if .Values.customer_frontend.dnsPolicy }}
-      dnsPolicy: {{ .Values.customer_frontend.dnsPolicy }}
-{{- end }}
-{{- if .Values.customer_frontend.dnsConfig }}
-      dnsConfig:
-{{ toYaml .Values.customer_frontend.dnsConfig | indent 8 }}
-{{- end }}
+      {{- with default .Values.affinity .Values.customerFrontend.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.tolerations .Values.customerFrontend.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if default .Values.dnsPolicy .Values.customerFrontend.dnsPolicy }}
+      dnsPolicy: {{ default .Values.dnsPolicy .Values.customerFrontend.dnsPolicy }}
+      {{- end }}
+      {{- if default .Values.dnsConfig .Values.customerFrontend.dnsConfig }}
+      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.customerFrontend.dnsConfig | indent 8 }}
+      {{- end }}
 {{- end }}

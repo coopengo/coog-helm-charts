@@ -1,18 +1,22 @@
-{{- if .Values.api.enabled -}}
+{{- if (or .Values.frontCore.enabled
+          .Values.apiB2c.enabled
+          .Values.apiReferential.enabled
+          .Values.b2c.enabled
+          .Values.b2b.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled
+          .Values.web.enabled)
+-}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "full_name" . }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
-  type: {{ .Values.api.service.type }}
+  type: ClusterIP
   ports:
-    - port: {{ .Values.api.service.port }}
+    - name: http
+      port: 80
       targetPort: http
-      protocol: TCP
-      name: http
-  selector:
-    app.kubernetes.io/name: {{ include "short_name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+  selector: {{- include "general.labels.matchLabels" . | nindent 4 }}
 {{- end }}

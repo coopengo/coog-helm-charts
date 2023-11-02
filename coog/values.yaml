@@ -1,26 +1,233 @@
-# Default values for coopengo.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+#############################################################################################################################
+#                                      Global configuration applied to all components                                       #
+#############################################################################################################################
 
+# -- Number of pod for all components. It can be customized for each component.
+# e.g:
+# coog:
+#   replicaCount: 1
+replicaCount: 1
+
+## -- clusterDomain Default Kubernetes cluster domain
+##
+clusterDomain: cluster.local
+
+# -- Strategy used to replace old pods with newest. It can be customized for each component.
+# e.g:
+# coog:
+#   strategy:
+#     type: Recreate
+#
+# ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+# values: Recreate or RollingUpdate
+# Note: it's not apply on dependencies
+strategy:
+  type: Recreate
+
+# -- Configure Container Security Context. It can be customized for each component.
+# ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+# @param securityContext.runAsUser Set components containers' Security Context runAsUser
+securityContext:
+  runAsUser: 1000
+
+# -- Setup variables shared to all components.
+extraEnvVar: {}
+
+image:
+  # -- Tag applied for all components. It can be customized for each component.
+  # e.g:
+  # coog:
+  #   image:
+  #     repository: cooghub
+  repository: cooghub
+
+  # -- Tag applied for all components. It can be customized for each component.
+  # e.g:
+  # coog:
+  #   image:
+  #     tag: coog-master-latest
+  tag: "changeme"
+
+  # -- Image Pull Policy applied for all components. It can be customized for each component.
+  # e.g:
+  # coog:
+  #   image:
+  #     pullPolicy: Always
+  pullPolicy: Always
+
+ingress:
+  # -- Define ingressClassName (default: nginx)
+  # Ref : https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+  className: nginx
+  # -- Default host for the ingress record applied for all ingress. It can be customized for each component.
+  # e.g:
+  # coog:
+  #   ingress:
+  #     hosts:
+  #       - host: coog.local
+  #         path: /
+  host: coog.local
+
+  # Can't set key as "tls", else warning for Rabbitmq dependencie
+  thisTls:
+    # -- Enable TLS configuration for the host defined at `ingress.host` parameter
+    # TLS certificates will be retrieved from a TLS secret with name: `{{- default (printf "%s-tls" .Values.ingress.host) .Values.ingress.thisTls.externalCertificate.name }}`
+    # You can:
+    #   - Create a secret with your own certificates.
+    #   - Rely on cert-manager to create it by setting the corresponding annotations
+    #
+    enabled: true
+
+    letsencrypt: true
+
+    # -- Use certificates manually created in a secret.
+    # - Create a secret with your own certificates with the secret name in format `{{- default (printf "%s-tls" .Values.ingress.host) .Values.ingress.thisTls.externalCertificate.name }}`
+    #   e.g:
+    #   apiVersion: v1
+    #   kind: Secret
+    #   metadata:
+    #     name: coog.local-tls
+    #   type: kubernetes.io/tls
+    #   data:
+    #     server.crt: |
+    #          <crt contents here>
+    #     server.key: |
+    #          <private key contents here>
+    externalCertificate:
+      enabled: false
+      # -- If your host is "coog.local" you have to create a secret in the same namespace called "coog.local-tls"
+      # You can customize the secret name by editing this value
+      name: ""
+
+    # -- TLS configuration for additional hostname(s) to be covered with this ingress record
+    # ref: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+    # e.g:
+    # configuration:
+    # - hosts:
+    #     - coog.local
+    #   secretName: coog.local-tls
+    #
+    configuration: []
+
+  # -- Default annotations applied to all ingress. It can be customized for each component
+  # e.g:
+  # coog:
+  #   ingress:
+  #     annotations:
+  #       key: value
+  annotations:
+    nginx.ingress.kubernetes.io/send-timeout: 3600
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: 3600
+    nginx.ingress.kubernetes.io/proxy-send-timeout: 3600
+    nginx.ingress.kubernetes.io/proxy-read-timeout: 3600
+    nginx.ingress.kubernetes.io/proxy-body-size: 100m
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 100m
+
+  # -- IP Whitelist behavior :
+  # trustedCidr : Ip list which are always allowed. maintenanceMode allow these IPs
+  # publicCidr (global + per component) : External IP to allow. We can append this list for each component.
+  # These IPs are not allowed when maintenanceMode is enable
+  nginx:
+    whiteList:
+      # -- managementMode define behavior for publicCidr parameter. It can be customized for each component
+      # e.g:
+      # coog:
+      #   ingress:
+      #     nginx:
+      #       whiteList:
+      #         managementMode: append
+      #
+      # possible values : append or replace
+      # append: group trustedCidr + global publicCidr + component publicCidr
+      # replace: if publicCidr's component is not empty, it's replace the content of the global public Cidr
+      managementMode: append
+      trustedCidr:
+        - 127.0.0.1/32
+      publicCidr: []
+
+# -- Configure options applied to all deployments, liveness, readiness and startup probes
+# ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+# initialDelaySeconds: Initial delay seconds e
+# periodSeconds: Period seconds
+# timeoutSeconds: Timeout seconds
+# failureThreshold: Failure threshold
+# successThreshold: Success threshold
+#
+# -- additional startup time on their first initialization
+startupProbe:
+  initialDelaySeconds: 2
+  periodSeconds: 30
+  timeoutSeconds: 30
+  successThreshold: 1
+  failureThreshold: 3
+
+# -- Sometimes, applications are temporarily unable to serve traffic.
+# For example, an application might need to load large data or configuration files during startup,
+# or depend on external services after startup. In such cases, you don't want to kill the application,
+# but you don't want to send it requests either
+readinessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 30
+  timeoutSeconds: 30
+  successThreshold: 1
+  failureThreshold: 3
+
+# With this configuration, the kubelet will attempt to open a socket to your container on the specified port.
+# If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
+livenessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 30
+  timeoutSeconds: 30
+  successThreshold: 1
+  failureThreshold: 3
+
+# -- Node labels for pod assignment. It can be customized for each component
+nodeSelector: {}
+
+# -- Tolerations for pod assignment. It can be customized for each component
+tolerations: []
+
+# -- Affinity for pod assignment. It can be customized for each component
+affinity: {}
+
+# -- dnsConfig for pod assignment. It can be customized for each component
+dnsConfig: {}
+
+# -- dnsPolicy for pod assignment. It can be customized for each component
+dnsPolicy: ""
+
+#############################################################################################################################
+#                                            Tools / Options                                                                #
+#############################################################################################################################
+
+# -- Limite total Resource usage
+# Ref: https://kubernetes.io/docs/concepts/policy/resource-quotas/
 quota:
   enabled: false
-  rolling_update: false
+  hard:
+    requests:
+      cpu: 6
+      memory: 4Gi
+    limits:
+      cpu: 8
+      memory: 6Gi
 
-maintenance_mode:
+# -- Create a container to receive unauthorized traffic.
+# Allow only "TrustedCIDR" to access to the environment (for tests & confirm that everything work)
+# Ref: https://gitlab.com/coopengo/devops/nginx-custom-error-pages
+maintenanceMode:
   enabled: false
-  imagePullSecrets:
-    - name: docker-registry
   image:
-    repository: cooghub/nginx-custom-error-pages
+    name: nginx-custom-error-pages
     tag: latest
-    pullPolicy: Always
-  # Possible variables :
-  # env:
+
+  extraEnvVar: {}
   #   TEMPLATE_NAME: "coopengo"
   #   DEFAULT_ERROR_PAGE: 404
   #   DEFAULT_HTTP_CODE: 404
   #   SHOW_DETAILS: false
   #   DISABLE_L10N: false
+
   resources:
     limits:
       cpu: 100m
@@ -28,17 +235,136 @@ maintenance_mode:
     requests:
       cpu: 80m
       memory: 80Mi
+
   ingress:
     nginx:
-      customhttperrors: '403'
-      whitelistsourcerange: '127.0.0.1/32'
+      customhttperrors: 403
     annotations: {}
-  nodeSelector: {}
 
+#############################################################################################################################
+#                                            External dependencies                                                          #
+#############################################################################################################################
+
+# -- Default database used by backCore
+# Ref: https://artifacthub.io/packages/helm/bitnami/postgresql/13.1.5
+postgresql:
+  isManaged: true
+  # Ref : https://hub.docker.com/r/bitnami/postgresql/tags
+  image:
+    tag: 14.9.0-debian-11-r58
+  # -- Mandatory if isManaged is false else 'host' is automatically added
+  # Use an external postgresql server (Database not managed by this chart)
+  host: ""
+  service:
+    ports:
+      # default: 5432
+      postgresql: ""
+
+# -- Mongodb dependency parameters.
+# Ref: https://artifacthub.io/packages/helm/bitnami/mongodb/12.1.31
+# Current Ref is the last chart version available with mongodb 5.
+# Mongodb is mandatory if we have front / api components enable
+mongodb:
+  # -- Enable to install mongodb on Kubernetes
+  # This is a coog parameter not mongodb
+  isManaged: false
+  image:
+    tag: 5.0.10-debian-11-r3
+  # -- Enable architecture type
+  # Should not been changed after first installation !
+  # Possibles values: standalone / replicaset
+  architecture: standalone
+  # -- Define number of mongodb replicaSet to create
+  # only when `architecture=replicaset`
+  replicaCount: 2
+  ## Name of the replica set (only when `architecture=replicaset`)
+  ## Ignored when mongodb.architecture=standalone
+  replicaSetName: rs0
+  # -- Mandatory if isManaged is false and frontCore enabled else 'hosts' is automatically added
+  # Use an external mongodb server (Database not managed by this chart)
+  # if set, replace default URI
+  # default : mongodb://(.Values.mongodb.auth.usernames[0]):(.Values.mongodb.auth.passwords[0])@(.Release.Name)-mongodb:(.Values.mongodb.service.ports.mongodb)/(.Values.mongodb.auth.databases[0])
+  # default for replicaset : mongodb://(.Values.mongodb.auth.usernames[0]):(.Values.mongodb.auth.passwords[0])@(.Release.Name)-mongodb-0.(.Release.Name)-mongodb-headless.svc.cluster.local:(.Values.mongodb.service.ports.mongodb)/(.Values.mongodb.auth.databases[0])
+  # E.g:
+  # hosts:
+  #   - test0.com:27017
+  #   - test1.com:27017
+  #   - test2.com:27018
+  hosts: []
+  # This is a coog parameter not mongodb
+  # If set, add URI options
+  # Applied on default host AND custom hosts
+  # Option to solve rights issue
+  # Must be equal to mongodb.auth.databases[0]
+  #- authSource=api-core-services
+  uriOptions:
+    []
+  service:
+    ports:
+      mongodb: 27017
+  updateStrategy:
+    type: Recreate
+  resources:
+    limits:
+      cpu: 200m
+      memory: 400Mi
+    requests:
+      cpu: 100m
+      memory: 300Mi
+  volumePermissions:
+    enabled: true
+    resources:
+      limits:
+        cpu: 200m
+        memory: 400Mi
+      requests:
+        cpu: 100m
+        memory: 300Mi
+  initdbScripts:
+    coog_init_script.sh: |
+      #!/bin/sh
+      echo "Create data in ${MONGODB_EXTRA_DATABASES%%,*}..."
+      mongo --port ${MONGODB_PORT_NUMBER} -u ${MONGODB_ROOT_USER} -p ${MONGODB_ROOT_PASSWORD} --authenticationDatabase admin <<EOF
+      use ${MONGODB_EXTRA_DATABASES%%,*};
+      db.salesroutes.insert({});
+      EOF
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessModes: ["ReadWriteOnce"]
+    size: 5Gi
+    # -- Create a custom persistent volume
+    # This is a coog parameter not mongodb
+    # Requires mongodb.persistence.enabled: true
+    # Requires mongodb.persistence.size: XXGi
+    # Requires mongodb.persistence.accessModes: ["XXXX"]
+    # capacity.storage is configured with persistentVolume.size
+    # accessModes is configured with mongodb.persistence.accessModes
+    # ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+    # E.g. for AWS-EFS-CSI-DRIVER
+    # volumeMode: Filesystem
+    # persistentVolumeReclaimPolicy: Retain
+    # csi:
+    #   driver: efs.csi.aws.com
+    #   volumeHandle: fs-ae66151a                # Must be the ID of the EFS volume created manually
+    #   volumeAttributes:
+    #       encryptInTransit: false              # By default, this value is true (encrypt network traffic)
+    customPersistentVolume: {}
+  # Need to custom timeoutSeconds parameter due to low resources limits
+  readinessProbe:
+    timeoutSeconds: 30
+    periodSeconds: 30
+  livenessProbe:
+    timeoutSeconds: 30
+    periodSeconds: 30
+
+# -- Default message service used by backCore
+# Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/12.3.0
 rabbitmq:
-  enabled: true
   persistence:
     enabled: false
+  service:
+    port: 5672
   resources:
     limits:
       cpu: 600m
@@ -46,6 +372,10 @@ rabbitmq:
     requests:
       cpu: 480m
       memory: 320Mi
+  memoryHighWatermark:
+    enabled: true
+    type: relative
+    value: 0.8
   updateStrategyType: RollingUpdate
   extraConfiguration: |-
     consumer_timeout = 172800000
@@ -53,351 +383,320 @@ rabbitmq:
   livenessProbe:
     initialDelaySeconds: 240
 
-mongodb:
-  enabled: true
-  strategyType: Recreate
+#############################################################################################################################
+#                                            Coog minimum components                                                        #
+#############################################################################################################################
+
+# -- Configuration for coog, celery and cron
+backCore:
   image:
-    tag: "4.4.12"
-  replicaSet:
-    enabled: false
-  usePassword: true
-  mongodbDatabase: coog-gateway
-  resources:
-    limits:
-      cpu: 100m
-      memory: 300Mi
-    requests:
-      cpu: 80m
-      memory: 240Mi
-  volumePermissions:
+    # -- Image repository to run coog, celery & cron
+    name: coog
+    # repository: ""
+    # tag: ""
+
+  # -- coog, celery and cron strategy type.
+  # values: Recreate or RollingUpdate
+  strategy:
+    type: ""
+
+  # -- coog, celery and cron security Context.
+  securityContext:
+    runAsUser: 1000 # Execute pod with specific user ID
+    runAsGroup: 1000 # Execute pod with specific group ID
+
+  # -- Create Postgres Database for coog
+  # by default, the script create a database defined in postgresql.auth.database
+  initDatabase: true
+  # -- append default database on TRYTOND_DATABASE_NAMES's variable
+  extraDatabases: []
+
+  persistentVolume:
+    # -- Enable BackCore data persistence using PVC
     enabled: true
+    name: workspace-io
+    # -- Storage Class & PVC for BackCore data volume
+    # If defined, storageClassName: <storageClass>
+    # If set to "-", storageClassName: "", which disables dynamic provisioning
+    # If undefined (the default) or set to null, no storageClassName spec is
+    # set, choosing the default provisioner.
+    storageClass: ""
+
+    # -- Create a custom storage class
+    # Requires persistentVolume.enabled: true
+    # Requires persistentVolume.storageClass: name
+    # ref: https://kubernetes.io/docs/concepts/storage/storage-classes/
+    # E.g. for AWS-EFS-CSI-DRIVER
+    # provisioner: efs.csi.aws.com
+    # parameters:
+    #   provisioningMode: efs-ap          # Must be `efs-ap` to enable dynamic provisioning
+    #   fileSystemId: fs-12345678         # Must be the ID of the EFS volume created manually
+    #   directoryPerms: "777"             # Default permission of the root directory of the volume
+    #   gidRangeStart: "1000"             # optional - Set the range of POSIX Group IDs (GIDs) that are used to set the GID of the AWS access point. If not specified, the default range is 50000-7000000. Each provisioned volume, and thus AWS access point, is assigned a unique GID from this range.
+    #   gidRangeEnd: "2000"               # optional - Set the range of POSIX Group IDs (GIDs) that are used to set the GID of the AWS access point. If not specified, the default range is 50000-7000000. Each provisioned volume, and thus AWS access point, is assigned a unique GID from this range.
+    #   basePath: "/dynamic_provisioning" # optional - Directory on the EFS volume that is used to create dynamically provisioned volumes. In this case, a PV is provisioned as “/dynamic_provisioning/<random uuid>” on the EFS volume. Only the subdirectory is mounted to pods that use the PV.
+    # mountOptions:
+    #   - tls
+    # reclaimPolicy: Retain
+    # allowVolumeExpansion: true
+    # volumeBindingMode: Immediate
+    customStorageClass: {}
+
+    # -- Create a custom persistent volume
+    # Requires persistentVolume.enabled: true
+    # Requires persistentVolume.size: XXGi
+    # Requires persistentVolume.accessModes: ["XXXX"]
+    # capacity.storage is configured with persistentVolume.size
+    # accessModes is configured with persistentVolume.access.Modes
+    # ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
+    # E.g. for AWS-EFS-CSI-DRIVER
+    # volumeMode: Filesystem
+    # persistentVolumeReclaimPolicy: Retain
+    # csi:
+    #   driver: efs.csi.aws.com
+    #   volumeHandle: fs-ae66151a                # Must be the ID of the EFS volume created manually
+    #   volumeAttributes:
+    #       encryptInTransit: false              # By default, this value is true (encrypt network traffic)
+    customPersistentVolume: {}
+
+    # -- Link to an existing persistent volume
+    # size parameter must be equal to existing volume.
+    # E.g.
+    # backCore:
+    #   persistentVolume:
+    #     existingPersistentVolumeName: "my-existing-persistent-volume"
+    existingPersistentVolumeName: ""
+
+    # -- PVC Storage Request for BackCoog
+    size: 50Gi
+
+    # -- PVC Access Mode for BackCore
+    # Requires persistentVolume.enabled: true
+    # If defined, and no customStorageClass is defined, then
+    # PVC must be created manually before volume will be bound
+    accessModes: ["ReadWriteMany"]
+
+    # -- Provide an existing `PersistentVolumeClaim`
+    # Requires persistentVolume.enabled: true
+    # If defined, PVC must be created manually before volume will be bound
+    existingClaim: ""
+
+  # -- coog, celery and cron configuration for number of workers. It can be customized for each component
+  workers:
+    number: 1
+
+  # -- Configure environement variables for backCore components (coog, celery, cron (except static : doesn't need configuration))
+  # Each value can be modified without override all or delete other parameters
+  # Ref: https://github.com/coopengo/coog/blob/master/bin/conf/trytond.conf
+  # ex:
+  # [web]
+  # listen = localhost:8000
+  #
+  # convert to variable :
+  # TRYTOND_WEB__LISTEN: localhost:8000
+  extraEnvVar:
+    # Following variables must be defined :
+    # start
+    TRYTOND_EMAIL__FROM: changeme
+    TRYTOND_OPTIONS__TABLE_DIMENSION: changeme
+    # end
+    COOG_IWC: "1"
+    COOG_TIMEOUT: "3600"
+    LOG_LEVEL: WARNING
+    # PINTE-25254
+    TRYTOND_ACCOUNT_PAYMENT_SEPA__FILESTORE: true
+    # PINTE-25254
+    TRYTOND_ACCOUNT_PAYMENT_SEPA__STORE_PREFIX: sepa_message
+    TRYTOND_CACHE__MODEL: "400"
+    TRYTOND_CACHE__CLEAN_TIMEOUT: "0"
+    TRYTOND_CACHE__RECORD: "50000"
+    TRYTOND_DATABASE__LANGUAGE: fr
+    TRYTOND_DATABASE__PATH: /workspace/io/edm
+    TRYTOND_DEBUG__VIEWS: false
+    TRYTOND_REPORT__EXPORT_ROOT_DIR: /workspace/io/batch/report
+    TRYTOND_SEPA_PAYMENT__OUT_DIR: /workspace/io/batch/sepa/sepa_out
+    TRYTOND_TZ: Europe/Paris
+
+  coog:
+    # -- coog, celery and batch configuration for number of workers
+    workers:
+      number: ""
+
+    # -- Configure environement variables for this component
+    # Each value can be modified without override all or delete other parameters
+    extraEnvVar: {}
+
+    ingress:
+      # -- Default host for the ingress resource for coog containers'
+      defaultPaths:
+        - /
+
+      # -- additionals hosts & paths
+      # host : required
+      # path : optionnal
+      # e.g:
+      # hosts:
+      #   - host: test1.example.com
+      #     paths:
+      #       - /
+      #   - host: test2.example.com
+      hosts: []
+
+      annotations:
+        nginx.ingress.kubernetes.io/use-proxy-protocol: true
+
+      nginx:
+        whiteList:
+          # -- Add cors (TRYTOND_WEB_CORS variable) to defaults values defined
+          # default values :
+          #   - https://<.Values.ingress.host>
+          # E.g.
+          # cors:
+          #   - https://test1.example.com
+          #   - https://test2.example.com
+          cors: []
+          publicCidr: []
+
+    # -- coog containers' resource requests and limits
     resources:
       limits:
-        cpu: 100m
-        memory: 300Mi
+        cpu: 1500m
+        memory: 1750Mi
       requests:
-        cpu: 80m
-        memory: 240Mi
+        cpu: 1200m
+        memory: 1400Mi
 
-postgresql:
-  enabled: true
-  persistence:
-    enabled: false
-  image:
-    debug: true
-  postgresqlDatabase: coog
-  initdbScripts:
-    db-init.sql: |
-      CREATE ROLE coog WITH LOGIN PASSWORD 'coog';
-  updateStrategy:
-    type: Recreate
+    initContainers:
+      resources:
+        limits:
+          cpu: 500m
+          memory: 800Mi
+        requests:
+          cpu: 400m
+          memory: 640Mi
 
-api:
-  # -- Deploy api container(s)
-  enabled: true
-  # -- 	Number of api Pods to run
-  replicaCount: 1
+  celery:
+    workers:
+      # -- Number of celery workers to run
+      number: ""
+      maximumMemory: 512000
 
-  mongodb:
-    database: coog-api-v2
-    # -- variable MONGO_IDENTITY_DB_NAME
-    # If not empty, Override default value from api.mongodb.database 
-    api_database: ""
+    coogCeleryModule: coog_async.coog_celery
 
-  image:
-    # -- api image repository
-    repository: coopengohub/api
-    # -- api image tag
-    tag: coog-2.10.2048
-    # -- api image pull policy
-    pullPolicy: Always
+    # -- Configure environement variables for this component
+    extraEnvVar:
+      TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: "1"
+      TRYTOND_BATCH__ROOT_DIR: /workspace/io/batch
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
+    # -- celery containers' resource requests and limits
+    resources:
+      limits:
+        cpu: 400m
+        memory: 1000Mi
+      requests:
+        cpu: 320m
+        memory: 800Mi
 
-  service:
-    type: ClusterIP
-    port: 80
+  cron:
+    # -- Dynamic ConfigMap variables for cron
+    extraEnvVar: {}
 
-  # -- api containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 500m
-      memory: 100Mi
-    requests:
-      cpu: 400m
-      memory: 80Mi
+    # -- cron containers' resource requests and limits
+    resources:
+      limits:
+        cpu: 200m
+        memory: 500Mi
+      requests:
+        cpu: 160m
+        memory: 400Mi
 
-  # -- Affinity for pod assignment
-  affinity: {}
+    # -- Configure options applied to cron deployment, liveness, readiness and startup probes
+    # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
+    # initialDelaySeconds: Initial delay seconds e
+    # periodSeconds: Period seconds
+    # timeoutSeconds: Timeout seconds
+    # failureThreshold: Failure threshold
+    # successThreshold: Success threshold
+    #
+    # With this configuration, the kubelet will attempt to open a socket to your container on the specified port.
+    # If it can establish a connection, the container is considered healthy, if it can't it is considered a failure
+    livenessProbe:
+      initialDelaySeconds: 0
+      periodSeconds: 120
+      timeoutSeconds: 30
+      successThreshold: 1
+      failureThreshold: 2
 
-  # -- Node labels for pod assignment
-  nodeSelector: {}
+    # -- additional startup time on their first initialization
+    startupProbe:
+      initialDelaySeconds: 30
+      periodSeconds: 30
+      timeoutSeconds: 30
+      successThreshold: 1
+      failureThreshold: 3
 
-  # -- Tolerations for pod assignment
-  tolerations: []
+  static:
+    image:
+      # -- static image name
+      name: coog-static
 
+    strategy:
+      # -- static redeployment strategy type
+      type: ""
 
-api_b2b_config:
-  # -- Deploy api_b2b_config container(s)
+    ingress:
+      # -- Default host for the ingress resource for static containers'
+      defaultPaths:
+        - /sao
+        - /bench
+        - /doc
+
+      # -- additionals hosts & paths
+      # host : required
+      # path : optionnal
+      # e.g:
+      # hosts:
+      #   - host: test1.example.com
+      #     path: /
+      #   - host: test2.example.com
+      hosts: []
+
+      nginx:
+        whiteList:
+          publicCidr: []
+
+    securityContext:
+      {}
+      # runAsUser: ""
+
+    # -- static containers' resource requests and limits
+    resources:
+      limits:
+        cpu: 50m
+        memory: 80Mi
+      requests:
+        cpu: 40m
+        memory: 64Mi
+
+#############################################################################################################################
+#                                            Back Additional components                                                     #
+#############################################################################################################################
+
+libroconv:
+  # -- Deploy libroconv container(s)
   enabled: false
-  # -- 	Number of api_b2b_config Pods to run
-  replicaCount: 1
+  strategy:
+    type: ""
 
   image:
-    # -- api_b2b_config image repository
-    repository: coopengohub/api-b2b-config
-    # -- api_b2b_config image tag
-    tag: coog-2.10.2048
-    # -- api_b2b_config image pull policy
-    pullPolicy: Always
+    # -- libroconv image repository
+    name: coog-libroconv
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
+  securityContext:
+    {}
+    # runAsUser: ""
 
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  # -- api_b2b_config containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 50m
-      memory: 80Mi
-    requests:
-      cpu: 40m
-      memory: 64Mi
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-api_b2c:
-  # -- Deploy api_b2c container(s)
-  enabled: false
-  # -- 	Number of api_b2c Pods to run
-  replicaCount: 1
-
-  image:
-    # -- api_b2c image repository
-    repository: coopengohub/api-b2c
-    # -- api_b2c image tag
-    tag: coog-2.10.2048
-    # -- api_b2c image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  # -- api_b2c containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 50m
-      memory: 50Mi
-    requests:
-      cpu: 40m
-      memory: 40Mi
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-
-api_identity_manager:
-  # -- Deploy api_identity_manager container(s)
-  enabled: true
-  # -- 	Number of api_identity_manager Pods to run
-  replicaCount: 1
-
-  image:
-    # -- api-identity-manager image repository
-    repository: coopengohub/api-identity-manager
-    # -- api-identity-manager image tag
-    tag: coog-2.10.2048
-    # -- api-identity-manager image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  # -- api_identity_manager containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 50m
-      memory: 70Mi
-    requests:
-      cpu: 40m
-      memory: 56Mi
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-
-api_referential:
-  # -- Deploy api_referential container(s)
-  enabled: false
-  # -- 	Number of api_referential Pods to run
-  replicaCount: 1
-
-  image:
-    # -- api_referential image repository
-    repository: coopengohub/api-referential
-    # -- api_referential image tag
-    tag: coog-2.10.2048
-    # -- api_referential image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  # -- api_referential containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 200m
-      memory: 400Mi
-    requests:
-      cpu: 160m
-      memory: 320Mi
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-
-app_b2c:
-  # -- Deploy app_b2c container(s)
-  enabled: false
-  # -- 	Number of app_b2c Pods to run
-  replicaCount: 1
-
-  image:
-    # -- app_b2c image repository
-    repository: coopengohub/app-b2c
-    # -- app_b2c image tag
-    tag: coog-2.10.2048
-    # -- app_b2c image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  ingress:
-    # -- Enable ingress controller resource for app_b2c containers'
-    enabled: false
-    # -- Ingress annotations for app_b2c containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for app_b2c containers'
-    hosts:
-      - host: app-b2c.local
-        paths: []
-    # -- TLS configuration for app_b2c containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-
-  # -- app_b2c containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 50m
-      memory: 50Mi
-    requests:
-      cpu: 40m
-      memory: 40Mi
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-
-unoconv:
-  # -- Deploy unoconv container(s)
-  enabled: true
-  # -- 	Number of unoconv Pods to run
-  replicaCount: 1
-
-  image:
-    # -- unoconv image repository
-    repository: coopengohub/unoconv
-    # -- unoconv image tag
-    tag: dgw-0.0.1
-    # -- unoconv image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 5000
-
-  # -- unoconv containers' resource requests and limits
+  # -- libroconv containers' resource requests and limits
   resources:
     limits:
       cpu: 300m
@@ -406,21 +705,12 @@ unoconv:
       cpu: 240m
       memory: 240Mi
 
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
   livenessProbe:
     initialDelaySeconds: 0
     periodSeconds: 60
     timeoutSeconds: 30
     successThreshold: 1
-    failureThreshold: 1
+    failureThreshold: 2
   readinessProbe:
     initialDelaySeconds: 0
     periodSeconds: 30
@@ -428,323 +718,209 @@ unoconv:
     successThreshold: 1
     failureThreshold: 3
 
-celery:
-  # -- Deploy celery container(s)
+#############################################################################################################################
+#                                            Front Minimum components                                                       #
+#############################################################################################################################
+
+# -- FrontCore
+## If one frontend component is enabled: true, it will enable by default the frontCore components (gateway, api & api-identity-manager)
+# List of front components :
+# - gateway
+# - api
+# - apiIdentityManager
+# - apiB2c
+# - apiReferential
+# - b2c
+# - b2b
+# - customerBackend
+# - customerFrontend
+# - web
+#
+# If you enable one front component, you must set mongodb.isManaged: true
+frontCore:
   enabled: false
-  # -- 	Number of celery workers to run
-  workers: 1
-  specificBatchConcurrency:
-    enabled: false
+  extraEnvVar: {}
+
+  gateway:
+    strategy:
+      type: ""
+
+    image:
+      # -- gateway image repository
+      name: coog-gateway
+
+    # -- Configure environement variables for this component
+    extraEnvVar:
+      BASE_PATH: "/gateway"
+      COOG_GATEWAY_BASE_PATH: "/gateway"
+      COOG_GATEWAY_PORT: 8000
+      COOG_MODULE: true
+      COOG_TOKEN_MODULE: true
+      FACEBOOK_MODULE: false
+      GOOGLE_MODULE: false
+      JWT_EXPIRATION: 3600
+
+    ingress:
+      # -- Default host for the ingress resource for gateway containers
+      defaultPaths:
+        - /gateway(/|$)(.*)
+
+      # -- additionals hosts & paths
+      # host : required
+      # path : optionnal
+      # e.g:
+      # hosts:
+      #   - host: test1.example.com
+      #     path: /
+      #   - host: test2.example.com
+      hosts: []
+
+      annotations:
+        nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+
+      nginx:
+        whiteList:
+          # -- Add cors (WHITELIST variable) to defaults values defined
+          # default values :
+          #   - http://localhost:4000
+          #   - https://<.Values.ingress.host>
+          # E.g.
+          # cors:
+          #   - https://test1.example.com
+          #   - https://test2.example.com
+          cors: []
+          publicCidr: []
+
+    securityContext:
+      {}
+      # runAsUser: ""
+
+    # -- gateway containers resource requests and limits
     resources:
       limits:
-        cpu: 200m
-        memory: 700Mi
+        cpu: 100m
+        memory: 100Mi
       requests:
-        cpu: 160m
-        memory: 560Mi
-    # -- Affinity for pod assignment
-    affinity: {}
+        cpu: 80m
+        memory: 80Mi
 
-    # -- Node labels for pod assignment
-    nodeSelector: {}
+  api:
+    strategy:
+      type: ""
 
-    # -- Tolerations for pod assignment
-    tolerations: []
+    image:
+      # -- api-v2 image repository
+      name: coog-api
 
-    livenessProbe:
-      initialDelaySeconds: 30
-      periodSeconds: 120
-      timeoutSeconds: 10
+    # -- Configure environement variables for this component
+    extraEnvVar: {}
 
-  # -- 	Number of celery Pods to run
-  replicaCount: 1
+    securityContext:
+      {}
+      # runAsUser: ""
 
-  # -- celery containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 400m
-      memory: 1000Mi
-    requests:
-      cpu: 320m
-      memory: 800Mi
-  cron:
-    # -- celery cron job containers' resource requests and limits
-    backend_configuration: true
-    resources:
-      limits:
-        cpu: 200m
-        memory: 300Mi
-      requests:
-        cpu: 160m
-        memory: 240Mi
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  livenessProbe:
-    initialDelaySeconds: 30
-    periodSeconds: 120
-    timeoutSeconds: 10
-
-  # -- batch configuration
-  batch:
-    # -- Configure batch workDays
-    workDays: 4
-    # -- Configure batch workDaysConf
-    workDaysConf: french_work_days
-
-coog:
-  cache_record: 50000
-  configurationFiles:
-    batch.conf: |-
-    coog.conf: |-
-  # -- Deploy coog container(s)
-  enabled: true
-  external_postgres:
-    enabled: false
-  root_dir: /workspace/io
-  # -- 	Number of coog workers to run
-  workers: 2
-  max_worker_memory: 0
-  log_level: INFO
-  timeout: 3600
-  extraEnv:
-    TRYTOND_TZ: Europe/Paris
-  # -- 	Number of coog Pods to run
-  replicaCount: 1
-  persistentVolume:
-    enabled: true
-    name: workspace-io
-    io: /workspace/io/
-    storageClass: nfs-client
-#    storageClass: standard
-    size: 10Gi
-    claim:
-      name: ""
-
-
-  image:
-    # -- coog image repository
-    repository: coopengohub/coog
-    # -- coog image tag
-    tag: coog-2.10.2048
-    # -- coog image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  securityContext:
-    runAsUser: 1000
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  ingress:
-    # -- Enable ingress controller resource for coog containers'
-    enabled: false
-    # -- Ingress annotations for coog containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for coog containers'
-    hosts:
-      - host: coog.local
-        paths: []
-    # -- TLS configuration for coog containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-    nginx:
-      whitelistsourcerange: '127.0.0.1/32'
-
-  # -- coog containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 1500m
-      memory: 1750Mi
-    requests:
-      cpu: 1200m
-      memory: 1400Mi
-
-  initContainers:
+    # -- api containers resource requests and limits
     resources:
       limits:
         cpu: 500m
-        memory: 800Mi
+        memory: 100Mi
       requests:
-        cpu: 400m
-        memory: 640Mi
+        cpu: 500m
+        memory: 100Mi
 
-  # -- Node labels for pod assignment
-  nodeSelector: {}
+  apiIdentityManager:
+    strategy:
+      type: ""
 
-  # -- Tolerations for pod assignment
-  tolerations: []
+    image:
+      # -- api-identity-manager image repository
+      name: coog-api-identity-manager
 
-  livenessProbe:
-    periodSeconds: 60
-    timeoutSeconds: 30
-  readinessProbe:
-    periodSeconds: 30
-    timeoutSeconds: 30
+    # -- Configure environement variables for this component
+    extraEnvVar: {}
 
-  # -- Affinity for pod assignment
-  affinity: {}
+    securityContext:
+      {}
+      # runAsUser: ""
 
+    # -- apiIdentityManager containers' resource requests and limits
+    resources:
+      limits:
+        cpu: 50m
+        memory: 70Mi
+      requests:
+        cpu: 50m
+        memory: 56Mi
 
-cron:
-  # -- Deploy cron container(s)
-  enabled: true
-  affinity: {}
+#############################################################################################################################
+#                                            Front Additional components                                                    #
+#############################################################################################################################
 
-  # -- cron containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 200m
-      memory: 500Mi
-    requests:
-      cpu: 160m
-      memory: 400Mi
-  livenessProbe:
-    initialDelaySeconds: 30
-    periodSeconds: 120
-    timeoutSeconds: 10
-    successThreshold: 1
-    failureThreshold: 2
-  startupProbe:
-    initialDelaySeconds: 30
-    periodSeconds: 120
-    timeoutSeconds: 10
-    successThreshold: 1
-    failureThreshold: 2
-  coogCeleryModule: coog_async.coog_celery
-  # -- Node labels for pod assignment
-  nodeSelector: {}
+##############################
+#      Components B2B        #
+##############################
 
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-
-
-paybox:
-  # -- Deploy paybox container(s)
+b2b:
   enabled: false
-  # -- 	Number of paybox Pods to run
-  replicaCount: 1
+  strategy:
+    type: ""
 
   image:
-    # -- paybox image repository
-    repository: coopengohub/paybox
-    # -- paybox image tag
-    tag: coog-2.10.2048
-    # -- paybox image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
+    # -- b2b image repository
+    name: coog-b2b
 
   ingress:
-    # -- Enable ingress controller resource for paybox containers'
-    enabled: false
-    # -- Ingress annotations for paybox containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for paybox containers'
-    hosts:
-      - host: paybox.local
-        paths: []
-    # -- TLS configuration for paybox containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
+    # -- Default host for the ingress resource for gateway containers
+    defaultPaths:
+      - /portal(/|$)(.*)
 
-  # -- paybox containers' resource requests and limits
+    # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     path: /
+    #   - host: test2.example.com
+    hosts: []
+
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+
+    nginx:
+      whiteList:
+        publicCidr: []
+
+  securityContext:
+    {}
+    # runAsUser: ""
+
+  # -- b2b containers' resource requests and limits
   resources:
     limits:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 250m
+      memory: 50Mi
     requests:
-      cpu: 80m
-      memory: 80Mi
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
+      cpu: 200m
+      memory: 40Mi
 
 web:
-  # -- Deploy web container(s)
-  enabled: true
-  # -- 	Number of web Pods to run
-  replicaCount: 1
+  enabled: false
+  strategy:
+    type: ""
 
   image:
     # -- web image repository
-    repository: coopengohub/web
-    # -- web image tag
-    tag: coog-2.10.2048
-    # -- web image pull policy
-    pullPolicy: Always
+    name: coog-web
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
+  # -- Configure environement variables for this component
+  extraEnvVar:
+    COOG_API_API_PATH: /web/api
+    COOG_API_APP_PATH: /web
 
-  service:
-    type: ClusterIP
-    port: 80
-
-  ingress:
-    # -- Enable ingress controller resource for web containers'
-    enabled: false
-    # -- Ingress annotations for web containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for web containers'
-    hosts:
-      - host: web.local
-        paths: []
-    # -- TLS configuration for web containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-    nginx:
-      rewritetarget: '/$2'
-      whitelistsourcerange: '127.0.0.1/32'
-
-  livenessProbe:
-    periodSeconds: 60
-    timeoutSeconds: 30
+  securityContext:
+    {}
+    # runAsUser: ""
 
   # -- web containers' resource requests and limits
   resources:
@@ -755,360 +931,127 @@ web:
       cpu: 400m
       memory: 160Mi
 
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-portal:
-  # -- Deploy portal container(s)
+apiReferential:
+  # -- Deploy apiReferential container(s)
   enabled: false
-  # -- 	Number of portal Pods to run
-  replicaCount: 1
+  strategy:
+    type: ""
 
   image:
-    # -- portal image repository
-    repository: coopengohub/portal
-    # -- portal image tag
-    tag: coog-2.10.2048
-    # -- portal image pull policy
-    pullPolicy: Always
+    # -- apiReferential image repository
+    name: coog-api-referential
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
+  # -- Configure environement variables for this component
+  extraEnvVar: {}
 
-  service:
-    type: ClusterIP
-    port: 80
+  securityContext:
+    {}
+    # runAsUser: ""
 
-  ingress:
-    # -- Enable ingress controller resource for portal containers'
-    enabled: false
-    # -- Ingress annotations for portal containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for portal containers'
-    hosts:
-      - host: portal.local
-        paths: []
-    # -- TLS configuration for portal containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-    nginx:
-      whitelistsourcerange: '127.0.0.1/32'
-
-  # -- portal containers' resource requests and limits
+  # -- apiReferential containers' resource requests and limits
   resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 250m
-      memory: 50Mi
-    requests:
       cpu: 200m
-      memory: 40Mi
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-gateway:
-  # -- Deploy gateway container(s)
-  enabled: true
-  external_mongodb:
-    enabled: false
-  mongodb:
-    database: coog-gateway
-  jwt:
-    encryption: secret
-    expiration: 3600
-  whitelist:
-  # -- 	Number of gateway Pods to run
-  replicaCount: 1
-  portal_url: coog.local
-  gateway_url: coog.local
-  entrypoint: "/gateway"
-  extraEnv:
-    COOG_TOKEN_MODULE: "false"
-
-  image:
-    # -- gateway image repository
-    repository: coopengohub/gateway
-    # -- gateway image tag
-    tag: coog-2.10.2048
-    # -- gateway image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  ingress:
-    # -- Enable ingress controller resource for gateway containers'
-    enabled: false
-    # -- Ingress annotations for gateway containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for gateway containers'
-    hosts:
-      - host: coog.local
-        paths: []
-    # -- TLS configuration for gateway containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-    nginx:
-      rewritetarget: '/$2'
-      whitelistsourcerange: '127.0.0.1/32'
-
-  # -- gateway containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 100m
-      memory: 100Mi
+      memory: 400Mi
     requests:
-      cpu: 80m
-      memory: 80Mi
+      cpu: 160m
+      memory: 320Mi
 
-  # -- Node labels for pod assignment
-  nodeSelector: {}
+##############################
+#      Components B2C        #
+##############################
 
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-static:
-  # -- Deploy static container(s)
-  enabled: true
-  # -- 	Number of static Pods to run
-  replicaCount: 1
+b2c:
+  # -- Deploy b2c + apiB2c container(s)
+  enabled: false
+  strategy:
+    type: ""
 
   image:
-    # -- static image repository
-    repository: coopengohub/static
-    # -- static image tag
-    tag: coog-2.10.2048
-    # -- static image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
+    # -- b2c image repository
+    name: coog-app-b2c
 
   ingress:
-    # -- Enable ingress controller resource for static containers'
-    enabled: false
-    # -- Ingress annotations for static containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for static containers'
-    hosts:
-      - host: static.local
-        paths: []
-    # -- TLS configuration for static containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-    nginx:
-      whitelistsourcerange: '127.0.0.1/32'
+    # -- Default host for the ingress resource for gateway containers
+    defaultPaths:
+      - /customers/myspace(/|$)(.*)
 
-  # -- static containers' resource requests and limits
+    # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     path: /
+    #   - host: test2.example.com
+    hosts: []
+
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+
+    nginx:
+      whiteList:
+        publicCidr: []
+
+  securityContext:
+    {}
+    # runAsUser: ""
+
+  # -- b2c containers' resource requests and limits
   resources:
     limits:
       cpu: 50m
-      memory: 80Mi
+      memory: 50Mi
     requests:
-      cpu: 40m
-      memory: 64Mi
+      cpu: 50m
+      memory: 40Mi
 
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-jwt:
-  internal:
-    encryption: changeme
-
-batch:
-  migquottosr:
-    enabled: false
-    image:
-      pullPolicy: Always
-      repository: coopengohub/migquottosr
-      tags: latest
-    schedule: "0 20 * * *"
-    imagePullSecrets:
-      - name: docker-registry
-    resources:
-      limits:
-        cpu: 200m
-        memory: 100Mi
-      requests:
-        cpu: 160m
-        memory: 80Mi
-
-# B2C Frontend
-customer_frontend:
-  # -- Deploy portal container(s)
+customerBackend:
+  # -- Deploy b2b container(s)
   enabled: false
-  # -- 	Number of portal Pods to run
-  replicaCount: 1
+  strategy:
+    type: ""
 
   image:
-    # -- portal image repository
-    repository: coopengohub/coog-customer-frontend
-    # -- portal image tag
-    tag: coog-2.13.2137
-    # -- portal image pull policy
-    pullPolicy: Always
+    # -- b2b image repository
+    name: coog-customer-backend
 
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
+  # -- Database configuration for the component
+  database:
+    # -- Default : strapi-{{ .Release.Name }}
+    name: ""
 
-  service:
-    type: ClusterIP
-    port: 80
+  # -- Configure environement variables for this component
+  extraEnvVar: {}
 
   ingress:
-    # -- Enable ingress controller resource for portal containers'
-    enabled: true
-    # -- Ingress annotations for portal containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for portal containers'
-    hosts:
-      - host: customer.local
-        paths: []
-    # -- TLS configuration for portal containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
+    # -- Default host for the ingress resource for gateway containers
+    defaultPaths:
+      - /v1/customer(/|$)(.*)
 
-  # -- portal containers' resource requests and limits
+    # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     path: /
+    #   - host: test2.example.com
+    hosts: []
+
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+
+    nginx:
+      whiteList:
+        publicCidr: []
+
+  securityContext:
+    {}
+    # runAsUser: ""
+
+  # -- b2b containers' resource requests and limits
   resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    limits:
-      cpu: 100m
-      memory: 100Mi
-    requests:
-      cpu: 80m
-      memory: 80Mi
-
-  initContainers:
-    resources:
-      limits:
-        cpu: 400m
-        memory: 2000Mi
-      requests:
-        cpu: 320m
-        memory: 1600Mi
-
-  # -- Node labels for pod assignment
-  nodeSelector: {}
-
-  # -- Tolerations for pod assignment
-  tolerations: []
-
-  # -- Affinity for pod assignment
-  affinity: {}
-
-# B2C Backend
-customer_backend:
-  # -- Deploy portal container(s)
-  enabled: false
-  # -- 	Number of portal Pods to run
-  replicaCount: 1
-  postgres_db: 'strapi'
-
-  image:
-    # -- portal image repository
-    repository: coopengohub/coog-customer-backend
-    # -- portal image tag
-    tag: coog-2.13.2137
-    # -- portal image pull policy
-    pullPolicy: Always
-
-  # -- Specify docker-registry secret names as an array
-  imagePullSecrets:
-    - name: docker-registry
-  nameOverride: ""
-  fullnameOverride: ""
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  ingress:
-    # -- Enable ingress controller resource for portal containers'
-    enabled: true
-    # -- Ingress annotations for portal containers'
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
-    # -- Default host for the ingress resource for portal containers'
-    hosts:
-      - host: v1.customer.local
-        paths: []
-    # -- TLS configuration for portal containers'
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-
-  # -- portal containers' resource requests and limits
-  resources:
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
       cpu: 400m
       memory: 300Mi
@@ -1125,11 +1068,88 @@ customer_backend:
         cpu: 320m
         memory: 400Mi
 
-  # -- Node labels for pod assignment
-  nodeSelector: {}
+customerFrontend:
+  # -- Deploy customerFrontend container(s)
+  enabled: false
+  strategy:
+    type: ""
 
-  # -- Tolerations for pod assignment
-  tolerations: []
+  image:
+    # -- customerFrontend image repository
+    name: coog-customer-frontend
 
-  # -- Affinity for pod assignment
-  affinity: {}
+  # -- Configure environement variables for this component
+  extraEnvVar:
+    GATSBY_API_URL: "/v1/customer"
+
+  ingress:
+    # -- Default host for the ingress resource for gateway containers
+    defaultPaths:
+      - /customer(/|$)(.*)
+
+    # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     path: /
+    #   - host: test2.example.com
+    hosts: []
+
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+
+    nginx:
+      whiteList:
+        publicCidr: []
+
+  securityContext:
+    {}
+    # runAsUser: ""
+
+  # -- customerFrontend containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 80m
+      memory: 80Mi
+
+  initContainers:
+    resources:
+      limits:
+        cpu: 400m
+        memory: 2000Mi
+      requests:
+        cpu: 320m
+        memory: 1600Mi
+
+# -- Is enable if one off following front component is enable :
+# - b2c
+# - customerBackend
+# - customerFrontend
+apiB2c:
+  strategy:
+    type: ""
+
+  image:
+    # -- apiB2c image repository
+    name: coog-api-b2c
+
+  # -- Configure environement variables for this component
+  extraEnvVar: {}
+
+  securityContext:
+    {}
+    # runAsUser: ""
+
+  # -- apiB2c containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 50m
+      memory: 50Mi
+    requests:
+      cpu: 50m
+      memory: 40Mi

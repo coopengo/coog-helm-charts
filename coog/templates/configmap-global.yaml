@@ -1,0 +1,11 @@
+{{- if .Values.extraEnvVar }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+data:
+  {{- range $key, $value := .Values.extraEnvVar }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}

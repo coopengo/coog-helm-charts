@@ -1,187 +1,116 @@
-{{- if .Values.celery.enabled -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "full_name" . }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
-  replicas: 1
-{{- if not .Values.quota.rolling_update }}
+  replicas: {{ default .Values.replicaCount .Values.backCore.cron.replicaCount }}
   strategy:
-    type: Recreate
-{{- end }}
+    type: {{ default .Values.strategy.type .Values.backCore.strategy.type }}
   selector:
-    matchLabels:
-      app.kubernetes.io/name: {{ include "short_name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
-      labels:
-        app.kubernetes.io/name: {{ include "short_name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
+      annotations:
+        {{- if .Values.extraEnvVar }}
+        checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
+        {{- end }}
+        checksum/configmap-backcore: {{ include (printf "%s/%s" $.Template.BasePath "configmap-backcore.yaml") . | sha256sum  }}
+        {{- if (and .Values.backCore .Values.backCore.cron .Values.backCore.cron.extraEnvVar) }}
+        checksum/configmap: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "configmap.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+        checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
+        {{- end }}
+        checksum/secret-backcore: {{ include (printf "%s/%s" $.Template.BasePath "secret-backcore.yaml") . | sha256sum  }}
+        {{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.cron .Values.secrets.backCore.cron.extraEnvVar) }}
+        checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
+        {{- end }}
+        checksum/secret-postgresql: {{ include (printf "%s/%s" $.Template.BasePath "secret-postgresql.yaml") . | sha256sum  }}
     spec:
-    {{- with .Values.coog.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- if .Values.coog.persistentVolume.enabled }}
+        - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
+    {{- if .Values.backCore.persistentVolume.enabled }}
       volumes:
-        - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
+        - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
           persistentVolumeClaim:
-            claimName: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
+            claimName: {{ default (printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-") .Values.backCore.persistentVolume.existingClaim }}
     {{- end }}
       containers:
-        - name: {{ include "short_name" . }}
-          image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
-          imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
+        - name: {{ include "general.names.name" . }}
+          image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
-          command:
-            - "ep"
-            - "cron"
-        {{- if .Values.coog.persistentVolume.enabled }}
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
+            runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.securityContext.runAsGroup }}
+          command: ['ep', 'cron']
+        {{- if .Values.backCore.persistentVolume.enabled }}
           volumeMounts:
-            - name: {{ .Release.Name }}-{{ .Values.coog.persistentVolume.name }}
-              mountPath: {{ .Values.coog.root_dir }}
+            - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+              mountPath: /workspace/io
               readOnly: false
         {{- end }}
-          env:
-            - name:  COOG_SERVER_WORKERS
-              value: "{{ .Values.coog.workers }}"
-            - name:  COOG_CELERY_WORKERS
-              value: "{{ .Values.coog.workers }}"
-            - name:  COOG_TIMEOUT
-              value: "{{ .Values.coog.timeout }}"
-            - name:  LOG_LEVEL
-              value: "{{ .Values.coog.log_level }}"
-            - name:  COOG_POSTGRES_HOST
-            {{- if not .Values.coog.external_postgres.enabled }}
-              value: "{{ .Release.Name }}-postgresql"
-            {{ else }}
-              value: "{{ .Values.coog.external_postgres.host }}"
+          envFrom:
+            {{- if .Values.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
-            - name:  COOG_POSTGRES_PORT
-            {{- if not .Values.coog.external_postgres.enabled }}
-              value: "{{ .Values.postgresql.service.port }}"
-            {{ else }}
-              value: "{{ .Values.coog.external_postgres.port }}"
+            - configMapRef:
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+            {{- if (and .Values.backCore .Values.backCore.cron .Values.backCore.cron.extraEnvVar) }}
+            - configMapRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
-            - name:  COOG_DB_NAME
-              value: "{{ .Values.secrets.coog.postgres.database}}"
-            - name:  COOG_DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: coog-postgres-db-secret
-                  key: USER
-            - name:  COOG_DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: coog-postgres-db-secret
-                  key: PASSWORD
-            - name: TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING
-              value: "1"
-            {{- if .Values.coog.extraEnv }}
-            {{- range $key, $value := .Values.coog.extraEnv }}
-            - name:  {{ $key }}
-              value: {{ $value | quote }}
+            {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
+            - secretRef:
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+            {{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.cron .Values.secrets.backCore.cron.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
-            - name: TRYTOND_CACHE__RECORD
-              value: "{{ .Values.coog.cache_record }}"
-            {{- if .Values.rabbitmq.enabled }}
-            - name:  TRYTOND_ASYNC__CELERY
-              valueFrom:
-                secretKeyRef:
-                  name: coog-trytond-secret
-                  key: TRYTOND_ASYNC__CELERY
-            - name:  TRYTOND_ASYNC_CELERY
-              valueFrom:
-                secretKeyRef:
-                  name: coog-trytond-secret
-                  key: TRYTOND_ASYNC__CELERY
-            {{- end }}
-            - name:  TRYTOND_CACHE__CLEAN_TIMEOUT
-              value: "0"
-            - name:  TRYTOND_DATABASE__URI
-              valueFrom:
-                secretKeyRef:
-                  name: coog-trytond-secret
-                  key: TRYTOND_DATABASE__URI
-            - name:  TRYTOND_DEBUG__VIEWS
-              value: "False"
-            - name:  TRYTOND_DEBUG__DISABLE_SYNTAX_ANALYSIS
-              value: "True"
-            - name: TRYTOND_REPORT__API
-              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-unoconv:5000/unoconv/{oext}"
-            - name: COOG_IWC
-              value: "1"
-            - name: TRYTOND_DATABASE__LANGUAGE
-              value: fr
-            {{- if .Values.secrets.coog.email_uri }}
-            - name: TRYTOND_EMAIL__URI
-              valueFrom:
-                secretKeyRef:
-                  name: coog-trytond-secret
-                  key: TRYTOND_EMAIL__URI
-            {{- end }}
-            {{- if .Values.secrets.coog.trytond_session__passphrase }}
-            - name: TRYTOND_SESSION__PASSPHRASE
-              valueFrom:
-                secretKeyRef:
-                  name: coog-trytond-secret
-                  key: TRYTOND_SESSION__PASSPHRASE
-            {{- end }}
-            {{- if .Values.celery.batchConfig }}
-            {{- range $key, $value := .Values.celery.batchConfig }}
-            - name:  {{ $key }}
-              value: {{ $value | quote }}
-            {{- end }}
-            {{- end }}
+            - secretRef:
+                name: {{  printf "%s-postgresql" (include "general.names.short" .) }}
           ports:
             - name: http
               containerPort: 8000
-              protocol: TCP
-          livenessProbe:
-            exec:
-              command:
-                - "/bin/bash"
-                - "-c"
-                - "ep cron --check"
-            {{- toYaml .Values.cron.livenessProbe | nindent 12 }}
           startupProbe:
             exec:
               command:
                 - "/bin/bash"
                 - "-c"
                 - "ep cron --check"
-            {{- toYaml .Values.cron.startupProbe | nindent 12 }}
-          resources:
-            {{- toYaml .Values.cron.resources | nindent 12 }}
-      {{- with .Values.cron.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.cron.startupProbe) "context" $) | nindent 12 }}
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/bash"
+                - "-c"
+                - "ep cron --check"
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.cron.livenessProbe) "context" $) | nindent 12 }}
+          resources: {{- toYaml .Values.backCore.cron.resources | nindent 12 }}
+      {{- with default .Values.nodeSelector .Values.backCore.cron.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.cron.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.cron.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-{{- if .Values.coog.dnsPolicy }}
-      dnsPolicy: {{ .Values.coog.dnsPolicy }}
-{{- end }}
-{{- if .Values.coog.dnsConfig }}
-      dnsConfig:
-{{ toYaml .Values.coog.dnsConfig | indent 8 }}
-{{- end }}
-{{- end }}
+      {{- with default .Values.affinity .Values.backCore.cron.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.tolerations .Values.backCore.cron.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if default .Values.dnsPolicy .Values.backCore.cron.dnsPolicy }}
+      dnsPolicy: {{ default .Values.dnsPolicy .Values.backCore.cron.dnsPolicy }}
+      {{- end }}
+      {{- if default .Values.dnsConfig .Values.backCore.cron.dnsConfig }}
+      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.backCore.cron.dnsConfig | indent 8 }}
+      {{- end }}

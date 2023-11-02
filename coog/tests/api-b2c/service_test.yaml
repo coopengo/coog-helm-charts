@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.jsonsuite
+suite: Test api-b2c service
+templates:
+  - api-b2c/service.yaml
+release:
+  name: test
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 24
+tests:
+  - it: Test metadata
+    set:
+      b2c:
+        enabled: true
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: metadata.name
+          value: test-coog-api-b2c
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: coog-api-b2c
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: coog-.*$
+      - equal:
+          path: spec.selector["app.kubernetes.io/name"]
+          value: coog-api-b2c
+      - equal:
+          path: spec.selector["app.kubernetes.io/instance"]
+          value: test
+
+  - it: Test network configuration
+    set:
+      b2c:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: http
+            port: 80
+            targetPort: http
+
+  - it: Test b2c enabled service
+    set:
+      b2c:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test customerBackend enabled service
+    set:
+      customerBackend:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test customerFrontend enabled service
+    set:
+      customerFrontend:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test not enabled service (1/2)
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled service (2/2)
+    set:
+      b2c:
+        enabled: false
+      customerBackend:
+        enabled: false
+      customerFrontend:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
