@@ -1,0 +1,20 @@
+{{- if (or .Values.frontCore.enabled
+          .Values.apiB2c.enabled
+          .Values.apiReferential.enabled
+          .Values.b2c.enabled
+          .Values.b2b.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled)
+-}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+data:
+  COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }}
+  COOG_URL: {{ printf "http://%s" (include "general.names.short" .) | quote }}
+  {{- range $key, $value := .Values.frontCore.extraEnvVar }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}

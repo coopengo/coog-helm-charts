@@ -1,0 +1,15 @@
+{{- if .Values.quota.enabled -}}
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: {{ include "general.names.fullname" . }}
+  namespace: {{ .Release.Name }}
+spec:
+  hard:
+    requests:
+      cpu: {{ .Values.quota.hard.requests.cpu | quote }}
+      memory: {{ .Values.quota.hard.requests.memory | quote }}
+    limits:
+      cpu: {{ .Values.quota.hard.limits.cpu | quote }}
+      memory: {{ .Values.quota.hard.limits.memory | quote }}
+{{- end }}

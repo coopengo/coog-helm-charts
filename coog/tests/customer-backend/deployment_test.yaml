@@ -1,0 +1,342 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test customer-backend deployment
+templates:
+  - customer-backend/configmap.yaml
+  - customer-backend/deployment.yaml
+  - customer-backend/secret.yaml
+  - configmap-global.yaml
+  - secret-global.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 24
+tests:
+  - it: Test metadata & template
+    template: customer-backend/deployment.yaml
+    set:
+      extraEnvVar:
+        ENABLE_GLOBAL_CONFIGMAP: foo
+      customerBackend:
+        enabled: true
+      imageCredentials:
+        name: test-registry
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
+    asserts:
+      - isKind:
+          of: Deployment
+      - contains:
+          path: spec.template.spec.imagePullSecrets
+          content:
+            name: test-registry
+      - equal:
+          path: metadata.name
+          value: test-coog-customer-backend
+      - isNotNull:
+          path: spec.replicas
+      - matchRegex:
+          path: spec.strategy.type
+          pattern: ^(RollingUpdate|Recreate)$
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: coog-customer-backend
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: coog-.*$
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: coog-customer-backend
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/instance"]
+          value: test
+      # [Start] Check checksum configuration - auto update pods when there is a change in configmap & secrets
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret"]
+      # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
+
+  - it: Test disabled configmaps, secrets & checksums
+    template: customer-backend/deployment.yaml
+    set:
+      extraEnvVar: {}
+      customerBackend:
+        enabled: true
+      secrets:
+        extraEnvVar: {}
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/configmap-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/configmap"]
+      - notExists:
+          path: spec.template.metadata.annotations["checksum/secret-global"]
+      - isNotEmpty:
+          path: spec.template.metadata.annotations["checksum/secret"]
+      # [Start] Check environment files
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-customer-backend-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].envFrom
+          content:
+            secretRef:
+              name: test-coog-customer-backend-configuration
+      # [End] Check environment files
+
+  - it: Test Container
+    template: customer-backend/deployment.yaml
+    set:
+      extraEnvVar:
+        ENABLE_GLOBAL_CONFIGMAP: foo
+      customerBackend:
+        enabled: true
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
+    asserts:
+      # Check Containers pod image
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].image
+          value: cooghub/coog-customer-backend:changeme
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].imagePullPolicy
+          pattern: ^(Always|Never|IfNotPresent)$
+      # [Start] Check environment files
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-customer-backend-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].envFrom
+          content:
+            secretRef:
+              name: test-coog-customer-backend-configuration
+      # [End] Check environment files
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].ports
+          content:
+            name: http
+            containerPort: 1337
+      # [Start] Check resources limites & requests
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].resources.limits.cpu
+          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].resources.limits.memory
+          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].resources.requests.cpu
+          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].resources.requests.memory
+          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      # [End] Check resources limites & requests
+
+  - it: Test initContainer
+    template: customer-backend/deployment.yaml
+    set:
+      extraEnvVar:
+        ENABLE_GLOBAL_CONFIGMAP: foo
+      customerBackend:
+        enabled: true
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_SECRET: foo
+    asserts:
+      # Check Containers pod image
+      - equal:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].image
+          value: cooghub/coog-customer-backend:changeme
+      - matchRegex:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].imagePullPolicy
+          pattern: ^(Always|Never|IfNotPresent)$
+      # [Start] Check environment files
+      - contains:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-customer-backend-configuration
+      - contains:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].envFrom
+          content:
+            secretRef:
+              name: test-coog-customer-backend-configuration
+      # [End] Check environment files
+      # [Start] Check resources limites & requests
+      - matchRegex:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].resources.limits.cpu
+          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      - matchRegex:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].resources.limits.memory
+          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      - matchRegex:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].resources.requests.cpu
+          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      - matchRegex:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].resources.requests.memory
+          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      # [End] Check resources limites & requests
+
+  - it: Test Global components configuration
+    template: customer-backend/deployment.yaml
+    set:
+      customerBackend:
+        enabled: true
+      replicaCount: 2
+      strategy:
+        type: Recreate
+      image:
+        repository: global-docker-repository
+        tag: global-docker-tag
+        pullPolicy: Always
+      securityContext:
+        runAsUser: 1003
+        runAsGroup: 1003
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 2
+      - equal:
+          path: spec.strategy.type
+          value: Recreate
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].image
+          value: global-docker-repository/coog-customer-backend:global-docker-tag
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].imagePullPolicy
+          value: Always
+      - equal:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].securityContext.runAsUser
+          value: 1003
+      - equal:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].securityContext.runAsGroup
+          value: 1003
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].securityContext.runAsUser
+          value: 1003
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].securityContext.runAsGroup
+          value: 1003
+
+  - it: Test specific component configuration
+    template: customer-backend/deployment.yaml
+    set:
+      customerBackend:
+        enabled: true
+        replicaCount: 3
+        strategy:
+          type: RollingUpdate
+        image:
+          repository: specific-docker-repository
+          tag: specific-docker-tag
+          pullPolicy: Never
+        securityContext:
+          runAsUser: 1001
+          runAsGroup: 1001
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+      - equal:
+          path: spec.strategy.type
+          value: RollingUpdate
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].image
+          value: specific-docker-repository/coog-customer-backend:specific-docker-tag
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].imagePullPolicy
+          value: Never
+      - equal:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].securityContext.runAsUser
+          value: 1001
+      - equal:
+          path: spec.template.spec.initContainers[?(@.name == "coog-customer-backend-build")].securityContext.runAsGroup
+          value: 1001
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].securityContext.runAsUser
+          value: 1001
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].securityContext.runAsGroup
+          value: 1001
+
+  - it: Test customerBackend enabled deployment
+    template: customer-backend/deployment.yaml
+    set:
+      customerBackend:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test customerBackend enabled deployment
+    template: customer-backend/deployment.yaml
+    set:
+      customerFrontend:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test not enabled deployment (1/2)
+    template: customer-backend/deployment.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled deployment (2/2)
+    template: customer-backend/deployment.yaml
+    set:
+      customerBackend:
+        enabled: false
+      customerFrontend:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

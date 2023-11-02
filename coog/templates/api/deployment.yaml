@@ -1,113 +1,113 @@
-{{- if .Values.api.enabled -}}
+{{- if (or .Values.frontCore.enabled
+          .Values.apiB2c.enabled
+          .Values.apiReferential.enabled
+          .Values.b2c.enabled
+          .Values.b2b.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled)
+-}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "full_name" . }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ .Values.api.replicaCount }}
-{{- if not .Values.quota.rolling_update }}
+  replicas: {{ default .Values.replicaCount .Values.frontCore.api.replicaCount }}
   strategy:
-    type: Recreate
-{{- end }}
+    type: {{ default .Values.strategy.type .Values.frontCore.api.strategy.type }}
   selector:
-    matchLabels:
-      app.kubernetes.io/name: {{ include "short_name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
   template:
     metadata:
-      labels:
-        app.kubernetes.io/name: {{ include "short_name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
+      annotations:
+        {{- if .Values.extraEnvVar }}
+        checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
+        {{- end }}
+        checksum/configmap-frontcore: {{ include (printf "%s/%s" $.Template.BasePath "configmap-frontcore.yaml") . | sha256sum  }}
+        checksum/configmap: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "configmap.yaml") . | sha256sum }}
+        {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+        checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
+        {{- end }}
+        {{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.extraEnvVar) }}
+        checksum/secret-frontcore: {{ include (printf "%s/%s" $.Template.BasePath "secret-frontcore.yaml") . | sha256sum  }}
+        {{- end }}
+        {{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.api .Values.secrets.frontCore.api.extraEnvVar) }}
+        checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
+        {{- end }}
+        checksum/secret-mongodb: {{ include (printf "%s/%s" $.Template.BasePath "secret-mongodb.yaml") . | sha256sum  }}
     spec:
-    {{- with .Values.api.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
+        - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
-        - name: {{ include "short_name" . }}
-          image: "{{ .Values.api.image.repository }}:{{ .Values.api.image.tag }}"
-          imagePullPolicy: {{ .Values.api.image.pullPolicy }}
+        - name: {{ include "general.names.name" . }}
+          image: "{{ default .Values.image.repository .Values.frontCore.api.image.repository }}/{{ .Values.frontCore.api.image.name }}:{{ default .Values.image.tag .Values.frontCore.api.image.tag }}"
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.frontCore.api.image.pullPolicy | quote }}
           securityContext:
             allowPrivilegeEscalation: false
             capabilities:
               drop:
-              - ALL
+                - ALL
             privileged: false
             procMount: Default
             runAsNonRoot: true
-            runAsUser: {{ .Values.coog.securityContext.runAsUser }}
-          env:
-            {{- if and .Values.secrets.api .Values.secrets.api.mongodb_uri }}
-            - name:  MONGODB_URI
-              valueFrom:
-                secretKeyRef:
-                  name: coog-api-mongo-db-secret
-                  key: MONGODB_URI
-            {{ else }}
-            - name:  MONGO_HOST
-            {{- if not .Values.gateway.external_mongodb.enabled }}
-              value: "{{ .Release.Name }}-mongodb"
-            {{- else }}
-              value: "{{ .Values.gateway.external_mongodb.host }}"
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.frontCore.api.securityContext.runAsUser }}
+            runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.frontCore.api.securityContext.runAsGroup }}
+          envFrom:
+            {{- if .Values.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
-            - name:  MONGO_PORT
-            {{- if not .Values.gateway.external_mongodb.enabled }}
-              value: "{{ .Values.mongodb.service.port }}"
-            {{- else }}
-              value: "{{ .Values.gateway.external_mongodb.port }}"
+            - configMapRef:
+                name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
+            - configMapRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
-            - name:  MONGO_DB_NAME
-              value: "{{ .Values.api.mongodb.database }}"
-            - name:  MONGO_IDENTITY_DB_NAME
-              value: "{{ default .Values.api.mongodb.database .Values.api.mongodb.api_database }}"
-            {{ end }}
-            - name: COOG_URL
-              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-coog"
-            - name: COOG_DB_NAME
-              value: "{{ .Values.secrets.coog.postgres.database }}"
-            - name:  COOG_API_V1_URL
-              value: "http://{{ .Release.Name }}-{{ .Chart.Name }}-web"
-            - name:  JWT_INTERNAL_ENCRYPTION
-              value: "{{ .Values.jwt.internal.encryption }}"
-            {{- if .Values.api.extraEnv }}
-            {{- range $key, $value := .Values.api.extraEnv }}
-            - name:  {{ $key }}
-              value: {{ $value | quote }}
+            {{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
             {{- end }}
+            {{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.api .Values.secrets.frontCore.api.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             {{- end }}
+            - secretRef:
+                name: {{ printf "%s-mongodb-configuration" (include "general.names.short" .) }}
           ports:
             - name: http
               containerPort: 3000
-              protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.frontCore.api.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
               path: /
               port: http
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.frontCore.api.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /
               port: http
-          resources:
-            {{- toYaml .Values.api.resources | nindent 12 }}
-      {{- with .Values.api.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.frontCore.api.readinessProbe) "context" $) | nindent 12 }}
+          resources: {{- toYaml .Values.frontCore.api.resources | nindent 12 }}
+      {{- with default .Values.nodeSelector .Values.frontCore.api.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
-    {{- with .Values.api.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-    {{- with .Values.api.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-    {{- end }}
-{{- if .Values.api.dnsPolicy }}
-      dnsPolicy: {{ .Values.api.dnsPolicy }}
-{{- end }}
-{{- if .Values.api.dnsConfig }}
-      dnsConfig:
-{{ toYaml .Values.api.dnsConfig | indent 8 }}
-{{- end }}
+      {{- with default .Values.affinity .Values.frontCore.api.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.tolerations .Values.frontCore.api.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if default .Values.dnsPolicy .Values.frontCore.api.dnsPolicy }}
+      dnsPolicy: {{ default .Values.dnsPolicy .Values.frontCore.api.dnsPolicy }}
+      {{- end }}
+      {{- if default .Values.dnsConfig .Values.frontCore.api.dnsConfig }}
+      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.frontCore.api.dnsConfig | indent 8 }}
+      {{- end }}
 {{- end }}
