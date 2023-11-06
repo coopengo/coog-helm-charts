@@ -1,17 +1,5 @@
-stages:
-  - synchronize
-  - lint
-  - trigger
-  - package
-  - update
-  - coreye
-
 include:
-  - project: 'coopengo/devops/gitlab-ci-template'
+  - project: "coopengo/devops/gitlab-ci-template"
     ref: master
-    file: 
-      - '/Jobs/reference.debian.gitlab-ci.yml'
-      - '/Jobs/reference.alpine.gitlab-ci.yml'
-  - local: .gitlab/.synchronization.gitlab-ci.yml
-  - local: .gitlab/.package.gitlab-ci.yml
-  - local: .gitlab/.weekly-build.gitlab-ci.yml
+    file:
+      - "/Project/${CI_PROJECT_NAME}/.gitlab-ci.yml"

@@ -1,0 +1,73 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test customer-frontend configmap
+templates:
+  - customer-frontend/configmap.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 24
+tests:
+  - it: Test metadata & template
+    set:
+      customerFrontend:
+        enabled: true
+    asserts:
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: test-coog-customer-frontend-configuration
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: coog-customer-frontend
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: coog-.*$
+
+  - it: Test variables
+    set:
+      ingress:
+        host: test.local
+      customerFrontend:
+        enabled: true
+        extraEnvVar:
+          CUSTOMER_FRONTEND_DYNAMIC_CONFIG: foo
+    asserts:
+      - equal:
+          path: data.API_URL
+          value: http://test-coog-customer-backend
+      - equal:
+          path: data.GATSBY_ROOT_URL
+          value: https://test.local
+      - equal:
+          path: data.CUSTOMER_FRONTEND_DYNAMIC_CONFIG
+          value: foo
+
+  - it: Test customerFrontend enabled configmap
+    set:
+      customerFrontend:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test not enabled configmap (1/2)
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled configmap (2/2)
+    set:
+      customerFrontend:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

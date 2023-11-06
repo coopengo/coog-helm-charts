@@ -1,63 +1,71 @@
-{{- if .Values.coog.enabled -}}
-{{- if .Values.coog.ingress.enabled -}}
-{{- $fullName := include "full_name" . -}}
-{{- $kubeVersion := .Capabilities.KubeVersion.Version -}}
-{{- if semverCompare ">=1.19-0" $kubeVersion -}}
 apiVersion: networking.k8s.io/v1
-{{ else }}
-apiVersion: extensions/v1beta1
-{{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
-  labels:
-{{ include "chart_labels" . | indent 4 }}
+  name: {{ printf "%s" (include "general.names.short" .) }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
   annotations:
-  {{- if $.Values.maintenance_mode.enabled }}
-  {{- range $key, $value := $.Values.maintenance_mode.ingress.annotations }}
+  {{- if and .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.enabled }}
+    cert-manager.io/cluster-issuer: letsencrypt
+  {{- end }}
+  {{- if $.Values.maintenanceMode.enabled }}
+    nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.maintenanceMode.ingress.nginx.customhttperrors }}
+    nginx.ingress.kubernetes.io/default-backend: {{ printf "%s-maintenance" (include "general.names.short" .) }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (.Values.ingress.nginx.whiteList.trustedCidr) }}
+  {{- range $key, $value := $.Values.maintenanceMode.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
-    nginx.ingress.kubernetes.io/custom-http-errors: {{ $.Values.maintenance_mode.ingress.nginx.customhttperrors | quote }}
-    nginx.ingress.kubernetes.io/default-backend: "{{ $.Release.Name }}-{{ $.Chart.Name }}-maintenance"
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ $.Values.maintenance_mode.ingress.nginx.whitelistsourcerange | quote }}
   {{- else }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ .Values.coog.ingress.nginx.whitelistsourcerange | quote }}
+  {{- if eq (default .Values.ingress.nginx.whiteList.managementMode .Values.backCore.coog.ingress.nginx.whiteList.managementMode) "append" }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.backCore.coog.ingress.nginx.whiteList.publicCidr) | quote }}
+  {{- else if eq (default .Values.ingress.nginx.whiteList.managementMode .Values.backCore.coog.ingress.nginx.whiteList.managementMode) "replace" }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr (default .Values.ingress.nginx.whiteList.publicCidr .Values.backCore.coog.ingress.nginx.whiteList.publicCidr)) | quote }}
+  {{- else }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: 127.0.0.1/32
   {{- end }}
-  {{- range $key, $value := .Values.coog.ingress.annotations }}
+  {{- end }}
+  {{- range $key, $value := .Values.ingress.annotations}}
+    {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- range $key, $value := .Values.backCore.coog.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
-{{- if .Values.coog.ingress.tls }}
+  {{- if and .Values.ingress.thisTls.enabled .Values.ingress.host (or .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.externalCertificate.enabled) }}
   tls:
-  {{- range .Values.coog.ingress.tls }}
+    {{- if or .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.externalCertificate.enabled }}
     - hosts:
-      {{- range .hosts }}
-        - {{ . | quote }}
-      {{- end }}
-      secretName: {{ .secretName }}
+        - {{ .Values.ingress.host | quote }}
+      secretName: {{ default (printf "%s-tls" .Values.ingress.host) .Values.ingress.thisTls.externalCertificate.name }}
+    {{- end }}
+    {{- if .Values.ingress.thisTls.configuration }}
+    {{- include "general.tplvalues.render" (dict "value" .Values.ingress.thisTls.configuration "context" $) | nindent 4 }}
+    {{- end }}
   {{- end }}
-{{- end }}
+  ingressClassName: {{ .Values.ingress.className | quote }}
   rules:
-  {{- range .Values.coog.ingress.hosts }}
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+        {{- range .Values.backCore.coog.ingress.defaultPaths }}
+        - path: {{ . | quote }}
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
+              port:
+                number: 80
+        {{- end }}
+  {{- range .Values.backCore.coog.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
         {{- range .paths }}
-        {{- if semverCompare ">=1.19-0" $kubeVersion }}
-        - path: {{ . }}
+        - path: {{ . | quote }}
           pathType: Prefix
           backend:
             service:
-              name: {{ $fullName }}
+              name: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
               port:
-                number: {{ $.Values.coog.service.port }}
-        {{ else }}
-        - path: {{ . }}
-          backend:
-            serviceName: {{ $fullName }}
-            servicePort: {{ $.Values.coog.service.port }}
-        {{- end }}
+                number: 80
         {{- end }}
   {{- end }}
-{{- end }}
-{{- end }}

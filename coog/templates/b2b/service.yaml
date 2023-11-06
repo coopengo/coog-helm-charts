@@ -1,0 +1,14 @@
+{{- if .Values.b2b.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+  selector: {{- include "general.labels.matchLabels" . | nindent 4 }}
+{{- end }}

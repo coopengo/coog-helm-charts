@@ -1,0 +1,19 @@
+{{- if and .Values.backCore.persistentVolume.enabled (not .Values.backCore.persistentVolume.existingClaim) -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  accessModes:
+  {{- range .Values.backCore.persistentVolume.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  {{- if .Values.backCore.persistentVolume.existingPersistentVolumeName }}
+  volumeName: {{ .Values.backCore.persistentVolume.existingPersistentVolumeName }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.backCore.persistentVolume.size }}
+  {{- include "storage.class" (dict "value" .Values.backCore.persistentVolume.storageClass) | nindent 2 }}
+{{- end -}}

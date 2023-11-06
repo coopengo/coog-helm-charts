@@ -1,0 +1,143 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test frontcore configmap
+templates:
+  - configmap-frontcore.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 24
+tests:
+  - it: Test metadata & template
+    set:
+      frontCore:
+        enabled: true
+    asserts:
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: test-coog-frontcore-configuration
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: coog
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: coog-.*$
+
+  - it: Test variables (1/2)
+    set:
+      frontCore:
+        enabled: true
+        extraEnvVar:
+          FRONTCORE_DYNAMIC_CONFIG: foo
+    asserts:
+      - equal:
+          path: data.COOG_DB_NAME
+          value: test
+      - equal:
+          path: data.COOG_URL
+          value: http://test-coog
+      - equal:
+          path: data.FRONTCORE_DYNAMIC_CONFIG
+          value: foo
+
+  - it: Test variables (2/2)
+    set:
+      frontCore:
+        enabled: true
+      postgresql:
+        auth:
+          database: "test0"
+    asserts:
+      - equal:
+          path: data.COOG_DB_NAME
+          value: test0
+
+  - it: Test frontCore enabled configmap
+    set:
+      frontCore:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test apiB2c enabled configmap
+    set:
+      apiB2c:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test apiReferential enabled configmap
+    set:
+      apiReferential:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test b2c enabled configmap
+    set:
+      b2c:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test b2b enabled configmap
+    set:
+      b2b:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test customerBackend enabled configmap
+    set:
+      customerBackend:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test customerFrontend enabled configmap
+    set:
+      customerFrontend:
+        enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
+  - it: Test not enabled configmap (1/2)
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled configmap (2/2)
+    set:
+      frontCore:
+        enabled: false
+      apiB2c:
+        enabled: false
+      apiReferential:
+        enabled: false
+      b2c:
+        enabled: false
+      b2b:
+        enabled: false
+      customerBackend:
+        enabled: false
+      customerFrontend:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0

@@ -1,0 +1,16 @@
+{{- if and .Values.mongodb.isManaged .Values.mongodb.persistence.enabled .Values.mongodb.persistence.customPersistentVolume -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ printf "%s-mongodb" .Release.Name | trunc 63 | trimSuffix "-" }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  capacity: 
+    storage: {{ .Values.mongodb.persistence.size }}
+  accessModes:
+  {{- range .Values.mongodb.persistence.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  {{- include "storage.class" (dict "value" .Values.mongodb.persistence.storageClass) | nindent 2 }}
+{{- toYaml .Values.mongodb.persistence.customPersistentVolume | nindent 2 }}
+{{- end -}}

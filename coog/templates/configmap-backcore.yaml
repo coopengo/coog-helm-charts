@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+data:
+  # Database
+  COOG_POSTGRES_HOST: {{ default (printf "%s-%s" .Release.Name "postgresql") .Values.postgresql.host | quote }}
+  COOG_POSTGRES_PORT: {{ default "5432" .Values.postgresql.service.ports.postgresql | quote }}
+  COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }}
+  DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }} # duplicate of COOG_DB_NAME
+  # Tryton
+  {{- if .Values.libroconv.enabled }}
+  TRYTOND_REPORT__API: {{ printf "http://%s-libroconv:5000/unoconv/{oext}" (include "general.names.short" .) | quote }}
+  {{- end }}
+  TRYTOND_DATABASE_NAMES: {{ default .Release.Name (include "postgres.databases" .) | quote }}
+  {{- range $key, $value := .Values.backCore.extraEnvVar }}
+  {{- if ne $key "LOG_LEVEL" }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
