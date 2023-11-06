@@ -97,7 +97,7 @@ tests:
           content:
             configMapRef:
               name: test-coog-customer-backend-configuration
-      - contains:
+      - notContains:
           path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].envFrom
           content:
             secretRef:
