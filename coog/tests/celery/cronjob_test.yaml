@@ -85,7 +85,7 @@ tests:
           content:
             configMapRef:
               name: test-coog-celery-configuration
-      - contains:
+      - notContains:
           path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].envFrom
           content:
             secretRef:
@@ -149,6 +149,9 @@ tests:
         securityContext:
           runAsUser: ""
           runAsGroup: ""
+      secrets:
+        extraEnvVar:
+          ENABLE_GLOBAL_TEST: foo
     asserts:
       - equal:
           path: spec.schedule
@@ -173,6 +176,11 @@ tests:
           value:
             - ep
             - daily_v2
+      - contains:
+          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
 
   - it: Test specific component configuration
     template: celery/cronjob.yaml
