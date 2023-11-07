@@ -420,7 +420,7 @@ backCore:
     # If set to "-", storageClassName: "", which disables dynamic provisioning
     # If undefined (the default) or set to null, no storageClassName spec is
     # set, choosing the default provisioner.
-    # storageClass: ""
+    storageClass: ""
 
     # -- Create a custom storage class
     # Requires persistentVolume.enabled: true
