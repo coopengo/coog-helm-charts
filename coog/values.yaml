@@ -363,6 +363,9 @@ mongodb:
 rabbitmq:
   persistence:
     enabled: false
+  containerSecurityContext:
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
   service:
     port: 5672
   resources:
