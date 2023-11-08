@@ -1,18 +1,12 @@
 dependencies:
 - name: mongodb
   repository: https://charts.bitnami.com/bitnami
-  version: 7.14.1
+  version: 12.1.31
 - name: rabbitmq
   repository: https://charts.bitnami.com/bitnami
-  version: 7.6.8
-- name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 10.5.0
+  version: 12.3.0
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 8.9.6
-- name: flower
-  repository: https://raw.githubusercontent.com/coopengo/coog-helm-charts/master
-  version: 0.2.0
-digest: sha256:3b39fb3aa402453dcfc34818931f0fc5f680b34f377924bdc469735e23905395
-generated: "2021-04-19T10:29:13.282110299+02:00"
+  version: 13.1.5
+digest: sha256:c56354d2fbb0642c44afcbb90cb3590adf4ad42386b048ce3ab5fe74fd3ea78a
+generated: "2023-10-31T16:40:10.069006256+01:00"
