@@ -1,12 +1,12 @@
 dependencies:
 - name: mongodb
   repository: https://charts.bitnami.com/bitnami
-  version: 12.1.31
+  version: 14.2.5
 - name: rabbitmq
   repository: https://charts.bitnami.com/bitnami
-  version: 12.3.0
+  version: 12.4.2
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 13.1.5
-digest: sha256:c56354d2fbb0642c44afcbb90cb3590adf4ad42386b048ce3ab5fe74fd3ea78a
-generated: "2023-10-31T16:40:10.069006256+01:00"
+digest: sha256:d313639f4c0f6784bc703d9476f05822e69393968ffc479b675cba712adda3bc
+generated: "2023-11-10T17:10:41.695415976+01:00"
