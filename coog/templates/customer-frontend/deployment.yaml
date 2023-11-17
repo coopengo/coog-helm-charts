@@ -60,8 +60,10 @@ spec:
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
+            {{- if (and .Values.secrets .Values.secrets.customerFrontend .Values.secrets.customerFrontend.extraEnvVar) }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- end }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.customerFrontend.image.repository }}/{{ .Values.customerFrontend.image.name }}:{{ default .Values.image.tag .Values.customerFrontend.image.tag }}"
@@ -90,8 +92,10 @@ spec:
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
+            {{- if (and .Values.secrets .Values.secrets.customerFrontend .Values.secrets.customerFrontend.extraEnvVar) }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 5000

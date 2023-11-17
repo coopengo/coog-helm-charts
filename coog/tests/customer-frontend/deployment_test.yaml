@@ -23,6 +23,9 @@ tests:
       imageCredentials:
         name: test-registry
       secrets:
+        customerFrontend:
+          extraEnvVar:
+            ENABLE_CUSTOMERFRONTEND_SECRET: foo
         extraEnvVar:
           ENABLE_GLOBAL_SECRET: foo
     asserts:
@@ -65,7 +68,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret-global"]
-      - notExists:
+      - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
 
@@ -76,6 +79,8 @@ tests:
       customerFrontend:
         enabled: true
       secrets:
+        customerFrontend:
+          extraEnvVar: {}
         extraEnvVar: {}
     asserts:
       - notExists:
@@ -102,7 +107,7 @@ tests:
           content:
             secretRef:
               name: test-coog-global-configuration
-      - contains:
+      - notContains:
           path: spec.template.spec.initContainers[?(@.name == "coog-customer-frontend-build")].envFrom
           content:
             secretRef:
@@ -122,7 +127,7 @@ tests:
           content:
             secretRef:
               name: test-coog-global-configuration
-      - contains:
+      - notContains:
           path: spec.template.spec.containers[?(@.name == "coog-customer-frontend")].envFrom
           content:
             secretRef:
@@ -137,6 +142,9 @@ tests:
       customerFrontend:
         enabled: true
       secrets:
+        customerFrontend:
+          extraEnvVar:
+            ENABLE_CUSTOMERFRONTEND_SECRET: foo
         extraEnvVar:
           ENABLE_GLOBAL_SECRET: foo
     asserts:
@@ -197,6 +205,9 @@ tests:
       customerFrontend:
         enabled: true
       secrets:
+        customerFrontend:
+          extraEnvVar:
+            ENABLE_CUSTOMERFRONTEND_SECRET: foo
         extraEnvVar:
           ENABLE_GLOBAL_SECRET: foo
     asserts:
