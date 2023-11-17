@@ -21,7 +21,9 @@ spec:
         {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
         checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
         {{- end }}
+        {{- if (and .Values.secrets .Values.secrets.customerFrontend .Values.secrets.customerFrontend.extraEnvVar) -}}
         checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
+        {{- end }}
     spec:
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
