@@ -65,7 +65,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret-global"]
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/secret"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
 
@@ -84,7 +84,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
-      - isNotEmpty:
+      - notExists:
           path: spec.template.metadata.annotations["checksum/secret"]
       # [Start] Check environment files
       - notContains:
