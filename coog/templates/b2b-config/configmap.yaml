@@ -1,13 +1,13 @@
 {{- if .Values.b2bConfig.enabled -}}
-{{- if .Values.b2bConfig.extraEnvVar -}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
+  COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }}
+  COOG_URL: {{ printf "http://%s" (include "general.names.short" .) | quote }}
   {{- range $key, $value := .Values.b2bConfig.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
-{{- end }}
 {{- end }}

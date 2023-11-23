@@ -38,6 +38,14 @@ spec:
             procMount: Default
             runAsNonRoot: true
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.b2bConfig.securityContext.runAsUser }}
+          {{- if and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.extraEnvVar .Values.secrets.frontCore.extraEnvVar.JWT_INTERNAL_ENCRYPTION }}
+          env:
+            - name: JWT_INTERNAL_ENCRYPTION
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
+                  key: JWT_INTERNAL_ENCRYPTION
+          {{- end }}
           {{- if (or .Values.extraEnvVar (and .Values.b2bConfig .Values.b2bConfig.extraEnvVar)) }}
           envFrom:
             {{- if .Values.extraEnvVar }}
