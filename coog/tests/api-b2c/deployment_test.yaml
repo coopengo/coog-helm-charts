@@ -112,6 +112,8 @@ tests:
       - notExists:
           path: spec.template.metadata.annotations["checksum/secret"]
       # [Start] Check environment files
+      - notExists:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].env
       - notContains:
           path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
           content:
@@ -157,6 +159,9 @@ tests:
       secrets:
         extraEnvVar:
           ENABLE_GLOBAL_SECRET: foo
+        backCore:
+          extraEnvVar:
+            TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET: Enabled
         frontCore:
           extraEnvVar:
             ENABLE_FRONTCORE_SECRET: foo
@@ -172,6 +177,14 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].imagePullPolicy
           pattern: ^(Always|Never|IfNotPresent)$
       # [Start] Check environment files
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].env
+          content:
+            name: COOG_DOCUMENT_TOKEN_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: test-coog-backcore-configuration
+                key: TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].envFrom
           content:
