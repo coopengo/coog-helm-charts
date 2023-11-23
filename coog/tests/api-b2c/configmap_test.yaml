@@ -44,6 +44,9 @@ tests:
           API_B2C_DYNAMIC_CONFIG: foo
     asserts:
       - equal:
+          path: data.COOG_URL
+          value: http://test-coog
+      - equal:
           path: data.API_B2C_DYNAMIC_CONFIG
           value: foo
 
@@ -130,4 +133,4 @@ tests:
           extraEnvVar: {}
     asserts:
       - hasDocuments:
-          count: 0
+          count: 1
