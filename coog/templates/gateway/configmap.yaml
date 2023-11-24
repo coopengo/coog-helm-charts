@@ -13,7 +13,7 @@ metadata:
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
   # URLs
-  COOG_GATEWAY_URL: {{ printf "https://%s" .Values.ingress.host | quote }}
+  COOG_GATEWAY_URL: {{ printf "https://%s%s" .Values.ingress.host (.Values.frontCore.gateway.extraEnvVar.BASE_PATH | default "") | quote }}
   COOG_API_IDENTITY_MANAGER_URL: {{ printf "http://%s-api-identity-manager" (include "general.names.short" .) | quote }}
   COOG_API_URL_V2: {{ printf "http://%s-api" (include "general.names.short" .) | quote }}
   COOG_PORTAL_URL: {{ printf "https://%s" .Values.ingress.host | quote }}
