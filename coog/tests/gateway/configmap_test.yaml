@@ -41,10 +41,11 @@ tests:
         gateway:
           extraEnvVar:
             GATEWAY_DYNAMIC_CONFIG: foo
+            BASE_PATH: /test
     asserts:
       - equal:
           path: data.COOG_GATEWAY_URL
-          value: "https://test.local"
+          value: "https://test.local/test"
       - equal:
           path: data.COOG_API_IDENTITY_MANAGER_URL
           value: "http://test-coog-api-identity-manager"
