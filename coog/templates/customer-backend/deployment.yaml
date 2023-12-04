@@ -45,7 +45,7 @@ spec:
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.customerBackend.securityContext.runAsUser }}
             runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.customerBackend.securityContext.runAsGroup }}
           resources: {{- toYaml .Values.customerBackend.initContainers.resources | nindent 12 }}
-          command: ['sh', '-c', 'yarn', 'build', '--no-optimization']
+          command: ['yarn', 'build', '--no-optimization']
           volumeMounts:
             - name: builddir
               mountPath: "/workdir/build"
