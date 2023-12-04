@@ -1,3 +1,6 @@
+# [23.48.2348-1][23.41.2348-1][23.14.2348-1][22.41.2348-1][22.14.2348-1-v2][2.14.2348-1-v2] - 2023-12-04
+- Fix command issue on the initContainer for customer-backend & customer-frontend
+
 # [23.41.2343] - 2023-10-26
 - Delete the "Web" component, which is no longer supported
 - Update RabbitMQ dependency to 12.3.0
