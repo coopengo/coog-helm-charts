@@ -765,6 +765,54 @@ libroconv:
     successThreshold: 1
     failureThreshold: 3
 
+paybox:
+  enabled: false
+  strategy:
+    type: ""
+
+  image:
+    # -- paybox image repository
+    name: paybox
+
+  # -- Configure environement variables for this component
+  extraEnvVar: {}
+
+  ingress:
+    # -- Default host for the ingress resource for paybox containers'
+    defaultPaths:
+        - /paybox(/|$)(.*)
+
+    # -- additionals hosts & paths
+    # host : required
+    # path : optionnal
+    # e.g:
+    # hosts:
+    #   - host: test1.example.com
+    #     paths:
+    #       - /
+    #   - host: test2.example.com
+    hosts: []
+
+    annotations:
+      nginx.ingress.kubernetes.io/rewrite-target: "/$2"
+
+    nginx:
+      whiteList:
+        publicCidr: []
+
+  securityContext:
+    {}
+    # runAsUser: ""
+
+  # -- paybox containers' resource requests and limits
+  resources:
+    limits:
+      cpu: 100m
+      memory: 100Mi
+    requests:
+      cpu: 80m
+      memory: 80Mi
+
 #############################################################################################################################
 #                                            Front Minimum components                                                       #
 #############################################################################################################################
