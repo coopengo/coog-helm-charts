@@ -1,3 +1,6 @@
+# [23.49.2349]
+- Add configuration management to import data into the Coog database # PINTE-25571
+
 # [23.48.2348-1][23.41.2348-1][23.14.2348-1][22.41.2348-1][22.14.2348-1-v2][2.14.2348-1-v2] - 2023-12-04
 - Fix command issue on the initContainer for customer-backend & customer-frontend
 
