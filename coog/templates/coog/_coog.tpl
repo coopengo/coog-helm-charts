@@ -22,6 +22,6 @@ Setup TRYTOND_WEB__CORS variable which has a dynamically generated part with the
 {{- range .Values.backCore.coog.ingress.nginx.whiteList.cors }}
 {{- $cors = . | append $cors -}}
 {{- end -}}
-{{- printf ",%s" (join "," $cors) }}
+{{- printf "\n%s" (join "\n" $cors) }}
 {{- end -}}
 {{- end -}}
