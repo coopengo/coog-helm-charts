@@ -53,6 +53,14 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.frontCore.api.securityContext.runAsUser }}
             runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.frontCore.api.securityContext.runAsGroup }}
+          {{- if and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.extraEnvVar .Values.secrets.backCore.extraEnvVar.TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET }}
+          env:
+            - name: COOG_DOCUMENT_TOKEN_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+                  key: TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET
+          {{- end }}
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:
