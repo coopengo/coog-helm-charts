@@ -517,7 +517,7 @@ backCore:
     TRYTOND_TZ: Europe/Paris
 
   migrator:
-    enabled: false
+    enabled: true
     extraEnvVar:
       # Source database that contains customers data to migrate inside coog database
       TRYTOND_MIGRATION__DATABASE: ""
