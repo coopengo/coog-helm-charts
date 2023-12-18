@@ -1,6 +1,6 @@
 # coog-helm-charts
 
-:warning: : **A new version has been introduced, starting with version 23.44.2345. This new version is incompatible with configurations of versions lower than 2345.** :warning:
+:warning: : **A new version has been introduced, starting with version 23.45.2345. This new version is incompatible with configurations of versions lower than 2345.** :warning:
 
 ## Prérequis
 

@@ -1,6 +1,11 @@
 # [23.51.2351]
 - Add configuration management to import data into the Coog database # PINTE-25571
 
+# [23.49.2349][23.41.2349][23.14.2349][22.41.2349][22.14.2349-v2][2.14.2349-v2]
+- COOG_DOCUMENT_TOKEN_SECRET variable added to the coog-api component.
+  This variable is automatically generated from the TRYTOND_DOCUMENT_API__DOCUMENT_TOKEN_SECRET variable on backCore.
+
+
 # [23.48.2348-1][23.41.2348-1][23.14.2348-1][22.41.2348-1][22.14.2348-1-v2][2.14.2348-1-v2] - 2023-12-04
 - Fix command issue on the initContainer for customer-backend & customer-frontend
 
