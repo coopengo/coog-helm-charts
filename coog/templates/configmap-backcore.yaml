@@ -19,3 +19,8 @@ data:
   {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- end }}
+  {{- if .Values.backCore.migrator.enabled }}
+  {{- range $key, $value := .Values.backCore.migrator.extraEnvVar }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}

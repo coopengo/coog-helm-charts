@@ -516,6 +516,15 @@ backCore:
     TRYTOND_SEPA_PAYMENT__OUT_DIR: /workspace/io/batch/sepa/sepa_out
     TRYTOND_TZ: Europe/Paris
 
+  migrator:
+    enabled: true
+    extraEnvVar:
+      # Source database that contains customers data to migrate inside coog database
+      TRYTOND_MIGRATION__DATABASE: ""
+      TRYTOND_MIGRATION__SSLMODE: ""
+      TRYTOND_MIGRATION__SCHEMA: ""
+
+
   coog:
     # -- coog, celery and batch configuration for number of workers
     workers:

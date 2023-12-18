@@ -34,6 +34,12 @@ tests:
       backCore:
         extraEnvVar:
           BACKCORE_DYNAMIC_CONFIG: foo
+        migrator:
+          enabled: true
+          extraEnvVar:
+            TRYTOND_MIGRATION__DATABASE: "staging"
+            TRYTOND_MIGRATION__SSLMODE: "disabled"
+            TRYTOND_MIGRATION__SCHEMA: "staging"
     asserts:
       - equal:
           path: data.COOG_POSTGRES_HOST
@@ -57,6 +63,15 @@ tests:
           value: foo
       - notExists:
           path: data.LOG_LEVEL
+      - equal:
+          path: data.TRYTOND_MIGRATION__DATABASE
+          value: staging
+      - equal:
+          path: data.TRYTOND_MIGRATION__SSLMODE
+          value: disabled
+      - equal:
+          path: data.TRYTOND_MIGRATION__SCHEMA
+          value: staging
 
   - it: Test variables (2/2)
     set:
@@ -71,6 +86,8 @@ tests:
         extraDatabases:
           - test1
           - test2
+        migrator:
+          enabled: false
       libroconv:
         enabled: true
     asserts:
@@ -92,3 +109,9 @@ tests:
       - equal:
           path: data.TRYTOND_REPORT__API
           value: http://test-coog-libroconv:5000/unoconv/{oext}
+      - notExists:
+          path: data.TRYTOND_MIGRATION__DATABASE
+      - notExists:
+          path: data.TRYTOND_MIGRATION__SSLMODE
+      - notExists:
+          path: data.TRYTOND_MIGRATION__SCHEMA
