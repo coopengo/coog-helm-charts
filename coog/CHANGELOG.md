@@ -1,4 +1,4 @@
-# [23.45.2350]
+# [23.51.2351]
 - Add configuration management to import data into the Coog database # PINTE-25571
 
 # [23.48.2348-1][23.41.2348-1][23.14.2348-1][22.41.2348-1][22.14.2348-1-v2][2.14.2348-1-v2] - 2023-12-04
