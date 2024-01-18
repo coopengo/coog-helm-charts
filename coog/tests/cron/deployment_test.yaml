@@ -89,7 +89,7 @@ tests:
       extraEnvVar: {}
       cron:
         enabled: true
-        extraEnvVar: {}
+        extraEnvVar: null
       secrets:
         extraEnvVar: {}
         cron:

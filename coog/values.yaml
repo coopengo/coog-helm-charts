@@ -689,7 +689,8 @@ cron:
     # runAsUser: ""
 
   # -- Dynamic ConfigMap variables for cron
-  extraEnvVar: {}
+  extraEnvVar:
+    LOG_LEVEL: WARNING
 
   # -- cron configuration for number of workers. It can be customized for each component
   workers:
