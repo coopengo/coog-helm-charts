@@ -93,6 +93,9 @@ tests:
         backCore:
           cron:
             extraEnvVar: {}
+      backCore:
+        cron:
+          extraEnvVar: null
     asserts:
       - notExists:
           path: spec.template.metadata.annotations["checksum/configmap-global"]
