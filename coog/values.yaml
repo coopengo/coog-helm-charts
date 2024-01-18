@@ -599,7 +599,8 @@ backCore:
 
   cron:
     # -- Dynamic ConfigMap variables for cron
-    extraEnvVar: {}
+    extraEnvVar:
+      LOG_LEVEL: WARNING
 
     # -- cron containers' resource requests and limits
     resources:
