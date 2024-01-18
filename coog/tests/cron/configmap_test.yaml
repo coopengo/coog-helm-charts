@@ -49,7 +49,7 @@ tests:
     set:
       backCore:
         cron:
-          extraEnvVar: {}
+          extraEnvVar: null
     asserts:
       - hasDocuments:
           count: 0
