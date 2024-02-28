@@ -33,7 +33,8 @@ spec:
                 ${PSQL_CMD} -d postgres -c "ALTER ROLE \"{{ default .Release.Name .Values.postgresql.auth.database }}\" PASSWORD '{{ default "" .Values.postgresql.auth.password }}' ;";
                 ${PSQL_CMD} -d postgres -c "GRANT \"{{ default .Release.Name .Values.postgresql.auth.database }}\" TO \"{{ default "postgres" .Values.postgresql.auth.adminUsername }}\";";
                 ${PSQL_CMD} -d postgres -c "CREATE DATABASE \"{{ default .Release.Name .Values.postgresql.auth.database }}\" OWNER \"{{ default .Release.Name .Values.postgresql.auth.database }}\" ;";
-                ${PSQL_CMD} -d '{{ default .Release.Name .Values.postgresql.auth.database }}' -c " CREATE EXTENSION IF NOT EXISTS unaccent;";
+                ${PSQL_CMD} -d '{{ default .Release.Name .Values.postgresql.auth.database }}' -c "CREATE EXTENSION IF NOT EXISTS unaccent;";
+                ${PSQL_CMD} -d '{{ default .Release.Name .Values.postgresql.auth.database }}' -c "CREATE EXTENSION IF NOT EXISTS pg_trgm;";
                 echo "Database {{ default .Release.Name .Values.postgresql.auth.database }} has been created.";
             fi
 {{- end -}}
