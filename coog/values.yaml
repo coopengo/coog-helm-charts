@@ -233,8 +233,8 @@ maintenanceMode:
       cpu: 100m
       memory: 100Mi
     requests:
-      cpu: 80m
-      memory: 80Mi
+      cpu: 50m
+      memory: 50Mi
 
   ingress:
     nginx:
@@ -310,7 +310,7 @@ mongodb:
       memory: 400Mi
     requests:
       cpu: 100m
-      memory: 300Mi
+      memory: 200Mi
   volumePermissions:
     enabled: true
     resources:
@@ -319,7 +319,7 @@ mongodb:
         memory: 400Mi
       requests:
         cpu: 100m
-        memory: 300Mi
+        memory: 200Mi
   initdbScripts:
     coog_init_script.sh: |
       #!/bin/sh
@@ -370,8 +370,8 @@ rabbitmq:
       cpu: 600m
       memory: 400Mi
     requests:
-      cpu: 480m
-      memory: 320Mi
+      cpu: 300m
+      memory: 200Mi
   memoryHighWatermark:
     enabled: true
     type: relative
@@ -571,17 +571,17 @@ backCore:
         cpu: 1500m
         memory: 1750Mi
       requests:
-        cpu: 1200m
-        memory: 1400Mi
+        cpu: 750m
+        memory: 875Mi
 
     initContainers:
       resources:
         limits:
-          cpu: 500m
-          memory: 800Mi
+          cpu: 1500m
+          memory: 1750Mi
         requests:
-          cpu: 400m
-          memory: 640Mi
+          cpu: 750m
+          memory: 875Mi
 
   celery:
     workers:
@@ -602,8 +602,8 @@ backCore:
         cpu: 400m
         memory: 1000Mi
       requests:
-        cpu: 320m
-        memory: 800Mi
+        cpu: 200m
+        memory: 500Mi
 
   cron:
     # -- Dynamic ConfigMap variables for cron
@@ -616,8 +616,8 @@ backCore:
         cpu: 200m
         memory: 500Mi
       requests:
-        cpu: 160m
-        memory: 400Mi
+        cpu: 100m
+        memory: 250Mi
 
     # -- Configure options applied to cron deployment, liveness, readiness and startup probes
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
@@ -684,8 +684,8 @@ backCore:
         cpu: 50m
         memory: 80Mi
       requests:
-        cpu: 40m
-        memory: 64Mi
+        cpu: 25m
+        memory: 40Mi
 
 #############################################################################################################################
 #                                            Back Additional components                                                     #
@@ -711,8 +711,8 @@ libroconv:
       cpu: 300m
       memory: 300Mi
     requests:
-      cpu: 240m
-      memory: 240Mi
+      cpu: 150m
+      memory: 150Mi
 
   livenessProbe:
     initialDelaySeconds: 0
@@ -809,8 +809,8 @@ frontCore:
         cpu: 100m
         memory: 100Mi
       requests:
-        cpu: 80m
-        memory: 80Mi
+        cpu: 50m
+        memory: 50Mi
 
   api:
     strategy:
@@ -833,8 +833,8 @@ frontCore:
         cpu: 500m
         memory: 100Mi
       requests:
-        cpu: 500m
-        memory: 100Mi
+        cpu: 250m
+        memory: 50Mi
 
   apiIdentityManager:
     strategy:
@@ -857,8 +857,8 @@ frontCore:
         cpu: 50m
         memory: 70Mi
       requests:
-        cpu: 50m
-        memory: 56Mi
+        cpu: 25m
+        memory: 35Mi
 
 #############################################################################################################################
 #                                            Front Additional components                                                    #
@@ -909,8 +909,8 @@ b2b:
       cpu: 250m
       memory: 50Mi
     requests:
-      cpu: 200m
-      memory: 40Mi
+      cpu: 125m
+      memory: 25Mi
 
 apiReferential:
   # -- Deploy apiReferential container(s)
@@ -935,8 +935,8 @@ apiReferential:
       cpu: 200m
       memory: 400Mi
     requests:
-      cpu: 160m
-      memory: 320Mi
+      cpu: 100m
+      memory: 200Mi
 
 ##############################
 #      Components B2C        #
@@ -984,8 +984,8 @@ b2c:
       cpu: 50m
       memory: 50Mi
     requests:
-      cpu: 50m
-      memory: 40Mi
+      cpu: 25m
+      memory: 25Mi
 
 customerBackend:
   # -- Deploy b2b container(s)
@@ -1037,8 +1037,8 @@ customerBackend:
       cpu: 400m
       memory: 300Mi
     requests:
-      cpu: 320m
-      memory: 240Mi
+      cpu: 200m
+      memory: 150Mi
 
   initContainers:
     resources:
@@ -1046,8 +1046,8 @@ customerBackend:
         cpu: 400m
         memory: 500Mi
       requests:
-        cpu: 320m
-        memory: 400Mi
+        cpu: 200m
+        memory: 250Mi
 
 customerFrontend:
   # -- Deploy customerFrontend container(s)
@@ -1095,8 +1095,8 @@ customerFrontend:
       cpu: 100m
       memory: 100Mi
     requests:
-      cpu: 80m
-      memory: 80Mi
+      cpu: 50m
+      memory: 50Mi
 
   initContainers:
     resources:
@@ -1104,8 +1104,8 @@ customerFrontend:
         cpu: 400m
         memory: 2000Mi
       requests:
-        cpu: 320m
-        memory: 1600Mi
+        cpu: 200m
+        memory: 1000Mi
 
 # -- Is enable if one off following front component is enable :
 # - b2c
