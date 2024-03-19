@@ -613,10 +613,10 @@ backCore:
     # -- cron containers' resource requests and limits
     resources:
       limits:
-        cpu: 200m
+        cpu: 400m
         memory: 500Mi
       requests:
-        cpu: 100m
+        cpu: 200m
         memory: 250Mi
 
     # -- Configure options applied to cron deployment, liveness, readiness and startup probes
