@@ -9,3 +9,15 @@ data:
   {{- range $key, $value := .Values.backCore.celery.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
+---
+{{- if (and .Values.backCore .Values.backCore.cron .Values.backCore.cron.extraEnvVar) -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-cron-configuration" (include "general.names.fullname" .) }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+data:
+  {{- range $key, $value := .Values.backCore.cron.extraEnvVar }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}

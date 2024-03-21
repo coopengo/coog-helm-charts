@@ -584,6 +584,7 @@ backCore:
           memory: 875Mi
 
   celery:
+    replicaCount: "1"
     workers:
       # -- Number of celery workers to run
       number: ""
@@ -605,19 +606,13 @@ backCore:
         cpu: 200m
         memory: 500Mi
 
+  celery_secondary:
+    replicaCount: "0"
+
   cron:
     # -- Dynamic ConfigMap variables for cron
     extraEnvVar:
       LOG_LEVEL: WARNING
-
-    # -- cron containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 200m
-        memory: 500Mi
-      requests:
-        cpu: 100m
-        memory: 250Mi
 
     # -- Configure options applied to cron deployment, liveness, readiness and startup probes
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
