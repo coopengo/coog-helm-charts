@@ -584,7 +584,6 @@ backCore:
           memory: 875Mi
 
   celery:
-    replicaCount: "1"
     workers:
       # -- Number of celery workers to run
       number: ""
