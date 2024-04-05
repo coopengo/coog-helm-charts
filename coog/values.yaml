@@ -589,10 +589,6 @@ backCore:
       number: ""
       maximumMemory: 512000
 
-    index:
-      workers:
-        number: "1"
-
     coogCeleryModule: coog_async.coog_celery
 
     # -- Configure environement variables for this component
