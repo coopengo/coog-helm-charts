@@ -49,7 +49,7 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
             runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.securityContext.runAsGroup }}
-          command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies']
+          command: ['sh', '-c', 'ep admin -cu ir res --activate-dependencies --no-indexes']
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:
