@@ -101,7 +101,6 @@ spec:
                 - "-c"
                 - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
-          resources: {{- toYaml .Values.backCore.celery.resources | nindent 12 }}
         - name: {{ printf "%s-database-maintenance" (include "general.names.name" .) }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
@@ -167,7 +166,7 @@ spec:
                 - "-c"
                 - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
-          resources: {{- toYaml .Values.backCore.celery.resources | nindent 12 }}
+      resources: {{- toYaml .Values.backCore.celery.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.celery.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
