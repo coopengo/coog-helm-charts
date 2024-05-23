@@ -216,7 +216,7 @@ spec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "celery -A {{ .Values.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
+                - "celery -A {{ .Values.cron.coogCeleryModule }} inspect ping -d coog-celery@$HOSTNAME"
             {{- toYaml .Values.celery.livenessProbe | nindent 12 }}
           readinessProbe:
             periodSeconds: 30
@@ -225,7 +225,7 @@ spec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "celery -A {{ .Values.cron.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
+                - "celery -A {{ .Values.cron.coogCeleryModule }} inspect ping -d coog-celery@$HOSTNAME"
           resources:
             {{- toYaml .Values.celery.resources | nindent 12 }}
       {{- with .Values.celery.nodeSelector }}
