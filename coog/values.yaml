@@ -605,6 +605,15 @@ backCore:
         cpu: 200m
         memory: 500Mi
 
+    databaseMaintenance:
+      resources:
+        limits:
+          cpu: 200m
+          memory: 500Mi
+        requests:
+          cpu: 100m
+          memory: 250Mi
+
   cron:
     # -- Dynamic ConfigMap variables for cron
     extraEnvVar:
