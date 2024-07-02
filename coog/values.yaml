@@ -608,11 +608,11 @@ backCore:
     databaseMaintenance:
       resources:
         limits:
+          cpu: 300m
+          memory: 650Mi
+        requests:
           cpu: 200m
           memory: 500Mi
-        requests:
-          cpu: 100m
-          memory: 250Mi
 
   cron:
     # -- Dynamic ConfigMap variables for cron
