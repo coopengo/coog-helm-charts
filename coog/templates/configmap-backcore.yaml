@@ -14,6 +14,16 @@ data:
   TRYTOND_REPORT__API: {{ printf "http://%s-libroconv:5000/unoconv/{oext}" (include "general.names.short" .) | quote }}
   {{- end }}
   TRYTOND_DATABASE_NAMES: {{ default .Release.Name (include "postgres.databases" .) | quote }}
+  {{- if (or .Values.frontCore.enabled
+          .Values.apiB2c.enabled
+          .Values.apiReferential.enabled
+          .Values.b2c.enabled
+          .Values.b2b.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled)
+  }}
+  TRYTOND_GATEWAY__URL: {{ printf "https://%s%s" .Values.ingress.host (.Values.frontCore.gateway.extraEnvVar.BASE_PATH | default "") | quote }}
+  {{- end }}
   {{- range $key, $value := .Values.backCore.extraEnvVar }}
   {{- if ne $key "LOG_LEVEL" }}
   {{ $key }}: {{ $value | quote }}

@@ -57,6 +57,8 @@ tests:
           value: foo
       - notExists:
           path: data.LOG_LEVEL
+      - notExists:
+          path: data.TRYTOND_GATEWAY__URL
 
   - it: Test variables (2/2)
     set:
@@ -72,6 +74,8 @@ tests:
           - test1
           - test2
       libroconv:
+        enabled: true
+      frontCore:
         enabled: true
     asserts:
       - equal:
@@ -92,3 +96,6 @@ tests:
       - equal:
           path: data.TRYTOND_REPORT__API
           value: http://test-coog-libroconv:5000/unoconv/{oext}
+      - equal:
+          path: data.TRYTOND_GATEWAY__URL
+          value: https://coog.local/gateway
