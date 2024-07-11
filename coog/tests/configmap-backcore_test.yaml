@@ -72,6 +72,8 @@ tests:
       - equal:
           path: data.TRYTOND_MIGRATION__SCHEMA
           value: staging
+      - notExists:
+          path: data.TRYTOND_GATEWAY__URL
 
   - it: Test variables (2/2)
     set:
@@ -89,6 +91,8 @@ tests:
         migrator:
           enabled: false
       libroconv:
+        enabled: true
+      frontCore:
         enabled: true
     asserts:
       - equal:
@@ -115,3 +119,6 @@ tests:
           path: data.TRYTOND_MIGRATION__SSLMODE
       - notExists:
           path: data.TRYTOND_MIGRATION__SCHEMA
+      - equal:
+          path: data.TRYTOND_GATEWAY__URL
+          value: https://coog.local/gateway
