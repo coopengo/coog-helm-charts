@@ -98,4 +98,4 @@ tests:
           value: http://test-coog-libroconv:5000/unoconv/{oext}
       - equal:
           path: data.TRYTOND_GATEWAY__URL
-          value: https://coog.local/gateway
+          value: http://test-coog-gateway
