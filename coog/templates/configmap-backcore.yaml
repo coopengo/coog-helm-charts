@@ -22,7 +22,7 @@ data:
           .Values.customerBackend.enabled
           .Values.customerFrontend.enabled)
   }}
-  TRYTOND_GATEWAY__URL: {{ printf "https://%s%s" .Values.ingress.host (.Values.frontCore.gateway.extraEnvVar.BASE_PATH | default "") | quote }}
+  TRYTOND_GATEWAY__URL: {{ printf "http://%s-gateway" (include "general.names.short" .) | quote }}
   {{- end }}
   {{- range $key, $value := .Values.backCore.extraEnvVar }}
   {{- if ne $key "LOG_LEVEL" }}
