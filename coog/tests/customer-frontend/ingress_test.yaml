@@ -7,15 +7,19 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test metadata & global configurations
     set:
       customerFrontend:
         enabled: true
       ingress:
-        className: "nginx"
+        className:
+          - nginx
+          - int-nginx
     asserts:
+      - hasDocuments:
+          count: 2
       - isKind:
           of: Ingress
       - equal:
@@ -34,8 +38,17 @@ tests:
           path: metadata.labels["app.kubernetes.io/version"]
           pattern: coog-.*$
       - equal:
+          path: metadata.labels["app.kubernetes.io/ingressClassName"]
+          value: nginx
+        documentSelector:
           path: spec.ingressClassName
           value: nginx
+      - equal:
+          path: metadata.labels["app.kubernetes.io/ingressClassName"]
+          value: int-nginx
+        documentSelector:
+          path: spec.ingressClassName
+          value: int-nginx
 
   - it: Test lets encrypt configuration
     set:
@@ -68,6 +81,9 @@ tests:
             hosts:
               - test-custom.local
             secretName: test.local-tls
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
 
   - it: Test annotations
     set:

@@ -14,7 +14,7 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test metadata & template
     template: celery/deployment.yaml
@@ -305,7 +305,6 @@ tests:
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
 
-
   - it: Test Volumes
     template: celery/deployment.yaml
     set:
@@ -391,8 +390,8 @@ tests:
           tag: specific-docker-tag
           pullPolicy: Never
         securityContext:
-            runAsUser: 1001
-            runAsGroup: 1001
+          runAsUser: 1001
+          runAsGroup: 1001
         celery:
           replicaCount: 3
     asserts:
