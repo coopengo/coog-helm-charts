@@ -24,7 +24,16 @@ tests:
           of: Ingress
       - equal:
           path: metadata.name
-          value: test-coog-b2b
+          value: test-coog-b2b-nginx
+        documentSelector:
+          path: spec.ingressClassName
+          value: nginx
+      - equal:
+          path: metadata.name
+          value: test-coog-b2b-int-nginx
+        documentSelector:
+          path: spec.ingressClassName
+          value: int-nginx
       - equal:
           path: metadata.labels["app.kubernetes.io/name"]
           value: coog-b2b

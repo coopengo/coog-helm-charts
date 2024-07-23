@@ -4,7 +4,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "general.names.fullname" $ }}
+  name: {{ printf "%s-%s" (include "general.names.fullname" $) $ingressClassName }}
   labels:
     app.kubernetes.io/ingressClassName: {{ $ingressClassName }}
     {{- include "general.labels.standard" $ | nindent 4 }}
