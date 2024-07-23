@@ -7,7 +7,7 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test configuration
     set:
@@ -52,8 +52,7 @@ tests:
           value: 50Gi
       - contains:
           path: spec.accessModes
-          content:
-            ReadWriteMany
+          content: ReadWriteMany
       - equal:
           path: spec.persistentVolumeReclaimPolicy
           value: Retain
@@ -64,8 +63,7 @@ tests:
             volumeHandle: fs-123456789
       - contains:
           path: spec.mountOptions
-          content:
-            tls
+          content: tls
 
   - it: Test default values
     set:

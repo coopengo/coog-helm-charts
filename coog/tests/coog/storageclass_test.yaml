@@ -7,7 +7,7 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test customStorageClass
     set:
@@ -46,8 +46,7 @@ tests:
             basePath: "/dynamic_provisioning"
       - contains:
           path: mountOptions
-          content:
-            tls
+          content: tls
       - equal:
           path: provisioner
           value: efs.csi.aws.com
@@ -72,7 +71,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: .Values.backCore.persistentVolume.storageClass is required when using customStorageClass!
-  
+
   - it: Test not enabled storageClass (1/3)
     set:
       backCore:
