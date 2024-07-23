@@ -7,14 +7,14 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test metadata & template
     set:
       cron:
         enabled: true
         extraEnvVar:
-            ENABLED_CRON_CONFIGMAP: foo
+          ENABLED_CRON_CONFIGMAP: foo
     asserts:
       - isKind:
           of: ConfigMap
