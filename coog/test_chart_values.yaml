@@ -54,7 +54,9 @@ image:
 ingress:
   # -- Define ingressClassName (default: nginx)
   # Ref : https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
-  className: nginx
+  className:
+    - nginx
+    - int-nginx
   # -- Default host for the ingress record applied for all ingress. It can be customized for each component.
   # e.g:
   # coog:
