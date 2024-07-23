@@ -7,7 +7,7 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test metadata & template
     set:
@@ -86,8 +86,8 @@ tests:
   - it: Test not enabled configmap (1/4)
     set:
       apiB2c:
-          extraEnvVar:
-            CONFIRM_DISABLED: foo
+        extraEnvVar:
+          CONFIRM_DISABLED: foo
     asserts:
       - hasDocuments:
           count: 0
@@ -101,8 +101,8 @@ tests:
       customerFrontend:
         enabled: false
       apiB2c:
-          extraEnvVar:
-            CONFIRM_DISABLED: foo
+        extraEnvVar:
+          CONFIRM_DISABLED: foo
     asserts:
       - hasDocuments:
           count: 0
@@ -116,7 +116,7 @@ tests:
       customerFrontend:
         enabled: false
       apiB2c:
-          extraEnvVar: {}
+        extraEnvVar: {}
     asserts:
       - hasDocuments:
           count: 0
@@ -130,7 +130,7 @@ tests:
       customerFrontend:
         enabled: true
       apiB2c:
-          extraEnvVar: {}
+        extraEnvVar: {}
     asserts:
       - hasDocuments:
           count: 1
