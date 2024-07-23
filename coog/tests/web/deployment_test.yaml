@@ -1,5 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: Test web deployment
+values:
+  - ../../values_secrets.yaml
 templates:
   - web/configmap.yaml
   - web/deployment.yaml
@@ -11,7 +13,7 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test metadata & template
     template: web/deployment.yaml

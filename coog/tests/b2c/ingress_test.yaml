@@ -7,7 +7,7 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test metadata & global configurations
     set:
