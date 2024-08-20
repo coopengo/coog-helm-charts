@@ -30,9 +30,7 @@ spec:
         {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
         checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
         {{- end }}
-        {{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.extraEnvVar) }}
         checksum/secret-frontcore: {{ include (printf "%s/%s" $.Template.BasePath "secret-frontcore.yaml") . | sha256sum  }}
-        {{- end }}
         checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
         checksum/secret-mongodb: {{ include (printf "%s/%s" $.Template.BasePath "secret-mongodb.yaml") . | sha256sum  }}
     spec:
@@ -65,10 +63,8 @@ spec:
             - secretRef:
                 name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
             {{- end }}
-            {{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.extraEnvVar) }}
             - secretRef:
                 name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
-            {{- end }}
             - secretRef:
                 name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
             - secretRef:
