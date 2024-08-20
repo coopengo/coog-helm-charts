@@ -32,8 +32,6 @@ tests:
         extraEnvVar:
           ENABLE_GLOBAL_SECRET: foo
         frontCore:
-          extraEnvVar:
-            ENABLE_FRONTCORE_SECRET: foo
           apiIdentityManager:
             extraEnvVar:
               ENABLE_API_IDENTITY_MANAGER_SECRET: foo
@@ -112,7 +110,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
-      - notExists:
+      - exists:
           path: spec.template.metadata.annotations["checksum/secret-frontcore"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/secret"]
@@ -139,7 +137,7 @@ tests:
           content:
             secretRef:
               name: test-coog-global-configuration
-      - notContains:
+      - contains:
           path: spec.template.spec.containers[?(@.name == "coog-api-identity-manager")].envFrom
           content:
             secretRef:
