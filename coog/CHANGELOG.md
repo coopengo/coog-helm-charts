@@ -1,3 +1,9 @@
+# [24.43.2443][24.41.2443]
+- Update limits and requests for cron.
+  - limit.cpu : 200m -> 400m
+  - limit.memory : 500Mi -> 800Mi
+  - request.memory : 250Mi -> 400Mi
+
 # [23.51.2351]
 - Add configuration management to import data into the Coog database # PINTE-25571
 
