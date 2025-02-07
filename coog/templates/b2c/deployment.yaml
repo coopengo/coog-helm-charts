@@ -1,4 +1,4 @@
-{{- if .Values.b2c.enabled -}}
+{{- if (and .Values.b2c.enabled .Values.b2c.enabled_myspace) -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
