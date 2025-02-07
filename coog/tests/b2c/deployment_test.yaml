@@ -16,7 +16,6 @@ tests:
     set:
       b2c:
         enabled: true
-        enabled_myspace: true
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
       imageCredentials:
@@ -70,7 +69,6 @@ tests:
       extraEnvVar: {}
       b2c:
         enabled: true
-        enabled_myspace: true
       secrets:
         extraEnvVar: {}
     asserts:
@@ -96,7 +94,6 @@ tests:
     set:
       b2c:
         enabled: true
-        enabled_myspace: true
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
       secrets:
@@ -147,7 +144,6 @@ tests:
     set:
       b2c:
         enabled: true
-        enabled_myspace: true
       replicaCount: 2
       strategy:
         type: Recreate
@@ -183,7 +179,6 @@ tests:
     set:
       b2c:
         enabled: true
-        enabled_myspace: true
         replicaCount: 3
         strategy:
           type: RollingUpdate
@@ -219,43 +214,21 @@ tests:
     set:
       b2c:
         enabled: true
-        enabled_myspace: true
     asserts:
       - hasDocuments:
           count: 1
 
-  - it: Test not enabled deployment (1/4)
+  - it: Test not enabled deployment (1/2)
     template: b2c/deployment.yaml
     asserts:
       - hasDocuments:
           count: 0
 
-  - it: Test not enabled deployment (2/4)
-    template: b2c/deployment.yaml
-    set:
-      b2c:
-        enabled: true
-        enabled_myspace: false
-    asserts:
-      - hasDocuments:
-          count: 0
-
-  - it: Test not enabled deployment (3/4)
+  - it: Test not enabled deployment (2/2)
     template: b2c/deployment.yaml
     set:
       b2c:
         enabled: false
-        enabled_myspace: false
-    asserts:
-      - hasDocuments:
-          count: 0
-
-  - it: Test not enabled deployment (4/4)
-    template: b2c/deployment.yaml
-    set:
-      b2c:
-        enabled: false
-        enabled_myspace: true
     asserts:
       - hasDocuments:
           count: 0

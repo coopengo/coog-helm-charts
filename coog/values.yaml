@@ -964,10 +964,7 @@ apiReferential:
 
 b2c:
   # -- Deploy b2c + apiB2c container(s)
-  # if enabled is true, only apiB2c will be deployed
-  # if enabled and enabled_myspace is true, b2c and apiB2c will be deployed
   enabled: false
-  enabled_myspace: false
   strategy:
     type: ""
 
