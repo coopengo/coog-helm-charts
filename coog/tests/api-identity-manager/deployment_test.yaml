@@ -1,5 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: Test api-identity-manager deployment
+values:
+  - ../../values_secrets.yaml
 templates:
   - api-identity-manager/configmap.yaml
   - api-identity-manager/deployment.yaml
