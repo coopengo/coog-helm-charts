@@ -597,7 +597,7 @@ backCore:
       TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: "1"
       TRYTOND_BATCH__ROOT_DIR: /workspace/io/batch
 
-    # -- celery containers' resource requests and limits
+    # -- celery pod' resource requests and limits
     resources:
       limits:
         cpu: 400m
@@ -605,6 +605,25 @@ backCore:
       requests:
         cpu: 200m
         memory: 500Mi
+
+    # -- celery containers' resource requests and limits
+    # worker:
+    #   resources:
+    #     limits:
+    #       cpu: 400m
+    #       memory: 1000Mi
+    #     requests:
+    #       cpu: 200m
+    #       memory: 500Mi
+
+    # databaseMaintenance:
+    #   resources:
+    #     limits:
+    #       cpu: 400m
+    #       memory: 1000Mi
+    #     requests:
+    #       cpu: 200m
+    #       memory: 500Mi
 
   cron:
     # -- Dynamic ConfigMap variables for cron
