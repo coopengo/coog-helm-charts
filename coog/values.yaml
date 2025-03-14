@@ -607,23 +607,23 @@ backCore:
         memory: 500Mi
 
     # -- celery containers' resource requests and limits
-    # worker:
-    #   resources:
-    #     limits:
-    #       cpu: 400m
-    #       memory: 1000Mi
-    #     requests:
-    #       cpu: 200m
-    #       memory: 500Mi
+    worker:
+      resources:
+        limits:
+          cpu: 300m
+          memory: 700Mi
+        requests:
+          cpu: 150m
+          memory: 350Mi
 
-    # databaseMaintenance:
-    #   resources:
-    #     limits:
-    #       cpu: 400m
-    #       memory: 1000Mi
-    #     requests:
-    #       cpu: 200m
-    #       memory: 500Mi
+    databaseMaintenance:
+      resources:
+        limits:
+          cpu: 100m
+          memory: 300Mi
+        requests:
+          cpu: 50m
+          memory: 150Mi
 
   cron:
     # -- Dynamic ConfigMap variables for cron
