@@ -1,0 +1,25 @@
+{{- if (or .Values.frontCore.enabled
+          .Values.apiB2c.enabled
+          .Values.apiReferential.enabled
+          .Values.b2c.enabled
+          .Values.b2b.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled)
+-}}
+{{- if or .Values.podDisruptionBudget .Values.frontCore.gateway.podDisruptionBudget }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
+  {{- if or .Values.podDisruptionBudget.minAvailable .Values.frontCore.gateway.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ default .Values.podDisruptionBudget.minAvailable .Values.frontCore.gateway.podDisruptionBudget.minAvailable }}
+  {{- end }}
+  {{- if or .Values.podDisruptionBudget.maxUnavailable .Values.frontCore.gateway.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ default .Values.podDisruptionBudget.maxUnavailable .Values.frontCore.gateway.podDisruptionBudget.maxUnavailable }}
+  {{- end }}
+{{- end }}
+{{- end }} 
