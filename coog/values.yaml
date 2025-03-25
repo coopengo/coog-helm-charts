@@ -569,19 +569,19 @@ backCore:
     # -- coog containers' resource requests and limits
     resources:
       limits:
-        cpu: 1500m
+        cpu: 1300m
         memory: 1750Mi
       requests:
-        cpu: 750m
+        cpu: 650m
         memory: 875Mi
 
     initContainers:
       resources:
         limits:
-          cpu: 1500m
+          cpu: 1300m
           memory: 1750Mi
         requests:
-          cpu: 750m
+          cpu: 650m
           memory: 875Mi
 
   celery:
