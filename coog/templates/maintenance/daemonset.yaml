@@ -23,6 +23,16 @@ spec:
         {{- end }}
       {{- end }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        procMount: Default
+        runAsNonRoot: true
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
@@ -30,6 +40,8 @@ spec:
           image: "{{ default .Values.image.repository .Values.maintenanceMode.image.repository }}/{{ .Values.maintenanceMode.image.name }}:{{ default .Values.image.tag .Values.maintenanceMode.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.maintenanceMode.image.pullPolicy | quote }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
