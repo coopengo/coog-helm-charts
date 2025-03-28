@@ -574,19 +574,19 @@ backCore:
     # -- coog containers' resource requests and limits
     resources:
       limits:
-        cpu: 1500m
+        cpu: 1300m
         memory: 1750Mi
       requests:
-        cpu: 750m
+        cpu: 650m
         memory: 875Mi
 
     initContainers:
       resources:
         limits:
-          cpu: 1500m
+          cpu: 1300m
           memory: 1750Mi
         requests:
-          cpu: 750m
+          cpu: 650m
           memory: 875Mi
 
     podDisruptionBudget:
@@ -605,7 +605,7 @@ backCore:
       TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: "1"
       TRYTOND_BATCH__ROOT_DIR: /workspace/io/batch
 
-    # -- celery containers' resource requests and limits
+    # -- celery pod' resource requests and limits
     resources:
       limits:
         cpu: 400m
@@ -627,11 +627,11 @@ backCore:
     databaseMaintenance:
       resources:
         limits:
-          cpu: 100m
-          memory: 300Mi
+          cpu: 300m
+          memory: 700Mi
         requests:
-          cpu: 50m
-          memory: 150Mi
+          cpu: 150m
+          memory: 350Mi
 
     podDisruptionBudget:
       minAvailable: 1
