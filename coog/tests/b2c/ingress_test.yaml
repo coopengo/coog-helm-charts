@@ -237,7 +237,7 @@ tests:
             http:
               paths:
                 - path: "/customers/myspace(/|$)(.*)"
-                  pathType: Prefix
+                  pathType: ImplementationSpecific
                   backend:
                     service:
                       name: test-coog-b2c
