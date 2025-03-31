@@ -52,7 +52,7 @@ spec:
         paths:
         {{- range $.Values.backCore.static.ingress.defaultPaths }}
         - path: {{ . | quote }}
-          pathType: Prefix
+          pathType: ImplementationSpecific
           backend:
             service:
               name: {{ include "general.names.fullname" $ }}
@@ -65,7 +65,7 @@ spec:
         paths:
         {{- range .paths }}
         - path: {{ . | quote }}
-          pathType: Prefix
+          pathType: ImplementationSpecific
           backend:
             service:
               name: {{ include "general.names.fullname" $ }}
