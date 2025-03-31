@@ -48,7 +48,7 @@ spec:
         paths:
         {{- range .Values.backCore.coog.ingress.defaultPaths }}
         - path: {{ . | quote }}
-          pathType: Prefix
+          pathType: ImplementationSpecific
           backend:
             service:
               name: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
@@ -61,7 +61,7 @@ spec:
         paths:
         {{- range .paths }}
         - path: {{ . | quote }}
-          pathType: Prefix
+          pathType: ImplementationSpecific
           backend:
             service:
               name: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
