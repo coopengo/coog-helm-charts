@@ -212,7 +212,7 @@ tests:
             http:
               paths:
                 - path: "/customer(/|$)(.*)"
-                  pathType: Prefix
+                  pathType: ImplementationSpecific
                   backend:
                     service:
                       name: test-coog-customer-frontend
