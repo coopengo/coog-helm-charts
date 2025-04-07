@@ -517,6 +517,8 @@ backCore:
     TRYTOND_REPORT__EXPORT_ROOT_DIR: /workspace/io/batch/report
     TRYTOND_SEPA_PAYMENT__OUT_DIR: /workspace/io/batch/sepa/sepa_out
     TRYTOND_TZ: Europe/Paris
+    TRYTOND_SSL__CERTIFICATE: "'0'"
+    TRYTOND_AUTHENTICATION_SAML__COOPENGO: "SSO Coopengo"
 
   migrator:
     enabled: false
@@ -563,7 +565,8 @@ backCore:
           # cors:
           #   - https://test1.example.com
           #   - https://test2.example.com
-          cors: []
+          cors: 
+            - https://accounts.google.com
           publicCidr: []
 
     # -- coog containers' resource requests and limits
@@ -692,8 +695,9 @@ backCore:
 
       nginx:
         whiteList:
+          cors:
+            - https://accounts.google.com
           publicCidr: []
-
     securityContext:
       {}
       # runAsUser: ""
