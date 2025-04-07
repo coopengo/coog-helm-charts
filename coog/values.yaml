@@ -698,6 +698,7 @@ backCore:
           cors:
             - https://accounts.google.com
           publicCidr: []
+
     securityContext:
       {}
       # runAsUser: ""
