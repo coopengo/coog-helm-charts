@@ -1,0 +1,57 @@
+suite: test celery pod disruption budget
+templates:
+  - celery/pod-disruption-budget.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+tests:
+  - it: should create PDB when backCore is enabled
+    set:
+      backCore:
+        enabled: true
+        celery:
+          podDisruptionBudget:
+            minAvailable: 2
+    asserts:
+      - isKind:
+          of: PodDisruptionBudget
+      - equal:
+          path: spec.minAvailable
+          value: 2
+      - matchRegex:
+          path: metadata.name
+          pattern: -celery$
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: coog-celery
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/instance"]
+          value: test
+
+  - it: should use specific PDB config when component-specific is not set
+    set:
+      podDisruptionBudget:
+        minAvailable: 2
+      backCore:
+        enabled: true
+        celery:
+          podDisruptionBudget:
+            minAvailable: 3
+    asserts:
+      - equal:
+          path: spec.minAvailable
+          value: 3
+  
+  - it: should use global PDB config when component-specific is not set
+    set:
+      podDisruptionBudget:
+        minAvailable: 3
+      backCore:
+        enabled: true
+        celery:
+          podDisruptionBudget:
+            minAvailable: ""
+    asserts:
+      - equal:
+          path: spec.minAvailable
+          value: 3 
