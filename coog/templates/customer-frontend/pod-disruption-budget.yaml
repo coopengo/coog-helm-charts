@@ -1,0 +1,18 @@
+{{- if .Values.customerFrontend.enabled -}}
+{{- if or .Values.podDisruptionBudget .Values.customerFrontend.podDisruptionBudget }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
+  {{- if or .Values.podDisruptionBudget.minAvailable .Values.customerFrontend.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ default .Values.podDisruptionBudget.minAvailable .Values.customerFrontend.podDisruptionBudget.minAvailable }}
+  {{- end }}
+  {{- if or .Values.podDisruptionBudget.maxUnavailable .Values.customerFrontend.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ default .Values.podDisruptionBudget.maxUnavailable .Values.customerFrontend.podDisruptionBudget.maxUnavailable }}
+  {{- end }}
+{{- end }}
+{{- end }} 
