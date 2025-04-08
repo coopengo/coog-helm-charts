@@ -551,7 +551,10 @@ backCore:
       #     paths:
       #       - /
       #   - host: test2.example.com
-      hosts: []
+      hosts:
+      - host: accounts.google.com
+        paths:
+          - /
 
       annotations:
         nginx.ingress.kubernetes.io/use-proxy-protocol: true
@@ -565,8 +568,10 @@ backCore:
           # cors:
           #   - https://test1.example.com
           #   - https://test2.example.com
-          cors: 
-            - https://accounts.google.com
+          cors:
+            {{- range .Values.corUrls}}
+            - {{ . }}
+            {{ end }}
           publicCidr: []
 
     # -- coog containers' resource requests and limits
@@ -711,6 +716,9 @@ backCore:
       requests:
         cpu: 25m
         memory: 40Mi
+
+corsUrl: 
+  - https://accounts.google.com
 
 #############################################################################################################################
 #                                            Back Additional components                                                     #
