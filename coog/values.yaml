@@ -979,6 +979,9 @@ b2b:
       cpu: 200m
       memory: 40Mi
 
+  podDisruptionBudget:
+    minAvailable: 1
+
 b2bConfig:
   enabled: false
   strategy:
