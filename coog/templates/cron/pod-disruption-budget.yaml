@@ -1,4 +1,4 @@
-{{- if or .Values.podDisruptionBudget .Values.backCore.cron.podDisruptionBudget }}
+{{- if or .Values.podDisruptionBudget .Values.cron.podDisruptionBudget }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
@@ -7,11 +7,11 @@ metadata:
 spec:
   selector:
     matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
-  {{- if or .Values.podDisruptionBudget.minAvailable .Values.backCore.cron.podDisruptionBudget.minAvailable }}
-  minAvailable: {{ default .Values.podDisruptionBudget.minAvailable .Values.backCore.cron.podDisruptionBudget.minAvailable }}
+  {{- if or .Values.podDisruptionBudget.minAvailable .Values.cron.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ default .Values.podDisruptionBudget.minAvailable .Values.cron.podDisruptionBudget.minAvailable }}
   {{- end }}
-  {{- if or .Values.podDisruptionBudget.maxUnavailable .Values.backCore.cron.podDisruptionBudget.maxUnavailable }}
-  maxUnavailable: {{ default .Values.podDisruptionBudget.maxUnavailable .Values.backCore.cron.podDisruptionBudget.maxUnavailable }}
+  {{- if or .Values.podDisruptionBudget.maxUnavailable .Values.cron.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ default .Values.podDisruptionBudget.maxUnavailable .Values.cron.podDisruptionBudget.maxUnavailable }}
   {{- end }}
 {{- end }}
  

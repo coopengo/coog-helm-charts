@@ -7,11 +7,9 @@ release:
 tests:
   - it: should create PDB when backCore is enabled
     set:
-      backCore:
-        enabled: true
-        cron:
-          podDisruptionBudget:
-            minAvailable: 2
+      cron:
+        podDisruptionBudget:
+          minAvailable: 2
     asserts:
       - isKind:
           of: PodDisruptionBudget
@@ -32,11 +30,9 @@ tests:
     set:
       podDisruptionBudget:
         minAvailable: 2
-      backCore:
-        enabled: true
-        cron:
-          podDisruptionBudget:
-            minAvailable: 3
+      cron:
+        podDisruptionBudget:
+          minAvailable: 3
     asserts:
       - equal:
           path: spec.minAvailable
@@ -46,11 +42,9 @@ tests:
     set:
       podDisruptionBudget:
         minAvailable: 3
-      backCore:
-        enabled: true
-        cron:
-          podDisruptionBudget:
-            minAvailable: ""
+      cron:
+        podDisruptionBudget:
+          minAvailable: ""
     asserts:
       - equal:
           path: spec.minAvailable
