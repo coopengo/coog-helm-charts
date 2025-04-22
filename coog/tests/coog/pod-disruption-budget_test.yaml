@@ -1,4 +1,4 @@
-suite: test coog pod disruption budget
+suite: Test coog pod disruption budget
 templates:
   - coog/pod-disruption-budget.yaml
 release:
@@ -48,9 +48,6 @@ tests:
         minAvailable: 3
       backCore:
         enabled: true
-        coog:
-          podDisruptionBudget:
-            minAvailable: ""
     asserts:
       - equal:
           path: spec.minAvailable

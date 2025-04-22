@@ -1,4 +1,4 @@
-suite: test api-b2c pod disruption budget
+suite: Test api-b2c pod disruption budget
 templates:
   - api-b2c/pod-disruption-budget.yaml
 release:
@@ -56,9 +56,6 @@ tests:
         minAvailable: 3
       b2c:
         enabled: true
-      apiB2c:
-        podDisruptionBudget:
-          minAvailable: ""
     asserts:
       - equal:
           path: spec.minAvailable

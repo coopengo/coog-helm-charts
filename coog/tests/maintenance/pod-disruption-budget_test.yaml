@@ -1,4 +1,4 @@
-suite: test maintenance pod disruption budget
+suite: Test maintenance pod disruption budget
 templates:
   - maintenance/pod-disruption-budget.yaml
 release:
@@ -54,8 +54,6 @@ tests:
         minAvailable: 3
       maintenanceMode:
         enabled: true
-        podDisruptionBudget:
-          minAvailable: ""
     asserts:
       - equal:
           path: spec.minAvailable
