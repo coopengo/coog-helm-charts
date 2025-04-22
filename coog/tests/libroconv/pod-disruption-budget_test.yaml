@@ -1,4 +1,4 @@
-suite: test libroconv pod disruption budget
+suite: Test libroconv pod disruption budget
 templates:
   - libroconv/pod-disruption-budget.yaml
 release:
@@ -54,8 +54,6 @@ tests:
         minAvailable: 3
       libroconv:
         enabled: true
-        podDisruptionBudget:
-          minAvailable: ""
     asserts:
       - equal:
           path: spec.minAvailable

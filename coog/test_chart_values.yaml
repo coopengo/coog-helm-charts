@@ -206,8 +206,10 @@ dnsPolicy: ""
 
 # -- Global PodDisruptionBudget configuration
 # Either set minAvailable or maxUnavailable, but not both
+# In case of both set, minAvailable only will be used
 podDisruptionBudget:
   minAvailable: 1
+#  maxUnavailable: 1
 
 #############################################################################################################################
 #                                            Tools / Options                                                                #

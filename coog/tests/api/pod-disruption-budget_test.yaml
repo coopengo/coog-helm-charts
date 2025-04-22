@@ -1,4 +1,4 @@
-suite: test api pod disruption budget
+suite: Test api pod disruption budget
 templates:
   - api/pod-disruption-budget.yaml
 release:
@@ -56,9 +56,6 @@ tests:
         minAvailable: 3
       frontCore:
         enabled: true
-        api:
-          podDisruptionBudget:
-            minAvailable: ""
     asserts:
       - equal:
           path: spec.minAvailable

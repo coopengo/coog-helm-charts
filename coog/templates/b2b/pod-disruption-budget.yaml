@@ -1,5 +1,7 @@
 {{- if .Values.b2b.enabled -}}
-{{- if or .Values.podDisruptionBudget .Values.b2b.podDisruptionBudget }}
+{{- $globalPDB := .Values.podDisruptionBudget -}}
+{{- $componentPDB := .Values.b2b.podDisruptionBudget -}}
+{{- if or $globalPDB $componentPDB }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
@@ -8,11 +10,14 @@ metadata:
 spec:
   selector:
     matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
-  {{- if or .Values.podDisruptionBudget.minAvailable .Values.b2b.podDisruptionBudget.minAvailable }}
-  minAvailable: {{ default .Values.podDisruptionBudget.minAvailable .Values.b2b.podDisruptionBudget.minAvailable }}
-  {{- end }}
-  {{- if or .Values.podDisruptionBudget.maxUnavailable .Values.b2b.podDisruptionBudget.maxUnavailable }}
-  maxUnavailable: {{ default .Values.podDisruptionBudget.maxUnavailable .Values.b2b.podDisruptionBudget.maxUnavailable }}
+  {{- if and $componentPDB $componentPDB.minAvailable }}
+  minAvailable: {{ $componentPDB.minAvailable }}
+  {{- else if and $globalPDB $globalPDB.minAvailable }}
+  minAvailable: {{ $globalPDB.minAvailable }}
+  {{- else if and $componentPDB $componentPDB.maxUnavailable }}
+  maxUnavailable: {{ $componentPDB.maxUnavailable }}
+  {{- else if and $globalPDB $globalPDB.maxUnavailable }}
+  maxUnavailable: {{ $globalPDB.maxUnavailable }}
   {{- end }}
 {{- end }}
 {{- end }} 

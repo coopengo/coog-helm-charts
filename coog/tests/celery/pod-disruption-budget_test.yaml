@@ -1,4 +1,4 @@
-suite: test celery pod disruption budget
+suite: Test celery pod disruption budget
 templates:
   - celery/pod-disruption-budget.yaml
 release:
@@ -48,9 +48,6 @@ tests:
         minAvailable: 3
       backCore:
         enabled: true
-        celery:
-          podDisruptionBudget:
-            minAvailable: ""
     asserts:
       - equal:
           path: spec.minAvailable

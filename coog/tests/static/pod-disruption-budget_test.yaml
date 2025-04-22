@@ -1,4 +1,4 @@
-suite: test static pod disruption budget
+suite: Test static pod disruption budget
 templates:
   - static/pod-disruption-budget.yaml
 release:
@@ -48,9 +48,6 @@ tests:
         minAvailable: 3
       backCore:
         enabled: true
-        static:
-          podDisruptionBudget:
-            minAvailable: ""
     asserts:
       - equal:
           path: spec.minAvailable

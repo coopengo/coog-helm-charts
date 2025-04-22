@@ -209,8 +209,10 @@ dnsPolicy: ""
 
 # -- Global PodDisruptionBudget configuration
 # Either set minAvailable or maxUnavailable, but not both
+# In case of both set, minAvailable only will be used
 podDisruptionBudget:
   minAvailable: 1
+#  maxUnavailable: 1
 
 #############################################################################################################################
 #                                            Tools / Options                                                                #
@@ -598,9 +600,10 @@ backCore:
         requests:
           cpu: 650m
           memory: 875Mi
-
-    podDisruptionBudget:
-      minAvailable: 1
+    # Uncomment to override default PDB for this component
+    # podDisruptionBudget:
+    #   minAvailable: 1
+    #   maxUnavailable: 1
 
   celery:
     workers:
@@ -643,8 +646,10 @@ backCore:
           cpu: 150m
           memory: 350Mi
 
-    podDisruptionBudget:
-      minAvailable: 1
+    # Uncomment to override default PDB for this component
+    # podDisruptionBudget:
+    #   minAvailable: 1
+    #   maxUnavailable: 1
 
   cron:
     # -- Dynamic ConfigMap variables for cron
@@ -685,8 +690,10 @@ backCore:
       successThreshold: 1
       failureThreshold: 3
 
-    podDisruptionBudget:
-      minAvailable: 1
+    # Uncomment to override default PDB for this component
+    # podDisruptionBudget:
+    #   minAvailable: 1
+    #   maxUnavailable: 1
 
   static:
     image:
@@ -731,8 +738,10 @@ backCore:
         cpu: 25m
         memory: 40Mi
 
-    podDisruptionBudget:
-      minAvailable: 1
+    # Uncomment to override default PDB for this component
+    # podDisruptionBudget:
+    #   minAvailable: 1
+    #   maxUnavailable: 1
 
 #############################################################################################################################
 #                                            Back Additional components                                                     #
@@ -773,6 +782,11 @@ libroconv:
     timeoutSeconds: 30
     successThreshold: 1
     failureThreshold: 3
+
+  # Uncomment to override default PDB for this component
+  # podDisruptionBudget:
+  #   minAvailable: 1
+  #   maxUnavailable: 1
 
 #############################################################################################################################
 #                                            Front Minimum components                                                       #
@@ -859,8 +873,10 @@ frontCore:
         cpu: 50m
         memory: 50Mi
 
-    podDisruptionBudget:
-      minAvailable: 1
+    # Uncomment to override default PDB for this component
+    # podDisruptionBudget:
+    #   minAvailable: 1
+    #   maxUnavailable: 1
 
   api:
     strategy:
@@ -886,8 +902,10 @@ frontCore:
         cpu: 250m
         memory: 50Mi
 
-    podDisruptionBudget:
-      minAvailable: 1
+    # Uncomment to override default PDB for this component
+    # podDisruptionBudget:
+    #   minAvailable: 1
+    #   maxUnavailable: 1
 
   apiIdentityManager:
     strategy:
@@ -913,8 +931,10 @@ frontCore:
         cpu: 25m
         memory: 35Mi
 
-    podDisruptionBudget:
-      minAvailable: 1
+    # Uncomment to override default PDB for this component
+    # podDisruptionBudget:
+    #   minAvailable: 1
+    #   maxUnavailable: 1
 
 #############################################################################################################################
 #                                            Front Additional components                                                    #
@@ -968,8 +988,10 @@ b2b:
       cpu: 125m
       memory: 25Mi
 
-  podDisruptionBudget:
-    minAvailable: 1
+  # Uncomment to override default PDB for this component
+  # podDisruptionBudget:
+  #   minAvailable: 1
+  #   maxUnavailable: 1
 
 apiReferential:
   # -- Deploy apiReferential container(s)
@@ -1049,8 +1071,10 @@ b2c:
       cpu: 25m
       memory: 25Mi
 
-  podDisruptionBudget:
-    minAvailable: 1
+  # Uncomment to override default PDB for this component
+  # podDisruptionBudget:
+  #   minAvailable: 1
+  #   maxUnavailable: 1
 
 customerBackend:
   # -- Deploy b2b container(s)

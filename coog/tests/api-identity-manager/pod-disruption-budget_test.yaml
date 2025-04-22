@@ -1,4 +1,4 @@
-suite: test api-identity-manager pod disruption budget
+suite: Test api-identity-manager pod disruption budget
 templates:
   - api-identity-manager/pod-disruption-budget.yaml
 release:
@@ -56,9 +56,6 @@ tests:
         minAvailable: 3
       frontCore:
         enabled: true
-        apiIdentityManager:
-          podDisruptionBudget:
-            minAvailable: ""
     asserts:
       - equal:
           path: spec.minAvailable

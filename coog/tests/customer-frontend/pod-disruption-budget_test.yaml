@@ -1,4 +1,4 @@
-suite: test customer-frontend pod disruption budget
+suite: Test customer-frontend pod disruption budget
 templates:
   - customer-frontend/pod-disruption-budget.yaml
 release:
@@ -54,8 +54,6 @@ tests:
         minAvailable: 3
       customerFrontend:
         enabled: true
-        podDisruptionBudget:
-          minAvailable: ""
     asserts:
       - equal:
           path: spec.minAvailable
