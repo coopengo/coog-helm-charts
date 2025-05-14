@@ -79,6 +79,19 @@ tests:
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret-postgresql"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
+      # [Start] Basic check at Template Pod level security stadards (enforced)
+      - equal:
+          path: spec.template.spec.securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.securityContext.seccompProfile
+      # [End] Basic check at Pod level security stadards
 
   - it: Test disabled configmaps, secrets & checksums
     template: coog/deployment.yaml
@@ -256,6 +269,19 @@ tests:
           path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].resources.requests.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
+      # [Start] Basic check at container level security stadards (enforced)
+      - equal:
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].securityContext.seccompProfile
+      # [End] Basic check at Pod level security stadards
 
   - it: Test Container
     template: coog/deployment.yaml
@@ -342,6 +368,19 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog")].resources.requests.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
+      # [Start] Basic check at container level security stadards (enforced)
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.containers[?(@.name == "coog")].securityContext.seccompProfile
+      # [End] Basic check at Pod level security stadards
 
   - it: Test Volumes
     template: coog/deployment.yaml
