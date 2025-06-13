@@ -544,6 +544,7 @@ backCore:
       # -- Default host for the ingress resource for coog containers'
       defaultPaths:
         - /
+        - /docusign
 
       # -- additionals hosts & paths
       # host : required
