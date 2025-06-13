@@ -1,0 +1,20 @@
+{{- if .Values.httpProbe.enabled -}}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: Probe
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.httpProbe.metadata.namespace }}
+spec:
+  interval: {{ .Values.httpProbe.spec.interval }}
+  module: {{ .Values.httpProbe.spec.module }}
+  prober:
+    url: {{ .Values.httpProbe.spec.prober.url }}:{{ .Values.httpProbe.spec.prober.port }}
+  targets:
+    staticConfig:
+      static:
+        - "https://{{ $.Values.ingress.host }}{{ .Values.backCore.coog.ingress.defaultPaths[0] }}"
+        {{- if .Values.frontCore.enabled }}
+        - "https://{{ $.Values.ingress.host }}{{ .Values.frontCore.gateway.extraEnvVar.COOG_GATEWAY_BASE_PATH }}"
+        {{- end }}
+{{- end }}
