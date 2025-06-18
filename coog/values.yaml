@@ -381,6 +381,7 @@ mongodb:
 # -- Default message service used by backCore
 # Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/12.3.0
 rabbitmq:
+  isManaged: true
   persistence:
     enabled: false
   containerSecurityContext:
