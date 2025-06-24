@@ -9,11 +9,11 @@ spec:
   interval: {{ .Values.httpProbe.spec.interval }}
   module: {{ .Values.httpProbe.spec.module }}
   prober:
-    url: {{ .Values.httpProbe.spec.prober.url }}:{{ .Values.httpProbe.spec.prober.port }}
+    url: "{{ .Values.httpProbe.spec.prober.url }}:{{ .Values.httpProbe.spec.prober.port }}"
   targets:
     staticConfig:
       static:
-        - "https://{{ $.Values.ingress.host }}{{ .Values.backCore.coog.ingress.defaultPaths[0] }}liveness"
+        - "https://{{ $.Values.ingress.host }}{{ index .Values.backCore.coog.ingress.defaultPaths 0 }}liveness"
         {{- if .Values.frontCore.enabled }}
         - "https://{{ $.Values.ingress.host }}{{ .Values.frontCore.gateway.extraEnvVar.COOG_GATEWAY_BASE_PATH }}"
         {{- end }}
