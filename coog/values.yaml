@@ -1174,7 +1174,7 @@ apiB2c:
   resources:
     limits:
       cpu: 50m
-      memory: 50Mi
+      memory: 80Mi
     requests:
       cpu: 50m
       memory: 40Mi
