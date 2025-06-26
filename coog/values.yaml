@@ -200,7 +200,7 @@ dnsPolicy: ""
 # -- Global PodDisruptionBudget configuration
 # Either set minAvailable or maxUnavailable, but not both
 podDisruptionBudget:
-  minAvailable: 1
+  minAvailable: 0
 
 #############################################################################################################################
 #                                            Tools / Options                                                                #
@@ -591,7 +591,7 @@ backCore:
           memory: 875Mi
 
     podDisruptionBudget:
-      minAvailable: 1
+      minAvailable: 0
 
   celery:
     workers:
@@ -635,7 +635,7 @@ backCore:
           memory: 350Mi
 
     podDisruptionBudget:
-      minAvailable: 1
+      minAvailable: 0
 
   cron:
     # -- Dynamic ConfigMap variables for cron
@@ -677,7 +677,7 @@ backCore:
       failureThreshold: 3
 
     podDisruptionBudget:
-      minAvailable: 1
+      minAvailable: 0
 
   static:
     image:
@@ -723,7 +723,7 @@ backCore:
         memory: 40Mi
 
     podDisruptionBudget:
-      minAvailable: 1
+      minAvailable: 0
 
 #############################################################################################################################
 #                                            Back Additional components                                                     #
@@ -851,7 +851,7 @@ frontCore:
         memory: 50Mi
 
     podDisruptionBudget:
-      minAvailable: 1
+      minAvailable: 0
 
   api:
     strategy:
@@ -878,7 +878,7 @@ frontCore:
         memory: 50Mi
 
     podDisruptionBudget:
-      minAvailable: 1
+      minAvailable: 0
 
   apiIdentityManager:
     strategy:
@@ -905,7 +905,7 @@ frontCore:
         memory: 35Mi
 
     podDisruptionBudget:
-      minAvailable: 1
+      minAvailable: 0
 
 #############################################################################################################################
 #                                            Front Additional components                                                    #
@@ -960,7 +960,7 @@ b2b:
       memory: 25Mi
 
   podDisruptionBudget:
-    minAvailable: 1
+    minAvailable: 0
 
 apiReferential:
   # -- Deploy apiReferential container(s)
@@ -1038,7 +1038,7 @@ b2c:
       memory: 25Mi
 
   podDisruptionBudget:
-    minAvailable: 1
+    minAvailable: 0
 
 customerBackend:
   # -- Deploy b2b container(s)
