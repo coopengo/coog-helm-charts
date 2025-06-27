@@ -231,3 +231,10 @@ tests:
                       name: test-coog
                       port:
                         number: 80
+                - path: "/docusign"
+                  pathType: ImplementationSpecific
+                  backend:
+                    service:
+                      name: test-coog
+                      port:
+                        number: 80
