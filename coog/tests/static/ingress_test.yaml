@@ -225,21 +225,21 @@ tests:
             http:
               paths:
                 - path: "/sao"
-                  pathType: Prefix
+                  pathType: ImplementationSpecific
                   backend:
                     service:
                       name: test-coog-static
                       port:
                         number: 80
                 - path: "/bench"
-                  pathType: Prefix
+                  pathType: ImplementationSpecific
                   backend:
                     service:
                       name: test-coog-static
                       port:
                         number: 80
                 - path: "/doc"
-                  pathType: Prefix
+                  pathType: ImplementationSpecific
                   backend:
                     service:
                       name: test-coog-static

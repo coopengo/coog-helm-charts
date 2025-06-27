@@ -197,6 +197,11 @@ dnsConfig: {}
 # -- dnsPolicy for pod assignment. It can be customized for each component
 dnsPolicy: ""
 
+# -- Global PodDisruptionBudget configuration
+# Either set minAvailable or maxUnavailable, but not both
+podDisruptionBudget:
+  minAvailable: 0
+
 #############################################################################################################################
 #                                            Tools / Options                                                                #
 #############################################################################################################################
@@ -362,6 +367,7 @@ mongodb:
 # -- Default message service used by backCore
 # Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/12.3.0
 rabbitmq:
+  isManaged: true
   persistence:
     enabled: false
   service:
@@ -435,7 +441,7 @@ backCore:
     #   directoryPerms: "777"             # Default permission of the root directory of the volume
     #   gidRangeStart: "1000"             # optional - Set the range of POSIX Group IDs (GIDs) that are used to set the GID of the AWS access point. If not specified, the default range is 50000-7000000. Each provisioned volume, and thus AWS access point, is assigned a unique GID from this range.
     #   gidRangeEnd: "2000"               # optional - Set the range of POSIX Group IDs (GIDs) that are used to set the GID of the AWS access point. If not specified, the default range is 50000-7000000. Each provisioned volume, and thus AWS access point, is assigned a unique GID from this range.
-    #   basePath: "/dynamic_provisioning" # optional - Directory on the EFS volume that is used to create dynamically provisioned volumes. In this case, a PV is provisioned as “/dynamic_provisioning/<random uuid>” on the EFS volume. Only the subdirectory is mounted to pods that use the PV.
+    #   basePath: "/dynamic_provisioning" # optional - Directory on the EFS volume that is used to create dynamically provisioned volumes. In this case, a PV is provisioned as "/dynamic_provisioning/<random uuid>" on the EFS volume. Only the subdirectory is mounted to pods that use the PV.
     # mountOptions:
     #   - tls
     # reclaimPolicy: Retain
@@ -539,6 +545,7 @@ backCore:
       # -- Default host for the ingress resource for coog containers'
       defaultPaths:
         - /
+        - /docusign
 
       # -- additionals hosts & paths
       # host : required
@@ -569,20 +576,23 @@ backCore:
     # -- coog containers' resource requests and limits
     resources:
       limits:
-        cpu: 1500m
+        cpu: 1300m
         memory: 1750Mi
       requests:
-        cpu: 750m
+        cpu: 650m
         memory: 875Mi
 
     initContainers:
       resources:
         limits:
-          cpu: 1500m
+          cpu: 1300m
           memory: 1750Mi
         requests:
-          cpu: 750m
+          cpu: 650m
           memory: 875Mi
+
+    podDisruptionBudget:
+      minAvailable: 0
 
   celery:
     workers:
@@ -597,7 +607,7 @@ backCore:
       TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: "1"
       TRYTOND_BATCH__ROOT_DIR: /workspace/io/batch
 
-    # -- celery containers' resource requests and limits
+    # -- celery pod' resource requests and limits
     resources:
       limits:
         cpu: 400m
@@ -605,6 +615,28 @@ backCore:
       requests:
         cpu: 200m
         memory: 500Mi
+
+    # -- celery containers' resource requests and limits
+    worker:
+      resources:
+        limits:
+          cpu: 300m
+          memory: 700Mi
+        requests:
+          cpu: 150m
+          memory: 350Mi
+
+    databaseMaintenance:
+      resources:
+        limits:
+          cpu: 300m
+          memory: 700Mi
+        requests:
+          cpu: 150m
+          memory: 350Mi
+
+    podDisruptionBudget:
+      minAvailable: 0
 
   cron:
     # -- Dynamic ConfigMap variables for cron
@@ -644,6 +676,9 @@ backCore:
       timeoutSeconds: 30
       successThreshold: 1
       failureThreshold: 3
+
+    podDisruptionBudget:
+      minAvailable: 0
 
   static:
     image:
@@ -687,6 +722,9 @@ backCore:
       requests:
         cpu: 25m
         memory: 40Mi
+
+    podDisruptionBudget:
+      minAvailable: 0
 
 #############################################################################################################################
 #                                            Back Additional components                                                     #
@@ -813,6 +851,9 @@ frontCore:
         cpu: 50m
         memory: 50Mi
 
+    podDisruptionBudget:
+      minAvailable: 0
+
   api:
     strategy:
       type: ""
@@ -837,6 +878,9 @@ frontCore:
         cpu: 250m
         memory: 50Mi
 
+    podDisruptionBudget:
+      minAvailable: 0
+
   apiIdentityManager:
     strategy:
       type: ""
@@ -860,6 +904,9 @@ frontCore:
       requests:
         cpu: 25m
         memory: 35Mi
+
+    podDisruptionBudget:
+      minAvailable: 0
 
 #############################################################################################################################
 #                                            Front Additional components                                                    #
@@ -912,6 +959,9 @@ b2b:
     requests:
       cpu: 125m
       memory: 25Mi
+
+  podDisruptionBudget:
+    minAvailable: 0
 
 apiReferential:
   # -- Deploy apiReferential container(s)
@@ -990,6 +1040,9 @@ b2c:
     requests:
       cpu: 25m
       memory: 25Mi
+
+  podDisruptionBudget:
+    minAvailable: 0
 
 customerBackend:
   # -- Deploy b2b container(s)
