@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test url probe
+templates:
+  - http_probe.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 29
+tests:
+  - it: Test variables (1/2)
+    set:
+      httpProbe:
+        enabled: true
+        metadata:
+          namespace: monitoring-test
+        spec:
+          interval: 60s
+          module: http_2xx
+          prober:
+            url: blackbox-exporter-test
+            port: 1500
+      frontCore:
+        enabled: false
+    asserts:
+      - equal:
+          path: spec.interval
+          value: 60s
+      - equal:
+          path: spec.module
+          value: http_2xx
+      - equal:
+          path: spec.prober.url
+          value: blackbox-exporter-test:1500
+  - it: Test variables (2/2)
+    set:
+      httpProbe:
+        enabled: true
+        metadata:
+          namespace: monitoring-test
+        spec:
+          interval: 60s
+          module: http_2xx
+          prober:
+            url: blackbox-exporter-test
+            port: 1500
+      frontCore:
+        enabled: true
+    asserts:
+      - equal:
+          path: spec.interval
+          value: 60s
+      - equal:
+          path: spec.module
+          value: http_2xx
+      - equal:
+          path: spec.prober.url
+          value: blackbox-exporter-test:1500
