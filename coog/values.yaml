@@ -246,6 +246,21 @@ maintenanceMode:
       customhttperrors: 403
     annotations: {}
 
+# -- Monitoring probe image
+# Ref: https://artifacthub.io/packages/helm/bitnami/blackbox-exporter
+httpProbe:
+  enabled: false
+
+  metadata:
+    namespace: monitoring
+
+  spec:
+    interval: 60s # Interval between probe checks
+    module: http_2xx
+    prober:
+      url: ""
+      port: ""
+
 #############################################################################################################################
 #                                            External dependencies                                                          #
 #############################################################################################################################
