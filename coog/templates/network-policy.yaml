@@ -1,0 +1,36 @@
+{{- if .Values.networkPolicy.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: {{ include "general.names.fullname" . }}-restrict-egress
+  labels:
+    {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  # Select all pods in the namespace
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    # Allow traffic within the same namespace
+    - to:
+        - podSelector: {}
+    {{- if .Values.networkPolicy.allowedEgressNamespaces }}
+    {{- range .Values.networkPolicy.allowedEgressNamespaces }}
+    # Allow traffic to {{ .name }} namespace
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: {{ .name }}
+    {{- end }}
+    {{- end }}
+    {{- if .Values.networkPolicy.allowDNS }}
+    # Allow DNS resolution
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    {{- end }}
+{{- end }} 
