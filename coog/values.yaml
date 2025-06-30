@@ -1200,3 +1200,6 @@ apiB2c:
     requests:
       cpu: 50m
       memory: 40Mi
+  podDisruptionBudget:
+    minAvailable: 0
+
