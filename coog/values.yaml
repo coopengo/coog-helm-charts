@@ -199,8 +199,8 @@ dnsPolicy: ""
 
 # -- Global PodDisruptionBudget configuration
 # Either set minAvailable or maxUnavailable, but not both
-podDisruptionBudget:
-  minAvailable: 0
+# podDisruptionBudget:
+#   minAvailable: 0
 
 #############################################################################################################################
 #                                            Tools / Options                                                                #
@@ -606,8 +606,8 @@ backCore:
           cpu: 650m
           memory: 875Mi
 
-    podDisruptionBudget:
-      minAvailable: 0
+    # podDisruptionBudget:
+    #   minAvailable: 0
 
   celery:
     workers:
@@ -650,8 +650,8 @@ backCore:
           cpu: 150m
           memory: 350Mi
 
-    podDisruptionBudget:
-      minAvailable: 0
+    # podDisruptionBudget:
+    #   minAvailable: 0
 
   cron:
     # -- Dynamic ConfigMap variables for cron
@@ -692,8 +692,8 @@ backCore:
       successThreshold: 1
       failureThreshold: 3
 
-    podDisruptionBudget:
-      minAvailable: 0
+    # podDisruptionBudget:
+    #   minAvailable: 0
 
   static:
     image:
@@ -738,8 +738,8 @@ backCore:
         cpu: 25m
         memory: 40Mi
 
-    podDisruptionBudget:
-      minAvailable: 0
+    # podDisruptionBudget:
+    #   minAvailable: 0
 
 #############################################################################################################################
 #                                            Back Additional components                                                     #
@@ -781,8 +781,8 @@ libroconv:
     successThreshold: 1
     failureThreshold: 3
 
-  podDisruptionBudget:
-    minAvailable: 0
+  # podDisruptionBudget:
+  #   minAvailable: 0
 
 #############################################################################################################################
 #                                            Front Minimum components                                                       #
@@ -869,8 +869,8 @@ frontCore:
         cpu: 50m
         memory: 50Mi
 
-    podDisruptionBudget:
-      minAvailable: 0
+    # podDisruptionBudget:
+    #   minAvailable: 0
 
   api:
     strategy:
@@ -896,8 +896,8 @@ frontCore:
         cpu: 250m
         memory: 50Mi
 
-    podDisruptionBudget:
-      minAvailable: 0
+    # podDisruptionBudget:
+    #   minAvailable: 0
 
   apiIdentityManager:
     strategy:
@@ -923,8 +923,8 @@ frontCore:
         cpu: 25m
         memory: 35Mi
 
-    podDisruptionBudget:
-      minAvailable: 0
+    # podDisruptionBudget:
+    #   minAvailable: 0
 
 #############################################################################################################################
 #                                            Front Additional components                                                    #
@@ -978,8 +978,8 @@ b2b:
       cpu: 125m
       memory: 25Mi
 
-  podDisruptionBudget:
-    minAvailable: 0
+  # podDisruptionBudget:
+  #   minAvailable: 0
 
 apiReferential:
   # -- Deploy apiReferential container(s)
@@ -1059,8 +1059,8 @@ b2c:
       cpu: 25m
       memory: 25Mi
 
-  podDisruptionBudget:
-    minAvailable: 0
+  # podDisruptionBudget:
+  #   minAvailable: 0
 
 customerBackend:
   # -- Deploy b2b container(s)
@@ -1209,6 +1209,6 @@ apiB2c:
     requests:
       cpu: 50m
       memory: 40Mi
-  podDisruptionBudget:
-    minAvailable: 0
+  # podDisruptionBudget:
+  #   minAvailable: 0
 
