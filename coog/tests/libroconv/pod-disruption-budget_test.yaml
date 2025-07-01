@@ -1,0 +1,62 @@
+suite: test libroconv pod disruption budget
+templates:
+  - libroconv/pod-disruption-budget.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+tests:
+  - it: should create PDB when libroconv is enabled
+    set:
+      libroconv:
+        enabled: true
+        podDisruptionBudget:
+          minAvailable: 2
+    asserts:
+      - isKind:
+          of: PodDisruptionBudget
+      - equal:
+          path: spec.minAvailable
+          value: 2
+      - matchRegex:
+          path: metadata.name
+          pattern: -libroconv$
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: coog-libroconv
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/instance"]
+          value: test
+
+  - it: should not create PDB when libroconv is disabled
+    set:
+      libroconv:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should use specific PDB config when component-specific is not set
+    set:
+      podDisruptionBudget:
+        minAvailable: 2
+      libroconv:
+        enabled: true
+        podDisruptionBudget:
+          minAvailable: 3
+    asserts:
+      - equal:
+          path: spec.minAvailable
+          value: 3
+  
+  - it: should use global PDB config when component-specific is not set
+    set:
+      podDisruptionBudget:
+        minAvailable: 3
+      libroconv:
+        enabled: true
+        podDisruptionBudget:
+          minAvailable: ""
+    asserts:
+      - equal:
+          path: spec.minAvailable
+          value: 3 

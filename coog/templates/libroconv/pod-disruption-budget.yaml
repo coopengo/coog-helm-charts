@@ -1,0 +1,18 @@
+{{- if .Values.libroconv.enabled -}}
+{{- if or .Values.podDisruptionBudget .Values.libroconv.podDisruptionBudget }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "general.names.fullname" . }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
+  {{- if or .Values.podDisruptionBudget.minAvailable .Values.libroconv.podDisruptionBudget.minAvailable }}
+  minAvailable: {{ default .Values.podDisruptionBudget.minAvailable .Values.libroconv.podDisruptionBudget.minAvailable }}
+  {{- end }}
+  {{- if or .Values.podDisruptionBudget.maxUnavailable .Values.libroconv.podDisruptionBudget.maxUnavailable }}
+  maxUnavailable: {{ default .Values.podDisruptionBudget.maxUnavailable .Values.libroconv.podDisruptionBudget.maxUnavailable }}
+  {{- end }}
+{{- end }}
+{{- end }} 
