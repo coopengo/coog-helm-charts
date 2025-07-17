@@ -8,6 +8,16 @@
 #   replicaCount: 1
 replicaCount: 1
 
+# -- Network policy configuration
+networkPolicy:
+  # -- Enable or disable the network policy
+  enabled: true
+  # -- Allow egress to these namespaces in addition to the chart's namespace
+  allowedEgressNamespaces:
+    - name: shared-services
+  # -- Enable DNS resolution (UDP/TCP port 53)
+  allowDNS: true
+
 # -- Strategy used to replace old pods with newest. It can be customized for each component.
 # e.g:
 # coog:
