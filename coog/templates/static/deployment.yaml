@@ -13,6 +13,18 @@ spec:
     metadata:
       labels: {{- include "general.labels.standard" . | nindent 8 }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        procMount: Default
+        runAsNonRoot: true
+        runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.static.securityContext.runAsUser }}
+        runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.static.securityContext.runAsGroup }}
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
@@ -20,6 +32,8 @@ spec:
           image: "{{ default .Values.image.repository .Values.backCore.static.image.repository }}/{{ .Values.backCore.static.image.name }}:{{ default .Values.image.tag .Values.backCore.static.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.static.image.pullPolicy | quote }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
