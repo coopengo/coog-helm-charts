@@ -79,6 +79,19 @@ tests:
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
+      # [Start] Basic check at Template Pod level security stadards (enforced)
+      - equal:
+          path: spec.template.spec.securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.securityContext.seccompProfile
+      # [End] Basic check at Pod level security stadards
 
   - it: Test disabled configmaps, secrets & checksums
     template: api-referential/deployment.yaml
@@ -216,6 +229,19 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-api-referential")].resources.requests.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
+      # [Start] Basic check at container level security stadards (enforced)
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-referential")].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-referential")].securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-referential")].securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.containers[?(@.name == "coog-api-referential")].securityContext.seccompProfile
+      # [End] Basic check at Pod level security stadards
 
   - it: Test Global components configuration
     template: api-referential/deployment.yaml
