@@ -37,6 +37,8 @@ maintenance_mode:
 
 rabbitmq:
   enabled: true
+  image:
+    repository: bitnamilegacy/rabbitmq
   persistence:
     enabled: false
   resources:
@@ -57,6 +59,7 @@ mongodb:
   enabled: true
   strategyType: Recreate
   image:
+    repository: bitnamilegacy/mongodb
     tag: "4.4.12"
   replicaSet:
     enabled: false
@@ -84,6 +87,7 @@ postgresql:
   persistence:
     enabled: false
   image:
+    repository: bitnamilegacy/postgresql
     debug: true
   postgresqlDatabase: coog
   initdbScripts:
