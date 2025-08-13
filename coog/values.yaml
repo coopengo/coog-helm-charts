@@ -266,6 +266,7 @@ postgresql:
   isManaged: true
   # Ref : https://hub.docker.com/r/bitnami/postgresql/tags
   image:
+    repository: bitnamilegacy/postgresql
     tag: 14.9.0-debian-11-r58
   # -- Mandatory if isManaged is false else 'host' is automatically added
   # Use an external postgresql server (Database not managed by this chart)
@@ -284,6 +285,7 @@ mongodb:
   # This is a coog parameter not mongodb
   isManaged: false
   image:
+    repository: bitnamilegacy/mongodb
     tag: 5.0.10-debian-11-r3
   # -- Enable architecture type
   # Should not been changed after first installation !
@@ -377,6 +379,8 @@ mongodb:
 # Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/12.3.0
 rabbitmq:
   isManaged: true
+  image:
+    repository: bitnamilegacy/rabbitmq
   persistence:
     enabled: false
   containerSecurityContext:
