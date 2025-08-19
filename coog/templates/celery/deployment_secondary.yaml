@@ -2,13 +2,22 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ printf "%s-secondary" (include "general.names.fullname" .) }}
-  labels: {{- include "general.labels.standard" . | nindent 4 }}
+  labels: 
+    {{- $defaultLabels := include "general.labels.standard" . | fromYaml }}
+    {{- $customName := printf "%s-%s" .Chart.Name "celery-secondary" }}
+    {{- $nameLabel := dict "app.kubernetes.io/name" $customName }}
+    {{- mustMergeOverwrite $defaultLabels $nameLabel | toYaml | nindent 4 }}
 spec:
   replicas: {{ default .Values.replicaCount .Values.backCore.celery_secondary.replicaCount }}
   strategy:
     type: {{ default .Values.strategy.type .Values.backCore.strategy.type }}
   selector:
-    matchLabels: {{- include "general.labels.matchLabels" . | nindent 6 }}
+    matchLabels:
+      {{- $defaultLabels := include "general.labels.matchLabels" . | fromYaml }}
+      {{- $customName := printf "%s-%s" .Chart.Name "celery-secondary" }}
+      {{- $nameLabel := dict "app.kubernetes.io/name" $customName }}
+      {{- mustMergeOverwrite $defaultLabels $nameLabel | toYaml | nindent 6 }}
+
   template:
     metadata:
       labels: {{- include "general.labels.standard" . | nindent 8 }}
@@ -27,6 +36,18 @@ spec:
         {{- end }}
         checksum/secret-postgresql: {{ include (printf "%s/%s" $.Template.BasePath "secret-postgresql.yaml") . | sha256sum  }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        procMount: Default
+        runAsNonRoot: true
+        runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
+        runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.securityContext.runAsGroup }}
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
     {{- if .Values.backCore.persistentVolume.enabled }}
@@ -40,6 +61,8 @@ spec:
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
@@ -101,9 +124,7 @@ spec:
                 - "-c"
                 - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
-          {{- with default .Values.backCore.celery.resources .Values.backCore.celery_secondary.resources }}
-          resources: {{- toYaml . | nindent 12 }}
-          {{- end }}
+          resources: {{- toYaml .Values.backCore.celery_secondary.worker.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.celery_secondary.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
