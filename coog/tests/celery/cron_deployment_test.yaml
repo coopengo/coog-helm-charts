@@ -2,6 +2,7 @@
 suite: Test cron deployment
 templates:
   - celery/cron_configmap.yaml
+  - celery/configmap.yaml
   - celery/deployment.yaml
   - celery/cron_secret.yaml
   - configmap-global.yaml
@@ -43,7 +44,7 @@ tests:
             name: test-registry
       - equal:
           path: metadata.name
-          value: test-coog-cron
+          value: test-coog-celery
       - isNotNull:
           path: spec.replicas
       - matchRegex:
@@ -51,7 +52,7 @@ tests:
           pattern: ^(RollingUpdate|Recreate)$
       - equal:
           path: metadata.labels["app.kubernetes.io/name"]
-          value: coog-cron
+          value: coog-celery
       - equal:
           path: metadata.labels["app.kubernetes.io/instance"]
           value: test
@@ -63,7 +64,7 @@ tests:
           pattern: coog-.*$
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/name"]
-          value: coog-cron
+          value: coog-celery
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/instance"]
           value: test
@@ -114,7 +115,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap-global"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/configmap-backcore"]
-      - notExists:
+      - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/configmap"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
@@ -275,7 +276,7 @@ tests:
             readOnly: false
 
   - it: Test Global components configuration
-    template: cron/deployment.yaml
+    template: celery/deployment.yaml
     set:
       replicaCount: 2
       strategy:
@@ -295,7 +296,7 @@ tests:
     asserts:
       - equal:
           path: spec.replicas
-          value: 2
+          value: 1 # Main celery replica cannot be greater than 1
       - equal:
           path: spec.strategy.type
           value: Recreate
@@ -313,7 +314,7 @@ tests:
           value: 1003
 
   - it: Test specific component configuration
-    template: cron/deployment.yaml
+    template: celery/deployment.yaml
     set:
       backCore:
         strategy:
@@ -330,7 +331,7 @@ tests:
     asserts:
       - equal:
           path: spec.replicas
-          value: 3
+          value: 1 # Main celery replica cannot be greater than 1
       - equal:
           path: spec.strategy.type
           value: RollingUpdate

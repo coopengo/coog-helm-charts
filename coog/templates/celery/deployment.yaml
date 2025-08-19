@@ -189,7 +189,7 @@ spec:
                 - "-c"
                 - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery-database-maintenance@$HOSTNAME"
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
-        - name: {{ printf "%s-cron" (include "general.names.name" .)}}
+        - name: {{ printf "%s-cron" .Chart.Name }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy | quote }}
           securityContext:
@@ -218,7 +218,7 @@ spec:
                 name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
             {{- if (and .Values.backCore .Values.backCore.cron .Values.backCore.cron.extraEnvVar) }}
             - configMapRef:
-                name: {{ printf "%s-cron-configuration" (include "general.names.fullname" .) }}
+                name: {{ printf "%s-%s-cron-configuration" .Release.Name .Chart.Name }}
             {{- end }}
             {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
             - secretRef:
@@ -228,7 +228,7 @@ spec:
                 name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
             {{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.cron .Values.secrets.backCore.cron.extraEnvVar) }}
             - secretRef:
-                name: {{ printf "%s-cron-configuration" (include "general.names.fullname" .) }}
+                name: {{ printf "%s-%s-cron-configuration" .Release.Name .Chart.Name }}
             {{- end }}
             - secretRef:
                 name: {{  printf "%s-postgresql" (include "general.names.short" .) }}
@@ -249,6 +249,7 @@ spec:
                 - "-c"
                 - "ep cron --check"
             {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.cron.livenessProbe) "context" $) | nindent 12 }}
+          resources: {{- toYaml .Values.backCore.cron.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.celery.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
