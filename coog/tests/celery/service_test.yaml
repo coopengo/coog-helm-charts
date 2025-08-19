@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.jsonsuite
 suite: Test cron service
 templates:
-  - cron/service.yaml
+  - celery/cron_service.yaml
 release:
   name: test
   namespace: test

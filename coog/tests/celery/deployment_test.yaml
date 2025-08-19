@@ -434,7 +434,7 @@ tests:
     asserts:
       - equal:
           path: spec.replicas
-          value: 2
+          value: 1 # main celery cannot have multiple pods
       - equal:
           path: spec.strategy.type
           value: Recreate
@@ -481,7 +481,7 @@ tests:
     asserts:
       - equal:
           path: spec.replicas
-          value: 3
+          value: 1 # main celery cannot have multiple pods
       - equal:
           path: spec.strategy.type
           value: RollingUpdate
