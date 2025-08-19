@@ -7,7 +7,7 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test configuration
     set:
@@ -46,8 +46,7 @@ tests:
           value: 50Gi
       - contains:
           path: spec.accessModes
-          content:
-            ReadWriteMany
+          content: ReadWriteMany
       - equal:
           path: spec.volumeName
           value: test-volume

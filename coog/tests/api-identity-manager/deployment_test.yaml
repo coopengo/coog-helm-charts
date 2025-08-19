@@ -1,5 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: Test api-identity-manager deployment
+values:
+  - ../../values_secrets.yaml
 templates:
   - api-identity-manager/configmap.yaml
   - api-identity-manager/deployment.yaml
@@ -14,7 +16,7 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test metadata & template
     template: api-identity-manager/deployment.yaml
@@ -30,8 +32,6 @@ tests:
         extraEnvVar:
           ENABLE_GLOBAL_SECRET: foo
         frontCore:
-          extraEnvVar:
-            ENABLE_FRONTCORE_SECRET: foo
           apiIdentityManager:
             extraEnvVar:
               ENABLE_API_IDENTITY_MANAGER_SECRET: foo
@@ -86,6 +86,19 @@ tests:
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret-mongodb"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
+      # [Start] Basic check at Template Pod level security stadards (enforced)
+      - equal:
+          path: spec.template.spec.securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.securityContext.seccompProfile
+      # [End] Basic check at Pod level security stadards
 
   - it: Test disabled configmaps, secrets & checksums
     template: api-identity-manager/deployment.yaml
@@ -110,7 +123,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/configmap"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
-      - notExists:
+      - exists:
           path: spec.template.metadata.annotations["checksum/secret-frontcore"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/secret"]
@@ -137,7 +150,7 @@ tests:
           content:
             secretRef:
               name: test-coog-global-configuration
-      - notContains:
+      - contains:
           path: spec.template.spec.containers[?(@.name == "coog-api-identity-manager")].envFrom
           content:
             secretRef:
@@ -237,6 +250,19 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-api-identity-manager")].resources.requests.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
+      # [Start] Basic check at container level security stadards (enforced)
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-identity-manager")].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-identity-manager")].securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-identity-manager")].securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.containers[?(@.name == "coog-api-identity-manager")].securityContext.seccompProfile
+      # [End] Basic check at Pod level security stadards
 
   - it: Test Global components configuration
     template: api-identity-manager/deployment.yaml

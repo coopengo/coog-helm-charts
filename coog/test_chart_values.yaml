@@ -54,7 +54,9 @@ image:
 ingress:
   # -- Define ingressClassName (default: nginx)
   # Ref : https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
-  className: nginx
+  className:
+    - nginx
+    - int-nginx
   # -- Default host for the ingress record applied for all ingress. It can be customized for each component.
   # e.g:
   # coog:
@@ -236,6 +238,21 @@ maintenanceMode:
     nginx:
       customhttperrors: 403
     annotations: {}
+
+# -- Monitoring probe image
+# Ref: https://artifacthub.io/packages/helm/bitnami/blackbox-exporter
+httpProbe:
+  enabled: false
+
+  metadata:
+    namespace: monitoring
+
+  spec:
+    interval: 60s # Interval between probe checks
+    module: http_2xx
+    prober:
+      url: ""
+      port: ""
 
 #############################################################################################################################
 #                                            External dependencies                                                          #
@@ -600,14 +617,33 @@ backCore:
       TRYTOND_BATCH__ENABLE_CELERY_AUTO_SCALING: "1"
       TRYTOND_BATCH__ROOT_DIR: /workspace/io/batch
 
-    # -- celery containers' resource requests and limits
+    # -- celery pod' resource requests and limits
     resources:
       limits:
         cpu: 400m
         memory: 1000Mi
       requests:
-        cpu: 320m
-        memory: 800Mi
+        cpu: 200m
+        memory: 500Mi
+
+    # -- celery containers' resource requests and limits
+    worker:
+      resources:
+        limits:
+          cpu: 200m
+          memory: 500Mi
+        requests:
+          cpu: 100m
+          memory: 250Mi
+
+    databaseMaintenance:
+      resources:
+        limits:
+          cpu: 200m
+          memory: 500Mi
+        requests:
+          cpu: 100m
+          memory: 250Mi
 
   cron:
     # -- Dynamic ConfigMap variables for cron

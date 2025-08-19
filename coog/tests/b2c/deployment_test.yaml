@@ -9,13 +9,14 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test metadata & template
     template: b2c/deployment.yaml
     set:
       b2c:
         enabled: true
+        enabled_myspace: true
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
       imageCredentials:
@@ -62,6 +63,19 @@ tests:
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret-global"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
+      # [Start] Basic check at Template Pod level security stadards (enforced)
+      - equal:
+          path: spec.template.spec.securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.securityContext.seccompProfile
+      # [End] Basic check at Pod level security stadards
 
   - it: Test disabled configmaps, secrets & checksums
     template: b2c/deployment.yaml
@@ -69,6 +83,7 @@ tests:
       extraEnvVar: {}
       b2c:
         enabled: true
+        enabled_myspace: true
       secrets:
         extraEnvVar: {}
     asserts:
@@ -94,6 +109,7 @@ tests:
     set:
       b2c:
         enabled: true
+        enabled_myspace: true
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
       secrets:
@@ -138,12 +154,26 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-b2c")].resources.requests.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
+      # [Start] Basic check at container level security stadards (enforced)
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-b2c")].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-b2c")].securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-b2c")].securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.containers[?(@.name == "coog-b2c")].securityContext.seccompProfile
+      # [End] Basic check at Pod level security stadards
 
   - it: Test Global components configuration
     template: b2c/deployment.yaml
     set:
       b2c:
         enabled: true
+        enabled_myspace: true
       replicaCount: 2
       strategy:
         type: Recreate
@@ -179,6 +209,7 @@ tests:
     set:
       b2c:
         enabled: true
+        enabled_myspace: true
         replicaCount: 3
         strategy:
           type: RollingUpdate
@@ -214,21 +245,43 @@ tests:
     set:
       b2c:
         enabled: true
+        enabled_myspace: true
     asserts:
       - hasDocuments:
           count: 1
 
-  - it: Test not enabled deployment (1/2)
+  - it: Test not enabled deployment (1/4)
     template: b2c/deployment.yaml
     asserts:
       - hasDocuments:
           count: 0
 
-  - it: Test not enabled deployment (2/2)
+  - it: Test not enabled deployment (2/4)
+    template: b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+        enabled_myspace: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled deployment (3/4)
     template: b2c/deployment.yaml
     set:
       b2c:
         enabled: false
+        enabled_myspace: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled deployment (4/4)
+    template: b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: false
+        enabled_myspace: true
     asserts:
       - hasDocuments:
           count: 0

@@ -23,6 +23,18 @@ spec:
         {{- end }}
       {{- end }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        procMount: Default
+        runAsNonRoot: true
+        runAsUser: {{ default .Values.securityContext.runAsUser .Values.b2b.securityContext.runAsUser }}
+        runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.b2b.securityContext.runAsGroup }}
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
@@ -30,6 +42,8 @@ spec:
           image: "{{ default .Values.image.repository .Values.b2b.image.repository }}/{{ .Values.b2b.image.name }}:{{ default .Values.image.tag .Values.b2b.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.b2b.image.pullPolicy | quote }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:

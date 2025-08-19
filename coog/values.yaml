@@ -58,7 +58,8 @@ image:
 ingress:
   # -- Define ingressClassName (default: nginx)
   # Ref : https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
-  className: nginx
+  className:
+    - nginx
   # -- Default host for the ingress record applied for all ingress. It can be customized for each component.
   # e.g:
   # coog:
@@ -241,6 +242,21 @@ maintenanceMode:
       customhttperrors: 403
     annotations: {}
 
+# -- Monitoring probe image
+# Ref: https://artifacthub.io/packages/helm/bitnami/blackbox-exporter
+httpProbe:
+  enabled: false
+
+  metadata:
+    namespace: monitoring
+
+  spec:
+    interval: 60s # Interval between probe checks
+    module: http_2xx
+    prober:
+      url: ""
+      port: ""
+
 #############################################################################################################################
 #                                            External dependencies                                                          #
 #############################################################################################################################
@@ -251,6 +267,7 @@ postgresql:
   isManaged: true
   # Ref : https://hub.docker.com/r/bitnami/postgresql/tags
   image:
+    repository: bitnamilegacy/postgresql
     tag: 14.9.0-debian-11-r58
   # -- Mandatory if isManaged is false else 'host' is automatically added
   # Use an external postgresql server (Database not managed by this chart)
@@ -269,6 +286,7 @@ mongodb:
   # This is a coog parameter not mongodb
   isManaged: false
   image:
+    repository: bitnamilegacy/mongodb
     tag: 5.0.10-debian-11-r3
   # -- Enable architecture type
   # Should not been changed after first installation !
@@ -361,6 +379,9 @@ mongodb:
 # -- Default message service used by backCore
 # Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/12.3.0
 rabbitmq:
+  isManaged: true
+  image:
+    repository: bitnamilegacy/rabbitmq
   persistence:
     enabled: false
   service:
@@ -382,6 +403,15 @@ rabbitmq:
     loopback_users.guest = false
   livenessProbe:
     initialDelaySeconds: 240
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    privileged: false
+    runAsNonRoot: true
 
 #############################################################################################################################
 #                                            Coog minimum components                                                        #
@@ -538,6 +568,7 @@ backCore:
       # -- Default host for the ingress resource for coog containers'
       defaultPaths:
         - /
+        - /docusign
 
       # -- additionals hosts & paths
       # host : required
@@ -568,19 +599,19 @@ backCore:
     # -- coog containers' resource requests and limits
     resources:
       limits:
-        cpu: 1500m
+        cpu: 1300m
         memory: 1750Mi
       requests:
-        cpu: 750m
+        cpu: 650m
         memory: 875Mi
 
     initContainers:
       resources:
         limits:
-          cpu: 1500m
+          cpu: 1300m
           memory: 1750Mi
         requests:
-          cpu: 750m
+          cpu: 650m
           memory: 875Mi
 
   celery:
@@ -597,13 +628,23 @@ backCore:
       TRYTOND_BATCH__ROOT_DIR: /workspace/io/batch
 
     # -- celery containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 400m
-        memory: 1000Mi
-      requests:
-        cpu: 200m
-        memory: 500Mi
+    worker:
+      resources:
+        limits:
+          cpu: 300m
+          memory: 700Mi
+        requests:
+          cpu: 150m
+          memory: 350Mi
+
+    databaseMaintenance:
+      resources:
+        limits:
+          cpu: 300m
+          memory: 700Mi
+        requests:
+          cpu: 150m
+          memory: 350Mi
 
   celery_secondary:
     replicaCount: "0"
@@ -612,6 +653,15 @@ backCore:
     # -- Dynamic ConfigMap variables for cron
     extraEnvVar:
       LOG_LEVEL: WARNING
+
+    # -- cron containers' resource requests and limits
+    resources:
+      limits:
+        cpu: 400m
+        memory: 800Mi
+      requests:
+        cpu: 200m
+        memory: 400Mi
 
     # -- Configure options applied to cron deployment, liveness, readiness and startup probes
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
@@ -938,7 +988,10 @@ apiReferential:
 
 b2c:
   # -- Deploy b2c + apiB2c container(s)
+  # if enabled is true, only apiB2c will be deployed
+  # if enabled and enabled_myspace is true, b2c and apiB2c will be deployed
   enabled: false
+  enabled_myspace: false
   strategy:
     type: ""
 

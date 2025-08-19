@@ -7,20 +7,33 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test metadata & global configurations
     set:
       customerBackend:
         enabled: true
       ingress:
-        className: "nginx"
+        className:
+          - nginx
+          - int-nginx
     asserts:
+      - hasDocuments:
+          count: 2
       - isKind:
           of: Ingress
       - equal:
           path: metadata.name
-          value: test-coog-customer-backend
+          value: test-coog-customer-backend-nginx
+        documentSelector:
+          path: spec.ingressClassName
+          value: nginx
+      - equal:
+          path: metadata.name
+          value: test-coog-customer-backend-int-nginx
+        documentSelector:
+          path: spec.ingressClassName
+          value: int-nginx
       - equal:
           path: metadata.labels["app.kubernetes.io/name"]
           value: coog-customer-backend
@@ -34,8 +47,17 @@ tests:
           path: metadata.labels["app.kubernetes.io/version"]
           pattern: coog-.*$
       - equal:
+          path: metadata.labels["app.kubernetes.io/ingressClassName"]
+          value: nginx
+        documentSelector:
           path: spec.ingressClassName
           value: nginx
+      - equal:
+          path: metadata.labels["app.kubernetes.io/ingressClassName"]
+          value: int-nginx
+        documentSelector:
+          path: spec.ingressClassName
+          value: int-nginx
 
   - it: Test lets encrypt configuration
     set:
@@ -68,6 +90,9 @@ tests:
             hosts:
               - test-custom.local
             secretName: test.local-tls
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
 
   - it: Test annotations
     set:
@@ -212,7 +237,7 @@ tests:
             http:
               paths:
                 - path: "/v1/customer(/|$)(.*)"
-                  pathType: Prefix
+                  pathType: ImplementationSpecific
                   backend:
                     service:
                       name: test-coog-customer-backend

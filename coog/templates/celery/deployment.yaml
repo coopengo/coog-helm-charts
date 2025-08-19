@@ -27,6 +27,18 @@ spec:
         {{- end }}
         checksum/secret-postgresql: {{ include (printf "%s/%s" $.Template.BasePath "secret-postgresql.yaml") . | sha256sum  }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        procMount: Default
+        runAsNonRoot: true
+        runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
+        runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.securityContext.runAsGroup }}
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
     {{- if .Values.backCore.persistentVolume.enabled }}
@@ -35,11 +47,17 @@ spec:
           persistentVolumeClaim:
             claimName: {{ default (printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-") .Values.backCore.persistentVolume.existingClaim }}
     {{- end }}
+      resources: {{- toYaml .Values.backCore.celery.resources | nindent 8 }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
+          {{- if (and .Values.backCore.celery.worker .Values.backCore.celery.worker.resources) }}
+          resources: {{- toYaml .Values.backCore.celery.worker.resources | nindent 12 }}
+          {{- end }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
@@ -85,21 +103,91 @@ spec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
+                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery@$HOSTNAME"
             {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.celery.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             exec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
+                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery@$HOSTNAME"
             {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.celery.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             exec:
               command:
                 - "/bin/bash"
                 - "-c"
-                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
+                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery@$HOSTNAME"
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
+        - name: {{ printf "%s-database-maintenance" (include "general.names.name" .) }}
+          image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
+          {{- if (and .Values.backCore.celery.databaseMaintenance .Values.backCore.celery.databaseMaintenance.resources) }}
+          resources: {{- toYaml .Values.backCore.celery.databaseMaintenance.resources | nindent 12 }}
+          {{- end }}
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
+            runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.securityContext.runAsGroup }}
+          command: ['ep', 'celery_maintenance']
+        {{- if .Values.backCore.persistentVolume.enabled }}
+          volumeMounts:
+            - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+              mountPath: /workspace/io
+              readOnly: false
+        {{- end }}
+          envFrom:
+            {{- if .Values.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            - configMapRef:
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+            - configMapRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            - secretRef:
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+            {{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.celery .Values.secrets.backCore.celery.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- end }}
+            - secretRef:
+                name: {{  printf "%s-postgresql" (include "general.names.short" .) }}
+          ports:
+            - name: http
+              containerPort: 8000
+          startupProbe:
+            exec:
+              command:
+                - "/bin/bash"
+                - "-c"
+                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery-database-maintenance@$HOSTNAME"
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.celery.startupProbe) "context" $) | nindent 12 }}
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/bash"
+                - "-c"
+                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery-database-maintenance@$HOSTNAME"
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.celery.livenessProbe) "context" $) | nindent 12 }}
+          readinessProbe:
+            exec:
+              command:
+                - "/bin/bash"
+                - "-c"
+                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery-database-maintenance@$HOSTNAME"
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
         - name: {{ printf "%s-cron" (include "general.names.name" .)}}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
@@ -177,7 +265,6 @@ spec:
       {{- if default .Values.dnsConfig .Values.backCore.celery.dnsConfig }}
       dnsConfig: {{- toYaml default .Values.dnsConfig .Values.backCore.celery.dnsConfig | indent 8 }}
       {{- end }}
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -298,4 +385,5 @@ spec:
       {{- end }}
       {{- if default .Values.dnsConfig .Values.backCore.celery.dnsConfig }}
       dnsConfig: {{- toYaml default .Values.dnsConfig .Values.backCore.celery.dnsConfig | indent 8 }}
+      {{- end }}
       {{- end }}

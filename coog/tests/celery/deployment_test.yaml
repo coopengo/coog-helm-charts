@@ -14,7 +14,7 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test metadata & template
     template: celery/deployment.yaml
@@ -79,6 +79,19 @@ tests:
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret-postgresql"]
       # [End] Check checksum configuration - auto update pods when there is a change in configmap & secrets
+      # [Start] Basic check at Template Pod level security stadards (enforced)
+      - equal:
+          path: spec.template.spec.securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.securityContext.seccompProfile
+      # [End] Basic check at Pod level security stadards
 
   - it: Test disabled configmaps, secrets & checksums
     template: celery/deployment.yaml
@@ -104,7 +117,7 @@ tests:
           path: spec.template.metadata.annotations["checksum/secret"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret-postgresql"]
-      # [Start] Check environment files
+      # [Start] Check environment files for celery
       - notContains:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].envFrom
           content:
@@ -137,6 +150,43 @@ tests:
               name: test-coog-celery-configuration
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].envFrom
+          content:
+            secretRef:
+              name: test-coog-postgresql
+      # [End] Check environment files for celery
+      # [Start] Check environment files for celery database maintenance
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-backcore-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-celery-configuration
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            secretRef:
+              name: test-coog-backcore-configuration
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            secretRef:
+              name: test-coog-celery-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
           content:
             secretRef:
               name: test-coog-postgresql
@@ -147,6 +197,24 @@ tests:
     set:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
+      backCore:
+        celery:
+          worker:
+            resources:
+              limits:
+                cpu: 200m
+                memory: 500Mi
+              requests:
+                cpu: 100m
+                memory: 250Mi
+          databaseMaintenance:
+            resources:
+              limits:
+                cpu: 200m
+                memory: 500Mi
+              requests:
+                cpu: 100m
+                memory: 250Mi
       secrets:
         extraEnvVar:
           ENABLE_GLOBAL_SECRET: foo
@@ -155,14 +223,21 @@ tests:
             extraEnvVar:
               ENABLE_CELERY_SECRET: foo
     asserts:
-      # Check Containers pod image
+      # Check Containers pod image (celery)
       - equal:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].image
           value: cooghub/coog:changeme
       - matchRegex:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].imagePullPolicy
           pattern: ^(Always|Never|IfNotPresent)$
-      # [Start] Check environment files
+      # Check Containers pod image (celery-database-maintenance)
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].image
+          value: cooghub/coog:changeme
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].imagePullPolicy
+          pattern: ^(Always|Never|IfNotPresent)$
+      # [Start] Check environment files celery
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].envFrom
           content:
@@ -198,13 +273,72 @@ tests:
           content:
             secretRef:
               name: test-coog-postgresql
-      # [End] Check environment files
+      # [End] Check environment files celery
+      # [Start] Check environment files celery-database-maintenance
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-backcore-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-celery-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            secretRef:
+              name: test-coog-global-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            secretRef:
+              name: test-coog-backcore-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            secretRef:
+              name: test-coog-celery-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].envFrom
+          content:
+            secretRef:
+              name: test-coog-postgresql
+      # [End] Check environment files celery-database-maintenance
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].ports
           content:
             name: http
             containerPort: 8000
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].ports
+          content:
+            name: http
+            containerPort: 8000
       # [Start] Check resources limites & requests
+      # - matchRegex:
+      #     path: spec.template.spec.resources.limits.cpu
+      #       # path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.limits.cpu
+      #     pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      # - matchRegex:
+      #     path: spec.template.spec.resources.limits.memory
+      #       # path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.limits.memory
+      #     pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      # - matchRegex:
+      #     path: spec.template.spec.resources.requests.cpu
+      #     # path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.requests.cpu
+      #     pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      # - matchRegex:
+      #     path: spec.template.spec.resources.requests.memory
+      #     # path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.requests.memory
+      #     pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+
       - matchRegex:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.limits.cpu
           pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
@@ -217,8 +351,43 @@ tests:
       - matchRegex:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.requests.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources.limits.cpu
+          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources.limits.memory
+          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources.requests.cpu
+          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      - matchRegex:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources.requests.memory
+          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
-
+      # [Start] Basic check at container level security stadards (enforced)
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].securityContext.seccompProfile
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].securityContext.privileged
+          value: false
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].securityContext.runAsNonRoot
+          value: true
+      - isNotEmpty:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].securityContext.seccompProfile
+      # [End] Basic check at Pod level security stadards
 
   - it: Test Volumes
     template: celery/deployment.yaml
@@ -233,6 +402,12 @@ tests:
           value: test-workspace-io
       - contains:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].volumeMounts
+          content:
+            name: test-workspace-io
+            mountPath: /workspace/io
+            readOnly: false
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].volumeMounts
           content:
             name: test-workspace-io
             mountPath: /workspace/io
@@ -275,6 +450,18 @@ tests:
       - equal:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].securityContext.runAsGroup
           value: 1003
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].image
+          value: global-docker-repository/coog:global-docker-tag
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].imagePullPolicy
+          value: Always
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].securityContext.runAsUser
+          value: 1003
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].securityContext.runAsGroup
+          value: 1003
 
   - it: Test specific component configuration
     template: celery/deployment.yaml
@@ -287,8 +474,8 @@ tests:
           tag: specific-docker-tag
           pullPolicy: Never
         securityContext:
-            runAsUser: 1001
-            runAsGroup: 1001
+          runAsUser: 1001
+          runAsGroup: 1001
         celery:
           replicaCount: 3
     asserts:
@@ -309,4 +496,16 @@ tests:
           value: 1001
       - equal:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].securityContext.runAsGroup
+          value: 1001
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].image
+          value: specific-docker-repository/coog:specific-docker-tag
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].imagePullPolicy
+          value: Never
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].securityContext.runAsUser
+          value: 1001
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].securityContext.runAsGroup
           value: 1001

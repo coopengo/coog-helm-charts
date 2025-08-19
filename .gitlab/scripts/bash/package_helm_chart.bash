@@ -19,9 +19,10 @@ for HELM_PROJECT in $(find . -mindepth 1 -maxdepth 1 -type d ! -name ".*" -exec 
 					helm lint "${HELM_PROJECT}" -f "${HELM_PROJECT}/values.yaml"
 					helm template -f "${HELM_PROJECT}/values.yaml" "${HELM_PROJECT}" >"${HELM_PROJECT}.template"
 				fi
-				if [[ ${CI_COMMIT_BRANCH} =~ ^(master|coog-(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$ ]]; then
+				if [[ ${CI_COMMIT_BRANCH} =~ ^(master|coog-(v2-)?(([[:digit:]]{1,2}).([[:digit:]]{1,2})))$ ]]; then
 					git tag -a "${HELM_PROJECT}-${HELM_PROJECT_VERSION}" -m "Create TAG ${HELM_PROJECT}-${HELM_PROJECT_VERSION}"
-					git push --tags
+					git push github "HEAD:${CI_COMMIT_BRANCH}" --tags
+					git push origin "HEAD:${CI_COMMIT_BRANCH}" --tags
 				fi
 				helm package "${HELM_PROJECT}"
 				helm repo index --url "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/stable" .

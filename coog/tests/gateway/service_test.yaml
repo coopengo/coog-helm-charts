@@ -7,7 +7,7 @@ release:
   namespace: test
 capabilities:
   majorVersion: 1
-  minorVersion: 24
+  minorVersion: 29
 tests:
   - it: Test metadata
     set:
@@ -106,7 +106,6 @@ tests:
       - hasDocuments:
           count: 1
 
-
   - it: Test not enabled service (1/2)
     asserts:
       - hasDocuments:
@@ -131,4 +130,3 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
-
