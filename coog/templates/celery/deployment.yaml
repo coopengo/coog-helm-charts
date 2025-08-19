@@ -386,4 +386,3 @@ spec:
       {{- if default .Values.dnsConfig .Values.backCore.celery.dnsConfig }}
       dnsConfig: {{- toYaml default .Values.dnsConfig .Values.backCore.celery.dnsConfig | indent 8 }}
       {{- end }}
-      {{- end }}

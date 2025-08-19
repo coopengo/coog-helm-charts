@@ -1,9 +1,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: Test cron deployment
 templates:
-  - cron/configmap.yaml
-  - cron/deployment.yaml
-  - cron/secret.yaml
+  - celery/cron_configmap.yaml
+  - celery/deployment.yaml
+  - celery/cron_secret.yaml
   - configmap-global.yaml
   - configmap-backcore.yaml
   - secret-global.yaml
@@ -17,7 +17,7 @@ capabilities:
   minorVersion: 29
 tests:
   - it: Test metadata & template
-    template: cron/deployment.yaml
+    template: celery/deployment.yaml
     set:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
@@ -98,7 +98,7 @@ tests:
       # [End] Basic check at Pod level security stadards
 
   - it: Test disabled configmaps, secrets & checksums
-    template: cron/deployment.yaml
+    template: celery/deployment.yaml
     set:
       extraEnvVar: {}
       secrets:
@@ -163,7 +163,7 @@ tests:
       # [End] Check environment files
 
   - it: Test Container
-    template: cron/deployment.yaml
+    template: celery/deployment.yaml
     set:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
@@ -257,7 +257,7 @@ tests:
       # [End] Basic check at Pod level security stadards
 
   - it: Test Volumes
-    template: cron/deployment.yaml
+    template: celery/deployment.yaml
     set:
       backCore:
         persistentVolume:
