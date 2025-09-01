@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
-suite: Test cron secret
+suite: Test cron configmap
 templates:
-  - cron/secret.yaml
+  - celery/cron_configmap.yaml
 release:
   name: test # Do not edit
   namespace: test
@@ -11,14 +11,13 @@ capabilities:
 tests:
   - it: Test metadata & template
     set:
-      secrets:
-        backCore:
-          cron:
-            extraEnvVar:
-              ENABLE_CRON_SECRET: foo
+      backCore:
+        cron:
+          extraEnvVar:
+            ENABLED_CRON_CONFIGMAP: foo
     asserts:
       - isKind:
-          of: Secret
+          of: ConfigMap
       - equal:
           path: metadata.name
           value: test-coog-cron-configuration
@@ -37,22 +36,20 @@ tests:
 
   - it: Test variables
     set:
-      secrets:
-        backCore:
-          cron:
-            extraEnvVar:
-              ENABLE_CRON_SECRET: foo
+      backCore:
+        cron:
+          extraEnvVar:
+            CRON_DYNAMIC_CONFIG: foo
     asserts:
       - equal:
-          path: stringData.ENABLE_CRON_SECRET
-          value: "foo"
+          path: data.CRON_DYNAMIC_CONFIG
+          value: foo
 
-  - it: Test not enabled secret
+  - it: Test not enabled configmap
     set:
-      secrets:
-        backCore:
-          cron:
-            extraEnvVar: {}
+      backCore:
+        cron:
+          extraEnvVar: null
     asserts:
       - hasDocuments:
           count: 0
