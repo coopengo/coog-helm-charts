@@ -282,6 +282,7 @@ postgresql:
 mongodb:
   # -- Enable to install mongodb on Kubernetes
   # This is a coog parameter not mongodb
+  srv_uri: false
   isManaged: false
   image:
     tag: 5.0.10-debian-11-r3
