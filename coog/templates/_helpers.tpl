@@ -137,22 +137,39 @@ Join mongodb hosts in string format
 {{- $clusterDomain := .Values.clusterDomain }}
 {{- $hosts := list -}}
 {{- $options := list -}}
+{{- $protocol := "mongodb://" -}}
+{{- $srvEnabled := .Values.mongodb.srv_uri | default false -}}
+{{- if $srvEnabled -}}
+{{- $protocol = "mongodb+srv://" -}}
+{{- end -}}
 {{- range .Values.mongodb.uriOptions -}}
 {{- $options = printf "%s" . | append $options -}}
 {{- end -}}
 {{- if .Values.mongodb.hosts -}}
 {{- range .Values.mongodb.hosts -}}
+{{- if $srvEnabled -}}
+{{- $hosts = printf "%s" . | append $hosts -}}
+{{- else -}}
 {{- $hosts = printf "%s" . | append $hosts -}}
 {{- end -}}
-{{- printf "mongodb://%s:%s@%s/%s" (first $.Values.mongodb.auth.usernames) (first $.Values.mongodb.auth.passwords) (join "," $hosts) (first $.Values.mongodb.auth.databases) }}
+{{- end -}}
+{{- printf "%s%s:%s@%s/%s" $protocol (first $.Values.mongodb.auth.usernames) (first $.Values.mongodb.auth.passwords) (join "," $hosts) (first $.Values.mongodb.auth.databases) }}
 {{- else -}}
 {{- if eq .Values.mongodb.architecture "replicaset" -}}
 {{- range $e, $i := until $replicaCount }}
-{{- $hosts = printf "%s-%d.%s-headless.%s.svc.%s:%d" $fullname $i $fullname $releaseNamespace $clusterDomain $portNumber | append $hosts }}
-{{- end }}
-{{- printf "mongodb://%s:%s@%s/%s?replicaSet=%s" (first .Values.mongodb.auth.usernames) (first .Values.mongodb.auth.passwords) (join "," $hosts) (first .Values.mongodb.auth.databases) .Values.mongodb.replicaSetName }}
+{{- if $srvEnabled -}}
+{{- $hosts = printf "%s-%d.%s-headless.%s.svc.%s" $fullname $i $fullname $releaseNamespace $clusterDomain | append $hosts }}
 {{- else -}}
-{{- printf "mongodb://%s:%s@%s:%d/%s" (first .Values.mongodb.auth.usernames) (first .Values.mongodb.auth.passwords) $fullname $portNumber (first .Values.mongodb.auth.databases) }}
+{{- $hosts = printf "%s-%d.%s-headless.%s.svc.%s:%d" $fullname $i $fullname $releaseNamespace $clusterDomain $portNumber | append $hosts }}
+{{- end -}}
+{{- end }}
+{{- printf "%s%s:%s@%s/%s?replicaSet=%s" $protocol (first .Values.mongodb.auth.usernames) (first .Values.mongodb.auth.passwords) (join "," $hosts) (first .Values.mongodb.auth.databases) .Values.mongodb.replicaSetName }}
+{{- else -}}
+{{- if $srvEnabled -}}
+{{- printf "%s%s:%s@%s/%s" $protocol (first .Values.mongodb.auth.usernames) (first .Values.mongodb.auth.passwords) $fullname (first .Values.mongodb.auth.databases) }}
+{{- else -}}
+{{- printf "%s%s:%s@%s:%d/%s" $protocol (first .Values.mongodb.auth.usernames) (first .Values.mongodb.auth.passwords) $fullname $portNumber (first .Values.mongodb.auth.databases) }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
 {{- if $options -}}
