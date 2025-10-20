@@ -53,7 +53,7 @@ image:
   # coog:
   #   image:
   #     pullPolicy: Always
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 ingress:
   # -- Define ingressClassName (default: nginx)
