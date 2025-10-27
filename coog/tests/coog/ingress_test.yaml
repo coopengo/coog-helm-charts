@@ -206,3 +206,31 @@ tests:
                       name: test-coog
                       port:
                         number: 80
+                - path: "/docusign"
+                  pathType: ImplementationSpecific
+                  backend:
+                    service:
+                      name: test-coog
+                      port:
+                        number: 80
+                - path: "/sao"
+                  pathType: ImplementationSpecific
+                  backend:
+                    service:
+                      name: test-coog-static
+                      port:
+                        number: 80
+                - path: "/bench"
+                  pathType: ImplementationSpecific
+                  backend:
+                    service:
+                      name: test-coog-static
+                      port:
+                        number: 80
+                - path: "/doc"
+                  pathType: ImplementationSpecific
+                  backend:
+                    service:
+                      name: test-coog-static
+                      port:
+                        number: 80
