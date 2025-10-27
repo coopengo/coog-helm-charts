@@ -555,6 +555,9 @@ backCore:
       # -- Default host for the ingress resource for coog containers'
       defaultPaths:
         - /
+        - /sao
+        - /bench
+        - /doc
 
       # -- additionals hosts & paths
       # host : required
@@ -693,12 +696,6 @@ backCore:
       type: ""
 
     ingress:
-      # -- Default host for the ingress resource for static containers'
-      defaultPaths:
-        - /sao
-        - /bench
-        - /doc
-
       # -- additionals hosts & paths
       # host : required
       # path : optionnal
