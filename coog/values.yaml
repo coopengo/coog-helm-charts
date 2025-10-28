@@ -509,7 +509,7 @@ backCore:
   workers:
     number: 1
 
-  # -- Configure environement variables for backCore components (coog, celery, cron (except static : doesn't need configuration))
+  # -- Configure environement variables for backCore components (coog, celery, cron)
   # Each value can be modified without override all or delete other parameters
   # Ref: https://github.com/coopengo/coog/blob/master/bin/conf/trytond.conf
   # ex:
@@ -558,7 +558,7 @@ backCore:
         - /docusign
         - /sao
         - /bench
-        - /doc
+        - /doc/legacy
 
       # -- additionals hosts & paths
       # host : required
@@ -652,6 +652,7 @@ backCore:
           cpu: 160m
           memory: 240Mi
 
+<<<<<<< HEAD
   static:
     image:
       # -- static image name
@@ -690,6 +691,8 @@ backCore:
         cpu: 40m
         memory: 64Mi
 
+=======
+>>>>>>> 3501c3f9 (delete static config)
 #############################################################################################################################
 #                                            Back Additional components                                                     #
 #############################################################################################################################
