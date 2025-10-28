@@ -504,7 +504,7 @@ backCore:
   workers:
     number: 1
 
-  # -- Configure environement variables for backCore components (coog, celery, cron (except static : doesn't need configuration))
+  # -- Configure environement variables for backCore components (coog, celery, cron)
   # Each value can be modified without override all or delete other parameters
   # Ref: https://github.com/coopengo/coog/blob/master/bin/conf/trytond.conf
   # ex:
@@ -548,7 +548,7 @@ backCore:
         - /
         - /sao
         - /bench
-        - /doc
+        - /doc/legacy
 
       # -- additionals hosts & paths
       # host : required
@@ -658,42 +658,6 @@ backCore:
       successThreshold: 1
       failureThreshold: 2
 
-  static:
-    image:
-      # -- static image name
-      name: coog-static
-
-    strategy:
-      # -- static redeployment strategy type
-      type: ""
-
-    ingress:
-      # -- additionals hosts & paths
-      # host : required
-      # path : optionnal
-      # e.g:
-      # hosts:
-      #   - host: test1.example.com
-      #     path: /
-      #   - host: test2.example.com
-      hosts: []
-
-      nginx:
-        whiteList:
-          publicCidr: []
-
-    securityContext:
-      {}
-      # runAsUser: ""
-
-    # -- static containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 50m
-        memory: 80Mi
-      requests:
-        cpu: 40m
-        memory: 64Mi
 
 #############################################################################################################################
 #                                            Back Additional components                                                     #
