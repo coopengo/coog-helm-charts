@@ -544,9 +544,6 @@ backCore:
       # -- Default host for the ingress resource for coog containers'
       defaultPaths:
         - /
-        - /sao
-        - /bench
-        - /doc/legacy
 
       # -- additionals hosts & paths
       # host : required
