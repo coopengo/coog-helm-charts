@@ -553,9 +553,6 @@ backCore:
       defaultPaths:
         - /
         - /docusign
-        - /sao
-        - /bench
-        - /doc/legacy
 
       # -- additionals hosts & paths
       # host : required
