@@ -245,17 +245,3 @@ tests:
                       name: test-coog
                       port:
                         number: 80
-                - path: "/bench"
-                  pathType: ImplementationSpecific
-                  backend:
-                    service:
-                      name: test-coog
-                      port:
-                        number: 80
-                - path: "/doc/legacy"
-                  pathType: ImplementationSpecific
-                  backend:
-                    service:
-                      name: test-coog
-                      port:
-                        number: 80
