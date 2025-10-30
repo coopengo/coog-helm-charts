@@ -582,6 +582,38 @@ backCore:
           cors: []
           publicCidr: []
 
+    ingressSao:
+      # -- Default host for the ingress resource for coog containers'
+      defaultPaths:
+        - /sao
+
+      # -- additionals hosts & paths
+      # host : required
+      # path : optionnal
+      # e.g:
+      # hosts:
+      #   - host: test1.example.com
+      #     paths:
+      #       - /
+      #   - host: test2.example.com
+      hosts: []
+
+      annotations:
+        nginx.ingress.kubernetes.io/use-proxy-protocol: true
+        nginx.ingress.kubernetes.io/permanent-redirect: "/"
+
+      nginx:
+        whiteList:
+          # -- Add cors (TRYTOND_WEB_CORS variable) to defaults values defined
+          # default values :
+          #   - https://<.Values.ingress.host>
+          # E.g.
+          # cors:
+          #   - https://test1.example.com
+          #   - https://test2.example.com
+          cors: []
+          publicCidr: []
+
     securityContext:
       {}
       # runAsUser: ""
