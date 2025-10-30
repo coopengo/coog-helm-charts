@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ printf "%s-%s-%s" (include "general.names.fullname" $) $ingressClassName "sao" }}
+  name: {{ printf "%s-%s-%s" (include "general.names.short" $) $ingressClassName "sao" }}
   labels:
     app.kubernetes.io/ingressClassName: {{ $ingressClassName }}
     {{- include "general.labels.standard" $ | nindent 4 }}
@@ -22,7 +22,7 @@ metadata:
   {{- if eq (default $.Values.ingress.nginx.whiteList.managementMode $.Values.backCore.coog.ingressSao.nginx.whiteList.managementMode) "append" }}
     nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat $.Values.ingress.nginx.whiteList.trustedCidr $.Values.ingress.nginx.whiteList.publicCidr $.Values.backCore.coog.ingressSao.nginx.whiteList.publicCidr) | quote }}
   {{- else if eq (default $.Values.ingress.nginx.whiteList.managementMode $.Values.backCore.coog.ingressSao.nginx.whiteList.managementMode) "replace" }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat $.Values.ingressSao.nginx.whiteList.trustedCidr (default $.Values.ingressSao.nginx.whiteList.publicCidr $.Values.backCore.coog.ingressSao.nginx.whiteList.publicCidr)) | quote }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat $.Values.ingress.nginx.whiteList.trustedCidr (default $.Values.ingress.nginx.whiteList.publicCidr $.Values.backCore.coog.ingressSao.nginx.whiteList.publicCidr)) | quote }}
   {{- else }}
     nginx.ingress.kubernetes.io/whitelist-source-range: 127.0.0.1/32
   {{- end }}
