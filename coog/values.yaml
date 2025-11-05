@@ -553,6 +553,7 @@ backCore:
       defaultPaths:
         - /
         - /docusign
+        - /doc
 
       # -- additionals hosts & paths
       # host : required
