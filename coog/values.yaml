@@ -516,7 +516,7 @@ backCore:
   workers:
     number: 1
 
-  # -- Configure environement variables for backCore components (coog, celery, cron (except static : doesn't need configuration))
+  # -- Configure environement variables for backCore components (coog, celery, cron)
   # Each value can be modified without override all or delete other parameters
   # Ref: https://github.com/coopengo/coog/blob/master/bin/conf/trytond.conf
   # ex:
@@ -569,6 +569,8 @@ backCore:
       # -- Default host for the ingress resource for coog containers'
       defaultPaths:
         - /
+        - /docusign
+        - /doc
 
       # -- additionals hosts & paths
       # host : required
@@ -583,6 +585,38 @@ backCore:
 
       annotations:
         nginx.ingress.kubernetes.io/use-proxy-protocol: true
+
+      nginx:
+        whiteList:
+          # -- Add cors (TRYTOND_WEB_CORS variable) to defaults values defined
+          # default values :
+          #   - https://<.Values.ingress.host>
+          # E.g.
+          # cors:
+          #   - https://test1.example.com
+          #   - https://test2.example.com
+          cors: []
+          publicCidr: []
+
+    ingressSao:
+      # -- Default host for the ingress resource for coog containers'
+      defaultPaths:
+        - /sao
+
+      # -- additionals hosts & paths
+      # host : required
+      # path : optionnal
+      # e.g:
+      # hosts:
+      #   - host: test1.example.com
+      #     paths:
+      #       - /
+      #   - host: test2.example.com
+      hosts: []
+
+      annotations:
+        nginx.ingress.kubernetes.io/use-proxy-protocol: true
+        nginx.ingress.kubernetes.io/permanent-redirect: "/"
 
       nginx:
         whiteList:
@@ -684,49 +718,6 @@ backCore:
       timeoutSeconds: 30
       successThreshold: 1
       failureThreshold: 3
-
-  static:
-    image:
-      # -- static image name
-      name: coog-static
-
-    strategy:
-      # -- static redeployment strategy type
-      type: ""
-
-    ingress:
-      # -- Default host for the ingress resource for static containers'
-      defaultPaths:
-        - /sao
-        - /bench
-        - /doc
-
-      # -- additionals hosts & paths
-      # host : required
-      # path : optionnal
-      # e.g:
-      # hosts:
-      #   - host: test1.example.com
-      #     path: /
-      #   - host: test2.example.com
-      hosts: []
-
-      nginx:
-        whiteList:
-          publicCidr: []
-
-    securityContext:
-      {}
-      # runAsUser: ""
-
-    # -- static containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 50m
-        memory: 80Mi
-      requests:
-        cpu: 25m
-        memory: 40Mi
 
 #############################################################################################################################
 #                                            Back Additional components                                                     #
