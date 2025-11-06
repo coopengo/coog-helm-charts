@@ -14,13 +14,12 @@
 
 PostgreSQL est installé par defaut pour cette partie
 
-| Composants | Coog               | Celery             | Cron               | Static             | Libroconv |
-| :--------- | :----------------- | :----------------- | :----------------- | :----------------- | :-------- |
-| Coog       |                    | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |           |
-| Celery     | :heavy_check_mark: |                    | :heavy_check_mark: | :heavy_check_mark: |           |
-| Cron       | :heavy_check_mark: | :heavy_check_mark: |                    | :heavy_check_mark: |           |
-| Static     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |                    |           |
-| Libroconv  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |           |
+| Composants | Coog               | Celery             | Cron               | Libroconv |
+| :--------- | :----------------- | :----------------- | :----------------- | :-------- |
+| Coog       |                    | :heavy_check_mark: | :heavy_check_mark: |           |
+| Celery     | :heavy_check_mark: |                    | :heavy_check_mark: |           |
+| Cron       | :heavy_check_mark: | :heavy_check_mark: |                    |           |
+| Libroconv  | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |           |
 
 ### Frontend - B2B
 
