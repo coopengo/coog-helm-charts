@@ -3,7 +3,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ printf "%s-%s" (include "general.names.fullname" $) $ingressClassName }}
+  name: {{ printf "%s-%s-%s" (include "general.names.short" $) $ingressClassName "sao" }}
   labels:
     app.kubernetes.io/ingressClassName: {{ $ingressClassName }}
     {{- include "general.labels.standard" $ | nindent 4 }}
@@ -19,10 +19,10 @@ metadata:
     {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- else }}
-  {{- if eq (default $.Values.ingress.nginx.whiteList.managementMode $.Values.backCore.static.ingress.nginx.whiteList.managementMode) "append" }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat $.Values.ingress.nginx.whiteList.trustedCidr $.Values.ingress.nginx.whiteList.publicCidr $.Values.backCore.static.ingress.nginx.whiteList.publicCidr) | quote }}
-  {{- else if eq (default $.Values.ingress.nginx.whiteList.managementMode $.Values.backCore.static.ingress.nginx.whiteList.managementMode) "replace" }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat $.Values.ingress.nginx.whiteList.trustedCidr (default $.Values.ingress.nginx.whiteList.publicCidr $.Values.backCore.static.ingress.nginx.whiteList.publicCidr)) | quote }}
+  {{- if eq (default $.Values.ingress.nginx.whiteList.managementMode $.Values.backCore.coog.ingressSao.nginx.whiteList.managementMode) "append" }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat $.Values.ingress.nginx.whiteList.trustedCidr $.Values.ingress.nginx.whiteList.publicCidr $.Values.backCore.coog.ingressSao.nginx.whiteList.publicCidr) | quote }}
+  {{- else if eq (default $.Values.ingress.nginx.whiteList.managementMode $.Values.backCore.coog.ingressSao.nginx.whiteList.managementMode) "replace" }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat $.Values.ingress.nginx.whiteList.trustedCidr (default $.Values.ingress.nginx.whiteList.publicCidr $.Values.backCore.coog.ingressSao.nginx.whiteList.publicCidr)) | quote }}
   {{- else }}
     nginx.ingress.kubernetes.io/whitelist-source-range: 127.0.0.1/32
   {{- end }}
@@ -30,7 +30,7 @@ metadata:
   {{- range $key, $value := $.Values.ingress.annotations}}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
-  {{- range $key, $value := $.Values.backCore.static.ingress.annotations }}
+  {{- range $key, $value := $.Values.backCore.coog.ingressSao.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
@@ -42,7 +42,7 @@ spec:
       secretName: {{ default (printf "%s-tls" $.Values.ingress.host) $.Values.ingress.thisTls.externalCertificate.name }}
     {{- end }}
     {{- if $.Values.ingress.thisTls.configuration }}
-      {{- include "general.tplvalues.render" (dict "value" $.Values.ingress.thisTls.configuration "context" $) | nindent 4 }}
+    {{- include "general.tplvalues.render" (dict "value" $.Values.ingress.thisTls.configuration "context" $) | nindent 4 }}
     {{- end }}
   {{- end }}
   ingressClassName: {{ $ingressClassName | quote }}
@@ -50,25 +50,25 @@ spec:
     - host: {{ $.Values.ingress.host | quote }}
       http:
         paths:
-        {{- range $.Values.backCore.static.ingress.defaultPaths }}
+        {{- range $.Values.backCore.coog.ingressSao.defaultPaths }}
         - path: {{ . | quote }}
           pathType: ImplementationSpecific
           backend:
             service:
-              name: {{ include "general.names.fullname" $ }}
+              name: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
               port:
                 number: 80
         {{- end }}
-  {{- range $.Values.backCore.static.ingress.hosts }}
+  {{- range $.Values.backCore.coog.ingressSao.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
-        {{- range .paths }}
+        {{- range $.paths }}
         - path: {{ . | quote }}
           pathType: ImplementationSpecific
           backend:
             service:
-              name: {{ include "general.names.fullname" $ }}
+              name: {{ printf "%s-%s" $.Release.Name $.Chart.Name | trunc 63 | trimSuffix "-" }}
               port:
                 number: 80
         {{- end }}
