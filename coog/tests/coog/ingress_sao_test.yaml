@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
-suite: Test static ingress
+suite: Test coog ingressSao
 templates:
-  - static/ingress.yaml
+  - coog/ingress_sao.yaml
 release:
   name: test # Do not edit
   namespace: test
@@ -22,19 +22,19 @@ tests:
           of: Ingress
       - equal:
           path: metadata.name
-          value: test-coog-static-nginx
+          value: test-coog-nginx-sao
         documentSelector:
           path: spec.ingressClassName
           value: nginx
       - equal:
           path: metadata.name
-          value: test-coog-static-int-nginx
+          value: test-coog-int-nginx-sao
         documentSelector:
           path: spec.ingressClassName
           value: int-nginx
       - equal:
           path: metadata.labels["app.kubernetes.io/name"]
-          value: coog-static
+          value: coog
       - equal:
           path: metadata.labels["app.kubernetes.io/instance"]
           value: test
@@ -96,10 +96,13 @@ tests:
         annotations:
           nginx.ingress.kubernetes.io/client-body-buffer-size: "100m"
       backCore:
-        static:
+        coog:
           ingress:
             annotations:
               nginx.ingress.kubernetes.io/use-proxy-protocol: "true"
+          ingressSao:
+            annotations:
+              ngnix.ingress.kubernetes.io/permanent-redirect: "/"
     asserts:
       - equal:
           path: metadata.annotations["nginx.ingress.kubernetes.io/client-body-buffer-size"]
@@ -107,6 +110,9 @@ tests:
       - equal:
           path: metadata.annotations["nginx.ingress.kubernetes.io/use-proxy-protocol"]
           value: "true"
+      - equal:
+          path: metadata.annotations["ngnix.ingress.kubernetes.io/permanent-redirect"]
+          value: "/"
 
   - it: Test maintenance mode
     set:
@@ -148,8 +154,8 @@ tests:
               - 127.0.0.3/32
               - 127.0.0.4/32
       backCore:
-        static:
-          ingress:
+        coog:
+          ingressSao:
             nginx:
               whiteList:
                 publicCidr:
@@ -173,8 +179,8 @@ tests:
               - 127.0.0.3/32
               - 127.0.0.4/32
       backCore:
-        static:
-          ingress:
+        coog:
+          ingressSao:
             nginx:
               whiteList:
                 publicCidr:
@@ -215,33 +221,19 @@ tests:
 
   - it: Test rules
     set:
-      ingress:
-        host: test.local
+      ingressSao:
+        host: coog.local
     asserts:
       - contains:
           path: spec.rules
           content:
-            host: test.local
+            host: coog.local
             http:
               paths:
                 - path: "/sao"
                   pathType: ImplementationSpecific
                   backend:
                     service:
-                      name: test-coog-static
-                      port:
-                        number: 80
-                - path: "/bench"
-                  pathType: ImplementationSpecific
-                  backend:
-                    service:
-                      name: test-coog-static
-                      port:
-                        number: 80
-                - path: "/doc"
-                  pathType: ImplementationSpecific
-                  backend:
-                    service:
-                      name: test-coog-static
+                      name: test-coog
                       port:
                         number: 80
