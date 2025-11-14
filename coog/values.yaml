@@ -682,47 +682,6 @@ backCore:
           cpu: 160m
           memory: 240Mi
 
-<<<<<<< HEAD
-  static:
-    image:
-      # -- static image name
-      name: coog-static
-
-    strategy:
-      # -- static redeployment strategy type
-      type: ""
-
-    ingress:
-
-      # -- additionals hosts & paths
-      # host : required
-      # path : optionnal
-      # e.g:
-      # hosts:
-      #   - host: test1.example.com
-      #     path: /
-      #   - host: test2.example.com
-      hosts: []
-
-      nginx:
-        whiteList:
-          publicCidr: []
-
-    securityContext:
-      {}
-      # runAsUser: ""
-
-    # -- static containers' resource requests and limits
-    resources:
-      limits:
-        cpu: 50m
-        memory: 80Mi
-      requests:
-        cpu: 40m
-        memory: 64Mi
-
-=======
->>>>>>> 3501c3f9 (delete static config)
 #############################################################################################################################
 #                                            Back Additional components                                                     #
 #############################################################################################################################

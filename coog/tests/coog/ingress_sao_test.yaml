@@ -60,6 +60,8 @@ tests:
   - it: Test lets encrypt configuration
     set:
       ingress:
+        className:
+          - nginx
         host: test.local
         thisTls:
           enabled: true
@@ -93,6 +95,8 @@ tests:
   - it: Test annotations
     set:
       ingress:
+        className:
+          - nginx
         annotations:
           nginx.ingress.kubernetes.io/client-body-buffer-size: "100m"
       backCore:
@@ -122,6 +126,8 @@ tests:
           annotations:
             maintenanceMode/test: foo
       ingress:
+        className:
+          - nginx
         nginx:
           whiteList:
             trustedCidr:
@@ -144,6 +150,8 @@ tests:
   - it: Test append mode
     set:
       ingress:
+        className:
+          - nginx
         nginx:
           whiteList:
             managementMode: append
@@ -169,6 +177,8 @@ tests:
   - it: Case 1 - Test backCore replace mode
     set:
       ingress:
+        className:
+          - nginx
         nginx:
           whiteList:
             managementMode: replace
@@ -194,6 +204,8 @@ tests:
   - it: Case 2 - Test global replace mode
     set:
       ingress:
+        className:
+          - nginx
         nginx:
           whiteList:
             managementMode: replace
@@ -211,6 +223,8 @@ tests:
   - it: Case 3 - Test global replace mode
     set:
       ingress:
+        className:
+          - nginx
         nginx:
           whiteList:
             managementMode: foo
@@ -221,6 +235,9 @@ tests:
 
   - it: Test rules
     set:
+      ingress:
+        className:
+          - nginx
       ingressSao:
         host: coog.local
     asserts:
