@@ -733,8 +733,8 @@ backCore:
 #############################################################################################################################
 
 libroconv:
-  enabled: false
   # -- Deploy libroconv container(s)
+  enabled: false
   strategy:
     type: ""
 
