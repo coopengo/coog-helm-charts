@@ -15,7 +15,7 @@ data:
   {{- if $libroconvUri }}
   TRYTOND_REPORT__API: {{ $libroconvUri | quote }}
   {{- end }}
-    TRYTOND_DATABASE_NAMES: {{ default .Release.Name (include "postgres.databases" .) | quote }}
+  TRYTOND_DATABASE_NAMES: {{ default .Release.Name (include "postgres.databases" .) | quote }}
   {{- if (or .Values.frontCore.enabled
           .Values.apiB2c.enabled
           .Values.apiReferential.enabled
