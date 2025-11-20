@@ -186,3 +186,35 @@ Create image pull secret string.
 {{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
 {{- end }}
 {{- end }}
+
+{{/*
+Generate LibroConv API URI based on deployment mode (shared vs per-tenant)
+Usage: {{ include "libroconv.uri" . }}
+*/}}
+{{- define "libroconv.uri" -}}
+{{- $protocol := "http://" -}}
+{{- $port := "5000" -}}
+{{- $basePath := "/unoconv/{oext}" -}}
+{{- $sharedServiceName := .Values.libroconv.sharedServiceName | default "" -}}
+{{- $releaseNamespace := include "general.namespace" . -}}
+
+{{- if $sharedServiceName -}}
+{{/*
+Shared mode: use the shared service in shared-namespace
+Format: http://<-shared-service-name>:5000/unoconv/{oext}/<tenant-namespace>
+*/}}
+{{- printf "%s%s:%s%s/%s" $protocol $sharedServiceName $port $basePath $releaseNamespace -}}
+{{- else if .Values.libroconv.enabled -}}
+{{/*
+Per-tenant mode: use the local service in the tenant namespace
+Format: http://<release-name>-libroconv:5000/unoconv/{oext}
+*/}}
+{{- $serviceName := printf "%s-libroconv" (include "general.names.short" .) -}}
+{{- printf "%s%s:%s%s" $protocol $serviceName $port $basePath -}}
+{{- else -}}
+{{/*
+No LibroConv configuration detected
+*/}}
+{{- "" -}}
+{{- end -}}
+{{- end -}}
