@@ -10,8 +10,12 @@ data:
   COOG_DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }}
   DB_NAME: {{ default .Release.Name .Values.postgresql.auth.database | quote }} # duplicate of COOG_DB_NAME
   # Tryton
-  TRYTOND_REPORT__API: {{ printf "http://%s:5000/unoconv/{oext}/%s" .Values.libroconv.sharedServiceName .Values.libroconv.sharedNamespace | quote }}
-  TRYTOND_DATABASE_NAMES: {{ default .Release.Name (include "postgres.databases" .) | quote }}
+  # LibroConv Configuration
+  {{- $libroconvUri := include "libroconv.uri" . -}}
+  {{- if $libroconvUri }}
+  TRYTOND_REPORT__API: {{ $libroconvUri | quote }}
+  {{- end }}
+    TRYTOND_DATABASE_NAMES: {{ default .Release.Name (include "postgres.databases" .) | quote }}
   {{- if (or .Values.frontCore.enabled
           .Values.apiB2c.enabled
           .Values.apiReferential.enabled
