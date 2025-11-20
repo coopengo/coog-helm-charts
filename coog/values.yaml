@@ -742,42 +742,6 @@ cron:
     successThreshold: 1
     failureThreshold: 3
 
-libroconv:
-  # -- Deploy libroconv container(s)
-  enabled: false
-  strategy:
-    type: ""
-
-  image:
-    # -- libroconv image repository
-    name: coog-libroconv
-
-  securityContext:
-    {}
-    # runAsUser: ""
-
-  # -- libroconv containers' resource requests and limits
-  resources:
-    limits:
-      cpu: 300m
-      memory: 300Mi
-    requests:
-      cpu: 240m
-      memory: 240Mi
-
-  livenessProbe:
-    initialDelaySeconds: 0
-    periodSeconds: 60
-    timeoutSeconds: 30
-    successThreshold: 1
-    failureThreshold: 2
-  readinessProbe:
-    initialDelaySeconds: 0
-    periodSeconds: 30
-    timeoutSeconds: 30
-    successThreshold: 1
-    failureThreshold: 3
-
 #############################################################################################################################
 #                                            Front Minimum components                                                       #
 #############################################################################################################################
