@@ -1,0 +1,28 @@
+{{- if .Values.b2b.enabled -}} 
+{{- if .Values.istio.enabled }}
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ printf "%s" (include "general.names.short" .) }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "general.names.name" . }}
+  action: DENY
+  rules:
+  - from:
+    - source:
+        notRemoteIpBlocks:
+        {{- with .Values.istio.whiteList.trustedCidr }}
+        {{- range . }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.b2b.istio.whiteList.publicCidr }}
+        {{- range . }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+{{- end }}
+{{- end }}

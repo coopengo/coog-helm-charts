@@ -2,6 +2,35 @@
 #                                      Global configuration applied to all components                                       #
 #############################################################################################################################
 
+istio:
+  enabled: true
+  mainHost: coog.local
+  whiteList:
+    trustedCidr:
+     - "10.0.0.0/8"
+     - "172.16.0.0/12"
+     - "192.168.0.0/16"
+     - "127.0.0.1/32"
+    publicCidr: []
+  authentication:
+    mtls:
+      mode: STRICT
+  gateway:
+    tls:
+      mode: SIMPLE
+    routing:
+      timeout: 3600s
+    servers:
+      http:
+        enabled: true
+        redirect: true
+      https:
+        enabled: true
+      custom: []
+    hosts:
+      - coog.local
+
+
 # -- Number of pod for all components. It can be customized for each component.
 # e.g:
 # coog:
@@ -598,6 +627,12 @@ backCore:
           cors: []
           publicCidr: []
 
+    istio:
+      hosts: []
+      whiteList:
+        publicCidr: []
+        cors: []
+
     ingressSao:
       # -- Default host for the ingress resource for coog containers'
       defaultPaths:
@@ -832,6 +867,11 @@ frontCore:
           cors: []
           publicCidr: []
 
+    istio:
+      whiteList:
+        publicCidr: []
+        cors: []
+
     securityContext:
       {}
       # runAsUser: ""
@@ -932,6 +972,10 @@ b2b:
       whiteList:
         publicCidr: []
 
+  istio:
+    whiteList:
+      publicCidr: []
+
   securityContext:
     {}
     # runAsUser: ""
@@ -1010,6 +1054,10 @@ b2c:
       whiteList:
         publicCidr: []
 
+  istio:
+    whiteList:
+      publicCidr: []
+
   securityContext:
     {}
     # runAsUser: ""
@@ -1062,6 +1110,10 @@ customerBackend:
     nginx:
       whiteList:
         publicCidr: []
+
+  istio:
+    whiteList:
+      publicCidr: []
 
   securityContext:
     {}
@@ -1120,6 +1172,10 @@ customerFrontend:
     nginx:
       whiteList:
         publicCidr: []
+
+  istio:
+    whiteList:
+      publicCidr: []
 
   securityContext:
     {}
