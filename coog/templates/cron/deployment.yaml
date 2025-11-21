@@ -13,6 +13,9 @@ spec:
     metadata:
       labels: {{- include "general.labels.standard" . | nindent 8 }}
       annotations:
+        {{- if .Values.istio.enabled }}
+        sidecar.istio.io/inject: "false"
+        {{- end }}
         {{- if .Values.extraEnvVar }}
         checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
         {{- end }}
