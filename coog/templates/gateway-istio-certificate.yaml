@@ -1,5 +1,5 @@
 ---
-{{- if and .Values.istio.enabled .Values.istio.gateway.certificate.issuer.existing }}
+{{- if and .Values.istio.enabled .Values.istio.gateway.certificate.create }}
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -11,6 +11,7 @@ spec:
   issuerRef:
     name: {{ .Values.istio.gateway.certificate.issuer.name }}
     kind: {{ .Values.istio.gateway.certificate.issuer.kind }}
+    groupName: {{ .Values.istio.gateway.certificate.issuer.groupName }}
   dnsNames:
   {{- range .Values.istio.gateway.hosts }}
   - {{ . }}

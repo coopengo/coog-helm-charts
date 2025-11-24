@@ -17,8 +17,9 @@ istio:
       mode: STRICT
   gateway:
     certificate:
+      create: true
       issuer:
-        existing: true
+        groupName: acme.coog.io
         name: "letsencrypt"
         kind: ClusterIssuer
     tls:
