@@ -4,7 +4,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: {{ printf "%s-istio-cert" $.Release.Namespace }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.istio.namespace }}
   label: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
   secretName: {{ printf "%s-istio-tls" .Release.Namespace }}

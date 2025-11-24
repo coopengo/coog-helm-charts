@@ -4,6 +4,7 @@
 
 istio:
   enabled: true
+  namespace: "istio-system"
   mainHost: coog.local
   whiteList:
     trustedCidr:
