@@ -16,6 +16,11 @@ istio:
     mtls:
       mode: STRICT
   gateway:
+    certificate:
+      issuer:
+        existing: true
+        name: "letsencrypt"
+        kind: ClusterIssuer
     tls:
       mode: SIMPLE
     routing:

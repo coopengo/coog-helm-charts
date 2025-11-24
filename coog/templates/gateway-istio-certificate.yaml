@@ -1,0 +1,18 @@
+---
+{{- if and .Values.istio.enabled .Values.istio.gateway.certificate.issuer.existing }}
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ printf "%s-istio-cert" $.Release.Namespace }}
+  namespace: {{ .Release.Namespace }}
+  label: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  secretName: {{ printf "%s-istio-tls" .Release.Namespace }}
+  issuerRef:
+    name: {{ .Values.istio.gateway.certificate.issuer.name }}
+    kind: {{ .Values.istio.gateway.certificate.issuer.kind }}
+  dnsNames:
+  {{- range .Values.istio.gateway.hosts }}
+  - {{ . }}
+  {{- end }}
+{{- end }}
