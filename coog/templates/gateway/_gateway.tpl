@@ -8,7 +8,7 @@ Join components hosts in string format
     {{- $hosts = append $hosts .host -}}
   {{- end -}}
 {{- end -}}
-{{- if .Values.frontCore.gateway.istio.hosts }}
+{{- if and .Values.frontCore.gateway.istio.hosts .Values.istio.enabled }}
   {{- range .Values.frontCore.gateway.istio.hosts }}
     {{- $hosts = append $hosts .host -}}
   {{- end -}}
@@ -22,7 +22,7 @@ Join components hosts in string format
 Setup "WHITELIST" variable which has a dynamically generated part with the possibility of defining additional URLs
 */}}
 {{- define "frontcore.gateway.cors" -}}
-{{- $mainHost := default .Values.ingress.host .Values.istio.mainHost -}}
+{{- $mainHost := ternary (default .Values.ingress.host .Values.istio.mainHost) .Values.ingress.host .Values.istio.enabled -}}
 http://localhost:4000,{{ printf "https://%s" $mainHost -}}
 {{- include "frontcore.gateway.hosts" . -}}
 {{- $cors := list -}}
@@ -31,7 +31,7 @@ http://localhost:4000,{{ printf "https://%s" $mainHost -}}
     {{- $cors = append $cors . -}}
   {{- end -}}
 {{- end -}}
-{{- if .Values.frontCore.gateway.istio.whiteList.cors }}
+{{- if and .Values.frontCore.gateway.istio.whiteList.cors .Values.istio.enabled }}
   {{- range .Values.frontCore.gateway.istio.whiteList.cors }}
     {{- $cors = append $cors . -}}
   {{- end -}}

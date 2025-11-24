@@ -8,7 +8,7 @@ Join components hosts in string format
     {{- $hosts = append $hosts .host -}}
   {{- end -}}
 {{- end -}}
-{{- if .Values.backCore.coog.istio.hosts }}
+{{- if and .Values.backCore.coog.istio.hosts .Values.istio.enabled }}
   {{- range .Values.backCore.coog.istio.hosts }}
     {{- $hosts = append $hosts .host -}}
   {{- end -}}
@@ -22,7 +22,7 @@ Join components hosts in string format
 Setup TRYTOND_WEB__CORS variable which has a dynamically generated part with the possibility of defining additional URLs
 */}}
 {{- define "backcore.coog.cors" -}}
-{{- $mainHost := default .Values.ingress.host .Values.istio.mainHost -}}
+{{- $mainHost := ternary (default .Values.ingress.host .Values.istio.mainHost) .Values.ingress.host .Values.istio.enabled -}}
 {{- printf "https://%s" $mainHost -}}
 {{- include "backcore.coog.hosts" . -}}
 {{- $cors := list -}}
@@ -31,7 +31,7 @@ Setup TRYTOND_WEB__CORS variable which has a dynamically generated part with the
     {{- $cors = append $cors . -}}
   {{- end -}}
 {{- end -}}
-{{- if .Values.backCore.coog.istio.whiteList.cors }}
+{{- if and .Values.backCore.coog.istio.whiteList.cors .Values.istio.enabled }}
   {{- range .Values.backCore.coog.istio.whiteList.cors }}
     {{- $cors = append $cors . -}}
   {{- end -}}
