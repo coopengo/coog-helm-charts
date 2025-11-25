@@ -24,4 +24,6 @@ data:
   {{- range $key, $value := .Values.frontCore.gateway.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}
+  ENABLE_WINDOW_RATE_LIMIT: "{{ .Values.backCore.coog.enable_window_rate_limiting | quote }}"
+  ENABLE_PERIODIC_RATE_LIMIT: "{{ .Values.backCore.coog.enable_periodic_rate_limiting | quote }}"
 {{- end }}
