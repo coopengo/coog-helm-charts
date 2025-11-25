@@ -23,7 +23,8 @@ spec:
         - {{ . | quote }}
         {{- end }}
         {{- end }}
-        {{- with .Values.backCore.coog.istio.whiteList.publicCidr }}
+        {{- $publicCidrs := concat $.Values.istio.whiteList.publicCidr (default $.Values.istio.whiteList.publicCidr $.Values.backCore.coog.istio.whiteList.publicCidr) }}
+        {{- with $publicCidrs }}
         {{- range . }}
         - {{ . | quote }}
         {{- end }}

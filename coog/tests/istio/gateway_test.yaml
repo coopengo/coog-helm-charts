@@ -1,0 +1,219 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test Istio Gateway
+templates:
+  - gateway-istio.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 29
+tests:
+  - it: Should not create Gateway when Istio is disabled
+    set:
+      istio:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Should create Gateway with basic configuration
+    set:
+      istio:
+        enabled: true
+        gateway:
+          hosts:
+            - coog.local
+          servers:
+            http:
+              enabled: true
+              redirect: false
+            https:
+              enabled: false
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Gateway
+      - isAPIVersion:
+          of: networking.istio.io/v1beta1
+      - equal:
+          path: metadata.name
+          value: test-coog-gateway
+      - equal:
+          path: metadata.namespace
+          value: test
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: coog
+      - equal:
+          path: metadata.labels["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: spec.selector.istio
+          value: ingressgateway
+
+  - it: Should create HTTP server with redirect to HTTPS
+    set:
+      istio:
+        enabled: true
+        gateway:
+          hosts:
+            - coog.local
+          servers:
+            http:
+              enabled: true
+              redirect: true
+            https:
+              enabled: false
+    asserts:
+      - contains:
+          path: spec.servers
+          content:
+            port:
+              number: 80
+              name: http
+              protocol: HTTP
+            hosts:
+              - "coog.local"
+            tls:
+              httpsRedirect: true
+
+  - it: Should create HTTPS server with SIMPLE TLS mode
+    set:
+      istio:
+        enabled: true
+        gateway:
+          hosts:
+            - coog.local
+          servers:
+            http:
+              enabled: false
+            https:
+              enabled: true
+          tls:
+            mode: SIMPLE
+    asserts:
+      - contains:
+          path: spec.servers
+          content:
+            port:
+              number: 443
+              name: https
+              protocol: HTTPS
+            tls:
+              mode: SIMPLE
+              credentialName: test-istio-tls
+            hosts:
+              - "coog.local"
+
+  - it: Should create HTTPS server with MUTUAL TLS mode
+    set:
+      istio:
+        enabled: true
+        gateway:
+          hosts:
+            - coog.local
+          servers:
+            http:
+              enabled: false
+            https:
+              enabled: true
+          tls:
+            mode: MUTUAL
+            caCertificates: /etc/istio/ca.pem
+    asserts:
+      - contains:
+          path: spec.servers
+          content:
+            port:
+              number: 443
+              name: https
+              protocol: HTTPS
+            tls:
+              mode: MUTUAL
+              credentialName: test-istio-tls
+              caCertificates: /etc/istio/ca.pem
+            hosts:
+              - "coog.local"
+
+  - it: Should support multiple hosts
+    set:
+      istio:
+        enabled: true
+        gateway:
+          hosts:
+            - coog.local
+            - api.coog.local
+            - admin.coog.local
+          servers:
+            http:
+              enabled: true
+              redirect: false
+            https:
+              enabled: false
+    asserts:
+      - contains:
+          path: spec.servers[0].hosts
+          content: "coog.local"
+      - contains:
+          path: spec.servers[0].hosts
+          content: "api.coog.local"
+      - contains:
+          path: spec.servers[0].hosts
+          content: "admin.coog.local"
+
+  - it: Should create both HTTP and HTTPS servers
+    set:
+      istio:
+        enabled: true
+        gateway:
+          hosts:
+            - coog.local
+          servers:
+            http:
+              enabled: true
+              redirect: true
+            https:
+              enabled: true
+          tls:
+            mode: SIMPLE
+    asserts:
+      - equal:
+          path: spec.servers
+          value:
+            - port:
+                number: 80
+                name: http
+                protocol: HTTP
+              hosts:
+                - "coog.local"
+              tls:
+                httpsRedirect: true
+            - port:
+                number: 443
+                name: https
+                protocol: HTTPS
+              tls:
+                mode: SIMPLE
+                credentialName: test-istio-tls
+              hosts:
+                - "coog.local"
+
+  - it: Should support wildcard hosts
+    set:
+      istio:
+        enabled: true
+        gateway:
+          hosts:
+            - "*.coog.local"
+          servers:
+            http:
+              enabled: true
+              redirect: false
+            https:
+              enabled: false
+    asserts:
+      - contains:
+          path: spec.servers[0].hosts
+          content: "*.coog.local"

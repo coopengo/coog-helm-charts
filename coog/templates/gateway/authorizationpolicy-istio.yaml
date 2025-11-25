@@ -31,7 +31,8 @@ spec:
         - {{ . | quote }}
         {{- end }}
         {{- end }}
-        {{- with .Values.frontCore.gateway.istio.whiteList.publicCidr }}
+        {{- $publicCidrs := concat $.Values.istio.whiteList.publicCidr (default $.Values.istio.whiteList.publicCidr $.Values.frontCore.gateway.istio.whiteList.publicCidr) }}
+        {{- with $publicCidrs }}
         {{- range . }}
         - {{ . | quote }}
         {{- end }}

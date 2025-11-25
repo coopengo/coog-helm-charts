@@ -24,7 +24,8 @@ spec:
         - {{ . | quote }}
         {{- end }}
         {{- end }}
-        {{- with .Values.customerFrontend.istio.whiteList.publicCidr }}
+        {{- $publicCidrs := concat $.Values.istio.whiteList.publicCidr (default $.Values.istio.whiteList.publicCidr $.Values.customerFrontend.istio.whiteList.publicCidr) }}
+        {{- with $publicCidrs }}
         {{- range . }}
         - {{ . | quote }}
         {{- end }}

@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test Istio Sidecar Injection
+templates:
+  - coog/deployment.yaml
+  - coog/configmap.yaml
+  - coog/secret.yaml
+  - configmap-global.yaml
+  - configmap-backcore.yaml
+  - secret-global.yaml
+  - secret-backcore.yaml
+  - secret-postgresql.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 29
+tests:
+  - it: Should inject Istio sidecar in coog deployment
+    template: coog/deployment.yaml
+    set:
+      istio:
+        enabled: true
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels["sidecar.istio.io/inject"]
+          value: "true"
+
+  - it: Should verify sidecar injection label exists in deployment spec
+    template: coog/deployment.yaml
+    set:
+      istio:
+        enabled: true
+    asserts:
+      - isNotNull:
+          path: spec.template.metadata.labels["sidecar.istio.io/inject"]
+      - matchRegex:
+          path: spec.template.metadata.labels["sidecar.istio.io/inject"]
+          pattern: ^(true|false)$
