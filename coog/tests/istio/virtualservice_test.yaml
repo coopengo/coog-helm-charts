@@ -3,7 +3,7 @@ suite: Test Istio VirtualService
 templates:
   - virtualservice-istio.yaml
 release:
-  name: test # Do not edit
+  name: test
   namespace: test
 capabilities:
   majorVersion: 1

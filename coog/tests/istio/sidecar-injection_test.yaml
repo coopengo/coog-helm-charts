@@ -10,7 +10,7 @@ templates:
   - secret-backcore.yaml
   - secret-postgresql.yaml
 release:
-  name: test # Do not edit
+  name: test
   namespace: test
 capabilities:
   majorVersion: 1
