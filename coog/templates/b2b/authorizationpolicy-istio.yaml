@@ -14,6 +14,11 @@ spec:
   - from:
     - source:
         notRemoteIpBlocks:
+        {{- with .Values.istio.whiteList.internalCidr }}
+        {{- range . }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
         {{- with .Values.istio.whiteList.trustedCidr }}
         {{- range . }}
         - {{ . | quote }}

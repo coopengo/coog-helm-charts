@@ -13,7 +13,6 @@ spec:
   template:
     metadata:
       labels: {{- include "general.labels.standard" . | nindent 8 }}
-      annotations:
         {{- if .Values.istio.enabled }}
         sidecar.istio.io/inject: "true"
         {{- end }}
