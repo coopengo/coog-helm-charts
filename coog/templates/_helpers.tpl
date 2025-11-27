@@ -193,12 +193,12 @@ Usage: {{ include "libroconv.uri" . }}
 */}}
 {{- define "libroconv.uri" -}}
 {{- $protocol := "http://" -}}
-{{- $port := .Values.libroconv.externalPort -}}
+{{- $port := .Values.libroconv.externalPort | default 5000 | toString -}}
 {{- $basePath := "/unoconv/{oext}" -}}
 {{- $externalAddress := .Values.libroconv.externalAddress | default "" -}}
 {{- $releaseNamespace := include "general.namespace" . -}}
 
-{{- if and .Values.libroconv.enabled .Values.libroconv.externalAddress -}}
+{{- if and (not .Values.libroconv.enabled) .Values.libroconv.externalAddress -}}
 {{- printf "%s%s:%s%s/%s" $protocol $externalAddress $port $basePath $releaseNamespace -}}
 {{- else if .Values.libroconv.enabled -}}
 {{- $serviceName := printf "%s-libroconv" (include "general.names.short" .) -}}
