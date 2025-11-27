@@ -565,10 +565,6 @@ backCore:
     # Each value can be modified without override all or delete other parameters
     extraEnvVar: {}
 
-    enable_window_rate_limiting: false
-
-    enable_periodic_rate_limiting: false
-
     ingress:
       # -- Default host for the ingress resource for coog containers'
       defaultPaths:
