@@ -46,7 +46,7 @@ tests:
       - isKind:
           of: AuthorizationPolicy
       - isAPIVersion:
-          of: security.istio.io/v1beta1
+          of: security.istio.io/v1
       - equal:
           path: metadata.name
           value: test-coog-coog

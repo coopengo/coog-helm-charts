@@ -1,6 +1,6 @@
 {{- if .Values.b2c.enabled -}}
 {{- if .Values.istio.enabled }}
-apiVersion: security.istio.io/v1beta1
+apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy
 metadata:
   name: {{ printf "%s" (include "general.names.fullname" .) }}

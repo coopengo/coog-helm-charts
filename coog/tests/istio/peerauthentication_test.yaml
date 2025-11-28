@@ -30,7 +30,7 @@ tests:
       - isKind:
           of: PeerAuthentication
       - isAPIVersion:
-          of: security.istio.io/v1beta1
+          of: security.istio.io/v1
       - equal:
           path: metadata.name
           value: test-coog-authentication

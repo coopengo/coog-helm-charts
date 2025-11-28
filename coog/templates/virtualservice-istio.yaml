@@ -1,6 +1,6 @@
 {{- if .Values.istio.enabled }}
 {{- $globalDefaultTimeout := default "600s" .Values.istio.gateway.routing.timeout }}
-apiVersion: networking.istio.io/v1beta1
+apiVersion: networking.istio.io/v1
 kind: VirtualService
 metadata:
   name: {{ printf "%s-%s" (include "general.names.short" $) "routing" }}
