@@ -47,7 +47,6 @@ spec:
           persistentVolumeClaim:
             claimName: {{ default (printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-") .Values.backCore.persistentVolume.existingClaim }}
     {{- end }}
-      resources: {{- toYaml .Values.backCore.celery.resources | nindent 8 }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
