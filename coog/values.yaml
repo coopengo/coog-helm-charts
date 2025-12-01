@@ -800,6 +800,10 @@ frontCore:
       GOOGLE_MODULE: false
       JWT_EXPIRATION: 3600
 
+    enable_window_rate_limiting: false
+
+    enable_periodic_rate_limiting: false
+
     ingress:
       # -- Default host for the ingress resource for gateway containers
       defaultPaths:
