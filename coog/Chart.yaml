@@ -1,6 +1,6 @@
 apiVersion: v2
 name: coog
-version: 25.48.2548
+version: 25.48.2548-2
 appVersion: coog-master
 home: https://github.com/coopengo/coog-helm-charts
 sources:
