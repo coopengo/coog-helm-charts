@@ -72,10 +72,10 @@ tests:
           value: foo
       - equal:
           path: data.ENABLE_WINDOW_RATE_LIMIT
-          value: false
+          value: "false"
       - equal:
           path: data.ENABLE_PERIODIC_RATE_LIMIT
-          value: false
+          value: "false"
   - it: Test variables (2/2)
     set:
       ingress:
