@@ -231,7 +231,7 @@ tests:
           content: "30.31.32.33/32"
       - contains:
           path: spec.rules[0].from[0].source.notRemoteIpBlocks
-          content: "4.5.6.7.8/32"
+          content: "5.6.7.8/32"
 
   - it: Should create AuthorizationPolicy for customer-backend when enabled
     template: customer-backend/authorizationpolicy-istio.yaml
