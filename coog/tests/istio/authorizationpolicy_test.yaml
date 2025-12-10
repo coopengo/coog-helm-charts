@@ -282,7 +282,7 @@ tests:
             - "10.0.0.0/8"
           trustedCidr: []
           publicCidr:
-            - "4.5.6.7.8/32"
+            - "5.6.7.8/32"
       customerFrontend:
         enabled: true
         istio:
@@ -308,7 +308,7 @@ tests:
           content: "50.51.52.53/32"
       - contains:
           path: spec.rules[0].from[0].source.notRemoteIpBlocks
-          content: "4.5.6.7.8/32"
+          content: "5.6.7.8/32"
 
   - it: Should not create AuthorizationPolicy with empty whiteList values
     template: coog/authorizationpolicy-istio.yaml
@@ -343,7 +343,7 @@ tests:
             - "1.2.3.4/32"
             - "5.6.7.8/32"
           publicCidr:
-            - "4.5.6.7.8/32"
+            - "5.6.7.8/32"
       backCore:
         coog:
           istio:
@@ -372,5 +372,5 @@ tests:
           content: "200.201.202.203/32"
       - contains:
           path: spec.rules[0].from[0].source.notRemoteIpBlocks
-          content: "4.5.6.7.8/32"
+          content: "5.6.7.8/32"
 
