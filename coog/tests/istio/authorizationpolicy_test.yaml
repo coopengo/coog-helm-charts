@@ -34,7 +34,7 @@ tests:
           trustedCidr:
             - "1.2.3.4/32"
           publicCidr:
-            - "4.5.6.7.8/32"
+            - "5.6.7.8/32"
       backCore:
         coog:
           istio:
