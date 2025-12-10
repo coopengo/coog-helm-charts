@@ -2,6 +2,107 @@
 #                                      Global configuration applied to all components                                       #
 #############################################################################################################################
 
+# -- Global istio configuration
+istio:
+  # enabled: True
+  # - istio injections in deployments labels
+  # - istio cors injections
+  # - istio authorizationpolicy creation
+  # - istio peerauthentication creation
+  # - istio gateway creation
+  # - istio virtualservice creation
+  enabled: false
+  # namespace where istiod and istio-ingressgateway are running
+  namespace: "istio-system"
+  # mainHost is
+    # - injected in CORS
+    # - used to defined virtualservice
+    # e.g:
+    # kind: VirtualService
+    # spec:
+    #   hosts:
+    #    - coog.local
+  mainHost: coog.local
+  whiteList:
+    # Internal, Trusted and public global whitelist CIDR used in authorizationpolicy
+    # CIDRs are added to all deployments
+    # DENY by default
+    # e.g:
+    # kind: AuthorizationPolicy
+    # spec:
+    #   action: DENY
+    #   rules:
+    #   - from:
+    #     - source:
+    #         notRemoteIpBlocks:
+    #          - "10.0.0.0/8"
+    #          - "172.16.0.0/12"
+    #          - "192.168.0.0/16"
+    #          - "127.0.0.1/32"
+    internalCidr:
+     - "10.0.0.0/8"
+     - "172.16.0.0/12"
+     - "192.168.0.0/16"
+     - "127.0.0.1/32"
+    trustedCidr: []
+    publicCidr: []
+  # peerauthentication configuration in STRICT mode
+  # e.g:
+  # kind: PeerAuthentication
+  # spec:
+  #   mtls:
+  #     mode: STRICT
+  authentication:
+    mtls:
+      mode: STRICT
+  # gateway confinguration
+  # e.g:
+  # kind: Gateway
+  # spec:
+  #   selector:
+  #       istio: ingressgateway
+  #   servers:
+  #   - port:
+  #       number: 80
+  #       name: http
+  #       protocol: HTTP
+  #     hosts:
+  #     - coog.local
+  #     tls:
+  #       httpsRedirect: true
+  #   - port:
+  #       number: 443
+  #       name: https
+  #       protocol: HTTPS
+  #     tls:
+  #       mode: SIMPLE
+  #       credentialName: "namespace-istio-tls"
+  #     hosts:
+  #     - coog.local
+  gateway:
+    certificate:
+      # Create certificate in istio namespace
+      create: true
+      # Set issuer on certificate
+      issuer:
+        groupName: acme.coog.io
+        name: "letsencrypt"
+        kind: ClusterIssuer
+    tls:
+      mode: SIMPLE
+    routing:
+      timeout: 3600s
+    servers:
+      http:
+        enabled: true
+        redirect: true
+      https:
+        enabled: true
+      custom: []
+    hosts:
+      - coog.local
+
+
 # -- Number of pod for all components. It can be customized for each component.
 # e.g:
 # coog:
@@ -598,6 +699,19 @@ backCore:
           cors: []
           publicCidr: []
 
+    istio:
+      hosts: []
+      whiteList:
+          # -- Add cors (TRYTOND_WEB_CORS variable) to defaults values defined
+          # default values :
+          #   - https://<.Values.istio.mainHost>
+          # E.g.
+          # cors:
+          #   - https://test1.example.com
+          #   - https://test2.example.com
+        cors: []
+        publicCidr: []
+
     ingressSao:
       # -- Default host for the ingress resource for coog containers'
       defaultPaths:
@@ -836,6 +950,18 @@ frontCore:
           cors: []
           publicCidr: []
 
+    istio:
+      whiteList:
+        # -- Add cors (TRYTOND_WEB_CORS variable) to defaults values defined
+        # default values :
+        #   - https://<.Values.istio.mainHost>
+        # E.g.
+        # cors:
+        #   - https://test1.example.com
+        #   - https://test2.example.com
+        cors: []
+        publicCidr: []
+
     securityContext:
       {}
       # runAsUser: ""
@@ -936,6 +1062,10 @@ b2b:
       whiteList:
         publicCidr: []
 
+  istio:
+    whiteList:
+      publicCidr: []
+
   securityContext:
     {}
     # runAsUser: ""
@@ -1014,6 +1144,10 @@ b2c:
       whiteList:
         publicCidr: []
 
+  istio:
+    whiteList:
+      publicCidr: []
+
   securityContext:
     {}
     # runAsUser: ""
@@ -1066,6 +1200,10 @@ customerBackend:
     nginx:
       whiteList:
         publicCidr: []
+
+  istio:
+    whiteList:
+      publicCidr: []
 
   securityContext:
     {}
@@ -1124,6 +1262,10 @@ customerFrontend:
     nginx:
       whiteList:
         publicCidr: []
+
+  istio:
+    whiteList:
+      publicCidr: []
 
   securityContext:
     {}

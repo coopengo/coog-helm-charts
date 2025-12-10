@@ -1,0 +1,36 @@
+{{- if (or .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled)
+-}}
+{{- if .Values.istio.enabled }}
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ printf "%s" (include "general.names.fullname" .) }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "general.names.name" . }}
+  action: DENY
+  rules:
+  - from:
+    - source:
+        notRemoteIpBlocks:
+        {{- with .Values.istio.whiteList.internalCidr }}
+        {{- range . }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.istio.whiteList.trustedCidr }}
+        {{- range . }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- $publicCidrs := concat $.Values.istio.whiteList.publicCidr (default $.Values.istio.whiteList.publicCidr $.Values.customerBackend.istio.whiteList.publicCidr) }}
+        {{- with $publicCidrs }}
+        {{- range . }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+{{- end }}
+{{- end }}
