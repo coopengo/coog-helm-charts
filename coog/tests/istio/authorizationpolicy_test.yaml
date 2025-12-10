@@ -144,7 +144,7 @@ tests:
           content: "11.12.13.14/32"
       - contains:
           path: spec.rules[0].from[0].source.notRemoteIpBlocks
-          content: "4.5.6.7.8/32"
+          content: "5.6.7.8/32"
 
   - it: Should not create gateway AuthorizationPolicy when frontCore is disabled
     template: gateway/authorizationpolicy-istio.yaml
