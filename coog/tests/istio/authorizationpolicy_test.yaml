@@ -117,7 +117,7 @@ tests:
             - "10.0.0.0/8"
           trustedCidr: []
           publicCidr:
-            - "4.5.6.7.8/32"
+            - "5.6.7.8/32"
       frontCore:
         enabled: true
         gateway:
