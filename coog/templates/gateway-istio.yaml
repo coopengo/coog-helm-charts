@@ -1,0 +1,56 @@
+---
+{{- if .Values.istio.enabled }}
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: {{ printf "%s-%s" (include "general.names.short" $) "gateway" }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "general.labels.standard" $ | nindent 4 }}
+spec:
+  selector:
+      istio: ingressgateway
+  servers:
+  {{- if .Values.istio.gateway.servers.http.enabled }}
+  # HTTP Server
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    {{- range .Values.istio.gateway.hosts }}
+    - {{ . | quote }}
+    {{- end }}
+    {{- if .Values.istio.gateway.servers.http.redirect }}
+    tls:
+      httpsRedirect: true
+    {{- end }}
+  {{- end }}
+  {{- if .Values.istio.gateway.servers.https.enabled }}
+  # HTTPS Server
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    tls:
+      mode: {{ .Values.istio.gateway.tls.mode }}
+      credentialName: {{ printf "%s-istio-tls" $.Release.Namespace }}
+      {{- if eq .Values.istio.gateway.tls.mode "MUTUAL" }}
+      caCertificates: {{ .Values.istio.gateway.tls.caCertificates }}
+      {{- end }}
+    hosts:
+    {{- range .Values.istio.gateway.hosts }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- end }}
+  {{- range .Values.istio.gateway.servers.custom }}
+  # Custom ports
+  - port:
+      number: {{ .port }}
+      name: {{ .name }}
+      protocol: {{ .protocol }}
+    hosts:
+    {{- range .Values.istio.gateway.hosts }}
+    - {{ . | quote }}
+    {{- end }}
+  {{- end }}
+{{- end }}

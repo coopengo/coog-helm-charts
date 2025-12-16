@@ -1,0 +1,199 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test Istio Certificate
+templates:
+  - gateway-istio-certificate.yaml
+release:
+  name: test
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 29
+tests:
+  - it: Should not create Certificate when Istio is disabled
+    set:
+      istio:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Should not create Certificate when certificate.create is false
+    set:
+      istio:
+        enabled: true
+        gateway:
+          certificate:
+            create: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Should create Certificate with basic configuration
+    set:
+      istio:
+        enabled: true
+        namespace: istio-system
+        gateway:
+          certificate:
+            create: true
+            issuer:
+              name: letsencrypt
+              kind: ClusterIssuer
+              groupName: acme.coog.io
+          hosts:
+            - coog.local
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Certificate
+      - isAPIVersion:
+          of: cert-manager.io/v1
+      - equal:
+          path: metadata.name
+          value: test-istio-cert
+      - equal:
+          path: metadata.namespace
+          value: istio-system
+      - equal:
+          path: spec.secretName
+          value: test-istio-tls
+      - equal:
+          path: spec.issuerRef.name
+          value: letsencrypt
+      - equal:
+          path: spec.issuerRef.kind
+          value: ClusterIssuer
+      - equal:
+          path: spec.issuerRef.groupName
+          value: acme.coog.io
+      - contains:
+          path: spec.dnsNames
+          content: coog.local
+
+  - it: Should support multiple DNS names
+    set:
+      istio:
+        enabled: true
+        namespace: istio-system
+        gateway:
+          certificate:
+            create: true
+            issuer:
+              name: letsencrypt
+              kind: ClusterIssuer
+              groupName: acme.coog.io
+          hosts:
+            - coog.local
+            - api.coog.local
+            - admin.coog.local
+    asserts:
+      - contains:
+          path: spec.dnsNames
+          content: coog.local
+      - contains:
+          path: spec.dnsNames
+          content: api.coog.local
+      - contains:
+          path: spec.dnsNames
+          content: admin.coog.local
+      - equal:
+          path: spec.dnsNames
+          value:
+            - coog.local
+            - api.coog.local
+            - admin.coog.local
+
+  - it: Should use Issuer instead of ClusterIssuer
+    set:
+      istio:
+        enabled: true
+        namespace: istio-system
+        gateway:
+          certificate:
+            create: true
+            issuer:
+              name: my-issuer
+              kind: Issuer
+              groupName: cert-manager.io
+          hosts:
+            - coog.local
+    asserts:
+      - equal:
+          path: spec.issuerRef.name
+          value: my-issuer
+      - equal:
+          path: spec.issuerRef.kind
+          value: Issuer
+      - equal:
+          path: spec.issuerRef.groupName
+          value: cert-manager.io
+
+  - it: Should have correct labels
+    set:
+      istio:
+        enabled: true
+        namespace: istio-system
+        gateway:
+          certificate:
+            create: true
+            issuer:
+              name: letsencrypt
+              kind: ClusterIssuer
+              groupName: acme.coog.io
+          hosts:
+            - coog.local
+    asserts:
+      - equal:
+          path: metadata.label["app.kubernetes.io/name"]
+          value: coog
+      - equal:
+          path: metadata.label["app.kubernetes.io/instance"]
+          value: test
+      - equal:
+          path: metadata.label["app.kubernetes.io/managed-by"]
+          value: Helm
+
+  - it: Should create certificate in custom Istio namespace
+    set:
+      istio:
+        enabled: true
+        namespace: custom-istio-ns
+        gateway:
+          certificate:
+            create: true
+            issuer:
+              name: letsencrypt
+              kind: ClusterIssuer
+              groupName: acme.coog.io
+          hosts:
+            - coog.local
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: custom-istio-ns
+
+  - it: Should use correct secretName format
+    set:
+      istio:
+        enabled: true
+        namespace: istio-system
+        gateway:
+          certificate:
+            create: true
+            issuer:
+              name: letsencrypt
+              kind: ClusterIssuer
+              groupName: acme.coog.io
+          hosts:
+            - coog.local
+    release:
+      name: my-release
+      namespace: my-namespace
+    asserts:
+      - equal:
+          path: spec.secretName
+          value: my-namespace-istio-tls
+      - equal:
+          path: metadata.name
+          value: my-namespace-istio-cert
