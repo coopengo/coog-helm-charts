@@ -1,0 +1,376 @@
+suite: Test Istio AuthorizationPolicy
+templates:
+  - coog/authorizationpolicy-istio.yaml
+  - gateway/authorizationpolicy-istio.yaml
+  - b2c/authorizationpolicy-istio.yaml
+  - b2b/authorizationpolicy-istio.yaml
+  - customer-backend/authorizationpolicy-istio.yaml
+  - customer-frontend/authorizationpolicy-istio.yaml
+release:
+  name: test
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 29
+tests:
+  - it: Should not create AuthorizationPolicy when Istio is disabled
+    set:
+      istio:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Should create AuthorizationPolicy for coog with default whiteList
+    template: coog/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+        whiteList:
+          internalCidr:
+            - "10.0.0.0/8"
+            - "172.16.0.0/12"
+            - "192.168.0.0/16"
+          trustedCidr:
+            - "1.2.3.4/32"
+          publicCidr:
+            - "5.6.7.8/32"
+      backCore:
+        coog:
+          istio:
+            whiteList:
+              publicCidr: []
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: AuthorizationPolicy
+      - isAPIVersion:
+          of: security.istio.io/v1
+      - equal:
+          path: metadata.name
+          value: test-coog-coog
+      - equal:
+          path: metadata.namespace
+          value: test
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: coog
+      - equal:
+          path: spec.action
+          value: DENY
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "10.0.0.0/8"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "172.16.0.0/12"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "192.168.0.0/16"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "1.2.3.4/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "5.6.7.8/32"
+
+  - it: Should create AuthorizationPolicy for coog with publicCidr
+    template: coog/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+        whiteList:
+          internalCidr:
+            - "10.0.0.0/8"
+          trustedCidr: []
+          publicCidr:
+            - "5.6.7.8/32"
+      backCore:
+        coog:
+          istio:
+            whiteList:
+              publicCidr:
+                - "5.6.7.8/32"
+                - "9.10.11.12/32"
+    asserts:
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "10.0.0.0/8"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "5.6.7.8/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "9.10.11.12/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "5.6.7.8/32"
+
+  - it: Should create AuthorizationPolicy for gateway when frontCore is enabled
+    template: gateway/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+        whiteList:
+          internalCidr:
+            - "10.0.0.0/8"
+          trustedCidr: []
+          publicCidr:
+            - "5.6.7.8/32"
+      frontCore:
+        enabled: true
+        gateway:
+          istio:
+            whiteList:
+              publicCidr:
+                - "11.12.13.14/32"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: AuthorizationPolicy
+      - equal:
+          path: metadata.name
+          value: test-coog-gateway
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: coog-gateway
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "10.0.0.0/8"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "11.12.13.14/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "5.6.7.8/32"
+
+  - it: Should not create gateway AuthorizationPolicy when frontCore is disabled
+    template: gateway/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+      frontCore:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Should create AuthorizationPolicy for b2c when enabled
+    template: b2c/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+        whiteList:
+          internalCidr:
+            - "10.0.0.0/8"
+          trustedCidr: []
+          publicCidr:
+            - "5.6.7.8/32"
+      b2c:
+        enabled: true
+        istio:
+          whiteList:
+            publicCidr:
+              - "20.21.22.23/32"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: AuthorizationPolicy
+      - equal:
+          path: metadata.name
+          value: test-coog-b2c
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: coog-b2c
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "10.0.0.0/8"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "20.21.22.23/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "5.6.7.8/32"
+
+  - it: Should create AuthorizationPolicy for b2b when enabled
+    template: b2b/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+        whiteList:
+          internalCidr:
+            - "10.0.0.0/8"
+          trustedCidr: []
+          publicCidr:
+            - "5.6.7.8/32"
+      b2b:
+        enabled: true
+        istio:
+          whiteList:
+            publicCidr:
+              - "30.31.32.33/32"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: AuthorizationPolicy
+      - equal:
+          path: metadata.name
+          value: test-coog-b2b
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: coog-b2b
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "10.0.0.0/8"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "30.31.32.33/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "5.6.7.8/32"
+
+  - it: Should create AuthorizationPolicy for customer-backend when enabled
+    template: customer-backend/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+        whiteList:
+          internalCidr:
+            - "10.0.0.0/8"
+          trustedCidr: []
+          publicCidr:
+            - "5.6.7.8/32"
+
+      customerBackend:
+        enabled: true
+        istio:
+          whiteList:
+            publicCidr:
+              - "40.41.42.43/32"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: AuthorizationPolicy
+      - equal:
+          path: metadata.name
+          value: test-coog-customer-backend
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: coog-customer-backend
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "10.0.0.0/8"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "40.41.42.43/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "5.6.7.8/32"
+
+  - it: Should create AuthorizationPolicy for customer-frontend when enabled
+    template: customer-frontend/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+        whiteList:
+          internalCidr:
+            - "10.0.0.0/8"
+          trustedCidr: []
+          publicCidr:
+            - "5.6.7.8/32"
+      customerFrontend:
+        enabled: true
+        istio:
+          whiteList:
+            publicCidr:
+              - "50.51.52.53/32"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: AuthorizationPolicy
+      - equal:
+          path: metadata.name
+          value: test-coog-customer-frontend
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: coog-customer-frontend
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "10.0.0.0/8"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "50.51.52.53/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "5.6.7.8/32"
+
+  - it: Should not create AuthorizationPolicy with empty whiteList values
+    template: coog/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+        whiteList:
+          internalCidr: []
+          trustedCidr: []
+          publicCidr: []
+      backCore:
+        coog:
+          istio:
+            whiteList:
+              publicCidr: []
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isNotNull:
+          path: spec.rules[0].from[0].source
+
+  - it: Should combine all whiteList sources correctly
+    template: coog/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+        whiteList:
+          internalCidr:
+            - "10.0.0.0/8"
+            - "172.16.0.0/12"
+          trustedCidr:
+            - "1.2.3.4/32"
+            - "5.6.7.8/32"
+          publicCidr:
+            - "5.6.7.8/32"
+      backCore:
+        coog:
+          istio:
+            whiteList:
+              publicCidr:
+                - "100.101.102.103/32"
+                - "200.201.202.203/32"
+    asserts:
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "10.0.0.0/8"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "172.16.0.0/12"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "1.2.3.4/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "5.6.7.8/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "100.101.102.103/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "200.201.202.203/32"
+      - contains:
+          path: spec.rules[0].from[0].source.notRemoteIpBlocks
+          content: "5.6.7.8/32"
+
