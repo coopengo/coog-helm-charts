@@ -688,11 +688,11 @@ backCore:
     # -- cron containers' resource requests and limits
     resources:
       limits:
-        cpu: 400m
-        memory: 800Mi
+        cpu: 600m
+        memory: 900Mi
       requests:
-        cpu: 200m
-        memory: 400Mi
+        cpu: 300m
+        memory: 450Mi
 
     # -- Configure options applied to cron deployment, liveness, readiness and startup probes
     # ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes
