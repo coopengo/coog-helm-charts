@@ -1,28 +1,42 @@
-{{/*
+yaml{{/*
 Join components hosts in string format
 */}}
 {{- define "frontcore.gateway.hosts" -}}
-{{- if .Values.frontCore.gateway.ingress.hosts }}
 {{- $hosts := list -}}
-{{- range .Values.frontCore.gateway.ingress.hosts  }}
-{{- $hosts = .host | append $hosts -}}
+{{- if .Values.frontCore.gateway.ingress.hosts }}
+  {{- range .Values.frontCore.gateway.ingress.hosts }}
+    {{- $hosts = append $hosts .host -}}
+  {{- end -}}
 {{- end -}}
-{{- printf ",https://%s" (join ",https://" $hosts) }}
+{{- if and .Values.frontCore.gateway.istio.hosts .Values.istio.enabled }}
+  {{- range .Values.frontCore.gateway.istio.hosts }}
+    {{- $hosts = append $hosts .host -}}
+  {{- end -}}
+{{- end -}}
+{{- if $hosts }}
+  {{- printf ",https://%s" (join ",https://" $hosts) -}}
 {{- end -}}
 {{- end -}}
-
 
 {{/*
 Setup "WHITELIST" variable which has a dynamically generated part with the possibility of defining additional URLs
 */}}
 {{- define "frontcore.gateway.cors" -}}
-http://localhost:4000,{{ printf "https://%s" .Values.ingress.host }}
+{{- $mainHost := ternary (default .Values.ingress.host .Values.istio.mainHost) .Values.ingress.host .Values.istio.enabled -}}
+http://localhost:4000,{{ printf "https://%s" $mainHost -}}
 {{- include "frontcore.gateway.hosts" . -}}
-{{- if .Values.frontCore.gateway.ingress.nginx.whiteList.cors -}}
 {{- $cors := list -}}
-{{- range .Values.frontCore.gateway.ingress.nginx.whiteList.cors }}
-{{- $cors = . | append $cors -}}
+{{- if .Values.frontCore.gateway.ingress.nginx.whiteList.cors }}
+  {{- range .Values.frontCore.gateway.ingress.nginx.whiteList.cors }}
+    {{- $cors = append $cors . -}}
+  {{- end -}}
 {{- end -}}
-{{- printf ",%s" (join "," $cors) }}
+{{- if and .Values.frontCore.gateway.istio.whiteList.cors .Values.istio.enabled }}
+  {{- range .Values.frontCore.gateway.istio.whiteList.cors }}
+    {{- $cors = append $cors . -}}
+  {{- end -}}
+{{- end -}}
+{{- if $cors }}
+  {{- printf ",%s" (join "," $cors) -}}
 {{- end -}}
 {{- end -}}
