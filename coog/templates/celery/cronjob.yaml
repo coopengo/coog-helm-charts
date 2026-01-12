@@ -11,6 +11,11 @@ spec:
     spec:
       backoffLimit: 0
       template:
+        metadata:
+          labels: {{- include "general.labels.standard" . | nindent 12 }}
+            {{- if .Values.istio.enabled }}
+            sidecar.istio.io/inject: "false"
+            {{- end }}
         spec:
           imagePullSecrets:
             - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
