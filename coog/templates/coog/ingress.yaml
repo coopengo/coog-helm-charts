@@ -1,52 +1,56 @@
+{{- range $ingressClassName := $.Values.ingress.className }}
+---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ printf "%s" (include "general.names.short" .) }}
-  labels: {{- include "general.labels.standard" . | nindent 4 }}
+  name: {{ printf "%s-%s" (include "general.names.short" $) $ingressClassName }}
+  labels:
+    app.kubernetes.io/ingressClassName: {{ $ingressClassName }}
+    {{- include "general.labels.standard" $ | nindent 4 }}
   annotations:
-  {{- if and .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.enabled }}
+  {{- if and $.Values.ingress.thisTls.letsencrypt $.Values.ingress.thisTls.enabled }}
     cert-manager.io/cluster-issuer: letsencrypt
   {{- end }}
   {{- if $.Values.maintenanceMode.enabled }}
-    nginx.ingress.kubernetes.io/custom-http-errors: {{ .Values.maintenanceMode.ingress.nginx.customhttperrors }}
-    nginx.ingress.kubernetes.io/default-backend: {{ printf "%s-maintenance" (include "general.names.short" .) }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (.Values.ingress.nginx.whiteList.trustedCidr) }}
+    nginx.ingress.kubernetes.io/custom-http-errors: {{ $.Values.maintenanceMode.ingress.nginx.customhttperrors }}
+    nginx.ingress.kubernetes.io/default-backend: {{ printf "%s-maintenance" (include "general.names.short" $) }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," ($.Values.ingress.nginx.whiteList.trustedCidr) }}
   {{- range $key, $value := $.Values.maintenanceMode.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
   {{- else }}
-  {{- if eq (default .Values.ingress.nginx.whiteList.managementMode .Values.backCore.coog.ingress.nginx.whiteList.managementMode) "append" }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr .Values.ingress.nginx.whiteList.publicCidr .Values.backCore.coog.ingress.nginx.whiteList.publicCidr) | quote }}
-  {{- else if eq (default .Values.ingress.nginx.whiteList.managementMode .Values.backCore.coog.ingress.nginx.whiteList.managementMode) "replace" }}
-    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat .Values.ingress.nginx.whiteList.trustedCidr (default .Values.ingress.nginx.whiteList.publicCidr .Values.backCore.coog.ingress.nginx.whiteList.publicCidr)) | quote }}
+  {{- if eq (default $.Values.ingress.nginx.whiteList.managementMode $.Values.backCore.coog.ingress.nginx.whiteList.managementMode) "append" }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat $.Values.ingress.nginx.whiteList.trustedCidr $.Values.ingress.nginx.whiteList.publicCidr $.Values.backCore.coog.ingress.nginx.whiteList.publicCidr) | quote }}
+  {{- else if eq (default $.Values.ingress.nginx.whiteList.managementMode $.Values.backCore.coog.ingress.nginx.whiteList.managementMode) "replace" }}
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ join "," (concat $.Values.ingress.nginx.whiteList.trustedCidr (default $.Values.ingress.nginx.whiteList.publicCidr $.Values.backCore.coog.ingress.nginx.whiteList.publicCidr)) | quote }}
   {{- else }}
     nginx.ingress.kubernetes.io/whitelist-source-range: 127.0.0.1/32
   {{- end }}
   {{- end }}
-  {{- range $key, $value := .Values.ingress.annotations}}
+  {{- range $key, $value := $.Values.ingress.annotations}}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
-  {{- range $key, $value := .Values.backCore.coog.ingress.annotations }}
+  {{- range $key, $value := $.Values.backCore.coog.ingress.annotations }}
     {{ $key }}: {{ $value | quote }}
   {{- end }}
 spec:
-  {{- if and .Values.ingress.thisTls.enabled .Values.ingress.host (or .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.externalCertificate.enabled) }}
+  {{- if and $.Values.ingress.thisTls.enabled $.Values.ingress.host (or $.Values.ingress.thisTls.letsencrypt $.Values.ingress.thisTls.externalCertificate.enabled) }}
   tls:
-    {{- if or .Values.ingress.thisTls.letsencrypt .Values.ingress.thisTls.externalCertificate.enabled }}
+    {{- if or $.Values.ingress.thisTls.letsencrypt $.Values.ingress.thisTls.externalCertificate.enabled }}
     - hosts:
-        - {{ .Values.ingress.host | quote }}
-      secretName: {{ default (printf "%s-tls" .Values.ingress.host) .Values.ingress.thisTls.externalCertificate.name }}
+        - {{ $.Values.ingress.host | quote }}
+      secretName: {{ default (printf "%s-tls" $.Values.ingress.host) $.Values.ingress.thisTls.externalCertificate.name }}
     {{- end }}
-    {{- if .Values.ingress.thisTls.configuration }}
-    {{- include "general.tplvalues.render" (dict "value" .Values.ingress.thisTls.configuration "context" $) | nindent 4 }}
+    {{- if $.Values.ingress.thisTls.configuration }}
+    {{- include "general.tplvalues.render" (dict "value" $.Values.ingress.thisTls.configuration "context" $) | nindent 4 }}
     {{- end }}
   {{- end }}
-  ingressClassName: {{ .Values.ingress.className | quote }}
+  ingressClassName: {{ $ingressClassName | quote }}
   rules:
-    - host: {{ .Values.ingress.host | quote }}
+    - host: {{ $.Values.ingress.host | quote }}
       http:
         paths:
-        {{- range .Values.backCore.coog.ingress.defaultPaths }}
+        {{- range $.Values.backCore.coog.ingress.defaultPaths }}
         - path: {{ . | quote }}
           pathType: ImplementationSpecific
           backend:
@@ -55,11 +59,11 @@ spec:
               port:
                 number: 80
         {{- end }}
-  {{- range .Values.backCore.coog.ingress.hosts }}
+  {{- range $.Values.backCore.coog.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
-        {{- range .paths }}
+        {{- range $.paths }}
         - path: {{ . | quote }}
           pathType: ImplementationSpecific
           backend:
@@ -69,3 +73,4 @@ spec:
                 number: 80
         {{- end }}
   {{- end }}
+{{- end }}
