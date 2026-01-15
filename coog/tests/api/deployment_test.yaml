@@ -97,6 +97,28 @@ tests:
           path: spec.template.spec.securityContext.seccompProfile
       # [End] Basic check at Pod level security stadards
 
+  - it: Test variables POSTGRES URL (1/1)
+
+    templates:
+     - secret-frontcore.yaml
+    set:
+      frontCore:
+        enabled: true
+        apiIdentityManager:
+          extraEnvVar: {}
+      extraEnvVar: {}
+      secrets:
+        extraEnvVar: {}
+        frontCore:
+          extraEnvVar: {}
+          apiIdentityManager:
+            extraEnvVar: {}
+
+    asserts:
+      - equal:
+          path: stringData.POSTGRESQL_URL
+          value: postgresql://coog:changeme@test-postgresql:5432/test 
+
   - it: Test disabled configmaps, secrets & checksums
     template: api/deployment.yaml
     set:
