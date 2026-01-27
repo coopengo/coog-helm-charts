@@ -1,9 +1,9 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
-suite: Test cron deployment
+suite: Test celery secondary deployment
 templates:
-  - cron/configmap.yaml
-  - cron/deployment.yaml
-  - cron/secret.yaml
+  - celery/configmap.yaml
+  - celery/deployment_secondary.yaml
+  - celery/secret.yaml
   - configmap-global.yaml
   - configmap-backcore.yaml
   - secret-global.yaml
@@ -17,21 +17,17 @@ capabilities:
   minorVersion: 29
 tests:
   - it: Test metadata & template
-    template: cron/deployment.yaml
+    template: celery/deployment_secondary.yaml
     set:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
-      backCore:
-        cron:
-          extraEnvVar:
-            ENABLE_CRON_SECRET: foo
       secrets:
         extraEnvVar:
           ENABLE_GLOBAL_SECRET: foo
         backCore:
-          cron:
+          celery:
             extraEnvVar:
-              ENABLE_CRON_SECRET: foo
+              ENABLE_CELERY_SECRET: foo
       imageCredentials:
         name: test-registry
     asserts:
@@ -43,7 +39,7 @@ tests:
             name: test-registry
       - equal:
           path: metadata.name
-          value: test-coog-cron
+          value: test-coog-celery-secondary
       - isNotNull:
           path: spec.replicas
       - matchRegex:
@@ -51,7 +47,7 @@ tests:
           pattern: ^(RollingUpdate|Recreate)$
       - equal:
           path: metadata.labels["app.kubernetes.io/name"]
-          value: coog-cron
+          value: coog-celery-secondary
       - equal:
           path: metadata.labels["app.kubernetes.io/instance"]
           value: test
@@ -63,7 +59,7 @@ tests:
           pattern: coog-.*$
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/name"]
-          value: coog-cron
+          value: coog-celery-secondary
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/instance"]
           value: test
@@ -98,23 +94,20 @@ tests:
       # [End] Basic check at Pod level security stadards
 
   - it: Test disabled configmaps, secrets & checksums
-    template: cron/deployment.yaml
+    template: celery/deployment_secondary.yaml
     set:
       extraEnvVar: {}
       secrets:
         extraEnvVar: {}
         backCore:
-          cron:
+          celery:
             extraEnvVar: {}
-      backCore:
-        cron:
-          extraEnvVar: null
     asserts:
       - notExists:
           path: spec.template.metadata.annotations["checksum/configmap-global"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/configmap-backcore"]
-      - notExists:
+      - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/configmap"]
       - notExists:
           path: spec.template.metadata.annotations["checksum/secret-global"]
@@ -124,140 +117,163 @@ tests:
           path: spec.template.metadata.annotations["checksum/secret"]
       - isNotEmpty:
           path: spec.template.metadata.annotations["checksum/secret-postgresql"]
-      # [Start] Check environment files
+      # [Start] Check environment files for celery
       - notContains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             configMapRef:
               name: test-coog-global-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             configMapRef:
               name: test-coog-backcore-configuration
-      - notContains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             configMapRef:
-              name: test-coog-cron-configuration
+              name: test-coog-celery-configuration
       - notContains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             secretRef:
               name: test-coog-global-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             secretRef:
               name: test-coog-backcore-configuration
       - notContains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             secretRef:
-              name: test-coog-cron-configuration
+              name: test-coog-celery-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             secretRef:
               name: test-coog-postgresql
-      # [End] Check environment files
+      # [End] Check environment files for celery
 
   - it: Test Container
-    template: cron/deployment.yaml
+    template: celery/deployment_secondary.yaml
     set:
       extraEnvVar:
         ENABLE_GLOBAL_CONFIGMAP: foo
       backCore:
-        cron:
-          extraEnvVar:
-            ENABLE_CRON_CONFIGMAP: foo
+        celery_secondary:
+          worker:
+            resources:
+              limits:
+                cpu: 200m
+                memory: 500Mi
+              requests:
+                cpu: 100m
+                memory: 250Mi
       secrets:
         extraEnvVar:
           ENABLE_GLOBAL_SECRET: foo
         backCore:
-          cron:
+          celery:
             extraEnvVar:
-              ENABLE_CRON_SECRET: foo
+              ENABLE_CELERY_SECRET: foo
     asserts:
-      # Check Containers pod image
+      # Check Containers pod image (celery)
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].image
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].image
           value: cooghub/coog:changeme
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].imagePullPolicy
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].imagePullPolicy
           pattern: ^(Always|Never|IfNotPresent)$
-      # [Start] Check environment files
+      # [Start] Check environment files celery
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             configMapRef:
               name: test-coog-global-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             configMapRef:
               name: test-coog-backcore-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             configMapRef:
-              name: test-coog-cron-configuration
+              name: test-coog-celery-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             secretRef:
               name: test-coog-global-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             secretRef:
               name: test-coog-backcore-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             secretRef:
-              name: test-coog-cron-configuration
+              name: test-coog-celery-configuration
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].envFrom
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].envFrom
           content:
             secretRef:
               name: test-coog-postgresql
-      # [End] Check environment files
+      # [End] Check environment files celery
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].ports
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].ports
           content:
             name: http
             containerPort: 8000
       # [Start] Check resources limites & requests
+      # - matchRegex:
+      #     path: spec.template.spec.resources.limits.cpu
+      #       # path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].resources.limits.cpu
+      #     pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      # - matchRegex:
+      #     path: spec.template.spec.resources.limits.memory
+      #       # path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].resources.limits.memory
+      #     pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      # - matchRegex:
+      #     path: spec.template.spec.resources.requests.cpu
+      #     # path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].resources.requests.cpu
+      #     pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
+      # - matchRegex:
+      #     path: spec.template.spec.resources.requests.memory
+      #     # path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].resources.requests.memory
+      #     pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].resources.limits.cpu
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].resources.limits.cpu
           pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].resources.limits.memory
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].resources.limits.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].resources.requests.cpu
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].resources.requests.cpu
           pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].resources.requests.memory
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].resources.requests.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
-      # [start] basic check at container level security stadards (enforced)
+      # [Start] Basic check at container level security stadards (enforced)
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].securityContext.allowPrivilegeEscalation
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].securityContext.allowPrivilegeEscalation
           value: false
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].securityContext.privileged
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].securityContext.privileged
           value: false
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].securityContext.runAsNonRoot
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].securityContext.runAsNonRoot
           value: true
       - isNotEmpty:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].securityContext.seccompProfile
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].securityContext.seccompProfile
       # [End] Basic check at Pod level security stadards
 
   - it: Test Volumes
-    template: cron/deployment.yaml
+    template: celery/deployment_secondary.yaml
     set:
       backCore:
         persistentVolume:
@@ -268,14 +284,14 @@ tests:
           path: spec.template.spec.volumes[?(@.name == "test-workspace-io")].persistentVolumeClaim.claimName
           value: test-workspace-io
       - contains:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].volumeMounts
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].volumeMounts
           content:
             name: test-workspace-io
             mountPath: /workspace/io
             readOnly: false
 
   - it: Test Global components configuration
-    template: cron/deployment.yaml
+    template: celery/deployment_secondary.yaml
     set:
       replicaCount: 2
       strategy:
@@ -295,25 +311,25 @@ tests:
     asserts:
       - equal:
           path: spec.replicas
-          value: 2
+          value: 0
       - equal:
           path: spec.strategy.type
           value: Recreate
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].image
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].image
           value: global-docker-repository/coog:global-docker-tag
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].imagePullPolicy
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].imagePullPolicy
           value: Always
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].securityContext.runAsUser
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].securityContext.runAsUser
           value: 1003
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].securityContext.runAsGroup
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].securityContext.runAsGroup
           value: 1003
 
   - it: Test specific component configuration
-    template: cron/deployment.yaml
+    template: celery/deployment_secondary.yaml
     set:
       backCore:
         strategy:
@@ -325,7 +341,7 @@ tests:
         securityContext:
           runAsUser: 1001
           runAsGroup: 1001
-        cron:
+        celery_secondary:
           replicaCount: 3
     asserts:
       - equal:
@@ -335,14 +351,14 @@ tests:
           path: spec.strategy.type
           value: RollingUpdate
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].image
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].image
           value: specific-docker-repository/coog:specific-docker-tag
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].imagePullPolicy
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].imagePullPolicy
           value: Never
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].securityContext.runAsUser
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].securityContext.runAsUser
           value: 1001
       - equal:
-          path: spec.template.spec.containers[?(@.name == "coog-cron")].securityContext.runAsGroup
+          path: spec.template.spec.containers[?(@.name == "coog-celery-secondary")].securityContext.runAsGroup
           value: 1001

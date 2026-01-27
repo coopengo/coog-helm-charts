@@ -1,0 +1,142 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ printf "%s-secondary" (include "general.names.fullname" .) }}
+  labels: 
+    {{- $defaultLabels := include "general.labels.standard" . | fromYaml }}
+    {{- $customName := printf "%s-%s" .Chart.Name "celery-secondary" }}
+    {{- $nameLabel := dict "app.kubernetes.io/name" $customName }}
+    {{- mustMergeOverwrite $defaultLabels $nameLabel | toYaml | nindent 4 }}
+spec:
+  replicas: {{ default .Values.replicaCount .Values.backCore.celery_secondary.replicaCount }}
+  strategy:
+    type: {{ default .Values.strategy.type .Values.backCore.strategy.type }}
+  selector:
+    matchLabels:
+      {{- $defaultLabels := include "general.labels.matchLabels" . | fromYaml }}
+      {{- $customName := printf "%s-%s" .Chart.Name "celery-secondary" }}
+      {{- $nameLabel := dict "app.kubernetes.io/name" $customName }}
+      {{- mustMergeOverwrite $defaultLabels $nameLabel | toYaml | nindent 6 }}
+
+  template:
+    metadata:
+      labels: {{- include "general.labels.standard" . | nindent 8 }}
+      annotations:
+        {{- if .Values.extraEnvVar }}
+        checksum/configmap-global: {{ include (printf "%s/%s" $.Template.BasePath "configmap-global.yaml") . | sha256sum  }}
+        {{- end }}
+        checksum/configmap-backcore: {{ include (printf "%s/%s" $.Template.BasePath "configmap-backcore.yaml") . | sha256sum  }}
+        checksum/configmap: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "configmap.yaml") . | sha256sum }}
+        {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+        checksum/secret-global: {{ include (printf "%s/%s" $.Template.BasePath "secret-global.yaml") . | sha256sum  }}
+        {{- end }}
+        checksum/secret-backcore: {{ include (printf "%s/%s" $.Template.BasePath "secret-backcore.yaml") . | sha256sum  }}
+        {{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.celery .Values.secrets.backCore.celery.extraEnvVar) }}
+        checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
+        {{- end }}
+        checksum/secret-postgresql: {{ include (printf "%s/%s" $.Template.BasePath "secret-postgresql.yaml") . | sha256sum  }}
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        privileged: false
+        procMount: Default
+        runAsNonRoot: true
+        runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
+        runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.securityContext.runAsGroup }}
+      imagePullSecrets:
+        - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
+    {{- if .Values.backCore.persistentVolume.enabled }}
+      volumes:
+        - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+          persistentVolumeClaim:
+            claimName: {{ default (printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-") .Values.backCore.persistentVolume.existingClaim }}
+    {{- end }}
+      containers:
+        - name: {{ printf "%s-secondary" (include "general.names.name" .) }}
+          image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
+            runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.securityContext.runAsGroup }}
+          command: ['ep', 'celery', '{{ default .Values.backCore.workers.number .Values.backCore.celery.workers.number }}']
+        {{- if .Values.backCore.persistentVolume.enabled }}
+          volumeMounts:
+            - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+              mountPath: /workspace/io
+              readOnly: false
+        {{- end }}
+          envFrom:
+            {{- if .Values.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            - configMapRef:
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+            - configMapRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            - secretRef:
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+            {{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.celery .Values.secrets.backCore.celery.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-configuration" (include "general.names.fullname" .) }}
+            {{- end }}
+            - secretRef:
+                name: {{  printf "%s-postgresql" (include "general.names.short" .) }}
+          ports:
+            - name: http
+              containerPort: 8000
+          startupProbe:
+            exec:
+              command:
+                - "/bin/bash"
+                - "-c"
+                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.celery.startupProbe) "context" $) | nindent 12 }}
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/bash"
+                - "-c"
+                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.celery.livenessProbe) "context" $) | nindent 12 }}
+          readinessProbe:
+            exec:
+              command:
+                - "/bin/bash"
+                - "-c"
+                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d celery@$HOSTNAME"
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
+          resources: {{- toYaml .Values.backCore.celery_secondary.worker.resources | nindent 12 }}
+      {{- with default .Values.nodeSelector .Values.backCore.celery_secondary.nodeSelector }}
+      nodeSelector: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.affinity .Values.backCore.celery_secondary.affinity }}
+      affinity: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with default .Values.tolerations .Values.backCore.celery_secondary.tolerations }}
+      tolerations: {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if default .Values.dnsPolicy .Values.backCore.celery.dnsPolicy }}
+      dnsPolicy: {{ default .Values.dnsPolicy .Values.backCore.celery.dnsPolicy }}
+      {{- end }}
+      {{- if default .Values.dnsConfig .Values.backCore.celery.dnsConfig }}
+      dnsConfig: {{- toYaml default .Values.dnsConfig .Values.backCore.celery.dnsConfig | indent 8 }}
+      {{- end }}
