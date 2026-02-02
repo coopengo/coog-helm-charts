@@ -20,6 +20,9 @@ spec:
         app.kubernetes.io/name: {{ include "short_name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
     {{- with .Values.maintenance_mode.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -28,6 +31,9 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.maintenance_mode.image.repository }}:{{ .Values.maintenance_mode.image.tag }}"
           imagePullPolicy: {{ .Values.maintenance_mode.image.pullPolicy }}
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
           ports:
             - name: http
               containerPort: 8080
