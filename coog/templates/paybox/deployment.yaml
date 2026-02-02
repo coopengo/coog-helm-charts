@@ -21,6 +21,9 @@ spec:
         app.kubernetes.io/name: {{ include "short_name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
     {{- with .Values.paybox.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -30,6 +33,8 @@ spec:
           image: "{{ .Values.paybox.image.repository }}:{{ .Values.paybox.image.tag }}"
           imagePullPolicy: {{ .Values.paybox.image.pullPolicy }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:

@@ -21,6 +21,9 @@ spec:
         app.kubernetes.io/name: {{ include "short_name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
     {{- with .Values.customer_backend.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -33,6 +36,8 @@ spec:
           image: "{{ .Values.customer_backend.image.repository }}:{{ .Values.customer_backend.image.tag }}"
           imagePullPolicy: {{ .Values.customer_backend.image.pullPolicy }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
@@ -83,6 +88,8 @@ spec:
           image: "{{ .Values.customer_backend.image.repository }}:{{ .Values.customer_backend.image.tag }}"
           imagePullPolicy: {{ .Values.customer_backend.image.pullPolicy }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
