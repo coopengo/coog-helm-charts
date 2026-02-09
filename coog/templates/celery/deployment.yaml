@@ -21,6 +21,9 @@ spec:
         app.kubernetes.io/name: {{ include "short_name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
     {{- with .Values.coog.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -36,6 +39,8 @@ spec:
           image: "{{ .Values.coog.image.repository }}:{{ .Values.coog.image.tag }}"
           imagePullPolicy: {{ .Values.coog.image.pullPolicy }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
