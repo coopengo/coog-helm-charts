@@ -17,6 +17,9 @@ spec:
         sidecar.istio.io/inject: "true"
         {{- end }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
@@ -24,6 +27,8 @@ spec:
           image: "{{ default .Values.image.repository .Values.libroconv.image.repository }}/{{ .Values.libroconv.image.name }}:{{ default .Values.image.tag .Values.libroconv.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.libroconv.image.pullPolicy | quote }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:

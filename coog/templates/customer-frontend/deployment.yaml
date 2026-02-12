@@ -28,6 +28,9 @@ spec:
         checksum/secret: {{ include (printf "%s/%s/%s" $.Template.BasePath (base (dir .Template.Name)) "secret.yaml") . | sha256sum }}
         {{- end }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       volumes:
@@ -38,6 +41,8 @@ spec:
           image: "{{ default .Values.image.repository .Values.customerFrontend.image.repository }}/{{ .Values.customerFrontend.image.name }}:{{ default .Values.image.tag .Values.customerFrontend.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.customerFrontend.image.pullPolicy | quote }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
@@ -72,6 +77,8 @@ spec:
           image: "{{ default .Values.image.repository .Values.customerFrontend.image.repository }}/{{ .Values.customerFrontend.image.name }}:{{ default .Values.image.tag .Values.customerFrontend.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.customerFrontend.image.pullPolicy | quote }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
