@@ -33,6 +33,9 @@ spec:
         {{- end }}
         checksum/secret-postgresql: {{ include (printf "%s/%s" $.Template.BasePath "secret-postgresql.yaml") . | sha256sum  }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
     {{- if .Values.backCore.persistentVolume.enabled }}
@@ -46,6 +49,8 @@ spec:
           image: "{{ default .Values.image.repository .Values.cron.image.repository }}/{{ .Values.cron.image.name }}:{{ default .Values.image.tag .Values.cron.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.cron.image.pullPolicy | quote }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
