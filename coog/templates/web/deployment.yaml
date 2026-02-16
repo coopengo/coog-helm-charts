@@ -23,6 +23,9 @@ spec:
         {{- end }}
         checksum/secret-mongodb: {{ include (printf "%s/%s" $.Template.BasePath "secret-mongodb.yaml") . | sha256sum  }}
     spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
@@ -30,6 +33,8 @@ spec:
           image: "{{ default .Values.image.repository .Values.web.image.repository }}/{{ .Values.web.image.name }}:{{ default .Values.image.tag .Values.web.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.web.image.pullPolicy | quote }}
           securityContext:
+            seccompProfile:
+              type: RuntimeDefault
             allowPrivilegeEscalation: false
             capabilities:
               drop:
