@@ -762,6 +762,17 @@ backCore:
           cpu: 650m
           memory: 875Mi
 
+  celery_secondary:
+    replicaCount: "0"
+    worker:
+      resources:
+        limits:
+          cpu: 300m
+          memory: 700Mi
+        requests:
+          cpu: 150m
+          memory: 350Mi
+
   celery:
     workers:
       # -- Number of celery workers to run
