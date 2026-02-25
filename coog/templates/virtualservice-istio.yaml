@@ -16,8 +16,13 @@ spec:
         exact: /sao
     redirect:
       uri: "/"
-      redirectCode: 301
-  
+      redirectCode: 307
+  - match:
+    - uri:
+        exact: /sao/
+    redirect:
+      uri: "/"
+      redirectCode: 307
   {{- if .Values.b2c.enabled }}
   - match:
     - uri:
