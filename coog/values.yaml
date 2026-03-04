@@ -591,6 +591,16 @@ backCore:
     #       encryptInTransit: false              # By default, this value is true (encrypt network traffic)
     customPersistentVolume: {}
 
+    # -- Pre-bind the PersistentVolume to a specific PersistentVolumeClaim
+    # Requires persistentVolume.enabled: true
+    # Requires persistentVolume.customPersistentVolume to be set
+    # ref: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#reserving-a-persistentvolume
+    # E.g.
+    # claimRef:
+    #   name: my-pvc
+    #   namespace: my-namespace
+    claimRef: {}
+
     # -- Link to an existing persistent volume
     # size parameter must be equal to existing volume.
     # E.g.
