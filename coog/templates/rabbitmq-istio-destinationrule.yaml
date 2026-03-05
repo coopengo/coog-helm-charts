@@ -4,7 +4,7 @@ apiVersion: networking.istio.io/v1
 kind: DestinationRule
 metadata:
   name: {{ printf "%s-rabbitmq-idle-timeout" $.Release.Namespace }}
-  namespace: {{ .Values.istio.namespace }}
+  namespace: {{ .Release.Namespace }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
   host: {{ printf "%s.svc.cluster.local" (.Values.rabbitmq.host | default (printf "%s-rabbitmq" .Release.Name)) }}
