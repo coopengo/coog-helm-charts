@@ -82,7 +82,7 @@ tests:
     asserts:
       - equal:
           path: spec.host
-          value: test-rabbitmq
+          value: test-rabbitmq.svc.cluster.local
 
   - it: Should use custom rabbitmq host when set
     set:
@@ -99,7 +99,7 @@ tests:
     asserts:
       - equal:
           path: spec.host
-          value: my-custom-rabbitmq.svc
+          value: my-custom-rabbitmq.svc.svc.cluster.local
 
   - it: Should render trafficPolicy with connectionPool tcp settings
     set:

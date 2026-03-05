@@ -7,7 +7,7 @@ metadata:
   namespace: {{ .Values.istio.namespace }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
-  host: {{ .Values.rabbitmq.host | default (printf "%s-rabbitmq" .Release.Name) }}
+  host: {{ printf "%s.svc.cluster.local" (.Values.rabbitmq.host | default (printf "%s-rabbitmq" .Release.Name)) }}
   trafficPolicy:
     {{- include "general.tplvalues.render" (dict "value" (.Values.rabbitmq.istio.trafficPolicy) "context" $) | nindent 4 }}
 
