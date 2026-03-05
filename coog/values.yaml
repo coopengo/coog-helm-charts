@@ -509,6 +509,16 @@ rabbitmq:
   livenessProbe:
     initialDelaySeconds: 240
 
+  istio:
+    trafficPolicy:
+      connectionPool:
+        tcp:
+          idleTimeout: 0s
+          tcpKeepalive:
+            time: 60s
+            interval: 30s
+            probes: 3
+
 #############################################################################################################################
 #                                            Coog minimum components                                                        #
 #############################################################################################################################
