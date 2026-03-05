@@ -1,0 +1,14 @@
+---
+{{- if and .Values.istio.enabled }}
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: {{ printf "%s-rabbitmq-idle-timeout" $.Release.Namespace }}
+  namespace: {{ .Values.istio.namespace }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  host: {{ .Values.rabbitmq.host | default (printf "%s-rabbitmq" .Release.Name) }}
+  trafficPolicy:
+    {{- include "general.tplvalues.render" (dict "value" (.Values.rabbitmq.istio.trafficPolicy) "context" $) | nindent 4 }}
+
+{{- end }}

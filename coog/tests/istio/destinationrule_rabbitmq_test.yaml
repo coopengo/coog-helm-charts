@@ -1,0 +1,131 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test RabbitMQ Istio DestinationRule
+templates:
+  - rabbitmq-istio-destinationrule.yaml
+release:
+  name: test
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 29
+tests:
+  - it: Should not create DestinationRule when Istio is disabled
+    set:
+      istio:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Should create DestinationRule when Istio is enabled
+    set:
+      istio:
+        enabled: true
+        namespace: istio-system
+      rabbitmq:
+        istio:
+          trafficPolicy:
+            connectionPool:
+              tcp:
+                idleTimeout: 0s
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: DestinationRule
+      - isAPIVersion:
+          of: networking.istio.io/v1
+
+  - it: Should set metadata name using release namespace
+    set:
+      istio:
+        enabled: true
+        namespace: istio-system
+      rabbitmq:
+        istio:
+          trafficPolicy:
+            connectionPool:
+              tcp:
+                idleTimeout: 0s
+    asserts:
+      - equal:
+          path: metadata.name
+          value: test-rabbitmq-idle-timeout
+
+  - it: Should set metadata namespace to istio namespace
+    set:
+      istio:
+        enabled: true
+        namespace: istio-system
+      rabbitmq:
+        istio:
+          trafficPolicy:
+            connectionPool:
+              tcp:
+                idleTimeout: 0s
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: istio-system
+
+  - it: Should use default rabbitmq host based on release name
+    set:
+      istio:
+        enabled: true
+        namespace: istio-system
+      rabbitmq:
+        istio:
+          trafficPolicy:
+            connectionPool:
+              tcp:
+                idleTimeout: 0s
+    asserts:
+      - equal:
+          path: spec.host
+          value: test-rabbitmq
+
+  - it: Should use custom rabbitmq host when set
+    set:
+      istio:
+        enabled: true
+        namespace: istio-system
+      rabbitmq:
+        host: my-custom-rabbitmq.svc
+        istio:
+          trafficPolicy:
+            connectionPool:
+              tcp:
+                idleTimeout: 0s
+    asserts:
+      - equal:
+          path: spec.host
+          value: my-custom-rabbitmq.svc
+
+  - it: Should render trafficPolicy with connectionPool tcp settings
+    set:
+      istio:
+        enabled: true
+        namespace: istio-system
+      rabbitmq:
+        istio:
+          trafficPolicy:
+            connectionPool:
+              tcp:
+                idleTimeout: 0s
+                tcpKeepalive:
+                  time: 60s
+                  interval: 30s
+                  probes: 3
+    asserts:
+      - equal:
+          path: spec.trafficPolicy.connectionPool.tcp.idleTimeout
+          value: 0s
+      - equal:
+          path: spec.trafficPolicy.connectionPool.tcp.tcpKeepalive.time
+          value: 60s
+      - equal:
+          path: spec.trafficPolicy.connectionPool.tcp.tcpKeepalive.interval
+          value: 30s
+      - equal:
+          path: spec.trafficPolicy.connectionPool.tcp.tcpKeepalive.probes
+          value: 3
