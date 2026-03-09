@@ -35,6 +35,8 @@ spec:
               image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
               imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy }}
               securityContext:
+                seccompProfile:
+                  type: RuntimeDefault
                 allowPrivilegeEscalation: false
                 capabilities:
                   drop:
