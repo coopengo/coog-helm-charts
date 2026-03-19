@@ -98,6 +98,49 @@ tests:
       - isNotEmpty:
           path: spec.accessModes
 
+  - it: Test claimRef configuration
+    set:
+      backCore:
+        persistentVolume:
+          enabled: true
+          storageClass: efs-sc
+          size: 50Gi
+          accessModes:
+            - ReadWriteMany
+          claimRef:
+            name: my-pvc
+            namespace: my-namespace
+          customPersistentVolume:
+            persistentVolumeReclaimPolicy: Retain
+            csi:
+              driver: efs.csi.aws.com
+              volumeHandle: fs-123456789
+    asserts:
+      - isKind:
+          of: PersistentVolume
+      - equal:
+          path: spec.claimRef.name
+          value: my-pvc
+      - equal:
+          path: spec.claimRef.namespace
+          value: my-namespace
+
+  - it: Test claimRef not set
+    set:
+      backCore:
+        persistentVolume:
+          enabled: true
+          storageClass: efs-sc
+          customPersistentVolume:
+            csi:
+              driver: efs.csi.aws.com
+              volumeHandle: fs-123456789
+    asserts:
+      - isKind:
+          of: PersistentVolume
+      - isNull:
+          path: spec.claimRef
+
   - it: Test not enabled pv (1/3)
     set:
       backCore:
