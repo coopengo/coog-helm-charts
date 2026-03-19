@@ -12,5 +12,9 @@ spec:
     - {{ . | quote }}
   {{- end }}
   {{- include "storage.class" (dict "value" .Values.backCore.persistentVolume.storageClass) | nindent 2 }}
+  {{- if .Values.backCore.persistentVolume.claimRef }}
+  claimRef:
+    {{- toYaml .Values.backCore.persistentVolume.claimRef | nindent 4 }}
+  {{- end }}
 {{- toYaml .Values.backCore.persistentVolume.customPersistentVolume | nindent 2 }}
 {{- end -}}
