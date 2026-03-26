@@ -23,6 +23,12 @@ spec:
     redirect:
       uri: "/"
       redirectCode: 307
+  - match:
+    - uri:
+        exact: /doc
+    redirect:
+      uri: /doc/
+      redirectCode: 307
   {{- if .Values.b2c.enabled }}
   - match:
     - uri:
