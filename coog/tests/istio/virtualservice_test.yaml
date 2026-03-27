@@ -70,6 +70,22 @@ tests:
               uri: "/"
               redirectCode: 307
 
+  - it: Should configure DOC redirect
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            match:
+              - uri:
+                  exact: /doc
+            redirect:
+              uri: "/doc/"
+              redirectCode: 307
+
   - it: Should route b2c traffic when enabled
     set:
       istio:
@@ -357,17 +373,20 @@ tests:
           path: spec.http[1].match[0].uri.exact
           value: /sao/
       - equal:
-          path: spec.http[2].match[0].uri.prefix
+          path: spec.http[2].match[0].uri.exact
+          value: /doc
+      - equal:
+          path: spec.http[3].match[0].uri.prefix
           value: "/customers/myspace/"
       - equal:
-          path: spec.http[4].match[0].uri.prefix
+          path: spec.http[5].match[0].uri.prefix
           value: "/v1/customer/"
       - equal:
-          path: spec.http[6].match[0].uri.prefix
+          path: spec.http[7].match[0].uri.prefix
           value: "/customer/"
       - equal:
-          path: spec.http[8].match[0].uri.prefix
+          path: spec.http[9].match[0].uri.prefix
           value: "/portal/"
       - equal:
-          path: spec.http[10].match[0].uri.prefix
+          path: spec.http[11].match[0].uri.prefix
           value: "/gateway/"
