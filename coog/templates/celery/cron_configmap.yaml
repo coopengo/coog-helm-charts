@@ -1,0 +1,15 @@
+{{- if (and .Values.backCore .Values.backCore.cron .Values.backCore.cron.extraEnvVar) -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "%s-cron-configuration" (include "general.names.short" .) }}
+  labels: 
+    {{- $defaultLabels := include "general.labels.standard" . | fromYaml }}
+    {{- $customName := printf "%s-%s" .Chart.Name "cron" }}
+    {{- $nameLabel := dict "app.kubernetes.io/name" $customName }}
+    {{- mustMergeOverwrite $defaultLabels $nameLabel | toYaml | nindent 4 }}
+data:
+  {{- range $key, $value := .Values.backCore.cron.extraEnvVar }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+{{- end }}
