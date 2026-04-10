@@ -133,3 +133,34 @@ tests:
       - equal:
           path: data.TRYTOND_REPORT__API
           value: http://test-service-externe.com:5001/unoconv/{oext}/test
+
+  - it: Test clamav disabled by default
+    asserts:
+      - notExists:
+          path: data.CLAMAV_HOST
+      - notExists:
+          path: data.CLAMAV_PORT
+      - notExists:
+          path: data.TRYTOND_DATABASE__BINARY_SCANNER
+      - notExists:
+          path: data.TRYTOND_DATABASE__BINARY_SCANNER_DIRECTORY
+
+  - it: Test clamav variables when enabled
+    set:
+      clamav:
+        enabled: true
+        host: clamav-service.default.svc.cluster.local
+        port: 3310
+    asserts:
+      - equal:
+          path: data.CLAMAV_HOST
+          value: clamav-service.default.svc.cluster.local
+      - equal:
+          path: data.CLAMAV_PORT
+          value: "3310"
+      - equal:
+          path: data.TRYTOND_DATABASE__BINARY_SCANNER
+          value: clamav_wrapper.py
+      - equal:
+          path: data.TRYTOND_DATABASE__BINARY_SCANNER_DIRECTORY
+          value: /tmp/
