@@ -4,7 +4,7 @@ metadata:
   name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
-  {{- $clamav := .Values.clamav | default (dict) -}}
+  {{ $clamav := .Values.clamav | default (dict) }}
   # Database
   COOG_POSTGRES_HOST: {{ default (printf "%s-%s" .Release.Name "postgresql") .Values.postgresql.host | quote }}
   COOG_POSTGRES_PORT: {{ default "5432" .Values.postgresql.service.ports.postgresql | quote }}
