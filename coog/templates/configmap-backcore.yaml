@@ -4,6 +4,7 @@ metadata:
   name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 data:
+  {{- $clamav := .Values.clamav | default (dict) -}}
   # Database
   COOG_POSTGRES_HOST: {{ default (printf "%s-%s" .Release.Name "postgresql") .Values.postgresql.host | quote }}
   COOG_POSTGRES_PORT: {{ default "5432" .Values.postgresql.service.ports.postgresql | quote }}
@@ -25,6 +26,12 @@ data:
           .Values.customerFrontend.enabled)
   }}
   TRYTOND_GATEWAY__URL: {{ printf "http://%s-gateway" (include "general.names.short" .) | quote }}
+  {{- end }}
+  {{- if $clamav.enabled }}
+  CLAMAV_HOST: {{ $clamav.host | quote }}
+  CLAMAV_PORT: {{ $clamav.port | quote }}
+  TRYTOND_DATABASE__BINARY_SCANNER: "clamav_wrapper.py"
+  TRYTOND_DATABASE__BINARY_SCANNER_DIRECTORY: "/tmp/"
   {{- end }}
   {{- range $key, $value := .Values.backCore.extraEnvVar }}
   {{- if ne $key "LOG_LEVEL" }}
