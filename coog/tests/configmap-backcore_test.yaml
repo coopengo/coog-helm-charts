@@ -126,15 +126,15 @@ tests:
     set:
       clamav:
         enabled: true
-        host: clamav-service.default.svc.cluster.local
-        port: 3310
+        host: clamav.coog.io
+        port: 443
     asserts:
       - equal:
           path: data.CLAMAV_HOST
-          value: clamav-service.default.svc.cluster.local
+          value: clamav.coog.io
       - equal:
           path: data.CLAMAV_PORT
-          value: "3310"
+          value: "443"
       - equal:
           path: data.TRYTOND_DATABASE__BINARY_SCANNER
           value: clamav_wrapper.py
