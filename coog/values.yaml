@@ -257,12 +257,6 @@ httpProbe:
       url: ""
       port: ""
 
-# -- ClamAV configuration for backCore binary scanner
-clamav:
-  enabled: false
-  host: ""
-  port: ""
-
 #############################################################################################################################
 #                                            External dependencies                                                          #
 #############################################################################################################################
@@ -419,6 +413,22 @@ rabbitmq:
         - ALL
     privileged: false
     runAsNonRoot: true
+
+  istio:
+    trafficPolicy:
+      connectionPool:
+        tcp:
+          idleTimeout: 0s
+          tcpKeepalive:
+            time: 60s
+            interval: 30s
+            probes: 3
+
+# -- ClamAV configuration for backCore binary scanner
+clamav:
+  enabled: false
+  host: ""
+  port: ""
 
 #############################################################################################################################
 #                                            Coog minimum components                                                        #
