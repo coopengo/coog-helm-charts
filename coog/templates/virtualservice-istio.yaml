@@ -11,26 +11,30 @@ spec:
   gateways:
   - {{ printf "%s-%s" (include "general.names.short" $) "gateway" }}
   http:
-  - match:
+  - name: redirect-sao
+    match:
     - uri:
         exact: /sao
     redirect:
       uri: "/"
       redirectCode: 307
-  - match:
+  - name: redirect-sao-slash
+    match:
     - uri:
         exact: /sao/
     redirect:
       uri: "/"
       redirectCode: 307
-  - match:
+  - name: redirect-doc
+    match:
     - uri:
         exact: /doc
     redirect:
       uri: /doc/
       redirectCode: 307
   {{- if .Values.b2c.enabled }}
-  - match:
+  - name: b2c
+    match:
     - uri:
         prefix: "/customers/myspace/"
     rewrite:
@@ -48,7 +52,8 @@ spec:
       retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
     {{- end }}
     
-  - match:
+  - name: redirect-b2c
+    match:
     - uri:
         exact: "/customers/myspace"
     redirect:
@@ -57,7 +62,8 @@ spec:
   {{- end }}
 
   {{- if .Values.customerBackend.enabled }}
-  - match:
+  - name: customer-backend
+    match:
     - uri:
         prefix: "/v1/customer/"
     rewrite:
@@ -75,7 +81,8 @@ spec:
       retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
     {{- end }}
     
-  - match:
+  - name: redirect-customer-backend
+    match:
     - uri:
         exact: "/v1/customer"
     redirect:
@@ -84,7 +91,8 @@ spec:
   {{- end }}
 
   {{- if .Values.customerFrontend.enabled }}
-  - match:
+  - name: customer-frontend
+    match:
     - uri:
         prefix: "/customer/"
     rewrite:
@@ -102,7 +110,8 @@ spec:
       retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
     {{- end }}
     
-  - match:
+  - name: redirect-customer-frontend
+    match:
     - uri:
         exact: "/customer"
     redirect:
@@ -111,7 +120,8 @@ spec:
   {{- end }}
 
   {{- if .Values.b2b.enabled }}
-  - match:
+  - name: b2b
+    match:
     - uri:
         prefix: "/portal/"
     rewrite:
@@ -129,7 +139,8 @@ spec:
       retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
     {{- end }}
     
-  - match:
+  - name: redirect-b2b
+    match:
     - uri:
         exact: "/portal"
     redirect:
@@ -144,7 +155,8 @@ spec:
            $.Values.b2b.enabled
            $.Values.customerBackend.enabled
            $.Values.customerFrontend.enabled) }}
-  - match:
+  - name: gateway
+    match:
     - uri:
         prefix: "/gateway/"
     rewrite:
@@ -162,7 +174,8 @@ spec:
       retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
     {{- end }}
     
-  - match:
+  - name: redirect-gateway
+    match:
     - uri:
         exact: "/gateway"
     redirect:
@@ -170,11 +183,72 @@ spec:
       redirectCode: 301
   {{- end }}
 
-  - match:
+  - name: callback-docusign
+    match:
     - uri:
         prefix: "/docusign"
+    route:
+    - destination:
+        host: {{ printf "%s" (include "general.names.short" $) }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+  - name: callback-cryptolog
+    match:
+    - uri:
+        prefix: "/cryptolog"
+    route:
+    - destination:
+        host: {{ printf "%s" (include "general.names.short" $) }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+  - name: callback-paybox
+    match:
+    - uri:
+        prefix: "/paybox"
+    route:
+    - destination:
+        host: {{ printf "%s" (include "general.names.short" $) }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+  - name: doc
+    match:
     - uri:
         prefix: "/doc"
+    route:
+    - destination:
+        host: {{ printf "%s" (include "general.names.short" $) }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+  - name: coog
+    match:
     - uri:
         prefix: "/"
     route:
