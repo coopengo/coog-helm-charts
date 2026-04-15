@@ -54,6 +54,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: redirect-sao
             match:
               - uri:
                   exact: /sao
@@ -63,6 +64,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: redirect-sao-slash
             match:
               - uri:
                   exact: /sao/
@@ -79,6 +81,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: redirect-doc
             match:
               - uri:
                   exact: /doc
@@ -100,6 +103,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: b2c
             match:
               - uri:
                   prefix: "/customers/myspace/"
@@ -114,6 +118,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: redirect-b2c
             match:
               - uri:
                   exact: "/customers/myspace"
@@ -135,6 +140,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: customer-backend
             match:
               - uri:
                   prefix: "/v1/customer/"
@@ -149,6 +155,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: redirect-customer-backend
             match:
               - uri:
                   exact: "/v1/customer"
@@ -170,6 +177,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: customer-frontend
             match:
               - uri:
                   prefix: "/customer/"
@@ -184,6 +192,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: redirect-customer-frontend
             match:
               - uri:
                   exact: "/customer"
@@ -205,6 +214,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: b2b
             match:
               - uri:
                   prefix: "/portal/"
@@ -219,6 +229,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: redirect-b2b
             match:
               - uri:
                   exact: "/portal"
@@ -240,6 +251,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: gateway
             match:
               - uri:
                   prefix: "/gateway/"
@@ -254,6 +266,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: redirect-gateway
             match:
               - uri:
                   exact: "/gateway"
@@ -261,7 +274,7 @@ tests:
               uri: "/gateway/"
               redirectCode: 301
 
-  - it: Should configure default route to coog service
+  - it: Should configure default routes to coog service
     set:
       istio:
         enabled: true
@@ -273,11 +286,60 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: callback-docusign
             match:
               - uri:
                   prefix: "/docusign"
+            route:
+              - destination:
+                  host: test-coog
+                  port:
+                    number: 80
+            timeout: 1200s
+      - contains:
+          path: spec.http
+          content:
+            name: callback-cryptolog
+            match:
+              - uri:
+                  prefix: "/cryptolog"
+            route:
+              - destination:
+                  host: test-coog
+                  port:
+                    number: 80
+            timeout: 1200s
+      - contains:
+          path: spec.http
+          content:
+            name: callback-paybox
+            match:
+              - uri:
+                  prefix: "/paybox"
+            route:
+              - destination:
+                  host: test-coog
+                  port:
+                    number: 80
+            timeout: 1200s
+      - contains:
+          path: spec.http
+          content:
+            name: doc
+            match:
               - uri:
                   prefix: "/doc"
+            route:
+              - destination:
+                  host: test-coog
+                  port:
+                    number: 80
+            timeout: 1200s
+      - contains:
+          path: spec.http
+          content:
+            name: coog
+            match:
               - uri:
                   prefix: "/"
             route:
@@ -305,6 +367,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: b2c
             match:
               - uri:
                   prefix: "/customers/myspace/"
@@ -335,6 +398,7 @@ tests:
       - contains:
           path: spec.http
           content:
+            name: b2c
             match:
               - uri:
                   prefix: "/customers/myspace/"
@@ -365,28 +429,58 @@ tests:
     asserts:
       - isNotEmpty:
           path: spec.http
-      # Verify routing precedence - more specific routes should come first
+      # Verify routing precedence and names
       - equal:
-          path: spec.http[0].match[0].uri.exact
-          value: /sao
+          path: spec.http[0].name
+          value: redirect-sao
       - equal:
-          path: spec.http[1].match[0].uri.exact
-          value: /sao/
+          path: spec.http[1].name
+          value: redirect-sao-slash
       - equal:
-          path: spec.http[2].match[0].uri.exact
-          value: /doc
+          path: spec.http[2].name
+          value: redirect-doc
       - equal:
-          path: spec.http[3].match[0].uri.prefix
-          value: "/customers/myspace/"
+          path: spec.http[3].name
+          value: b2c
       - equal:
-          path: spec.http[5].match[0].uri.prefix
-          value: "/v1/customer/"
+          path: spec.http[4].name
+          value: redirect-b2c
       - equal:
-          path: spec.http[7].match[0].uri.prefix
-          value: "/customer/"
+          path: spec.http[5].name
+          value: customer-backend
       - equal:
-          path: spec.http[9].match[0].uri.prefix
-          value: "/portal/"
+          path: spec.http[6].name
+          value: redirect-customer-backend
       - equal:
-          path: spec.http[11].match[0].uri.prefix
-          value: "/gateway/"
+          path: spec.http[7].name
+          value: customer-frontend
+      - equal:
+          path: spec.http[8].name
+          value: redirect-customer-frontend
+      - equal:
+          path: spec.http[9].name
+          value: b2b
+      - equal:
+          path: spec.http[10].name
+          value: redirect-b2b
+      - equal:
+          path: spec.http[11].name
+          value: gateway
+      - equal:
+          path: spec.http[12].name
+          value: redirect-gateway
+      - equal:
+          path: spec.http[13].name
+          value: callback-docusign
+      - equal:
+          path: spec.http[14].name
+          value: callback-cryptolog
+      - equal:
+          path: spec.http[15].name
+          value: callback-paybox
+      - equal:
+          path: spec.http[16].name
+          value: doc
+      - equal:
+          path: spec.http[17].name
+          value: coog
