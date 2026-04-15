@@ -30,9 +30,6 @@ spec:
         {{- end }}
         checksum/secret-postgresql: {{ include (printf "%s/%s" $.Template.BasePath "secret-postgresql.yaml") . | sha256sum  }}
     spec:
-      {{- if .Values.serviceAccount.name }}
-      serviceAccountName: {{ .Values.serviceAccount.name }}
-      {{- end }}
       securityContext:
         seccompProfile:
           type: RuntimeDefault
