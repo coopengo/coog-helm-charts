@@ -4,7 +4,7 @@ metadata:
   name: {{ include "general.names.fullname" . }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
-  replicas: {{ default .Values.replicaCount .Values.backCore.celery.replicaCount }}
+  replicas: 1
   strategy:
     type: {{ default .Values.strategy.type .Values.backCore.strategy.type }}
   selector:
@@ -188,6 +188,67 @@ spec:
                 - "-c"
                 - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery-database-maintenance@$HOSTNAME"
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
+        - name: {{ printf "%s-cron" .Chart.Name }}
+          image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy | quote }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
+            runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.securityContext.runAsGroup }}
+          command: ['ep', 'cron']
+        {{- if .Values.backCore.persistentVolume.enabled }}
+          volumeMounts:
+            - name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
+              mountPath: /workspace/io
+              readOnly: false
+        {{- end }}
+          envFrom:
+            {{- if .Values.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            - configMapRef:
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+            {{- if (and .Values.backCore .Values.backCore.cron .Values.backCore.cron.extraEnvVar) }}
+            - configMapRef:
+                name: {{ printf "%s-%s-cron-configuration" .Release.Name .Chart.Name }}
+            {{- end }}
+            {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            - secretRef:
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+            {{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.cron .Values.secrets.backCore.cron.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-%s-cron-configuration" .Release.Name .Chart.Name }}
+            {{- end }}
+            - secretRef:
+                name: {{  printf "%s-postgresql" (include "general.names.short" .) }}
+          ports:
+            - name: http
+              containerPort: 8000
+          startupProbe:
+            exec:
+              command:
+                - "/bin/bash"
+                - "-c"
+                - "ep cron --check"
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.cron.startupProbe) "context" $) | nindent 12 }}
+          livenessProbe:
+            exec:
+              command:
+                - "/bin/bash"
+                - "-c"
+                - "ep cron --check"
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.cron.livenessProbe) "context" $) | nindent 12 }}
+          resources: {{- toYaml .Values.backCore.cron.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.celery.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
