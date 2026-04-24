@@ -163,6 +163,29 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-libroconv")].securityContext.runAsGroup
           value: 1001
 
+  - it: Test serviceAccountName is not set when serviceAccount.name is empty
+    template: libroconv/deployment.yaml
+    set:
+      libroconv:
+        enabled: true
+      serviceAccount:
+        name: ""
+    asserts:
+      - notExists:
+          path: spec.template.spec.serviceAccountName
+
+  - it: Test serviceAccountName is set when serviceAccount.name is defined
+    template: libroconv/deployment.yaml
+    set:
+      libroconv:
+        enabled: true
+      serviceAccount:
+        name: my-custom-sa
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: my-custom-sa
+
   - it: Test not enabled deployment
     template: libroconv/deployment.yaml
     set:
