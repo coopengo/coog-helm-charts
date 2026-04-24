@@ -1,0 +1,486 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test Istio VirtualService
+templates:
+  - virtualservice-istio.yaml
+release:
+  name: test
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 29
+tests:
+  - it: Should not create VirtualService when Istio is disabled
+    set:
+      istio:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Should create VirtualService with basic configuration
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+        gateway:
+          routing:
+            timeout: 600s
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: VirtualService
+      - isAPIVersion:
+          of: networking.istio.io/v1
+      - equal:
+          path: metadata.name
+          value: test-coog-routing
+      - equal:
+          path: metadata.namespace
+          value: test
+      - contains:
+          path: spec.hosts
+          content: "coog.local"
+      - contains:
+          path: spec.gateways
+          content: test-coog-gateway
+
+  - it: Should configure SAO redirect
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            name: redirect-sao
+            match:
+              - uri:
+                  exact: /sao
+            redirect:
+              uri: "/"
+              redirectCode: 307
+      - contains:
+          path: spec.http
+          content:
+            name: redirect-sao-slash
+            match:
+              - uri:
+                  exact: /sao/
+            redirect:
+              uri: "/"
+              redirectCode: 307
+
+  - it: Should configure DOC redirect
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            name: redirect-doc
+            match:
+              - uri:
+                  exact: /doc
+            redirect:
+              uri: "/doc/"
+              redirectCode: 307
+
+  - it: Should route b2c traffic when enabled
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+        gateway:
+          routing:
+            timeout: 3600s
+      b2c:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            name: b2c
+            match:
+              - uri:
+                  prefix: "/customers/myspace/"
+            rewrite:
+              uri: "/"
+            route:
+              - destination:
+                  host: test-coog-b2c
+                  port:
+                    number: 80
+            timeout: 3600s
+      - contains:
+          path: spec.http
+          content:
+            name: redirect-b2c
+            match:
+              - uri:
+                  exact: "/customers/myspace"
+            redirect:
+              uri: "/customers/myspace/"
+              redirectCode: 301
+
+  - it: Should route customer-backend traffic when enabled
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+        gateway:
+          routing:
+            timeout: 600s
+      customerBackend:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            name: customer-backend
+            match:
+              - uri:
+                  prefix: "/v1/customer/"
+            rewrite:
+              uri: "/"
+            route:
+              - destination:
+                  host: test-coog-customer-backend
+                  port:
+                    number: 80
+            timeout: 600s
+      - contains:
+          path: spec.http
+          content:
+            name: redirect-customer-backend
+            match:
+              - uri:
+                  exact: "/v1/customer"
+            redirect:
+              uri: "/v1/customer/"
+              redirectCode: 301
+
+  - it: Should route customer-frontend traffic when enabled
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+        gateway:
+          routing:
+            timeout: 3600s
+      customerFrontend:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            name: customer-frontend
+            match:
+              - uri:
+                  prefix: "/customer/"
+            rewrite:
+              uri: "/"
+            route:
+              - destination:
+                  host: test-coog-customer-frontend
+                  port:
+                    number: 80
+            timeout: 3600s
+      - contains:
+          path: spec.http
+          content:
+            name: redirect-customer-frontend
+            match:
+              - uri:
+                  exact: "/customer"
+            redirect:
+              uri: "/customer/"
+              redirectCode: 301
+
+  - it: Should route b2b traffic when enabled
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+        gateway:
+          routing:
+            timeout: 3600s
+      b2b:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            name: b2b
+            match:
+              - uri:
+                  prefix: "/portal/"
+            rewrite:
+              uri: "/"
+            route:
+              - destination:
+                  host: test-coog-b2b
+                  port:
+                    number: 80
+            timeout: 3600s
+      - contains:
+          path: spec.http
+          content:
+            name: redirect-b2b
+            match:
+              - uri:
+                  exact: "/portal"
+            redirect:
+              uri: "/portal/"
+              redirectCode: 301
+
+  - it: Should route gateway traffic when frontCore is enabled
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+        gateway:
+          routing:
+            timeout: 3600s
+      frontCore:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            name: gateway
+            match:
+              - uri:
+                  prefix: "/gateway/"
+            rewrite:
+              uri: "/"
+            route:
+              - destination:
+                  host: test-coog-gateway
+                  port:
+                    number: 80
+            timeout: 3600s
+      - contains:
+          path: spec.http
+          content:
+            name: redirect-gateway
+            match:
+              - uri:
+                  exact: "/gateway"
+            redirect:
+              uri: "/gateway/"
+              redirectCode: 301
+
+  - it: Should configure default routes to coog service
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+        gateway:
+          routing:
+            timeout: 1200s
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            name: callback-docusign
+            match:
+              - uri:
+                  prefix: "/docusign"
+            route:
+              - destination:
+                  host: test-coog
+                  port:
+                    number: 80
+            timeout: 1200s
+      - contains:
+          path: spec.http
+          content:
+            name: callback-cryptolog
+            match:
+              - uri:
+                  prefix: "/cryptolog"
+            route:
+              - destination:
+                  host: test-coog
+                  port:
+                    number: 80
+            timeout: 1200s
+      - contains:
+          path: spec.http
+          content:
+            name: callback-paybox
+            match:
+              - uri:
+                  prefix: "/paybox"
+            route:
+              - destination:
+                  host: test-coog
+                  port:
+                    number: 80
+            timeout: 1200s
+      - contains:
+          path: spec.http
+          content:
+            name: doc
+            match:
+              - uri:
+                  prefix: "/doc"
+            route:
+              - destination:
+                  host: test-coog
+                  port:
+                    number: 80
+            timeout: 1200s
+      - contains:
+          path: spec.http
+          content:
+            name: coog
+            match:
+              - uri:
+                  prefix: "/"
+            route:
+              - destination:
+                  host: test-coog
+                  port:
+                    number: 80
+            timeout: 1200s
+
+  - it: Should configure retry policy when enabled
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+        gateway:
+          routing:
+            timeout: 600s
+            retry:
+              attempts: 3
+              perTryTimeout: 30s
+              retryOn: "5xx,reset,connect-failure"
+      b2c:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            name: b2c
+            match:
+              - uri:
+                  prefix: "/customers/myspace/"
+            rewrite:
+              uri: "/"
+            route:
+              - destination:
+                  host: test-coog-b2c
+                  port:
+                    number: 80
+            timeout: 600s
+            retries:
+              attempts: 3
+              perTryTimeout: 30s
+              retryOn: "5xx,reset,connect-failure"
+
+  - it: Should not configure retry policy when disabled
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+        gateway:
+          routing:
+            timeout: 600s
+      b2c:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            name: b2c
+            match:
+              - uri:
+                  prefix: "/customers/myspace/"
+            rewrite:
+              uri: "/"
+            route:
+              - destination:
+                  host: test-coog-b2c
+                  port:
+                    number: 80
+            timeout: 600s
+
+  - it: Should configure multiple routes when multiple services are enabled
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+      b2c:
+        enabled: true
+      b2b:
+        enabled: true
+      customerBackend:
+        enabled: true
+      customerFrontend:
+        enabled: true
+      frontCore:
+        enabled: true
+    asserts:
+      - isNotEmpty:
+          path: spec.http
+      # Verify routing precedence and names
+      - equal:
+          path: spec.http[0].name
+          value: redirect-sao
+      - equal:
+          path: spec.http[1].name
+          value: redirect-sao-slash
+      - equal:
+          path: spec.http[2].name
+          value: redirect-doc
+      - equal:
+          path: spec.http[3].name
+          value: b2c
+      - equal:
+          path: spec.http[4].name
+          value: redirect-b2c
+      - equal:
+          path: spec.http[5].name
+          value: customer-backend
+      - equal:
+          path: spec.http[6].name
+          value: redirect-customer-backend
+      - equal:
+          path: spec.http[7].name
+          value: customer-frontend
+      - equal:
+          path: spec.http[8].name
+          value: redirect-customer-frontend
+      - equal:
+          path: spec.http[9].name
+          value: b2b
+      - equal:
+          path: spec.http[10].name
+          value: redirect-b2b
+      - equal:
+          path: spec.http[11].name
+          value: gateway
+      - equal:
+          path: spec.http[12].name
+          value: redirect-gateway
+      - equal:
+          path: spec.http[13].name
+          value: callback-docusign
+      - equal:
+          path: spec.http[14].name
+          value: callback-cryptolog
+      - equal:
+          path: spec.http[15].name
+          value: callback-paybox
+      - equal:
+          path: spec.http[16].name
+          value: doc
+      - equal:
+          path: spec.http[17].name
+          value: coog

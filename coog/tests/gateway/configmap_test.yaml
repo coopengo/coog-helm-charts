@@ -34,6 +34,8 @@ tests:
 
   - it: Test variables (1/2)
     set:
+      istio:
+        enabled: false
       ingress:
         host: test.local
       frontCore:
@@ -78,6 +80,8 @@ tests:
           value: "false"
   - it: Test variables (2/2)
     set:
+      istio:
+        enabled: false
       ingress:
         host: test.local
       frontCore:

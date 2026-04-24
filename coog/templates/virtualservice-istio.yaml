@@ -1,0 +1,266 @@
+{{- if .Values.istio.enabled }}
+{{- $globalDefaultTimeout := default "600s" .Values.istio.gateway.routing.timeout }}
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: {{ printf "%s-%s" (include "general.names.short" $) "routing" }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  hosts:
+  - {{ $.Values.istio.mainHost | quote }}
+  gateways:
+  - {{ printf "%s-%s" (include "general.names.short" $) "gateway" }}
+  http:
+  - name: redirect-sao
+    match:
+    - uri:
+        exact: /sao
+    redirect:
+      uri: "/"
+      redirectCode: 307
+  - name: redirect-sao-slash
+    match:
+    - uri:
+        exact: /sao/
+    redirect:
+      uri: "/"
+      redirectCode: 307
+  - name: redirect-doc
+    match:
+    - uri:
+        exact: /doc
+    redirect:
+      uri: /doc/
+      redirectCode: 307
+  {{- if .Values.b2c.enabled }}
+  - name: b2c
+    match:
+    - uri:
+        prefix: "/customers/myspace/"
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: {{ printf "%s-%s" (include "general.names.short" $) "b2c" }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+    
+  - name: redirect-b2c
+    match:
+    - uri:
+        exact: "/customers/myspace"
+    redirect:
+      uri: "/customers/myspace/"
+      redirectCode: 301
+  {{- end }}
+
+  {{- if .Values.customerBackend.enabled }}
+  - name: customer-backend
+    match:
+    - uri:
+        prefix: "/v1/customer/"
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: {{ printf "%s-%s" (include "general.names.short" $) "customer-backend" }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+    
+  - name: redirect-customer-backend
+    match:
+    - uri:
+        exact: "/v1/customer"
+    redirect:
+      uri: "/v1/customer/"
+      redirectCode: 301
+  {{- end }}
+
+  {{- if .Values.customerFrontend.enabled }}
+  - name: customer-frontend
+    match:
+    - uri:
+        prefix: "/customer/"
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: {{ printf "%s-%s" (include "general.names.short" $) "customer-frontend" }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+    
+  - name: redirect-customer-frontend
+    match:
+    - uri:
+        exact: "/customer"
+    redirect:
+      uri: "/customer/"
+      redirectCode: 301
+  {{- end }}
+
+  {{- if .Values.b2b.enabled }}
+  - name: b2b
+    match:
+    - uri:
+        prefix: "/portal/"
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: {{ printf "%s-%s" (include "general.names.short" $) "b2b" }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+    
+  - name: redirect-b2b
+    match:
+    - uri:
+        exact: "/portal"
+    redirect:
+      uri: "/portal/"
+      redirectCode: 301
+  {{- end }}
+
+  {{- if (or $.Values.frontCore.enabled
+           $.Values.apiB2c.enabled
+           $.Values.apiReferential.enabled
+           $.Values.b2c.enabled
+           $.Values.b2b.enabled
+           $.Values.customerBackend.enabled
+           $.Values.customerFrontend.enabled) }}
+  - name: gateway
+    match:
+    - uri:
+        prefix: "/gateway/"
+    rewrite:
+      uri: "/"
+    route:
+    - destination:
+        host: {{ printf "%s-%s" (include "general.names.short" $) "gateway" }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+    
+  - name: redirect-gateway
+    match:
+    - uri:
+        exact: "/gateway"
+    redirect:
+      uri: "/gateway/"
+      redirectCode: 301
+  {{- end }}
+
+  - name: callback-docusign
+    match:
+    - uri:
+        prefix: "/docusign"
+    route:
+    - destination:
+        host: {{ printf "%s" (include "general.names.short" $) }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+  - name: callback-cryptolog
+    match:
+    - uri:
+        prefix: "/cryptolog"
+    route:
+    - destination:
+        host: {{ printf "%s" (include "general.names.short" $) }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+  - name: callback-paybox
+    match:
+    - uri:
+        prefix: "/paybox"
+    route:
+    - destination:
+        host: {{ printf "%s" (include "general.names.short" $) }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+  - name: doc
+    match:
+    - uri:
+        prefix: "/doc"
+    route:
+    - destination:
+        host: {{ printf "%s" (include "general.names.short" $) }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+  - name: coog
+    match:
+    - uri:
+        prefix: "/"
+    route:
+    - destination:
+        host: {{ printf "%s" (include "general.names.short" $) }}
+        port:
+          number: 80
+    timeout: {{ $globalDefaultTimeout }}
+    {{- if .Values.istio.gateway.routing.retry }}
+    retries:
+      attempts: {{ .Values.istio.gateway.routing.retry.attempts }}
+      perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
+      retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
+    {{- end }}
+{{- end }}
