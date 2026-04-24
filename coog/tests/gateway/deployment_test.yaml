@@ -407,6 +407,29 @@ tests:
       - hasDocuments:
           count: 1
 
+  - it: Test serviceAccountName is not set when serviceAccount.name is empty
+    template: gateway/deployment.yaml
+    set:
+      frontCore:
+        enabled: true
+      serviceAccount:
+        name: ""
+    asserts:
+      - notExists:
+          path: spec.template.spec.serviceAccountName
+
+  - it: Test serviceAccountName is set when serviceAccount.name is defined
+    template: gateway/deployment.yaml
+    set:
+      frontCore:
+        enabled: true
+      serviceAccount:
+        name: my-custom-sa
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: my-custom-sa
+
   - it: Test not enabled deployment (1/2)
     template: gateway/deployment.yaml
     asserts:
