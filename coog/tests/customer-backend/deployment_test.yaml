@@ -306,6 +306,29 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-customer-backend")].securityContext.runAsGroup
           value: 1001
 
+  - it: Test serviceAccountName is not set when serviceAccount.name is empty
+    template: customer-backend/deployment.yaml
+    set:
+      customerBackend:
+        enabled: true
+      serviceAccount:
+        name: ""
+    asserts:
+      - notExists:
+          path: spec.template.spec.serviceAccountName
+
+  - it: Test serviceAccountName is set when serviceAccount.name is defined
+    template: customer-backend/deployment.yaml
+    set:
+      customerBackend:
+        enabled: true
+      serviceAccount:
+        name: my-custom-sa
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: my-custom-sa
+
   - it: Test customerBackend enabled deployment
     template: customer-backend/deployment.yaml
     set:
