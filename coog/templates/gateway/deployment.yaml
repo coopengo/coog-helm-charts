@@ -52,7 +52,7 @@ spec:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
         - name: {{ include "general.names.name" . }}
-          image: "{{ default .Values.image.repository .Values.frontCore.gateway.image.repository }}/{{ .Values.frontCore.gateway.image.name }}:{{ default .Values.image.tag .Values.frontCore.gateway.image.tag }}"
+          image: "{{ default .Values.image.repository .Values.frontCore.gateway.image.repository }}/{{ include "portal.image.name" (dict "name" .Values.frontCore.gateway.image.name "context" $) }}:{{ default .Values.image.tag .Values.frontCore.gateway.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.frontCore.gateway.image.pullPolicy }}
           securityContext:
             seccompProfile:
@@ -95,12 +95,12 @@ spec:
             {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.frontCore.gateway.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             httpGet:
-              path: /
+              path: {{ ternary "/status" "/" .Values.portalV2 }}
               port: http
             {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.frontCore.gateway.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             httpGet:
-              path: /
+              path: {{ ternary "/status" "/" .Values.portalV2 }}
               port: http
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.frontCore.gateway.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.frontCore.gateway.resources | nindent 12 }}

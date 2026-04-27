@@ -285,3 +285,15 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: Test portalV2 image rewrite
+    template: b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+        enabled_myspace: true
+      portalV2: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-b2c")].image
+          value: cooghub/coog-portal-app-b2c:changeme
