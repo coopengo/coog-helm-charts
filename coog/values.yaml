@@ -165,7 +165,6 @@ image:
 #   - coog-app-b2c              -> coog-portal-app-b2c              (b2c image)
 #   - coog-api-b2c              -> coog-portal-api-b2c              (apiB2c image)
 # Kubernetes Service names are NOT changed; URLs in gateway/configmap.yaml continue to resolve to the same services.
-# Gateway liveness & readiness are changed from / to /liveness 
 portalV2: false
 
 ingress:
