@@ -456,3 +456,64 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: Test portalV2 image rewrite
+    template: gateway/deployment.yaml
+    set:
+      frontCore:
+        enabled: true
+      portalV2: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-gateway")].image
+          value: cooghub/coog-portal-gateway:changeme
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-gateway")].livenessProbe.httpGet.path
+          value: /status
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-gateway")].readinessProbe.httpGet.path
+          value: /status
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-gateway")].startupProbe.httpGet.path
+          value: /
+
+  - it: Test portalV2 disabled keeps default probes
+    template: gateway/deployment.yaml
+    set:
+      frontCore:
+        enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-gateway")].livenessProbe.httpGet.path
+          value: /
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-gateway")].readinessProbe.httpGet.path
+          value: /
+
+  - it: Test portalV2 idempotent on already-portal image name
+    template: gateway/deployment.yaml
+    set:
+      frontCore:
+        enabled: true
+        gateway:
+          image:
+            name: coog-portal-gateway
+      portalV2: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-gateway")].image
+          value: cooghub/coog-portal-gateway:changeme
+
+  - it: Test portalV2 leaves non-coog image name untouched
+    template: gateway/deployment.yaml
+    set:
+      frontCore:
+        enabled: true
+        gateway:
+          image:
+            name: mycorp-gateway
+      portalV2: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-gateway")].image
+          value: cooghub/mycorp-gateway:changeme

@@ -469,3 +469,14 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: Test portalV2 image rewrite
+    template: api-identity-manager/deployment.yaml
+    set:
+      frontCore:
+        enabled: true
+      portalV2: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-identity-manager")].image
+          value: cooghub/coog-portal-api-identity-manager:changeme

@@ -45,7 +45,7 @@ spec:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
         - name: {{ include "general.names.name" . }}
-          image: "{{ default .Values.image.repository .Values.b2b.image.repository }}/{{ .Values.b2b.image.name }}:{{ default .Values.image.tag .Values.b2b.image.tag }}"
+          image: "{{ default .Values.image.repository .Values.b2b.image.repository }}/{{ include "portal.image.name" (dict "name" .Values.b2b.image.name "context" $) }}:{{ default .Values.image.tag .Values.b2b.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.b2b.image.pullPolicy | quote }}
           securityContext:
             seccompProfile:

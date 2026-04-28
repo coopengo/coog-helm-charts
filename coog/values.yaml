@@ -156,6 +156,17 @@ image:
   #     pullPolicy: Always
   pullPolicy: IfNotPresent
 
+# -- Switch to the Portal V2 container images.
+# When true, the "coog-" prefix is substituted with "coog-portal-" for the following images:
+#   - coog-gateway              -> coog-portal-gateway              (frontCore.gateway image, also flips livenessProbe/readinessProbe path to /status)
+#   - coog-api                  -> coog-portal-api                  (frontCore.api image)
+#   - coog-api-identity-manager -> coog-portal-api-identity-manager (frontCore.apiIdentityManager image)
+#   - coog-b2b                  -> coog-portal-b2b                  (b2b image)
+#   - coog-app-b2c              -> coog-portal-app-b2c              (b2c image)
+#   - coog-api-b2c              -> coog-portal-api-b2c              (apiB2c image)
+# Kubernetes Service names are NOT changed; URLs in gateway/configmap.yaml continue to resolve to the same services.
+portalV2: false
+
 ingress:
   # -- Define ingressClassName (default: nginx)
   # Ref : https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
