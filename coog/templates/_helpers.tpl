@@ -189,17 +189,13 @@ Create image pull secret string.
 
 {{/*
 Return true ("true") when the chart runs in RabbitMQ operator mode.
-Operator mode is selected when either `rabbitmq.mode` equals "operator"
-or `rabbitmq.operator.enabled` is truthy. `rabbitmq.mode` takes precedence.
+Operator mode is selected exclusively via `rabbitmq.mode == "operator"`,
+which is the single source of truth.
 Usage: {{ if eq (include "coog.rabbitmq.operatorMode" .) "true" }}
 */}}
 {{- define "coog.rabbitmq.operatorMode" -}}
 {{- $mode := default "legacy" .Values.rabbitmq.mode -}}
-{{- $opEnabled := false -}}
-{{- if and .Values.rabbitmq.operator (hasKey .Values.rabbitmq.operator "enabled") -}}
-{{- $opEnabled = .Values.rabbitmq.operator.enabled -}}
-{{- end -}}
-{{- if or (eq $mode "operator") $opEnabled -}}
+{{- if eq $mode "operator" -}}
 true
 {{- else -}}
 false

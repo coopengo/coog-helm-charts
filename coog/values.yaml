@@ -490,17 +490,15 @@ mongodb:
 #   * "legacy"   (default) -> the Bitnami RabbitMQ sub-chart is deployed in the
 #                              tenant namespace (controlled by `rabbitmq.isManaged`).
 #                              Vhosts, users and permissions are still managed
-#                              by Terraform in `customer-resources`.
+#                              by an external pipeline.
 #   * "operator"           -> the chart only renders Vhost / User / Permission /
 #                              Secret CRDs (rabbitmq.com/v1beta1) targeting an
 #                              external RabbitmqCluster managed by the official
-#                              RabbitMQ Cluster Operator (deployed by
-#                              `saas-platform`). The Bitnami sub-chart MUST be
-#                              disabled to avoid a double deployment.
+#                              RabbitMQ Cluster Operator deployed at the
+#                              cluster/platform level. The Bitnami sub-chart
+#                              MUST be disabled to avoid a double deployment.
 #
-# `rabbitmq.mode` is the single source of truth. The boolean
-# `rabbitmq.operator.enabled` is exposed as a convenience alias and is kept in
-# sync with the mode (truthy iff mode == "operator"). Helm evaluates dependency
+# `rabbitmq.mode` is the single source of truth. Helm evaluates dependency
 # conditions on a single key only (here `rabbitmq.isManaged`); when switching
 # to mode=operator the chart will fail-fast if `isManaged` is left to true.
 rabbitmq:
@@ -555,11 +553,8 @@ rabbitmq:
   # The chart renders Vhost / User / Permission / Secret CRDs in the tenant
   # namespace, targeting an external RabbitmqCluster.
   operator:
-    # -- Convenience alias kept in sync with `rabbitmq.mode == "operator"`.
-    # The templates rely on `rabbitmq.mode`; this flag is exposed for
-    # external tooling (Argo, Terraform) that may toggle a boolean.
-    enabled: false
-    # -- Reference to the RabbitmqCluster managed by saas-platform.
+    # -- Reference to the cluster-wide RabbitmqCluster (deployed at the
+    # platform level).
     cluster:
       name: rabbitmq-production
       namespace: rabbitmq-system
