@@ -372,7 +372,6 @@ tests:
       - hasDocuments:
           count: 1
 
-<<<<<<< HEAD
   - it: Test web enabled deployment
     template: api-identity-manager/deployment.yaml
     set:

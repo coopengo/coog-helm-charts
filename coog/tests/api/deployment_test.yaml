@@ -366,7 +366,6 @@ tests:
       - hasDocuments:
           count: 1
 
-<<<<<<< HEAD
   - it: Test web enabled deployment
     template: api/deployment.yaml
     set:
