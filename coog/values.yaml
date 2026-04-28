@@ -485,7 +485,28 @@ mongodb:
 
 # -- Default message service used by backCore
 # Ref: https://artifacthub.io/packages/helm/bitnami/rabbitmq/12.3.0
+#
+# Two deployment modes are supported and chosen via `rabbitmq.mode`:
+#   * "legacy"   (default) -> the Bitnami RabbitMQ sub-chart is deployed in the
+#                              tenant namespace (controlled by `rabbitmq.isManaged`).
+#                              Vhosts, users and permissions are still managed
+#                              by Terraform in `customer-resources`.
+#   * "operator"           -> the chart only renders Vhost / User / Permission /
+#                              Secret CRDs (rabbitmq.com/v1beta1) targeting an
+#                              external RabbitmqCluster managed by the official
+#                              RabbitMQ Cluster Operator (deployed by
+#                              `saas-platform`). The Bitnami sub-chart MUST be
+#                              disabled to avoid a double deployment.
+#
+# `rabbitmq.mode` is the single source of truth. The boolean
+# `rabbitmq.operator.enabled` is exposed as a convenience alias and is kept in
+# sync with the mode (truthy iff mode == "operator"). Helm evaluates dependency
+# conditions on a single key only (here `rabbitmq.isManaged`); when switching
+# to mode=operator the chart will fail-fast if `isManaged` is left to true.
 rabbitmq:
+  # -- Deployment mode: "legacy" (Bitnami sub-chart) or "operator" (CRDs only).
+  mode: legacy
+  # -- When `mode: operator`, MUST be set to false to disable the Bitnami sub-chart.
   isManaged: true
   image:
     repository: bitnamilegacy/rabbitmq
@@ -529,6 +550,30 @@ rabbitmq:
             time: 60s
             interval: 30s
             probes: 3
+
+  # -- Operator mode configuration (only used when `rabbitmq.mode: operator`).
+  # The chart renders Vhost / User / Permission / Secret CRDs in the tenant
+  # namespace, targeting an external RabbitmqCluster.
+  operator:
+    # -- Convenience alias kept in sync with `rabbitmq.mode == "operator"`.
+    # The templates rely on `rabbitmq.mode`; this flag is exposed for
+    # external tooling (Argo, Terraform) that may toggle a boolean.
+    enabled: false
+    # -- Reference to the RabbitmqCluster managed by saas-platform.
+    cluster:
+      name: rabbitmq-production
+      namespace: rabbitmq-system
+    # -- Vhost name. If empty, defaults to "/<release-name>".
+    vhost: ""
+    user:
+      # -- Tags applied to the User CRD (e.g. management, policymaker, monitoring).
+      tags:
+        - management
+    # -- Permissions applied to the user on the vhost (regex patterns).
+    permissions:
+      configure: ".*"
+      write: ".*"
+      read: ".*"
 
 # -- ClamAV configuration for backCore binary scanner
 clamav:
