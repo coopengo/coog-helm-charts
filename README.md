@@ -163,6 +163,49 @@ Pendant ~10-30s entre la création des CRDs et leur réconciliation par le Topol
 - **`rabbitmq.vhost` legacy ignoré en mode operator** : le helper `coog.rabbitmq.vhost` n'utilise que `rabbitmq.operator.vhost` en mode operator. Si tu mets `rabbitmq.vhost: "foo"` mais oublies `rabbitmq.operator.vhost`, le chart utilise le défaut `/<release-name>` au lieu de `foo` — vhost créé sous un nom inattendu, queues à recréer côté apps.
 - **`isManaged: true` + `mode: operator`** : combinaison invalide. Un guard fail-fast dans `_helpers.tpl` rejette le rendu — corriger en passant `isManaged: false`.
 - **Annotation `topology-allowed-namespaces` mal posée** : si elle est uniquement sur le namespace `rabbitmq-system` (ancien comportement) au lieu du `RabbitmqCluster` CR, les CRDs Topology restent en `Ready: False` avec `resource is not allowed to reference defined cluster reference`.
+- **`rabbitmq.auth.password` est bootstrap-only — `helm upgrade` ne rotate PAS le password** : voir la section ci-dessous.
+
+### Rotation du password user (mode operator)
+
+Le Topology Operator lit `spec.importCredentialsSecret` du `User` CRD **uniquement** à la création initiale, c'est-à-dire tant que `status.credentials.name` est vide. Une fois ce statut renseigné (premier reconcile), le Secret auto-généré `<user-cr>-user-credentials` devient la **source de vérité** et le Secret d'entrée que rend le chart (`<release>-rabbitmq-credentials`) n'est plus jamais relu.
+
+Conséquence : modifier `rabbitmq.auth.password` dans les values puis `helm upgrade` met bien à jour le Secret d'entrée côté Kubernetes, mais **n'a aucun effet côté broker** ni sur le Secret de sortie consommé par les apps. Le broker continue d'accepter l'ancien password.
+
+C'est documenté upstream et assumé par les mainteneurs :
+
+> *« The Operator does not monitor either the provided secret object or the generated secret object, and updating either secret object won't update the credentials. As a workaround, add a label or annotation to `users.rabbitmq.com` object to trigger the Operator to reconcile. »*
+> — [doc officielle « Using the Topology Operator »](https://www.rabbitmq.com/kubernetes/operator/using-topology-operator)
+
+Voir aussi l'[issue #571](https://github.com/rabbitmq/messaging-topology-operator/issues/571) (fermée par une simple [MAJ de doc](https://github.com/rabbitmq/messaging-topology-operator/pull/589), pas de fix code).
+
+#### Procédure officielle de rotation
+
+1. Mettre à jour le password côté values + `helm upgrade` :
+   ```bash
+   helm upgrade <release> coopengo/coog \
+     --namespace <ns> --reuse-values \
+     --set rabbitmq.auth.password='<nouveau-password>'
+   ```
+   Cela met à jour le Secret d'entrée `<release>-rabbitmq-credentials` (étape nécessaire mais insuffisante seule).
+
+2. Lancer le helper fourni par le chart :
+   ```bash
+   ./coog/scripts/rotate-rabbitmq-user.sh \
+     --release <release> --namespace <ns>
+   ```
+   Le script :
+   - lit le nouveau password depuis le Secret d'entrée (pas d'argument shell, pas de leak via `ps`),
+   - patch le Secret de sortie `<release>-coog-rabbitmq-user-user-credentials`,
+   - annote le `User` CR avec un timestamp pour déclencher un reconcile,
+   - valide via `rabbitmqctl authenticate_user` côté broker,
+   - liste les `Deployment`s qui consomment le Secret de sortie et qui sont à `kubectl rollout restart` manuellement.
+
+3. Rollout des consommateurs identifiés :
+   ```bash
+   kubectl -n <ns> rollout restart deploy/<name>
+   ```
+
+⚠️ Pendant la fenêtre entre l'étape 2 et le rollout des consommateurs, les nouvelles connexions AMQP avec l'ancien password sont rejetées. Les connexions ouvertes restent valides (auth à la connexion). Pour une rotation sans coupure utilisateur, planifier sur une fenêtre de maintenance.
 
 ### Rollback `operator` → `legacy`
 
