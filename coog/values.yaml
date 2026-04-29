@@ -524,9 +524,11 @@ rabbitmq:
     type: relative
     value: 0.8
   updateStrategyType: RollingUpdate
+  # NOTE: do not add `loopback_users.guest = false` here — RabbitMQ defaults
+  # already restrict the built-in `guest` user to localhost. Setting `= false`
+  # has the inverse semantics and *opens* guest:guest to network access.
   extraConfiguration: |-
     consumer_timeout = 172800000
-    loopback_users.guest = false
   livenessProbe:
     initialDelaySeconds: 240
   podSecurityContext:

@@ -109,3 +109,66 @@ mongodb:
         driver: "efs.csi.aws.com"
         volumeHandle: "fs-987654321"
 ```
+
+## Mode RabbitMQ : `legacy` vs `operator`
+
+Le chart supporte deux modes de déploiement RabbitMQ via le toggle `rabbitmq.mode` :
+
+| Mode | Déploiement | Sources des resources RabbitMQ (vhost/user/permissions) |
+|---|---|---|
+| `legacy` (défaut) | Subchart Bitnami `rabbitmq` v12.4.2 déployé dans le namespace tenant | Externes (Terraform `cyrilgdn/rabbitmq` ou autre outillage) |
+| `operator` | Aucun broker déployé par le chart — connexion à un `RabbitmqCluster` externe géré par le RabbitMQ Cluster Operator | CRDs `Vhost`, `User`, `Permission` posées par le chart, réconciliées par le Messaging Topology Operator |
+
+Le mode `operator` cible un `RabbitmqCluster` déployé hors-bande et accessible via DNS interne `<cluster>.<namespace>.svc.cluster.local`.
+
+### Prérequis du mode `operator`
+
+- Un `RabbitmqCluster` opérationnel sur le cluster (Cluster Operator + Topology Operator + CRDs `rabbitmq.com` installés).
+- L'annotation `rabbitmq.com/topology-allowed-namespaces` posée sur le `RabbitmqCluster` CR (pas sur le namespace) avec une valeur incluant le namespace tenant ou `*`. Le Topology Operator ne lit cette annotation que sur le CR.
+- Le namespace tenant a Istio activé en mode compatible (`STRICT` ou `PERMISSIVE`) si le namespace du cluster RabbitMQ enforce mTLS — sinon l'auth AMQP côté broker rejette les pods tenant.
+
+### Activation côté values
+
+```yaml
+rabbitmq:
+  mode: operator
+  isManaged: false        # OBLIGATOIRE en mode operator (désactive le subchart Bitnami)
+  operator:
+    cluster:
+      name: rabbitmq-production       # défaut
+      namespace: rabbitmq-system      # défaut
+    vhost: "<nom-du-vhost>"           # nom du vhost à créer sur le cluster
+    user:
+      tags:
+        - management
+    permissions:
+      configure: ".*"
+      write: ".*"
+      read: ".*"
+  auth:
+    username: "<user-tenant>"
+    password: "<password-random>"
+```
+
+Le password est posé dans un Secret K8s `<release>-rabbitmq-credentials` du namespace tenant et importé par le `User` CRD via `importCredentialsSecret` — le Topology Operator l'applique au user créé sur `rabbitmq-production`.
+
+### Cutover d'un tenant existant `legacy` → `operator`
+
+1. **Côté values** : ajouter `mode: operator`, `isManaged: false`, et `operator.vhost: "<même-valeur-que-rabbitmq.vhost>"`.
+
+Pendant ~10-30s entre la création des CRDs et leur réconciliation par le Topology Operator, les pods qui rolling-restart peuvent voir des `ACCESS_REFUSED` transitoires. Les clients AMQP retentent automatiquement.
+
+### Pièges connus
+
+- **`rabbitmq.vhost` legacy ignoré en mode operator** : le helper `coog.rabbitmq.vhost` n'utilise que `rabbitmq.operator.vhost` en mode operator. Si tu mets `rabbitmq.vhost: "foo"` mais oublies `rabbitmq.operator.vhost`, le chart utilise le défaut `/<release-name>` au lieu de `foo` — vhost créé sous un nom inattendu, queues à recréer côté apps.
+- **`isManaged: true` + `mode: operator`** : combinaison invalide. Un guard fail-fast dans `_helpers.tpl` rejette le rendu — corriger en passant `isManaged: false`.
+- **Annotation `topology-allowed-namespaces` mal posée** : si elle est uniquement sur le namespace `rabbitmq-system` (ancien comportement) au lieu du `RabbitmqCluster` CR, les CRDs Topology restent en `Ready: False` avec `resource is not allowed to reference defined cluster reference`.
+
+### Rollback `operator` → `legacy`
+
+```yaml
+rabbitmq:
+  mode: legacy
+  isManaged: true
+  # retirer le bloc rabbitmq.operator
+```
