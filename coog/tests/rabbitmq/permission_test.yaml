@@ -1,0 +1,81 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test RabbitMQ Permission CRD
+templates:
+  - rabbitmq/permission.yaml
+release:
+  name: test
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 29
+tests:
+  - it: Renders nothing in legacy mode (default)
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Renders Permission CRD with default permissions
+    set:
+      rabbitmq:
+        mode: operator
+        isManaged: false
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Permission
+      - equal:
+          path: apiVersion
+          value: rabbitmq.com/v1beta1
+      - equal:
+          path: metadata.name
+          value: test-coog-rabbitmq-permission
+      - equal:
+          path: metadata.namespace
+          value: test
+      - equal:
+          path: spec.vhost
+          value: /test
+      - equal:
+          path: spec.userReference.name
+          value: test-coog-rabbitmq-user
+      - equal:
+          path: spec.permissions.configure
+          value: ".*"
+      - equal:
+          path: spec.permissions.write
+          value: ".*"
+      - equal:
+          path: spec.permissions.read
+          value: ".*"
+      - equal:
+          path: spec.rabbitmqClusterReference.name
+          value: rabbitmq-production
+      - equal:
+          path: spec.rabbitmqClusterReference.namespace
+          value: rabbitmq-system
+
+  - it: Custom permissions and vhost are honored
+    set:
+      rabbitmq:
+        mode: operator
+        isManaged: false
+        operator:
+          vhost: /shared
+          permissions:
+            configure: "^myapp-.*"
+            write: "^myapp-.*"
+            read: ".*"
+    asserts:
+      - equal:
+          path: spec.vhost
+          value: /shared
+      - equal:
+          path: spec.permissions.configure
+          value: "^myapp-.*"
+      - equal:
+          path: spec.permissions.write
+          value: "^myapp-.*"
+      - equal:
+          path: spec.permissions.read
+          value: ".*"

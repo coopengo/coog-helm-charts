@@ -188,6 +188,107 @@ Create image pull secret string.
 {{- end }}
 
 {{/*
+Return true ("true") when the chart runs in RabbitMQ operator mode.
+Operator mode is selected exclusively via `rabbitmq.mode == "operator"`,
+which is the single source of truth.
+Usage: {{ if eq (include "coog.rabbitmq.operatorMode" .) "true" }}
+*/}}
+{{- define "coog.rabbitmq.operatorMode" -}}
+{{- $mode := default "legacy" .Values.rabbitmq.mode -}}
+{{- if eq $mode "operator" -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}
+
+{{/*
+Fail-fast guard: in operator mode the Bitnami sub-chart MUST be disabled
+(`rabbitmq.isManaged: false`). Renders nothing on success, aborts the
+release otherwise with an actionable error message.
+Usage: {{ include "coog.rabbitmq.assertOperatorMode" . }}
+*/}}
+{{- define "coog.rabbitmq.assertOperatorMode" -}}
+{{- if eq (include "coog.rabbitmq.operatorMode" .) "true" -}}
+{{- if .Values.rabbitmq.isManaged -}}
+{{- fail "rabbitmq.mode=operator requires rabbitmq.isManaged=false to disable the Bitnami sub-chart and avoid a double deployment." -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+RabbitMQ vhost name used by the application AMQP URI and the Vhost CRD.
+- Operator mode: defaults to "/<release-name>" unless `rabbitmq.operator.vhost` is set.
+- Legacy mode: returns `.Values.rabbitmq.vhost` as-is (may be empty).
+The value is returned WITH the leading slash when it makes sense semantically;
+helpers that build the AMQP URI strip it (the AMQP URI uses the vhost path
+component without leading slash, RFC-3986 style).
+Usage: {{ include "coog.rabbitmq.vhost" . }}
+*/}}
+{{- define "coog.rabbitmq.vhost" -}}
+{{- if eq (include "coog.rabbitmq.operatorMode" .) "true" -}}
+{{- $v := default "" .Values.rabbitmq.operator.vhost -}}
+{{- if $v -}}
+{{- $v -}}
+{{- else -}}
+{{- printf "/%s" .Release.Name -}}
+{{- end -}}
+{{- else -}}
+{{- default "" .Values.rabbitmq.vhost -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+RabbitMQ vhost path component for the AMQP URI (no leading slash).
+Returns an empty string when no vhost is configured (legacy default).
+Usage: {{ include "coog.rabbitmq.vhostPath" . }}
+*/}}
+{{- define "coog.rabbitmq.vhostPath" -}}
+{{- $v := include "coog.rabbitmq.vhost" . -}}
+{{- if hasPrefix "/" $v -}}
+{{- trimPrefix "/" $v -}}
+{{- else -}}
+{{- $v -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+RabbitMQ host used by the AMQP URI.
+- Operator mode: Service DNS of the external RabbitmqCluster
+  (`<cluster>.<cluster-namespace>.svc.cluster.local`), unless overridden
+  via `rabbitmq.host`.
+- Legacy mode: `<release>-rabbitmq` (Bitnami sub-chart Service), unless
+  overridden via `rabbitmq.host`.
+Usage: {{ include "coog.rabbitmq.host" . }}
+*/}}
+{{- define "coog.rabbitmq.host" -}}
+{{- if .Values.rabbitmq.host -}}
+{{- .Values.rabbitmq.host -}}
+{{- else if eq (include "coog.rabbitmq.operatorMode" .) "true" -}}
+{{- $cluster := .Values.rabbitmq.operator.cluster.name -}}
+{{- $clusterNs := .Values.rabbitmq.operator.cluster.namespace -}}
+{{- printf "%s.%s.svc.cluster.local" $cluster $clusterNs -}}
+{{- else -}}
+{{- printf "%s-rabbitmq" .Release.Name -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Fully-qualified RabbitMQ host used by Istio DestinationRule (which requires
+an FQDN). Appends `.svc.cluster.local` unless the host already ends with it
+(e.g. operator mode where the helper already returns a full Service DNS).
+Usage: {{ include "coog.rabbitmq.hostFqdn" . }}
+*/}}
+{{- define "coog.rabbitmq.hostFqdn" -}}
+{{- $h := include "coog.rabbitmq.host" . -}}
+{{- if hasSuffix ".svc.cluster.local" $h -}}
+{{- $h -}}
+{{- else -}}
+{{- printf "%s.svc.cluster.local" $h -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Generate LibroConv API URI based on deployment mode (shared vs per-tenant)
 Usage: {{ include "libroconv.uri" . }}
 */}}
