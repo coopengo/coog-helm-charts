@@ -157,7 +157,7 @@ tests:
           of: PersistentVolume
       - equal:
           path: metadata.name
-          value: my-short-name
+          value: my-short-name-workspace-io
 
   - it: Test shorted_name not defined fallback
     set:
