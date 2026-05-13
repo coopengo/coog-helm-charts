@@ -34,6 +34,7 @@ tests:
       backCore:
         extraEnvVar:
           BACKCORE_DYNAMIC_CONFIG: foo
+          LOG_LEVEL: INFO
         migrator:
           enabled: true
           extraEnvVar:
@@ -61,8 +62,9 @@ tests:
       - equal:
           path: data.BACKCORE_DYNAMIC_CONFIG
           value: foo
-      - notExists:
+      - equal:
           path: data.LOG_LEVEL
+          value: INFO
       - equal:
           path: data.TRYTOND_MIGRATION__DATABASE
           value: staging
