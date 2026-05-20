@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ if .Values.shorted_name }}{{ printf "%s-%s" .Values.shorted_name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}{{ else }}{{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}{{ end }}
+  name: {{ printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-" }}
   labels: {{- include "general.labels.standard" . | nindent 4 }}
 spec:
   capacity:
