@@ -463,3 +463,14 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: Test portalV2 image rewrite
+    template: api/deployment.yaml
+    set:
+      frontCore:
+        enabled: true
+      portalV2: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api")].image
+          value: cooghub/coog-portal-api:changeme
