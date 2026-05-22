@@ -257,3 +257,50 @@ tests:
       - equal:
           path: spec.template.spec.serviceAccountName
           value: my-custom-sa
+
+  - it: Test not enabled deployment (1/4)
+    template: b2c/deployment.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled deployment (2/4)
+    template: b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+        enabled_myspace: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled deployment (3/4)
+    template: b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: false
+        enabled_myspace: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test not enabled deployment (4/4)
+    template: b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: false
+        enabled_myspace: true
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: Test portalV2 image rewrite
+    template: b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+        enabled_myspace: true
+      portalV2: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-b2c")].image
+          value: cooghub/coog-portal-app-b2c:changeme
