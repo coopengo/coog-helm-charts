@@ -60,7 +60,7 @@ spec:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
       containers:
         - name: {{ include "general.names.name" . }}
-          image: "{{ default .Values.image.repository .Values.frontCore.apiIdentityManager.image.repository }}/{{ .Values.frontCore.apiIdentityManager.image.name }}:{{ default .Values.image.tag .Values.frontCore.apiIdentityManager.image.tag }}"
+          image: "{{ default .Values.image.repository .Values.frontCore.apiIdentityManager.image.repository }}/{{ include "portal.image.name" (dict "name" .Values.frontCore.apiIdentityManager.image.name "context" $) }}:{{ default .Values.image.tag .Values.frontCore.apiIdentityManager.image.tag }}"
           imagePullPolicy: {{ default .Values.image.pullPolicy .Values.frontCore.apiIdentityManager.image.pullPolicy | quote }}
           securityContext:
             seccompProfile:
