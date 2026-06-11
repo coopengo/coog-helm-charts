@@ -1,0 +1,65 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test RabbitMQ Vhost CRD
+templates:
+  - rabbitmq/vhost.yaml
+release:
+  name: test
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 29
+tests:
+  - it: Renders nothing in legacy mode (default)
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Renders Vhost CRD with default vhost name in operator mode
+    set:
+      rabbitmq:
+        mode: operator
+        isManaged: false
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Vhost
+      - equal:
+          path: apiVersion
+          value: rabbitmq.com/v1beta1
+      - equal:
+          path: metadata.name
+          value: test-coog-rabbitmq-vhost
+      - equal:
+          path: metadata.namespace
+          value: test
+      - equal:
+          path: spec.name
+          value: /test
+      - equal:
+          path: spec.rabbitmqClusterReference.name
+          value: rabbitmq-production
+      - equal:
+          path: spec.rabbitmqClusterReference.namespace
+          value: rabbitmq-system
+
+  - it: Custom vhost name and cluster reference are honored
+    set:
+      rabbitmq:
+        mode: operator
+        isManaged: false
+        operator:
+          vhost: /custom-vhost
+          cluster:
+            name: rabbitmq-staging
+            namespace: rabbitmq-staging-ns
+    asserts:
+      - equal:
+          path: spec.name
+          value: /custom-vhost
+      - equal:
+          path: spec.rabbitmqClusterReference.name
+          value: rabbitmq-staging
+      - equal:
+          path: spec.rabbitmqClusterReference.namespace
+          value: rabbitmq-staging-ns
