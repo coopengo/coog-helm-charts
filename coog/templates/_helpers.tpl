@@ -286,6 +286,22 @@ Usage: {{ include "coog.rabbitmq.hostFqdn" . }}
 {{- else -}}
 {{- printf "%s.svc.cluster.local" $h -}}
 {{- end -}}
+
+
+Resolve a Portal V2 image name. When .Values.portalV2 is true and the name starts
+with "coog-" but not already with "coog-portal-", insert the "portal-" segment so
+that "coog-X" becomes "coog-portal-X". Names already prefixed with "coog-portal-"
+are returned as-is (no double-prefix). Names not starting with "coog-" are returned
+unchanged.
+Usage:
+  {{ include "portal.image.name" (dict "name" .Values.frontCore.gateway.image.name "context" $) }}
+*/}}
+{{- define "portal.image.name" -}}
+{{- $name := .name -}}
+{{- if and .context.Values.portalV2 (hasPrefix "coog-" $name) (not (hasPrefix "coog-portal-" $name)) -}}
+{{- $name = printf "coog-portal-%s" (trimPrefix "coog-" $name) -}}
+{{- end -}}
+{{- $name -}}
 {{- end -}}
 
 {{/*

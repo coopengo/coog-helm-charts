@@ -407,3 +407,14 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+
+  - it: Test portalV2 image rewrite
+    template: api-b2c/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+      portalV2: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-api-b2c")].image
+          value: cooghub/coog-portal-api-b2c:changeme
