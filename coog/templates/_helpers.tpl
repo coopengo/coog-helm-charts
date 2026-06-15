@@ -286,8 +286,9 @@ Usage: {{ include "coog.rabbitmq.hostFqdn" . }}
 {{- else -}}
 {{- printf "%s.svc.cluster.local" $h -}}
 {{- end -}}
+{{- end -}}
 
-
+{{/*
 Resolve a Portal V2 image name. When .Values.portalV2 is true and the name starts
 with "coog-" but not already with "coog-portal-", insert the "portal-" segment so
 that "coog-X" becomes "coog-portal-X". Names already prefixed with "coog-portal-"
