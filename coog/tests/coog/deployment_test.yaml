@@ -415,6 +415,14 @@ tests:
               secretKeyRef:
                 name: test-coog-customer-backend-configuration
                 key: COOG_TOKEN_SHARED_SECRET
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog")].env
+          content:
+            name: TRYTOND_SESSION__JWT_ENCRYPTION
+            valueFrom:
+              secretKeyRef:
+                name: test-coog-frontcore-configuration
+                key: JWT_INTERNAL_ENCRYPTION
 
   - it: Test Global components configuration
     template: coog/deployment.yaml
@@ -519,3 +527,120 @@ tests:
       - equal:
           path: spec.template.spec.containers[?(@.name == "coog")].securityContext.runAsGroup
           value: 1001
+
+  - it: Test JWT encryption shared with frontCore
+    template: coog/deployment.yaml
+    set:
+      frontCore:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog")].env
+          content:
+            name: TRYTOND_SESSION__JWT_ENCRYPTION
+            valueFrom:
+              secretKeyRef:
+                name: test-coog-frontcore-configuration
+                key: JWT_INTERNAL_ENCRYPTION
+      # The init container has no JWT need (ep admin -cu ir res)
+      - notExists:
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].env
+
+  # Each front flag alone must trigger the JWT variable, since each one alone
+  # renders the frontcore secret. Both sides now derive from the shared helper
+  # "coog.frontcore.enabled", these cases guard against it being bypassed.
+  - it: Test JWT encryption with apiB2c enabled
+    template: coog/deployment.yaml
+    set:
+      apiB2c:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog")].env
+          content:
+            name: TRYTOND_SESSION__JWT_ENCRYPTION
+            valueFrom:
+              secretKeyRef:
+                name: test-coog-frontcore-configuration
+                key: JWT_INTERNAL_ENCRYPTION
+
+  - it: Test JWT encryption with apiReferential enabled
+    template: coog/deployment.yaml
+    set:
+      apiReferential:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog")].env
+          content:
+            name: TRYTOND_SESSION__JWT_ENCRYPTION
+            valueFrom:
+              secretKeyRef:
+                name: test-coog-frontcore-configuration
+                key: JWT_INTERNAL_ENCRYPTION
+
+  - it: Test JWT encryption with b2c enabled
+    template: coog/deployment.yaml
+    set:
+      b2c:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog")].env
+          content:
+            name: TRYTOND_SESSION__JWT_ENCRYPTION
+            valueFrom:
+              secretKeyRef:
+                name: test-coog-frontcore-configuration
+                key: JWT_INTERNAL_ENCRYPTION
+
+  - it: Test JWT encryption with b2b enabled
+    template: coog/deployment.yaml
+    set:
+      b2b:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog")].env
+          content:
+            name: TRYTOND_SESSION__JWT_ENCRYPTION
+            valueFrom:
+              secretKeyRef:
+                name: test-coog-frontcore-configuration
+                key: JWT_INTERNAL_ENCRYPTION
+
+  - it: Test JWT encryption with customerBackend enabled
+    template: coog/deployment.yaml
+    set:
+      customerBackend:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog")].env
+          content:
+            name: TRYTOND_SESSION__JWT_ENCRYPTION
+            valueFrom:
+              secretKeyRef:
+                name: test-coog-frontcore-configuration
+                key: JWT_INTERNAL_ENCRYPTION
+
+  - it: Test JWT encryption with customerFrontend enabled
+    template: coog/deployment.yaml
+    set:
+      customerFrontend:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog")].env
+          content:
+            name: TRYTOND_SESSION__JWT_ENCRYPTION
+            valueFrom:
+              secretKeyRef:
+                name: test-coog-frontcore-configuration
+                key: JWT_INTERNAL_ENCRYPTION
+
+  - it: Test JWT encryption is absent without any front component
+    template: coog/deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[?(@.name == "coog")].env[?(@.name == "TRYTOND_SESSION__JWT_ENCRYPTION")]

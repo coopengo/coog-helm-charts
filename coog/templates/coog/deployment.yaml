@@ -128,6 +128,13 @@ spec:
                     name: {{ printf "%s-customer-backend-configuration" (include "general.names.short" .) }}
                     key: COOG_TOKEN_SHARED_SECRET
           {{- end }}
+          {{- if eq (include "coog.frontcore.enabled" .) "true" }}
+            - name: TRYTOND_SESSION__JWT_ENCRYPTION
+              valueFrom:
+                  secretKeyRef:
+                    name: {{ printf "%s-frontcore-configuration" (include "general.names.short" .) }}
+                    key: JWT_INTERNAL_ENCRYPTION
+          {{- end }}
           envFrom:
             {{- if .Values.extraEnvVar }}
             - configMapRef:
