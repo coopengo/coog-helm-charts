@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test JWT encryption keys shared by gateway and frontCore
+values:
+  - ../values_secrets.yaml
+templates:
+  - gateway/secret.yaml
+  - secret-frontcore.yaml
+release:
+  name: test # Do not edit
+  namespace: test
+capabilities:
+  majorVersion: 1
+  minorVersion: 29
+tests:
+  # secrets.frontCore.extraEnvVar.JWT_INTERNAL_ENCRYPTION is the single source of
+  # truth: the gateway derives its own JWT_ENCRYPTION from it, so both components
+  # sign and validate JWT with the same key.
+  - it: Test default values ship the changeme placeholder on both secrets
+    set:
+      frontCore:
+        enabled: true
+    asserts:
+      - equal:
+          path: stringData.JWT_ENCRYPTION
+          value: changeme
+        template: gateway/secret.yaml
+      - equal:
+          path: stringData.JWT_INTERNAL_ENCRYPTION
+          value: changeme
+        template: secret-frontcore.yaml
+
+  - it: Test JWT_INTERNAL_ENCRYPTION is propagated to the gateway JWT_ENCRYPTION
+    set:
+      frontCore:
+        enabled: true
+      secrets:
+        frontCore:
+          extraEnvVar:
+            JWT_INTERNAL_ENCRYPTION: some_secret
+    asserts:
+      - equal:
+          path: stringData.JWT_ENCRYPTION
+          value: some_secret
+        template: gateway/secret.yaml
+      - equal:
+          path: stringData.JWT_INTERNAL_ENCRYPTION
+          value: some_secret
+        template: secret-frontcore.yaml
+
+  # The gateway secret is mounted after the frontCore one, so any
+  # JWT_INTERNAL_ENCRYPTION it defines would shadow the shared key in the gateway
+  # pod only, and desynchronize it from api & apiIdentityManager.
+  - it: Test the gateway secret never defines JWT_INTERNAL_ENCRYPTION
+    template: gateway/secret.yaml
+    set:
+      frontCore:
+        enabled: true
+      secrets:
+        frontCore:
+          extraEnvVar:
+            JWT_INTERNAL_ENCRYPTION: some_secret
+    asserts:
+      - notExists:
+          path: stringData.JWT_INTERNAL_ENCRYPTION
+
+  - it: Test the gateway secret defines no JWT key when JWT_INTERNAL_ENCRYPTION is unset
+    template: gateway/secret.yaml
+    set:
+      frontCore:
+        enabled: true
+      secrets:
+        frontCore:
+          extraEnvVar: null
+    asserts:
+      - notExists:
+          path: stringData.JWT_ENCRYPTION
+      - notExists:
+          path: stringData.JWT_INTERNAL_ENCRYPTION
+
+  - it: Test JWT_INTERNAL_ENCRYPTION is auto-generated when unset
+    template: secret-frontcore.yaml
+    set:
+      frontCore:
+        enabled: true
+      secrets:
+        frontCore:
+          extraEnvVar: null
+    asserts:
+      - matchRegex:
+          path: stringData.JWT_INTERNAL_ENCRYPTION
+          pattern: ^[a-zA-Z0-9]{32}$
+
+  # An explicit gateway key wins over the value derived from JWT_INTERNAL_ENCRYPTION,
+  # which keeps the external and internal keys separable.
+  - it: Test an explicit gateway JWT_ENCRYPTION overrides the derived value
+    template: gateway/secret.yaml
+    set:
+      frontCore:
+        enabled: true
+      secrets:
+        frontCore:
+          extraEnvVar:
+            JWT_INTERNAL_ENCRYPTION: internal_secret
+          gateway:
+            extraEnvVar:
+              JWT_ENCRYPTION: gateway_secret
+    asserts:
+      - equal:
+          path: stringData.JWT_ENCRYPTION
+          value: gateway_secret
+
+  # Keys generated with `openssl rand -base64 32` may start with a YAML indicator
+  # character or contain ": ", both of which break an unquoted scalar.
+  - it: Test a key holding YAML special characters is quoted on both secrets
+    set:
+      frontCore:
+        enabled: true
+      secrets:
+        frontCore:
+          extraEnvVar:
+            JWT_INTERNAL_ENCRYPTION: "*aB+/9x: Yz="
+    asserts:
+      - equal:
+          path: stringData.JWT_ENCRYPTION
+          value: "*aB+/9x: Yz="
+        template: gateway/secret.yaml
+      - equal:
+          path: stringData.JWT_INTERNAL_ENCRYPTION
+          value: "*aB+/9x: Yz="
+        template: secret-frontcore.yaml
