@@ -2,6 +2,12 @@
 suite: Test api-identity-manager deployment
 values:
   - ../../values_secrets.yaml
+# values_secrets.yaml ships JWT_INTERNAL_ENCRYPTION on the "changeme" placeholder,
+# which secret-frontcore.yaml rejects on purpose. The deployments checksum that
+# secret, so every test here needs a real value. The fail path itself is covered
+# by tests/secret-frontcore_test.yaml.
+set:
+  secrets.frontCore.extraEnvVar.JWT_INTERNAL_ENCRYPTION: test-jwt-internal-encryption
 templates:
   - api-identity-manager/configmap.yaml
   - api-identity-manager/deployment.yaml
