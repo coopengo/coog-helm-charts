@@ -110,17 +110,11 @@ spec:
             {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.celery.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             exec:
-              command:
-                - "/bin/bash"
-                - "-c"
-                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery@$HOSTNAME"
+              command: ['ep', 'liveness_celery', '--app-name', 'celery']
             {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.celery.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             exec:
-              command:
-                - "/bin/bash"
-                - "-c"
-                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery@$HOSTNAME"
+              command: ['ep', 'readiness_sub_service']
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
         - name: {{ printf "%s-database-maintenance" (include "general.names.name" .) }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
@@ -180,17 +174,11 @@ spec:
             {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.celery.startupProbe) "context" $) | nindent 12 }}
           livenessProbe:
             exec:
-              command:
-                - "/bin/bash"
-                - "-c"
-                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery-database-maintenance@$HOSTNAME"
+              command: ['ep', 'liveness_celery', '--app-name', 'celery_maintenance']
             {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.celery.livenessProbe) "context" $) | nindent 12 }}
           readinessProbe:
             exec:
-              command:
-                - "/bin/bash"
-                - "-c"
-                - "celery -A {{ .Values.backCore.celery.coogCeleryModule }} inspect ping -d coog-celery-database-maintenance@$HOSTNAME"
+              command: ['ep', 'readiness_sub_service']
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.celery.readinessProbe) "context" $) | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.celery.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
