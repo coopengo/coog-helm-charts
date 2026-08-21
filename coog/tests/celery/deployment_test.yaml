@@ -528,3 +528,31 @@ tests:
       - equal:
           path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].securityContext.runAsGroup
           value: 1001
+
+  - it: Test health probes
+    template: celery/deployment.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].livenessProbe.exec.command
+          value:
+            - ep
+            - liveness_celery
+            - --app-name
+            - celery
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].readinessProbe.exec.command
+          value:
+            - ep
+            - readiness_sub_service
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].livenessProbe.exec.command
+          value:
+            - ep
+            - liveness_celery
+            - --app-name
+            - celery_maintenance
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].readinessProbe.exec.command
+          value:
+            - ep
+            - readiness_sub_service
