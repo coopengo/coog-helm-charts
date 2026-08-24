@@ -398,7 +398,6 @@ rabbitmq:
   updateStrategyType: RollingUpdate
   extraConfiguration: |-
     consumer_timeout = 172800000
-    loopback_users.guest = false
   livenessProbe:
     initialDelaySeconds: 240
 

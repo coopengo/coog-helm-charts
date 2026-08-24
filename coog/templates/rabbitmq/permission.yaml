@@ -1,0 +1,19 @@
+{{- if eq (include "coog.rabbitmq.operatorMode" .) "true" }}
+apiVersion: rabbitmq.com/v1beta1
+kind: Permission
+metadata:
+  name: {{ printf "%s-rabbitmq-permission" (include "general.names.short" .) }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  vhost: {{ include "coog.rabbitmq.vhost" . | quote }}
+  userReference:
+    name: {{ printf "%s-rabbitmq-user" (include "general.names.short" .) }}
+  permissions:
+    configure: {{ .Values.rabbitmq.operator.permissions.configure | quote }}
+    write: {{ .Values.rabbitmq.operator.permissions.write | quote }}
+    read: {{ .Values.rabbitmq.operator.permissions.read | quote }}
+  rabbitmqClusterReference:
+    name: {{ .Values.rabbitmq.operator.cluster.name | quote }}
+    namespace: {{ .Values.rabbitmq.operator.cluster.namespace | quote }}
+{{- end }}

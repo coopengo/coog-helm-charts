@@ -1,0 +1,18 @@
+{{- if eq (include "coog.rabbitmq.operatorMode" .) "true" }}
+apiVersion: rabbitmq.com/v1beta1
+kind: User
+metadata:
+  name: {{ printf "%s-rabbitmq-user" (include "general.names.short" .) }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  tags:
+    {{- range .Values.rabbitmq.operator.user.tags }}
+    - {{ . | quote }}
+    {{- end }}
+  rabbitmqClusterReference:
+    name: {{ .Values.rabbitmq.operator.cluster.name | quote }}
+    namespace: {{ .Values.rabbitmq.operator.cluster.namespace | quote }}
+  importCredentialsSecret:
+    name: {{ printf "%s-rabbitmq-credentials" (include "general.names.short" .) }}
+{{- end }}
