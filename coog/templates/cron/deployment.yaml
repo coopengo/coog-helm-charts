@@ -115,6 +115,10 @@ spec:
                 - "-c"
                 - "ep cron --check"
             {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.cron.livenessProbe) "context" $) | nindent 12 }}
+          readinessProbe:
+            exec:
+              command: ['ep', 'readiness_sub_service']
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.cron.readinessProbe) "context" $) | nindent 12 }}
           resources: {{- toYaml .Values.backCore.cron.resources | nindent 12 }}
       {{- with default .Values.nodeSelector .Values.backCore.cron.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
