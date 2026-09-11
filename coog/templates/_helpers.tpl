@@ -188,6 +188,27 @@ Create image pull secret string.
 {{- end }}
 
 {{/*
+Return true ("true") when at least one front component is enabled, which is the
+condition under which the frontCore secret `<release>-<chart>-frontcore-configuration`
+is rendered. Any template that references that secret MUST gate on this helper so the
+reference can never dangle.
+Usage: {{ if eq (include "coog.frontcore.enabled" .) "true" }}
+*/}}
+{{- define "coog.frontcore.enabled" -}}
+{{- if (or .Values.frontCore.enabled
+          .Values.apiB2c.enabled
+          .Values.apiReferential.enabled
+          .Values.b2c.enabled
+          .Values.b2b.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled) -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}
+
+{{/*
 Return true ("true") when the chart runs in RabbitMQ operator mode.
 Operator mode is selected exclusively via `rabbitmq.mode == "operator"`,
 which is the single source of truth.
