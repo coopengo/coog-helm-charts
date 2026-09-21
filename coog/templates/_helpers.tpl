@@ -112,6 +112,39 @@ TRYTOND_SESSION__PASSPHRASE: {{ include "secret.token.generator" (dict "value" "
 
 
 {{/*
+Shared JWT key: single source of truth.
+
+`secrets.jwt_encryption` is the only place where the JWT signing key is defined. It feeds
+the three environment variables that MUST always carry the same value, otherwise a token
+issued by one component cannot be validated by the others:
+  - JWT_INTERNAL_ENCRYPTION         -> secret <short>-frontcore-configuration
+  - JWT_ENCRYPTION                  -> secret <fullname>-configuration (gateway)
+  - TRYTOND_SESSION__JWT_ENCRYPTION -> secret <short>-backcore-configuration
+
+This helper only validates; it emits nothing. It rejects the legacy per-component keys
+(which would silently produce a duplicate YAML key in the rendered secret) and enforces
+the value when frontCore.enabled is true.
+
+Usage: {{- include "coog.jwt.validate" . }}
+*/}}
+{{- define "coog.jwt.validate" -}}
+{{- $moved := "Move its value to secrets.jwt_encryption, which now feeds JWT_INTERNAL_ENCRYPTION, JWT_ENCRYPTION and TRYTOND_SESSION__JWT_ENCRYPTION at once." -}}
+{{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.extraEnvVar .Values.secrets.frontCore.extraEnvVar.JWT_INTERNAL_ENCRYPTION) -}}
+{{- fail (printf "secrets.frontCore.extraEnvVar.JWT_INTERNAL_ENCRYPTION is no longer supported. %s" $moved) -}}
+{{- end -}}
+{{- if (and .Values.secrets .Values.secrets.frontCore .Values.secrets.frontCore.gateway .Values.secrets.frontCore.gateway.extraEnvVar .Values.secrets.frontCore.gateway.extraEnvVar.JWT_ENCRYPTION) -}}
+{{- fail (printf "secrets.frontCore.gateway.extraEnvVar.JWT_ENCRYPTION is no longer supported. %s" $moved) -}}
+{{- end -}}
+{{- if (and .Values.secrets .Values.secrets.backCore .Values.secrets.backCore.extraEnvVar .Values.secrets.backCore.extraEnvVar.TRYTOND_SESSION__JWT_ENCRYPTION) -}}
+{{- fail (printf "secrets.backCore.extraEnvVar.TRYTOND_SESSION__JWT_ENCRYPTION is no longer supported. %s" $moved) -}}
+{{- end -}}
+{{- if (and .Values.frontCore.enabled (not (and .Values.secrets .Values.secrets.jwt_encryption))) -}}
+{{- fail "secrets.jwt_encryption is mandatory when frontCore.enabled is true: it is the JWT key shared by the gateway, the frontCore components and the back office. Generate one with `openssl rand -base64 32`." -}}
+{{- end -}}
+{{- end -}}
+
+
+{{/*
 Join TRYTOND_DATABASE_NAMES in string format
 */}}
 {{- define "postgres.databases" -}}
