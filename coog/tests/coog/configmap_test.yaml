@@ -71,7 +71,7 @@ tests:
           path: data.COOG_SERVER_WORKERS
           value: "5"
 
-  - it: Test TRYTOND_WEB__CORS without gateway
+  - it: Test TRYTOND_WEB__CORS with istio and whitelists
     set:
       istio:
         enabled: true
@@ -97,5 +97,6 @@ tests:
             https://coog.local
             https://test0.local
             https://test1.local
+            http://test-coog
             https://cors0.local
             https://cors1.local
