@@ -777,6 +777,7 @@ backCore:
           # -- Add cors (TRYTOND_WEB_CORS variable) to defaults values defined
           # default values :
           #   - https://<.Values.ingress.host>
+          #   - http://<release>-coog (internal origin used by the gateway, when deployed)
           # E.g.
           # cors:
           #   - https://test1.example.com
@@ -790,6 +791,7 @@ backCore:
           # -- Add cors (TRYTOND_WEB_CORS variable) to defaults values defined
           # default values :
           #   - https://<.Values.istio.mainHost>
+          #   - http://<release>-coog (internal origin used by the gateway, when deployed)
           # E.g.
           # cors:
           #   - https://test1.example.com

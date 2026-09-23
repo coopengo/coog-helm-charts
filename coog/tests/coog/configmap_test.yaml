@@ -49,7 +49,10 @@ tests:
           value: "2"
       - equal:
           path: data.TRYTOND_WEB__CORS
-          value: https://coog.local,https://test0.local
+          value: |-
+            https://coog.local
+            https://test0.local
+            http://test-coog
       - equal:
           path: data.TRYTOND_STRAPI__URL
           value: http://test-coog-customer-backend
@@ -67,3 +70,32 @@ tests:
       - equal:
           path: data.COOG_SERVER_WORKERS
           value: "5"
+
+  - it: Test TRYTOND_WEB__CORS without gateway
+    set:
+      istio:
+        enabled: true
+      backCore:
+        coog:
+          ingress:
+            hosts:
+              - host: test0.local
+            nginx:
+              whiteList:
+                cors:
+                  - https://cors0.local
+          istio:
+            hosts:
+              - host: test1.local
+            whiteList:
+              cors:
+                - https://cors1.local
+    asserts:
+      - equal:
+          path: data.TRYTOND_WEB__CORS
+          value: |-
+            https://coog.local
+            https://test0.local
+            https://test1.local
+            https://cors0.local
+            https://cors1.local
