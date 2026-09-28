@@ -14,7 +14,7 @@ Join components hosts in string format
   {{- end -}}
 {{- end -}}
 {{- if $hosts }}
-  {{- printf ",https://%s" (join ",https://" $hosts) -}}
+  {{- printf "\nhttps://%s" (join "\nhttps://" $hosts) -}}
 {{- end -}}
 {{- end -}}
 
@@ -25,6 +25,8 @@ Setup TRYTOND_WEB__CORS variable which has a dynamically generated part with the
 {{- $mainHost := ternary (default .Values.ingress.host .Values.istio.mainHost) .Values.ingress.host .Values.istio.enabled -}}
 {{- printf "https://%s" $mainHost -}}
 {{- include "backcore.coog.hosts" . -}}
+{{- /* The gateway rewrites the Origin header to its COOG_URL origin before proxying to coog */ -}}
+{{- printf "\nhttp://%s" (include "general.names.short" .) -}}
 {{- $cors := list -}}
 {{- if .Values.backCore.coog.ingress.nginx.whiteList.cors }}
   {{- range .Values.backCore.coog.ingress.nginx.whiteList.cors }}
