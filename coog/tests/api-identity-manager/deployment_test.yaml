@@ -17,6 +17,12 @@ release:
 capabilities:
   majorVersion: 1
   minorVersion: 29
+# secrets.jwt_encryption is mandatory as soon as frontCore.enabled is true, and this suite
+# renders secret-frontcore.yaml. Set once here: this suite is not about the JWT key itself,
+# it is covered by tests/secret-frontcore_test.yaml and tests/gateway/secret_test.yaml.
+set:
+  secrets:
+    jwt_encryption: test-jwt-encryption-key
 tests:
   - it: Test metadata & template
     template: api-identity-manager/deployment.yaml
