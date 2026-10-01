@@ -2,6 +2,9 @@
 #                                      Global configuration applied to all components                                       #
 #############################################################################################################################
 
+secrets:
+  jwt_encryption: test-jwt-encryption-key
+
 # -- Number of pod for all components. It can be customized for each component.
 # e.g:
 # coog:
