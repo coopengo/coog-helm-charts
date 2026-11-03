@@ -161,9 +161,25 @@ Pendant ~10-30s entre la création des CRDs et leur réconciliation par le Topol
 - **`rabbitmq.vhost` legacy ignoré en mode operator** : le helper `coog.rabbitmq.vhost` n'utilise que `rabbitmq.operator.vhost` en mode operator. Si tu mets `rabbitmq.vhost: "foo"` mais oublies `rabbitmq.operator.vhost`, le chart utilise le défaut `/<release-name>` au lieu de `foo` — vhost créé sous un nom inattendu, queues à recréer côté apps.
 - **`isManaged: true` + `mode: operator`** : combinaison invalide. Un guard fail-fast dans `_helpers.tpl` rejette le rendu — corriger en passant `isManaged: false`.
 - **Annotation `topology-allowed-namespaces` mal posée** : si elle est uniquement sur le namespace `rabbitmq-system` (ancien comportement) au lieu du `RabbitmqCluster` CR, les CRDs Topology restent en `Ready: False` avec `resource is not allowed to reference defined cluster reference`.
-- **`rabbitmq.auth.password` est bootstrap-only — `helm upgrade` ne rotate PAS le password** : voir la section ci-dessous.
+- **`rabbitmq.auth.password` est bootstrap-only avec un Topology Operator < 1.20 — `helm upgrade` ne rotate PAS le password** : voir la section ci-dessous (à partir de 1.20, `helm upgrade` suffit).
 
 ### Rotation du password user (mode operator)
+
+#### Topology Operator ≥ 1.20 : `helm upgrade` suffit
+
+Le Secret d'entrée `<release>-rabbitmq-credentials` porte le label `rabbitmq.com/topology-operator: "true"`, que l'opérateur ≥ 1.20 exige sur tout Secret référencé (sans lui, le webhook refuse le `User`). L'opérateur surveille ces Secrets et applique lui-même un changement de `password` côté broker, sans annotation ni script :
+
+```bash
+helm upgrade <release> coopengo/coog \
+  --namespace <ns> --reuse-values \
+  --set rabbitmq.auth.password='<nouveau-password>'
+```
+
+Les Deployments coog, celery et cron redémarrent d'eux-mêmes (annotation `checksum/secret-backcore`) avec la nouvelle URL AMQP. Pendant les quelques secondes où l'opérateur applique le password, une connexion peut être refusée : les clients Celery retentent.
+
+Prérequis : le label doit être posé (cette version du chart redéployée) **avant** que le chart `saas` n'installe le Topology Operator 1.20 sur l'env (voir le README de `saas-plateform`).
+
+#### Topology Operator < 1.20 (procédure historique)
 
 Le Topology Operator lit `spec.importCredentialsSecret` du `User` CRD **uniquement** à la création initiale, c'est-à-dire tant que `status.credentials.name` est vide. Une fois ce statut renseigné (premier reconcile), le Secret auto-généré `<user-cr>-user-credentials` devient la **source de vérité** et le Secret d'entrée que rend le chart (`<release>-rabbitmq-credentials`) n'est plus jamais relu.
 
