@@ -221,6 +221,15 @@ tests:
       - failedTemplate:
           errorPattern: 'externalSftp.customer: "" must be a lowercase DNS label'
 
+  - it: refuses a customer name too long for the volume names of the SFTP pods
+    set:
+      externalSftp:
+        customer: a-customer-name-that-is-much-too-long-for-a-volume-name-x
+    template: external-sftp/validate.yaml
+    asserts:
+      - failedTemplate:
+          errorPattern: 'at most 54 characters'
+
   - it: requires the customer EFS volume
     set:
       backCore:

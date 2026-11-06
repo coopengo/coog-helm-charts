@@ -35,8 +35,9 @@ too widely. Run by validate.yaml, so that one check covers every object.
 {{- define "externalSftp.validate" -}}
 {{- $s := .Values.externalSftp -}}
 {{- $label := "^[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?$" -}}
-{{- if not (regexMatch $label (toString $s.customer)) -}}
-{{- fail (printf "externalSftp.customer: %q must be a lowercase DNS label (letters, digits, '-', at most 63 characters)" (toString $s.customer)) -}}
+{{- /* The SFTP pods name the customer volumes customer-<customer> (63 characters at most) */ -}}
+{{- if not (regexMatch "^[a-z0-9]([-a-z0-9]{0,52}[a-z0-9])?$" (toString $s.customer)) -}}
+{{- fail (printf "externalSftp.customer: %q must be a lowercase DNS label (letters, digits, '-', at most 54 characters)" (toString $s.customer)) -}}
 {{- end -}}
 {{- if not (regexMatch $label (toString $s.efsName)) -}}
 {{- fail (printf "externalSftp.efsName: %q must be a lowercase DNS label (letters, digits, '-', at most 63 characters)" (toString $s.efsName)) -}}
