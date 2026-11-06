@@ -1,0 +1,7 @@
+{{- /*
+Renders nothing: fails the release on an externalSftp value the SFTP server
+would refuse, or that would open it too widely (externalSftp.validate).
+*/ -}}
+{{- if .Values.externalSftp.enabled }}
+{{- include "externalSftp.validate" . }}
+{{- end }}
