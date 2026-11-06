@@ -1,0 +1,28 @@
+{{- if and .Values.externalSftp.enabled .Values.externalSftp.allowedCidr }}
+# IP whitelist of the customer on the SFTP port of the SFTP server. The server
+# denies every source no policy allows. No CIDR, no policy: an ALLOW rule
+# without ipBlocks would match every source.
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ printf "sftp-allow-%s" .Values.externalSftp.customer }}
+  namespace: {{ .Values.externalSftp.namespace }}
+  labels:
+    {{- include "externalSftp.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- toYaml .Values.externalSftp.selector | nindent 6 }}
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            ipBlocks:
+            {{- range .Values.externalSftp.allowedCidr }}
+              - {{ . | quote }}
+            {{- end }}
+      to:
+        - operation:
+            ports:
+              - {{ .Values.externalSftp.port | quote }}
+{{- end }}
