@@ -139,16 +139,16 @@ tests:
             containerPort: 5000
       # [Start] Check resources limites & requests
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-b2b")].resources.limits.cpu
+          path: spec.template.spec.resources.limits.cpu
           pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-b2b")].resources.limits.memory
+          path: spec.template.spec.resources.limits.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-b2b")].resources.requests.cpu
+          path: spec.template.spec.resources.requests.cpu
           pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
       - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-b2b")].resources.requests.memory
+          path: spec.template.spec.resources.requests.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
       # [Start] Basic check at container level security stadards (enforced)
