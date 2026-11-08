@@ -52,6 +52,11 @@ spec:
         runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.apiB2c.securityContext.runAsGroup }}
       imagePullSecrets:
         - name: {{ (default "docker-registry" (and .Values.imageCredentials .Values.imageCredentials.name)) }}
+      {{- if .Values.podLevelResources }}
+      {{- with include "general.resources.pod" (dict "containers" (list .Values.apiB2c.resources) "context" $) }}
+      resources: {{- . | nindent 8 }}
+      {{- end }}
+      {{- end }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.apiB2c.image.repository }}/{{ include "portal.image.name" (dict "name" .Values.apiB2c.image.name "context" $) }}:{{ default .Values.image.tag .Values.apiB2c.image.tag }}"
@@ -115,7 +120,9 @@ spec:
               path: /
               port: http
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.apiB2c.readinessProbe) "context" $) | nindent 12 }}
+          {{- if not .Values.podLevelResources }}
           resources: {{- toYaml .Values.apiB2c.resources | nindent 12 }}
+          {{- end }}
       {{- with default .Values.nodeSelector .Values.apiB2c.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}

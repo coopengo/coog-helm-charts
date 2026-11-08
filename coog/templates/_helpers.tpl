@@ -339,6 +339,123 @@ Usage:
 {{- end -}}
 
 {{/*
+Pod-level resources (pod spec.resources) of a workload: for each resource, the max of the
+values declared by its containers (containers, init containers and, with istio.enabled, the
+istio-proxy sidecar). The containers share that envelope:
+- cpu and memory only, the resources pod-level resources accept;
+- a request left out takes the limit, as Kubernetes defaults it;
+- a pod limit is set only when every container sets one for that resource (otherwise the
+  pod was not bounded on it);
+- istio.proxy.resources is part of the max because istiod injects the sidecar with its own
+  requests, and the API rejects a pod whose requests are below its containers' requests.
+Usage:
+  {{- with include "general.resources.pod" (dict "containers" (list .Values.x.resources) "initContainers" (list .Values.x.initContainers.resources) "context" $) }}
+  resources: {{- . | nindent 8 }}
+  {{- end }}
+*/}}
+{{- define "general.resources.pod" -}}
+{{- $all := concat (default (list) .containers) (default (list) .initContainers) -}}
+{{- if .context.Values.istio.enabled -}}
+{{- $all = append $all .context.Values.istio.proxy.resources -}}
+{{- end -}}
+{{- $pod := dict "requests" (dict) "limits" (dict) -}}
+{{- range $name := list "cpu" "memory" -}}
+{{- range $kind := list "requests" "limits" -}}
+{{- $max := 0 -}}
+{{- $declared := false -}}
+{{- $unbounded := false -}}
+{{- range $res := $all -}}
+{{- $value := "" -}}
+{{- if kindIs "map" $res -}}
+{{- include "general.resources.check" $res -}}
+{{- $value = toString (get (get $res $kind | default dict) $name) -}}
+{{- if and (eq $kind "requests") (eq $value "") -}}
+{{- $value = toString (get (get $res "limits" | default dict) $name) -}}
+{{- end -}}
+{{- end -}}
+{{- if eq $value "" -}}
+{{- $unbounded = true -}}
+{{- else -}}
+{{- $declared = true -}}
+{{- $max = max $max (include "general.quantity.parse" (dict "name" $name "value" $value) | int64) -}}
+{{- end -}}
+{{- end -}}
+{{- if and $declared (or (eq $kind "requests") (not $unbounded)) -}}
+{{- $_ := set (get $pod $kind) $name (include "general.quantity.format" (dict "name" $name "value" $max)) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- range $kind := list "requests" "limits" -}}
+{{- if not (get $pod $kind) -}}
+{{- $_ := unset $pod $kind -}}
+{{- end -}}
+{{- end -}}
+{{- with $pod -}}
+{{- toYaml . -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Fail on what pod-level resources do not accept: keys other than requests and limits,
+resources other than cpu and memory.
+*/}}
+{{- define "general.resources.check" -}}
+{{- range $kind, $values := . -}}
+{{- if not (has $kind (list "requests" "limits")) -}}
+{{- fail (printf "resources.%s: pod-level resources only accept requests and limits" $kind) -}}
+{{- end -}}
+{{- range $name, $_ := ($values | default dict) -}}
+{{- if not (has $name (list "cpu" "memory")) -}}
+{{- fail (printf "resources.%s.%s: pod-level resources only accept cpu and memory" $kind $name) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Kubernetes quantity to an integer: millicores for cpu ("1", "1.5", "300m"), bytes for memory
+("700Mi", "1Gi", "1G", "1048576").
+Usage: {{ include "general.quantity.parse" (dict "name" "cpu" "value" "300m") | int64 }}
+*/}}
+{{- define "general.quantity.parse" -}}
+{{- $value := toString .value -}}
+{{- if eq .name "cpu" -}}
+{{- if not (regexMatch "^([0-9]+(\\.[0-9]+)?|\\.[0-9]+)m?$" $value) -}}
+{{- fail (printf "resources: invalid cpu quantity %q" $value) -}}
+{{- end -}}
+{{- if hasSuffix "m" $value -}}
+{{- trimSuffix "m" $value | float64 | ceil | int64 -}}
+{{- else -}}
+{{- mulf (float64 $value) 1000 | ceil | int64 -}}
+{{- end -}}
+{{- else -}}
+{{- if not (regexMatch "^[0-9]+(\\.[0-9]+)?(Ki|Mi|Gi|Ti|k|M|G|T)?$" $value) -}}
+{{- fail (printf "resources: invalid memory quantity %q" $value) -}}
+{{- end -}}
+{{- $number := regexFind "^[0-9]+(\\.[0-9]+)?" $value -}}
+{{- $units := dict "" 1 "k" 1000 "M" 1000000 "G" 1000000000 "T" 1000000000000 "Ki" 1024 "Mi" 1048576 "Gi" 1073741824 "Ti" 1099511627776 -}}
+{{- mulf (float64 $number) (get $units (trimPrefix $number $value)) | ceil | int64 -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Integer from general.quantity.parse back to a quantity: "1300m" for cpu, "1750Mi" for memory
+(Ki, or bytes, when it is not a whole number of Mi).
+*/}}
+{{- define "general.quantity.format" -}}
+{{- $value := .value | int64 -}}
+{{- if eq .name "cpu" -}}
+{{- printf "%dm" $value -}}
+{{- else if eq (mod $value 1048576) 0 -}}
+{{- printf "%dMi" (div $value 1048576) -}}
+{{- else if eq (mod $value 1024) 0 -}}
+{{- printf "%dKi" (div $value 1024) -}}
+{{- else -}}
+{{- printf "%d" $value -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Generate LibroConv API URI based on deployment mode (shared vs per-tenant)
 Usage: {{ include "libroconv.uri" . }}
 */}}
