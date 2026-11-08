@@ -44,6 +44,11 @@ spec:
           persistentVolumeClaim:
             claimName: {{ default (printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-") .Values.backCore.persistentVolume.existingClaim }}
     {{- end }}
+      {{- if .Values.podLevelResources }}
+      {{- with include "general.resources.pod" (dict "containers" (list .Values.cron.resources) "context" $) }}
+      resources: {{- . | nindent 8 }}
+      {{- end }}
+      {{- end }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.cron.image.repository }}/{{ .Values.cron.image.name }}:{{ default .Values.image.tag .Values.cron.image.tag }}"
@@ -107,7 +112,9 @@ spec:
                 - "-c"
                 - "ep cron --check"
             {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.cron.livenessProbe) "context" $) | nindent 12 }}
+          {{- if not .Values.podLevelResources }}
           resources: {{- toYaml .Values.cron.resources | nindent 12 }}
+          {{- end }}
       {{- with default .Values.nodeSelector .Values.cron.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}

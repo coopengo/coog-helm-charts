@@ -39,6 +39,11 @@ spec:
       volumes:
         - name: builddir
           emptyDir: {}
+      {{- if .Values.podLevelResources }}
+      {{- with include "general.resources.pod" (dict "containers" (list .Values.customerFrontend.resources) "initContainers" (list .Values.customerFrontend.initContainers.resources) "context" $) }}
+      resources: {{- . | nindent 8 }}
+      {{- end }}
+      {{- end }}
       initContainers:
         - name: {{ printf "%s-build" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
           image: "{{ default .Values.image.repository .Values.customerFrontend.image.repository }}/{{ .Values.customerFrontend.image.name }}:{{ default .Values.image.tag .Values.customerFrontend.image.tag }}"
@@ -55,7 +60,9 @@ spec:
             runAsNonRoot: true
             runAsUser: {{ default .Values.securityContext.runAsUser .Values.customerFrontend.securityContext.runAsUser }}
             runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.customerFrontend.securityContext.runAsGroup }}
+          {{- if not .Values.podLevelResources }}
           resources: {{- toYaml .Values.customerFrontend.initContainers.resources | nindent 12 }}
+          {{- end }}
           command: ['yarn', 'build', '--prefix-paths']
           volumeMounts:
             - name: builddir
@@ -127,7 +134,9 @@ spec:
               path: /
               port: http
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.customerFrontend.readinessProbe) "context" $) | nindent 12 }}
+          {{- if not .Values.podLevelResources }}
           resources: {{- toYaml .Values.customerFrontend.resources | nindent 12 }}
+          {{- end }}
       {{- with default .Values.nodeSelector .Values.customerFrontend.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}

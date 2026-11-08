@@ -244,16 +244,16 @@ tests:
             containerPort: 8000
       # [Start] Check resources limites & requests
       - matchRegex:
-          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].resources.limits.cpu
+          path: spec.template.spec.resources.limits.cpu
           pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
       - matchRegex:
-          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].resources.limits.memory
+          path: spec.template.spec.resources.limits.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       - matchRegex:
-          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].resources.requests.cpu
+          path: spec.template.spec.resources.requests.cpu
           pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
       - matchRegex:
-          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].resources.requests.memory
+          path: spec.template.spec.resources.requests.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
 
@@ -328,20 +328,6 @@ tests:
           content:
             name: http
             containerPort: 8000
-      # [Start] Check resources limites & requests
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog")].resources.limits.cpu
-          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog")].resources.limits.memory
-          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog")].resources.requests.cpu
-          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog")].resources.requests.memory
-          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
-      # [End] Check resources limites & requests
 
   - it: Test Volumes
     template: coog/deployment.yaml
@@ -486,3 +472,81 @@ tests:
       - equal:
           path: spec.template.spec.containers[?(@.name == "coog")].securityContext.runAsGroup
           value: 1001
+
+  - it: Test pod-level resources cover the init container
+    template: coog/deployment.yaml
+    set:
+      backCore:
+        coog:
+          resources:
+            limits:
+              cpu: 1
+              memory: 1Gi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+          initContainers:
+            resources:
+              limits:
+                cpu: 2
+                memory: 1Gi
+              requests:
+                cpu: 1
+                memory: 256Mi
+    asserts:
+      - equal:
+          path: spec.template.spec.resources
+          value:
+            limits:
+              cpu: 2000m
+              memory: 1024Mi
+            requests:
+              cpu: 1000m
+              memory: 512Mi
+      - notExists:
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].resources
+      - notExists:
+          path: spec.template.spec.containers[?(@.name == "coog")].resources
+
+  - it: Test pod-level resources take the max with the istio sidecar
+    template: coog/deployment.yaml
+    set:
+      istio:
+        enabled: true
+    asserts:
+      # defaults: main 1500m/1750Mi, 1200m/1400Mi, above the init container and the sidecar
+      - equal:
+          path: spec.template.spec.resources
+          value:
+            limits:
+              cpu: 1500m
+              memory: 1750Mi
+            requests:
+              cpu: 1200m
+              memory: 1400Mi
+
+  - it: Test container-level resources when podLevelResources is false
+    template: coog/deployment.yaml
+    set:
+      podLevelResources: false
+    asserts:
+      - notExists:
+          path: spec.template.spec.resources
+      - equal:
+          path: spec.template.spec.initContainers[?(@.name == "coog-module-update")].resources
+          value:
+            limits:
+              cpu: 500m
+              memory: 800Mi
+            requests:
+              cpu: 400m
+              memory: 640Mi
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog")].resources
+          value:
+            limits:
+              cpu: 1500m
+              memory: 1750Mi
+            requests:
+              cpu: 1200m
+              memory: 1400Mi
