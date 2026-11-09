@@ -53,6 +53,11 @@ spec:
           persistentVolumeClaim:
             claimName: {{ default (printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-") .Values.backCore.persistentVolume.existingClaim }}
       {{- end }}
+      {{- if .Values.podLevelResources }}
+      {{- with include "general.resources.pod" (dict "containers" (list .Values.backCore.coog.resources) "initContainers" (list .Values.backCore.coog.initContainers.resources) "context" $) }}
+      resources: {{- . | nindent 8 }}
+      {{- end }}
+      {{- end }}
       initContainers:
         - name: {{ printf "%s-module-update" (include "general.names.name" .) }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
@@ -94,7 +99,9 @@ spec:
           ports:
             - name: http
               containerPort: 8000
+          {{- if not .Values.podLevelResources }}
           resources: {{- toYaml .Values.backCore.coog.initContainers.resources | nindent 12 }}
+          {{- end }}
       containers:
         - name: {{ include "general.names.name" . }}
           image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
@@ -167,7 +174,9 @@ spec:
               path: "/{{ .Values.postgresql.auth.database }}/readiness"
               port: http
             {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.coog.readinessProbe) "context" $) | nindent 12 }}
+          {{- if not .Values.podLevelResources }}
           resources: {{- toYaml .Values.backCore.coog.resources | nindent 12 }}
+          {{- end }}
       {{- with default .Values.nodeSelector .Values.backCore.coog.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}
