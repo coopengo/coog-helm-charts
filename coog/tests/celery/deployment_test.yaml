@@ -322,47 +322,20 @@ tests:
             name: http
             containerPort: 8000
       # [Start] Check resources limites & requests
-      # - matchRegex:
-      #     path: spec.template.spec.resources.limits.cpu
-      #       # path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.limits.cpu
-      #     pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
-      # - matchRegex:
-      #     path: spec.template.spec.resources.limits.memory
-      #       # path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.limits.memory
-      #     pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
-      # - matchRegex:
-      #     path: spec.template.spec.resources.requests.cpu
-      #     # path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.requests.cpu
-      #     pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
-      # - matchRegex:
-      #     path: spec.template.spec.resources.requests.memory
-      #     # path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.requests.memory
-      #     pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
-
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.limits.cpu
-          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.limits.memory
-          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.requests.cpu
-          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-celery")].resources.requests.memory
-          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources.limits.cpu
-          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources.limits.memory
-          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources.requests.cpu
-          pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
-      - matchRegex:
-          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources.requests.memory
-          pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
+      # Pod-level resources: max of the worker and database-maintenance resources
+      - equal:
+          path: spec.template.spec.resources
+          value:
+            limits:
+              cpu: 200m
+              memory: 500Mi
+            requests:
+              cpu: 100m
+              memory: 250Mi
+      - notExists:
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].resources
+      - notExists:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources
       # [End] Check resources limites & requests
       # [Start] Basic check at container level security stadards (enforced)
       - equal:
@@ -556,3 +529,153 @@ tests:
           value:
             - ep
             - readiness_sub_service
+
+  - it: Test pod-level resources when database maintenance only overrides memory
+    template: celery/deployment.yaml
+    set:
+      backCore:
+        celery:
+          worker:
+            resources:
+              limits:
+                cpu: 1000m
+                memory: 2500Mi
+              requests:
+                cpu: 500m
+                memory: 1250Mi
+          databaseMaintenance:
+            resources:
+              limits:
+                memory: 1000Mi
+              requests:
+                memory: 500Mi
+    asserts:
+      # max per resource: the worker's, above database maintenance (memory override,
+      # cpu from the chart defaults 300m / 150m)
+      - equal:
+          path: spec.template.spec.resources
+          value:
+            limits:
+              cpu: 1000m
+              memory: 2500Mi
+            requests:
+              cpu: 500m
+              memory: 1250Mi
+
+  - it: Test pod-level resources without limits on one container
+    template: celery/deployment.yaml
+    set:
+      backCore:
+        celery:
+          databaseMaintenance:
+            resources: null
+    asserts:
+      # the pod was not bounded: no pod limits, requests of the worker only
+      - equal:
+          path: spec.template.spec.resources
+          value:
+            requests:
+              cpu: 150m
+              memory: 350Mi
+
+  - it: Test pod-level resources are at least the istio sidecar's
+    template: celery/deployment.yaml
+    set:
+      istio:
+        enabled: true
+      backCore:
+        celery:
+          worker:
+            resources:
+              limits:
+                cpu: 200m
+                memory: 70Mi
+              requests:
+                cpu: 25m
+                memory: 35Mi
+          databaseMaintenance:
+            resources:
+              limits:
+                cpu: 50m
+                memory: 70Mi
+              requests:
+                cpu: 25m
+                memory: 35Mi
+    asserts:
+      # max per resource with the sidecar (100m/256Mi, 50m/128Mi): cpu limit from the worker
+      - equal:
+          path: spec.template.spec.resources
+          value:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 50m
+              memory: 128Mi
+
+  - it: Test pod-level resources reject resources other than cpu and memory
+    template: celery/deployment.yaml
+    set:
+      backCore:
+        celery:
+          worker:
+            resources:
+              limits:
+                ephemeral-storage: 1Gi
+    asserts:
+      - failedTemplate:
+          errorMessage: "resources.limits.ephemeral-storage: pod-level resources only accept cpu and memory"
+
+  - it: Test container-level resources when podLevelResources is false
+    template: celery/deployment.yaml
+    set:
+      podLevelResources: false
+      istio:
+        enabled: true
+    asserts:
+      # 24.41 keeps its pod-level line, backCore.celery.resources (unset by default)
+      - equal:
+          path: spec.template.spec.resources
+          value: null
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery")].resources
+          value:
+            limits:
+              cpu: 300m
+              memory: 700Mi
+            requests:
+              cpu: 150m
+              memory: 350Mi
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources
+          value:
+            limits:
+              cpu: 300m
+              memory: 700Mi
+            requests:
+              cpu: 150m
+              memory: 350Mi
+
+  - it: Test pod-level resources include backCore.celery.resources in the max
+    template: celery/deployment.yaml
+    set:
+      backCore:
+        celery:
+          resources:
+            limits:
+              cpu: 2
+              memory: 512Mi
+            requests:
+              cpu: 1
+              memory: 256Mi
+    asserts:
+      # max of backCore.celery.resources and the worker/database-maintenance defaults (300m/700Mi, 150m/350Mi)
+      - equal:
+          path: spec.template.spec.resources
+          value:
+            limits:
+              cpu: 2000m
+              memory: 700Mi
+            requests:
+              cpu: 1000m
+              memory: 350Mi
