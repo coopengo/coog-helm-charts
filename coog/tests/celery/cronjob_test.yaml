@@ -258,3 +258,33 @@ tests:
             requests:
               cpu: 160m
               memory: 240Mi
+
+  - it: Test pod-level resources of the cronjob leave the istio sidecar out
+    template: celery/cronjob.yaml
+    set:
+      istio:
+        enabled: true
+      backCore:
+        celery:
+          cronJob:
+            resources:
+              limits:
+                cpu: 50m
+                memory: 100Mi
+              requests:
+                cpu: 25m
+                memory: 50Mi
+    asserts:
+      # the cronjob pod disables the injection: no sidecar, no istio-proxy floor
+      - equal:
+          path: spec.jobTemplate.spec.template.metadata.labels["sidecar.istio.io/inject"]
+          value: "false"
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.resources
+          value:
+            limits:
+              cpu: 50m
+              memory: 100Mi
+            requests:
+              cpu: 25m
+              memory: 50Mi

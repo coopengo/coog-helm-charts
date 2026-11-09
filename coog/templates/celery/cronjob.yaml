@@ -31,7 +31,7 @@ spec:
                 {{- end }}
         {{- end }}
           {{- if .Values.podLevelResources }}
-          {{- with include "general.resources.pod" (dict "containers" (list .Values.backCore.celery.cronJob.resources) "context" $) }}
+          {{- with include "general.resources.pod" (dict "containers" (list .Values.backCore.celery.cronJob.resources) "sidecar" false "context" $) }}
           resources: {{- . | nindent 12 }}
           {{- end }}
           {{- end }}
