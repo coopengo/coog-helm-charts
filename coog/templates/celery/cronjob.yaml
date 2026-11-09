@@ -30,6 +30,11 @@ spec:
                 claimName: {{ .Values.backCore.persistentVolume.existingClaim }}
                 {{- end }}
         {{- end }}
+          {{- if .Values.podLevelResources }}
+          {{- with include "general.resources.pod" (dict "containers" (list .Values.backCore.celery.cronJob.resources) "context" $) }}
+          resources: {{- . | nindent 12 }}
+          {{- end }}
+          {{- end }}
           containers:
             - name: {{ printf "%s-daily" (include "general.names.name" .) | trunc 63 | trimSuffix "-" }}
               image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
@@ -83,4 +88,6 @@ spec:
                 {{- end }}
                 - secretRef:
                     name: {{  printf "%s-postgresql" (include "general.names.short" .) }}
+              {{- if not .Values.podLevelResources }}
               resources: {{- toYaml .Values.backCore.celery.cronJob.resources | nindent 16 }}
+              {{- end }}

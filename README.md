@@ -3,7 +3,7 @@
 ## Prérequis
 
 - Un compte sur [DockerHub](https://hub.docker.com/)
-- Cluster Kubernetes en version 1.21+
+- Cluster Kubernetes en version 1.21+, et 1.34+ pour les ressources au niveau pod (activées par défaut, voir [Ressources au niveau pod](#ressources-au-niveau-pod-podlevelresources)) — sinon `podLevelResources: false`
 - Installer [helm 3.10+](https://helm.sh/)
 - Installer [Nginx Ingress Controller](https://kubernetes.github.io/ingress-nginx/deploy/)
 - Configurer des [volumes persistants](https://kubernetes.io/fr/docs/concepts/storage/persistent-volumes/) pour la persistence des données - Indispensable en production
@@ -107,6 +107,39 @@ mongodb:
         driver: "efs.csi.aws.com"
         volumeHandle: "fs-987654321"
 ```
+
+## Ressources au niveau pod (`podLevelResources`)
+
+Option **opt-out** : activée par défaut. Les `resources` de chaque composant sont posées sur le pod (`spec.template.spec.resources` du Deployment / DaemonSet), plus aucune sur ses conteneurs. Les conteneurs du pod partagent cette enveloppe.
+
+Valeur du pod, pour chaque ressource (cpu, mémoire, requests et limits séparément) : le **max** des valeurs des conteneurs du pod.
+
+| Composant | Valeurs prises en compte |
+| :-- | :-- |
+| coog | `backCore.coog.resources`, `backCore.coog.initContainers.resources` |
+| celery | `backCore.celery.resources`, `backCore.celery.single.resources`, `backCore.celery.cronJob.resources` (pod du CronJob) |
+| cron | `cron.resources` |
+| customerBackend, customerFrontend | `resources`, `initContainers.resources` |
+| autres composants | `resources` |
+| tous, si `istio.enabled` | `istio.proxy.resources` (sidecar `istio-proxy`) |
+
+- **Prérequis** : Kubernetes 1.34+ (feature gate `PodLevelResources`, beta et activée par défaut, encore beta en 1.36), nœuds en cgroup v2.
+- **Istio** : istiod injecte `istio-proxy` avec ses propres ressources (`global.proxy.resources` des values istiod), et l'API refuse un pod dont les requests sont inférieures à celles du sidecar. `istio.proxy.resources` doit donc reprendre les values istiod de la plateforme (défaut : 50m/128Mi en requests, 100m/256Mi en limits).
+- Seules `cpu` et `memory` sont acceptées : toute autre ressource fait échouer le rendu.
+- Une requête absente prend la valeur de la limite. Si un conteneur n'a pas de limite pour une ressource, le pod n'en a pas non plus.
+- Les sous-charts Bitnami (postgresql, rabbitmq, mongodb) ne changent pas : ressources au niveau conteneur.
+
+### Passage d'un tenant
+
+Les pods sont recréés. Un pod à plusieurs conteneurs reçoit le max de leurs valeurs, partagé par tous : pour coog, `max(serveur, module-update, sidecar)`. Vérifier que les valeurs des tenants couvrent ce partage avant le passage.
+
+### Revenir aux ressources par conteneur
+
+```yaml
+podLevelResources: false
+```
+
+Le rendu est alors identique à celui des versions précédentes du chart.
 
 ## Mode RabbitMQ : `legacy` vs `operator`
 

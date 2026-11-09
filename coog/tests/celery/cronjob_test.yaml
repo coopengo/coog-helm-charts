@@ -108,16 +108,16 @@ tests:
       # [End] Check environment files - apply variables on initContainer from configmap & secrets
       # [Start] Check resources limites & requests
       - matchRegex:
-          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].resources.limits.cpu
+          path: spec.jobTemplate.spec.template.spec.resources.limits.cpu
           pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
       - matchRegex:
-          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].resources.limits.memory
+          path: spec.jobTemplate.spec.template.spec.resources.limits.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       - matchRegex:
-          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].resources.requests.cpu
+          path: spec.jobTemplate.spec.template.spec.resources.requests.cpu
           pattern: ^([0-9]{1,2}([.][0-9]+)?|[0-9]{1,5}m)$
       - matchRegex:
-          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].resources.requests.memory
+          path: spec.jobTemplate.spec.template.spec.resources.requests.memory
           pattern: ^([0-9]+(Ei|E|Pi|P|Ti|T|Gi|G|Mi|M|Ki|k|m)?)$
       # [End] Check resources limites & requests
 
@@ -226,3 +226,35 @@ tests:
             - daily
             - "2"
             - test
+
+  - it: Test pod-level resources of the cronjob pod
+    template: celery/cronjob.yaml
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.resources
+          value:
+            limits:
+              cpu: 200m
+              memory: 300Mi
+            requests:
+              cpu: 160m
+              memory: 240Mi
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].resources
+
+  - it: Test container-level resources of the cronjob when podLevelResources is false
+    template: celery/cronjob.yaml
+    set:
+      podLevelResources: false
+    asserts:
+      - notExists:
+          path: spec.jobTemplate.spec.template.spec.resources
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.containers[?(@.name == "coog-celery-daily")].resources
+          value:
+            limits:
+              cpu: 200m
+              memory: 300Mi
+            requests:
+              cpu: 160m
+              memory: 240Mi
