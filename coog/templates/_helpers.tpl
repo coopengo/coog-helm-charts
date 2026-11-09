@@ -314,7 +314,8 @@ istio-proxy sidecar). The containers share that envelope:
 - a pod limit is set only when every container sets one for that resource (otherwise the
   pod was not bounded on it);
 - istio.proxy.resources is part of the max because istiod injects the sidecar with its own
-  requests, and the API rejects a pod whose requests are below its containers' requests.
+  requests, and the API rejects a pod whose requests are below its containers' requests;
+  a pod that disables the injection passes "sidecar" false.
 Usage:
   {{- with include "general.resources.pod" (dict "containers" (list .Values.x.resources) "initContainers" (list .Values.x.initContainers.resources) "context" $) }}
   resources: {{- . | nindent 8 }}
@@ -322,7 +323,7 @@ Usage:
 */}}
 {{- define "general.resources.pod" -}}
 {{- $all := concat (default (list) .containers) (default (list) .initContainers) -}}
-{{- if .context.Values.istio.enabled -}}
+{{- if and .context.Values.istio.enabled (dig "sidecar" true .) -}}
 {{- $all = append $all .context.Values.istio.proxy.resources -}}
 {{- end -}}
 {{- $pod := dict "requests" (dict) "limits" (dict) -}}
