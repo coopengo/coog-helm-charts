@@ -1,0 +1,21 @@
+{{- if .Values.externalSftp.enabled }}
+# Customer EFS for the SFTP server, found by label and mounted at
+# /mnt/<customer>/<efsName>.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "externalSftp.volumeName" . }}
+  namespace: {{ .Values.externalSftp.namespace }}
+  labels:
+    {{- include "externalSftp.labels" . | nindent 4 }}
+spec:
+  accessModes:
+  {{- range .Values.backCore.persistentVolume.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  volumeName: {{ include "externalSftp.volumeName" . }}
+  resources:
+    requests:
+      storage: {{ .Values.backCore.persistentVolume.size }}
+  {{- include "storage.class" (dict "value" .Values.backCore.persistentVolume.storageClass) | nindent 2 }}
+{{- end }}
