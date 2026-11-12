@@ -1,0 +1,241 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: Test external SFTP server objects
+templates:
+  - external-sftp/pv.yaml
+  - external-sftp/pvc.yaml
+  - external-sftp/configmap-users.yaml
+  - external-sftp/authorizationpolicy-istio.yaml
+  - external-sftp/validate.yaml
+release:
+  name: coopengo-acme-sandbox
+  namespace: acme-sandbox
+capabilities:
+  majorVersion: 1
+  minorVersion: 29
+# Customer EFS as customer-deployments sets it, and an enabled external SFTP.
+set:
+  backCore:
+    persistentVolume:
+      enabled: true
+      storageClass: efs-sc
+      size: 50Gi
+      accessModes:
+        - ReadWriteMany
+      customPersistentVolume:
+        mountOptions:
+          - tls
+          - iam
+        persistentVolumeReclaimPolicy: Retain
+        csi:
+          driver: efs.csi.aws.com
+          volumeHandle: fs-123456789
+  externalSftp:
+    enabled: true
+    customer: acme
+    efsName: acme-sandbox-workspace-io
+    users:
+      - username: acme-ftp
+        publicKeys:
+          - ssh-ed25519 AAAAC3Nza acme@host
+      - username: acme.batch
+        publicKeys:
+          - ssh-rsa AAAAB3Nza batch@host
+        chroot: /batch/exportdb/
+    allowedCidr:
+      - 203.0.113.10/32
+      - 198.51.100.0/24
+tests:
+  - it: renders nothing by default
+    set:
+      externalSftp:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders a PV on the customer EFS, bound to the claim of the SFTP namespace
+    template: external-sftp/pv.yaml
+    asserts:
+      - isKind:
+          of: PersistentVolume
+      - equal:
+          path: metadata.name
+          value: sftp-acme-sandbox-workspace-io
+      - equal:
+          path: metadata.labels["sftp.coopengo.com/customer"]
+          value: acme
+      - equal:
+          path: metadata.labels["sftp.coopengo.com/efs-name"]
+          value: acme-sandbox-workspace-io
+      - equal:
+          path: spec.csi.volumeHandle
+          value: fs-123456789
+      - equal:
+          path: spec.claimRef
+          value:
+            name: sftp-acme-sandbox-workspace-io
+            namespace: sftp
+      - equal:
+          path: spec.capacity.storage
+          value: 50Gi
+      - equal:
+          path: spec.persistentVolumeReclaimPolicy
+          value: Retain
+
+  - it: renders the PVC in the SFTP namespace with the labels the SFTP server looks for
+    template: external-sftp/pvc.yaml
+    asserts:
+      - isKind:
+          of: PersistentVolumeClaim
+      - equal:
+          path: metadata.namespace
+          value: sftp
+      - equal:
+          path: spec.volumeName
+          value: sftp-acme-sandbox-workspace-io
+      - equal:
+          path: metadata.labels["sftp.coopengo.com/customer"]
+          value: acme
+      - equal:
+          path: spec.storageClassName
+          value: efs-sc
+
+  - it: renders one SFTPGo account per user, chrooted below the EFS root
+    template: external-sftp/configmap-users.yaml
+    asserts:
+      - equal:
+          path: metadata.name
+          value: sftp-users-acme
+      - equal:
+          path: metadata.namespace
+          value: sftp
+      - equal:
+          path: data["acme-ftp.json"]
+          value: '{"home_dir":"/mnt/acme/acme-sandbox-workspace-io","permissions":{"/":["*"]},"public_keys":["ssh-ed25519 AAAAC3Nza acme@host"],"status":1,"username":"acme-ftp"}'
+      - equal:
+          path: data["acme.batch.json"]
+          value: '{"home_dir":"/mnt/acme/acme-sandbox-workspace-io/batch/exportdb","permissions":{"/":["*"]},"public_keys":["ssh-rsa AAAAB3Nza batch@host"],"status":1,"username":"acme.batch"}'
+
+  - it: renders the whitelist on the SFTP port of the SFTP server pods
+    template: external-sftp/authorizationpolicy-istio.yaml
+    asserts:
+      - isKind:
+          of: AuthorizationPolicy
+      - equal:
+          path: metadata.name
+          value: sftp-allow-acme
+      - equal:
+          path: metadata.namespace
+          value: sftp
+      - equal:
+          path: spec.action
+          value: ALLOW
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app: sftpgo
+      - equal:
+          path: spec.rules
+          value:
+            - from:
+                - source:
+                    ipBlocks:
+                      - 203.0.113.10/32
+                      - 198.51.100.0/24
+              to:
+                - operation:
+                    ports:
+                      - "2222"
+
+  - it: renders no whitelist without CIDR (it would match every source)
+    set:
+      externalSftp:
+        allowedCidr: []
+    template: external-sftp/authorizationpolicy-istio.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: refuses a /0 CIDR
+    set:
+      externalSftp:
+        allowedCidr:
+          - 0.0.0.0/0
+    template: external-sftp/validate.yaml
+    asserts:
+      - failedTemplate:
+          errorPattern: 'externalSftp.allowedCidr: "0\.0\.0\.0/0" must be an IPv4 CIDR'
+
+  - it: refuses an address without prefix
+    set:
+      externalSftp:
+        allowedCidr:
+          - 203.0.113.10
+    template: external-sftp/validate.yaml
+    asserts:
+      - failedTemplate:
+          errorPattern: 'externalSftp.allowedCidr: "203\.0\.113\.10" must be an IPv4 CIDR'
+
+  - it: refuses a username the SFTP server would refuse
+    set:
+      externalSftp:
+        users:
+          - username: acme ftp
+            publicKeys:
+              - ssh-ed25519 AAAAC3Nza acme@host
+    template: external-sftp/validate.yaml
+    asserts:
+      - failedTemplate:
+          errorPattern: 'username "acme ftp" may only hold'
+
+  - it: refuses an account without public key
+    set:
+      externalSftp:
+        users:
+          - username: acme-ftp
+            publicKeys: []
+    template: external-sftp/validate.yaml
+    asserts:
+      - failedTemplate:
+          errorMessage: "externalSftp.users: acme-ftp has no public key"
+
+  - it: refuses a chroot outside the EFS
+    set:
+      externalSftp:
+        users:
+          - username: acme-ftp
+            publicKeys:
+              - ssh-ed25519 AAAAC3Nza acme@host
+            chroot: batch/../../other
+    template: external-sftp/validate.yaml
+    asserts:
+      - failedTemplate:
+          errorPattern: 'chroot "batch/\.\./\.\./other" must be a path below the EFS root'
+
+  - it: requires the customer and the EFS name
+    set:
+      externalSftp:
+        customer: ""
+    template: external-sftp/validate.yaml
+    asserts:
+      - failedTemplate:
+          errorPattern: 'externalSftp.customer: "" must be a lowercase DNS label'
+
+  - it: refuses a customer name too long for the volume names of the SFTP pods
+    set:
+      externalSftp:
+        customer: a-customer-name-that-is-much-too-long-for-a-volume-name-x
+    template: external-sftp/validate.yaml
+    asserts:
+      - failedTemplate:
+          errorPattern: 'at most 54 characters'
+
+  - it: requires the customer EFS volume
+    set:
+      backCore:
+        persistentVolume:
+          enabled: false
+    template: external-sftp/validate.yaml
+    asserts:
+      - failedTemplate:
+          errorPattern: externalSftp needs backCore.persistentVolume.enabled

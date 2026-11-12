@@ -944,6 +944,40 @@ backCore:
 #                                            Back Additional components                                                     #
 #############################################################################################################################
 
+# -- Shared SFTP server outside this release, under Istio in its own namespace
+# (saas-plateform chart, component sftp). Opt-in: renders, in the namespace of
+# that server, what it needs for this customer:
+# - a second PV + PVC on the customer EFS, the same volume as
+#   backCore.persistentVolume (a pod only mounts PVCs of its own namespace);
+# - the SFTP accounts (ConfigMap sftp-users-<customer>), read at each login;
+# - the IP whitelist (AuthorizationPolicy sftp-allow-<customer>).
+externalSftp:
+  # -- Render the objects of this customer for the shared SFTP server
+  enabled: false
+  # -- Namespace of the SFTP server
+  namespace: sftp
+  # -- Labels of the SFTP server pods, selector of the whitelist policy
+  selector:
+    app: sftpgo
+  # -- SFTP port of the SFTP server pods
+  port: 2222
+  # -- Customer name: suffix of the objects, label sftp.coopengo.com/customer
+  customer: ""
+  # -- Name of the customer EFS: PV and PVC sftp-<efsName>, mounted by the SFTP
+  # server at /mnt/<customer>/<efsName>
+  efsName: ""
+  # -- SFTP accounts of the customer. chroot: home below the EFS root (empty: the EFS root)
+  # e.g:
+  # users:
+  #   - username: acme-ftp
+  #     publicKeys:
+  #       - ssh-ed25519 AAAAC3Nza... someone@acme
+  #     chroot: batch/exportdb
+  users: []
+  # -- Source CIDRs allowed on the SFTP port: IPv4 with a prefix, never /0.
+  # Empty: no policy, the SFTP server refuses every source of this customer
+  allowedCidr: []
+
 libroconv:
   # -- Deploy libroconv container(s)
   enabled: false
