@@ -1,0 +1,20 @@
+{{- if .Values.externalSftp.enabled }}
+{{- $root := include "externalSftp.root" . }}
+# SFTP accounts of the customer, one SFTPGo user per key, read by the SFTP
+# server at each login: an update needs no restart.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ printf "sftp-users-%s" .Values.externalSftp.customer }}
+  namespace: {{ .Values.externalSftp.namespace }}
+  labels:
+    {{- include "externalSftp.labels" . | nindent 4 }}
+data:
+  {{- range .Values.externalSftp.users }}
+  {{- $home := $root }}
+  {{- with .chroot }}
+  {{- $home = printf "%s/%s" $root (trimAll "/" .) }}
+  {{- end }}
+  {{ printf "%s.json" .username }}: {{ dict "username" .username "status" 1 "home_dir" $home "public_keys" .publicKeys "permissions" (dict "/" (list "*")) | toJson | quote }}
+  {{- end }}
+{{- end }}
