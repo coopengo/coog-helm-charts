@@ -966,6 +966,11 @@ externalSftp:
   # -- Name of the customer EFS: PV and PVC sftp-<efsName>, mounted by the SFTP
   # server at /mnt/<customer>/<efsName>
   efsName: ""
+  # -- Name of the PV and PVC in the SFTP namespace (empty: sftp-<efsName>).
+  # The storage of a PV cannot change: give another name when the customer
+  # volume moves to another storage (EFS to S3 Files). The mount path
+  # /mnt/<customer>/<efsName> stays the same
+  volumeName: ""
   # -- SFTP accounts of the customer. chroot: home below the EFS root (empty: the EFS root)
   # e.g:
   # users:

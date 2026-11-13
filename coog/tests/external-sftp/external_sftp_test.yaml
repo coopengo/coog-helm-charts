@@ -100,6 +100,60 @@ tests:
           path: spec.storageClassName
           value: efs-sc
 
+  - it: renames the PV for another storage, with the same labels
+    template: external-sftp/pv.yaml
+    set:
+      backCore:
+        persistentVolume:
+          customPersistentVolume:
+            mountOptions: []
+            csi:
+              volumeHandle: s3files:fs-0123456789abcdef0
+      externalSftp:
+        volumeName: sftp-acme-sandbox-workspace-io-s3
+    asserts:
+      - equal:
+          path: metadata.name
+          value: sftp-acme-sandbox-workspace-io-s3
+      - equal:
+          path: spec.claimRef.name
+          value: sftp-acme-sandbox-workspace-io-s3
+      - equal:
+          path: spec.csi.volumeHandle
+          value: s3files:fs-0123456789abcdef0
+      - equal:
+          path: metadata.labels["sftp.coopengo.com/efs-name"]
+          value: acme-sandbox-workspace-io
+
+  - it: renames the PVC for another storage, with the labels the SFTP server mounts it by
+    template: external-sftp/pvc.yaml
+    set:
+      externalSftp:
+        volumeName: sftp-acme-sandbox-workspace-io-s3
+    asserts:
+      - equal:
+          path: metadata.name
+          value: sftp-acme-sandbox-workspace-io-s3
+      - equal:
+          path: spec.volumeName
+          value: sftp-acme-sandbox-workspace-io-s3
+      - equal:
+          path: metadata.labels["sftp.coopengo.com/customer"]
+          value: acme
+      - equal:
+          path: metadata.labels["sftp.coopengo.com/efs-name"]
+          value: acme-sandbox-workspace-io
+
+  - it: keeps the account homes on a renamed volume (same mount path)
+    template: external-sftp/configmap-users.yaml
+    set:
+      externalSftp:
+        volumeName: sftp-acme-sandbox-workspace-io-s3
+    asserts:
+      - equal:
+          path: data["acme-ftp.json"]
+          value: '{"home_dir":"/mnt/acme/acme-sandbox-workspace-io","permissions":{"/":["*"]},"public_keys":["ssh-ed25519 AAAAC3Nza acme@host"],"status":1,"username":"acme-ftp"}'
+
   - it: renders one SFTPGo account per user, chrooted below the EFS root
     template: external-sftp/configmap-users.yaml
     asserts:
@@ -229,6 +283,15 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: 'at most 54 characters'
+
+  - it: refuses a volume name Kubernetes would refuse
+    set:
+      externalSftp:
+        volumeName: Sftp_Acme
+    template: external-sftp/validate.yaml
+    asserts:
+      - failedTemplate:
+          errorPattern: 'externalSftp.volumeName: "Sftp_Acme" must be a lowercase object name'
 
   - it: requires the customer EFS volume
     set:
