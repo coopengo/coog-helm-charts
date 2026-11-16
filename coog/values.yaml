@@ -608,7 +608,7 @@ rabbitmq:
     # publishes them again later, instead of filling the memory of the shared
     # broker until its alarm blocks every tenant.
     queueLimit:
-      enabled: false
+      enabled: true
       maxLength: 100000
 
 # -- ClamAV configuration for backCore binary scanner

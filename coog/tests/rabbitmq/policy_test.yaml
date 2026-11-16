@@ -14,23 +14,11 @@ tests:
       - hasDocuments:
           count: 0
 
-  - it: Renders nothing in operator mode while the limit is off (default)
+  - it: Caps every queue of the vhost in operator mode (default), refusing new messages beyond
     set:
       rabbitmq:
         mode: operator
         isManaged: false
-    asserts:
-      - hasDocuments:
-          count: 0
-
-  - it: Caps every queue of the vhost once enabled, refusing new messages beyond
-    set:
-      rabbitmq:
-        mode: operator
-        isManaged: false
-        operator:
-          queueLimit:
-            enabled: true
     asserts:
       - hasDocuments:
           count: 1
@@ -77,7 +65,6 @@ tests:
             name: rabbitmq-staging
             namespace: rabbitmq-staging-ns
           queueLimit:
-            enabled: true
             maxLength: 250000
     asserts:
       - equal:
@@ -90,3 +77,14 @@ tests:
           path: spec.rabbitmqClusterReference.name
           value: rabbitmq-staging
 
+  - it: Renders nothing when the limit is disabled
+    set:
+      rabbitmq:
+        mode: operator
+        isManaged: false
+        operator:
+          queueLimit:
+            enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
