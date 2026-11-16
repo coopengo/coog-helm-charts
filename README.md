@@ -176,7 +176,7 @@ rabbitmq:
       configure: ".*"
       write: ".*"
       read: ".*"
-    queueLimit:                       # défaut : inactif ; 100 000 messages par file une fois activé
+    queueLimit:                       # défaut : actif, 100 000 messages par file
       enabled: true
       maxLength: 100000
   auth:
@@ -190,7 +190,7 @@ Le chart pose une `Policy` `queue-limit` sur le vhost du tenant : chaque file ga
 
 - Choisir `maxLength` au-dessus du plus gros run légitime du tenant : un run publie un message par job, dans la file de son batch.
 - Une seule `Policy` s'applique à une file (la plus prioritaire) : une autre `Policy` posée sur le vhost avec une priorité supérieure à 0 remplacerait ce plafond.
-- **Mise en service** : inactif par défaut (le rendu du chart ne change pas). L'activer (`enabled: true`) dans les values par défaut des pipelines tenants, et ajuster `maxLength` dans les values d'un tenant dont un run légitime dépasse le plafond. Vérifier ensuite que la `Policy` est `Ready` (`kubectl -n <tenant> get policies.rabbitmq.com`) et posée sur le broker (`rabbitmqctl list_policies -p <vhost>`).
+- **Mise en service** : actif par défaut en mode operator : à la mise à jour du chart, chaque tenant reçoit la `Policy`. Avant, vérifier qu'aucune file légitime n'approche `maxLength` (pic des 30 derniers jours par file : `max_over_time(max by (vhost, queue) (rabbitmq_detailed_queue_messages_ready{...})[30d:5m])`), et ajuster `maxLength` dans les values d'un tenant dont un run légitime dépasse le plafond. Vérifier ensuite que la `Policy` est `Ready` (`kubectl -n <tenant> get policies.rabbitmq.com`) et posée sur le broker (`rabbitmqctl list_policies -p <vhost>`).
 - **Retour arrière** : `enabled: false` puis `helm upgrade` : la `Policy` est supprimée et le Topology Operator retire la policy du broker. Les messages déjà en file ne sont pas touchés.
 
 Le password est posé dans un Secret K8s `<release>-rabbitmq-credentials` du namespace tenant et importé par le `User` CRD via `importCredentialsSecret` — le Topology Operator l'applique au user créé sur `rabbitmq-production`.
