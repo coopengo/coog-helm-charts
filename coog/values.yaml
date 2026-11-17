@@ -602,6 +602,14 @@ rabbitmq:
       configure: ".*"
       write: ".*"
       read: ".*"
+    # -- Cap on the ready messages of each queue of the vhost (Policy CRD).
+    # Beyond it the broker refuses the new messages of this vhost only
+    # (`overflow: reject-publish`): Coog flags them `enqueue_failed` and
+    # publishes them again later, instead of filling the memory of the shared
+    # broker until its alarm blocks every tenant.
+    queueLimit:
+      enabled: true
+      maxLength: 100000
 
 # -- ClamAV configuration for backCore binary scanner
 clamav:

@@ -177,10 +177,22 @@ rabbitmq:
       configure: ".*"
       write: ".*"
       read: ".*"
+    queueLimit:                       # défaut : actif, 100 000 messages par file
+      enabled: true
+      maxLength: 100000
   auth:
     username: "<user-tenant>"
     password: "<password-random>"
 ```
+
+### Plafond de messages par file (`rabbitmq.operator.queueLimit`)
+
+Le chart pose une `Policy` `queue-limit` sur le vhost du tenant : chaque file garde au plus `maxLength` messages prêts (`max-length`), et au-delà le broker refuse les nouveaux messages de ce vhost seulement (`overflow: reject-publish`). Coog passe alors les publications refusées en `enqueue_failed` et les republie plus tard (cron `resend_failed_tasks_to_enqueue`), au lieu qu'une file qui s'emballe remplisse la mémoire du broker partagé jusqu'à son alarme, qui bloque les publications de tous les tenants (PINTE-30188).
+
+- Choisir `maxLength` au-dessus du plus gros run légitime du tenant : un run publie un message par job, dans la file de son batch.
+- Une seule `Policy` s'applique à une file (la plus prioritaire) : une autre `Policy` posée sur le vhost avec une priorité supérieure à 0 remplacerait ce plafond.
+- **Mise en service** : actif par défaut en mode operator : à la mise à jour du chart, chaque tenant reçoit la `Policy`. Avant, vérifier qu'aucune file légitime n'approche `maxLength` (pic des 30 derniers jours par file : `max_over_time(max by (vhost, queue) (rabbitmq_detailed_queue_messages_ready{...})[30d:5m])`), et ajuster `maxLength` dans les values d'un tenant dont un run légitime dépasse le plafond. Vérifier ensuite que la `Policy` est `Ready` (`kubectl -n <tenant> get policies.rabbitmq.com`) et posée sur le broker (`rabbitmqctl list_policies -p <vhost>`).
+- **Retour arrière** : `enabled: false` puis `helm upgrade` : la `Policy` est supprimée et le Topology Operator retire la policy du broker. Les messages déjà en file ne sont pas touchés.
 
 Le password est posé dans un Secret K8s `<release>-rabbitmq-credentials` du namespace tenant et importé par le `User` CRD via `importCredentialsSecret` — le Topology Operator l'applique au user créé sur `rabbitmq-production`.
 
