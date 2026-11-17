@@ -5,10 +5,13 @@ renders in that namespace for the customer (externalSftp.*).
 */}}
 
 {{/*
-Name of the PV and of the PVC of the customer EFS in the SFTP namespace.
+Name of the PV and of the PVC of the customer EFS in the SFTP namespace:
+externalSftp.volumeName, sftp-<efsName> by default. The storage of a PV cannot
+change: a customer volume moved to another storage (EFS to S3 Files) needs
+another name, while its labels and mount path stay the same.
 */}}
 {{- define "externalSftp.volumeName" -}}
-{{- printf "sftp-%s" .Values.externalSftp.efsName -}}
+{{- .Values.externalSftp.volumeName | default (printf "sftp-%s" .Values.externalSftp.efsName) -}}
 {{- end -}}
 
 {{/*
@@ -41,6 +44,11 @@ too widely. Run by validate.yaml, so that one check covers every object.
 {{- end -}}
 {{- if not (regexMatch $label (toString $s.efsName)) -}}
 {{- fail (printf "externalSftp.efsName: %q must be a lowercase DNS label (letters, digits, '-', at most 63 characters)" (toString $s.efsName)) -}}
+{{- end -}}
+{{- with $s.volumeName -}}
+{{- if not (regexMatch "^[a-z0-9]([-a-z0-9]{0,251}[a-z0-9])?$" (toString .)) -}}
+{{- fail (printf "externalSftp.volumeName: %q must be a lowercase object name (letters, digits, '-', at most 253 characters)" (toString .)) -}}
+{{- end -}}
 {{- end -}}
 {{- if not (and .Values.backCore.persistentVolume.enabled .Values.backCore.persistentVolume.customPersistentVolume) -}}
 {{- fail "externalSftp needs backCore.persistentVolume.enabled and backCore.persistentVolume.customPersistentVolume: the SFTP server mounts the same EFS" -}}
