@@ -1,0 +1,27 @@
+{{- /*
+Cap on the ready messages of every queue of the tenant vhost. Beyond it the
+broker refuses the new messages of this vhost only (reject-publish): Coog
+flags the refused publications enqueue_failed and publishes them again later,
+instead of one queue filling the memory of the shared broker until its alarm
+blocks the publishers of every tenant (PINTE-30188).
+*/ -}}
+{{- if and (eq (include "coog.rabbitmq.operatorMode" .) "true") .Values.rabbitmq.operator.queueLimit.enabled }}
+apiVersion: rabbitmq.com/v1beta1
+kind: Policy
+metadata:
+  name: {{ printf "%s-rabbitmq-queue-limit" (include "general.names.short" .) }}
+  namespace: {{ .Release.Namespace }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  name: queue-limit
+  vhost: {{ include "coog.rabbitmq.vhost" . | quote }}
+  pattern: ".*"
+  applyTo: queues
+  priority: 0
+  definition:
+    max-length: {{ int .Values.rabbitmq.operator.queueLimit.maxLength }}
+    overflow: reject-publish
+  rabbitmqClusterReference:
+    name: {{ .Values.rabbitmq.operator.cluster.name | quote }}
+    namespace: {{ .Values.rabbitmq.operator.cluster.namespace | quote }}
+{{- end }}
