@@ -207,14 +207,6 @@ tests:
               requests:
                 cpu: 100m
                 memory: 250Mi
-          databaseMaintenance:
-            resources:
-              limits:
-                cpu: 200m
-                memory: 500Mi
-              requests:
-                cpu: 100m
-                memory: 250Mi
       secrets:
         extraEnvVar:
           ENABLE_GLOBAL_SECRET: foo
@@ -322,7 +314,7 @@ tests:
             name: http
             containerPort: 8000
       # [Start] Check resources limites & requests
-      # Pod-level resources: max of the worker and database-maintenance resources
+      # Pod-level resources: the worker resources (the database-maintenance container has none of its own)
       - equal:
           path: spec.template.spec.resources
           value:
@@ -530,47 +522,16 @@ tests:
             - ep
             - readiness_sub_service
 
-  - it: Test pod-level resources when database maintenance only overrides memory
+  - it: Test pod-level resources without limits on the worker
     template: celery/deployment.yaml
     set:
       backCore:
         celery:
           worker:
             resources:
-              limits:
-                cpu: 1000m
-                memory: 2500Mi
-              requests:
-                cpu: 500m
-                memory: 1250Mi
-          databaseMaintenance:
-            resources:
-              limits:
-                memory: 1000Mi
-              requests:
-                memory: 500Mi
+              limits: null
     asserts:
-      # max per resource: the worker's, above database maintenance (memory override,
-      # cpu from the chart defaults 300m / 150m)
-      - equal:
-          path: spec.template.spec.resources
-          value:
-            limits:
-              cpu: 1000m
-              memory: 2500Mi
-            requests:
-              cpu: 500m
-              memory: 1250Mi
-
-  - it: Test pod-level resources without limits on one container
-    template: celery/deployment.yaml
-    set:
-      backCore:
-        celery:
-          databaseMaintenance:
-            resources: null
-    asserts:
-      # the pod was not bounded: no pod limits, requests of the worker only
+      # the pod is not bounded: no pod limits, requests of the worker only
       - equal:
           path: spec.template.spec.resources
           value:
@@ -589,14 +550,6 @@ tests:
             resources:
               limits:
                 cpu: 200m
-                memory: 70Mi
-              requests:
-                cpu: 25m
-                memory: 35Mi
-          databaseMaintenance:
-            resources:
-              limits:
-                cpu: 50m
                 memory: 70Mi
               requests:
                 cpu: 25m
@@ -644,12 +597,5 @@ tests:
             requests:
               cpu: 150m
               memory: 350Mi
-      - equal:
+      - notExists:
           path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources
-          value:
-            limits:
-              cpu: 300m
-              memory: 700Mi
-            requests:
-              cpu: 150m
-              memory: 350Mi
