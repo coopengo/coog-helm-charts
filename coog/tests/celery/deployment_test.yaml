@@ -536,8 +536,8 @@ tests:
           path: spec.template.spec.resources
           value:
             requests:
-              cpu: 150m
-              memory: 350Mi
+              cpu: 250m
+              memory: 600Mi
 
   - it: Test pod-level resources are at least the istio sidecar's
     template: celery/deployment.yaml
@@ -592,10 +592,10 @@ tests:
           path: spec.template.spec.containers[?(@.name == "coog-celery")].resources
           value:
             limits:
-              cpu: 300m
-              memory: 700Mi
+              cpu: 500m
+              memory: 1200Mi
             requests:
-              cpu: 150m
-              memory: 350Mi
+              cpu: 250m
+              memory: 600Mi
       - notExists:
           path: spec.template.spec.containers[?(@.name == "coog-celery-database-maintenance")].resources
