@@ -119,7 +119,7 @@ Valeur du pod, pour chaque ressource (cpu, mémoire, requests et limits séparé
 | Composant | Valeurs prises en compte |
 | :-- | :-- |
 | coog | `backCore.coog.resources`, `backCore.coog.initContainers.resources` |
-| celery | `backCore.celery.worker.resources`, `backCore.celery.databaseMaintenance.resources` |
+| celery | `backCore.celery.worker.resources` |
 | customerBackend, customerFrontend | `resources`, `initContainers.resources` |
 | autres composants | `resources` |
 | tous, si `istio.enabled` | `istio.proxy.resources` (sidecar `istio-proxy`) |
@@ -132,7 +132,7 @@ Valeur du pod, pour chaque ressource (cpu, mémoire, requests et limits séparé
 
 ### Passage d'un tenant
 
-Les pods sont recréés. Un pod à plusieurs conteneurs reçoit le max de leurs valeurs, partagé par tous : pour celery, `max(worker, maintenance, sidecar)` pour les trois conteneurs. Vérifier que les valeurs celery des tenants couvrent ce partage avant le passage.
+Les pods sont recréés. Un pod à plusieurs conteneurs reçoit le max de leurs valeurs, partagé par tous : pour celery, `max(worker, sidecar)` pour les trois conteneurs (le conteneur de maintenance n'a pas de valeur propre). Vérifier que les valeurs celery des tenants couvrent ce partage avant le passage.
 
 ### Revenir aux ressources par conteneur
 
