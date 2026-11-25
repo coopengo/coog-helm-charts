@@ -164,7 +164,14 @@ spec:
       redirectCode: 301
   {{- end }}
 
-  {{- if include "gateway.enabled" $ }}
+  {{- if (or $.Values.frontCore.enabled
+           $.Values.apiB2c.enabled
+           $.Values.apiReferential.enabled
+           $.Values.b2c.enabled
+           $.Values.b2b.enabled
+           $.Values.customerBackend.enabled
+           $.Values.customerFrontend.enabled
+           $.Values.backCore.bus.enabled) }}
   - name: gateway
     match:
     - uri:

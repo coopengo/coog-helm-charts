@@ -148,8 +148,10 @@ Usage: {{- include "coog.jwt.validate" . }}
 
 {{/*
 Whether the gateway (coog-portal-gateway) is deployed: for the portals, or for the Tryton
-bus, which is only reached through it. Gates the gateway objects, what its pod reads
-(frontcore configuration, MongoDB secret) and its route in the VirtualService.
+bus, which is only reached through it. Gates the gateway objects and what its pod reads
+(frontcore configuration, MongoDB secret). The Istio templates (gateway route in the
+VirtualService, gateway AuthorizationPolicy) keep their own copy of this list: keep them
+in sync.
 Usage: {{- if include "gateway.enabled" . }}
 */}}
 {{- define "gateway.enabled" -}}
