@@ -123,7 +123,7 @@ issued by one component cannot be validated by the others:
 
 This helper only validates; it emits nothing. It rejects the legacy per-component keys
 (which would silently produce a duplicate YAML key in the rendered secret) and enforces
-the value when frontCore.enabled is true.
+the value when frontCore.enabled or backCore.bus.enabled is true.
 
 Usage: {{- include "coog.jwt.validate" . }}
 */}}
@@ -141,6 +141,40 @@ Usage: {{- include "coog.jwt.validate" . }}
 {{- if (and .Values.frontCore.enabled (not (and .Values.secrets .Values.secrets.jwt_encryption))) -}}
 {{- fail "secrets.jwt_encryption is mandatory when frontCore.enabled is true: it is the JWT key shared by the gateway, the frontCore components and the back office. Generate one with `openssl rand -base64 32`." -}}
 {{- end -}}
+{{- if (and .Values.backCore.bus.enabled (not (and .Values.secrets .Values.secrets.jwt_encryption))) -}}
+{{- fail "secrets.jwt_encryption is mandatory when backCore.bus.enabled is true: the bus is served through the gateway, which does not start without its JWT key. Generate one with `openssl rand -base64 32`." -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Whether the gateway (coog-portal-gateway) is deployed: for the portals, or for the Tryton
+bus, which is only reached through it. Gates the gateway objects, what its pod reads
+(frontcore configuration, MongoDB secret) and its route in the VirtualService.
+Usage: {{- if include "gateway.enabled" . }}
+*/}}
+{{- define "gateway.enabled" -}}
+{{- if (or .Values.frontCore.enabled
+          .Values.apiB2c.enabled
+          .Values.apiReferential.enabled
+          .Values.b2c.enabled
+          .Values.b2b.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled
+          .Values.backCore.bus.enabled) -}}
+true
+{{- end -}}
+{{- end -}}
+
+{{/*
+URL the coog login announces to Sao for the bus: the gateway route to the bus, on the host
+Sao is served from (the same host as TRYTOND_WEB__CORS). The trailing slash matters: Sao
+resolves "<db>/bus" against it.
+Usage: {{ include "backcore.bus.urlHost" . }}
+*/}}
+{{- define "backcore.bus.urlHost" -}}
+{{- $mainHost := ternary (default .Values.ingress.host .Values.istio.mainHost) .Values.ingress.host .Values.istio.enabled -}}
+{{- $basePath := trimSuffix "/" (toString (default "" .Values.frontCore.gateway.extraEnvVar.COOG_GATEWAY_BASE_PATH)) -}}
+{{- printf "https://%s%s/coog/" $mainHost $basePath -}}
 {{- end -}}
 
 

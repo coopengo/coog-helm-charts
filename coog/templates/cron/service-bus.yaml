@@ -1,0 +1,15 @@
+{{- if .Values.backCore.bus.enabled }}
+{{- /* The Tryton bus runs in the cron pod: the gateway reaches it through this Service */}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ printf "%s-bus" (include "general.names.short" .) }}
+  labels: {{- include "general.labels.standard" . | nindent 4 }}
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: bus
+  selector: {{- include "general.labels.matchLabels" . | nindent 4 }}
+{{- end }}

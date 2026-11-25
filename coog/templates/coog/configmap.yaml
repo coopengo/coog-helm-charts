@@ -9,6 +9,12 @@ data:
   {{- if (or .Values.customerBackend.enabled .Values.customerFrontend.enabled) }}
   TRYTOND_STRAPI__URL: {{ printf "http://%s-customer-backend" (include "general.names.short" .) | quote }}
   {{- end }}
+  {{- if .Values.backCore.bus.enabled }}
+  # The login announces the bus to Sao. url_host is set on coog only: coog then refuses
+  # bus requests itself (401), so no long polling ever holds a coog worker
+  TRYTOND_BUS__ALLOW_SUBSCRIBE: "1"
+  TRYTOND_BUS__URL_HOST: {{ include "backcore.bus.urlHost" . | quote }}
+  {{- end }}
   {{- range $key, $value := .Values.backCore.coog.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
   {{- end }}

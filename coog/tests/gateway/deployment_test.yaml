@@ -413,6 +413,16 @@ tests:
       - hasDocuments:
           count: 1
 
+  - it: Test gateway enabled deployment by the bus alone
+    template: gateway/deployment.yaml
+    set:
+      backCore:
+        bus:
+          enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
   - it: Test serviceAccountName is not set when serviceAccount.name is empty
     template: gateway/deployment.yaml
     set:

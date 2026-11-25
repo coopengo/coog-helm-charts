@@ -121,6 +121,7 @@ Valeur du pod, pour chaque ressource (cpu, mémoire, requests et limits séparé
 | coog | `backCore.coog.resources`, `backCore.coog.initContainers.resources` |
 | celery | `backCore.celery.worker.resources`, `backCore.celery.databaseMaintenance.resources` |
 | customerBackend, customerFrontend | `resources`, `initContainers.resources` |
+| cron | `backCore.cron.resources`, `backCore.bus.resources` (bus activé et `resources` non vide) |
 | autres composants | `resources` |
 | tous, si `istio.enabled` | `istio.proxy.resources` (sidecar `istio-proxy`) |
 
@@ -141,6 +142,72 @@ podLevelResources: false
 ```
 
 Le rendu est alors identique à celui des versions précédentes du chart.
+
+## Bus Tryton (`backCore.bus`)
+
+Option **opt-in**, désactivée par défaut. Le bus Tryton pousse les notifications vers Sao (long polling). Il tourne dans un conteneur `bus` (`ep bus`) du pod cron et n'est joignable que par la gateway, sous `/gateway/coog/<db>/bus` : c'est le seul chemin sous lequel le navigateur envoie le cookie de session, que la gateway réécrit en `Path=/gateway/coog/<db>`.
+
+```text
+Sao servie par la gateway (/gateway/sao/)
+       │ POST /gateway/coog/<db>/bus + cookie
+       ▼
+┌─────────────┐  TLS      ┌───────────────────┐  /gateway/  ┌───────────────┐
+│ NLB AWS     ├──────────►│ ingressgateway    ├────────────►│ gateway       │
+│ TCP, 350 s  │           │ Istio             │             │ /coog/:db/bus │
+└─────────────┘           └───────────────────┘             └───────┬───────┘
+       ┌──────────── COOG_BUS_URL = http://<short>-bus ─────────────┘
+       ▼
+┌─────────────┐  port 80  ┌───────────────────┐
+│ Service     ├──────────►│ pod cron : bus    │
+│ <short>-bus │           │ ep bus, port 8001 │
+└─────────────┘           └─────────┬─────────┘
+       ┌─ LISTEN sur le canal bus ──┘
+       ▼
+PostgreSQL du tenant (NOTIFY : coog, celery, cron)
+```
+
+Si le bus ne répond pas (redéploiement, panne), Sao réessaie seule avec un délai croissant, jusqu'à 10 min entre deux essais.
+
+```yaml
+backCore:
+  bus:
+    enabled: true
+    longPollingTimeout: 50            # secondes, défaut
+    resources: {}                     # défaut : partage l'enveloppe du pod cron
+secrets:
+  jwt_encryption: "<clé>"             # obligatoire : le bus active la gateway
+```
+
+| Objet | Ce que l'option rend |
+| :-- | :-- |
+| pod cron | conteneur `coog-cron-bus` : `ep bus`, `TRYTOND_WEB__LISTEN=0.0.0.0:8001`, `TRYTOND_WEB__CORS=http://<short>-bus` (l'origine vers laquelle la gateway réécrit l'en-tête `Origin`, comme pour coog), `TRYTOND_BUS__ALLOW_SUBSCRIBE=1`, `TRYTOND_BUS__LONG_POLLING_TIMEOUT`, `TRYTOND_DATABASE_NAMES` vide (pas de préchargement du pool : `ep bus` délie les modules coog), sondes `tcpSocket` |
+| Service `<short>-bus` | ClusterIP, port 80 vers le port `bus` des pods cron |
+| configmap coog | `TRYTOND_BUS__ALLOW_SUBSCRIBE=1`, `TRYTOND_BUS__URL_HOST=https://<hôte>/gateway/coog/` |
+| configmap gateway | `COOG_BUS_URL=http://<short>-bus` |
+| gateway | déployée même sans portail : deployment, service, configmaps et secrets qu'elle lit, route `/gateway/` du VirtualService |
+
+- **Prérequis** : coog ≥ 26.28 (le login annonce l'URL du bus et Sao la suit), une gateway (coog-portal-api) qui a la route `/coog/:db/bus`, `secrets.jwt_encryption`, et Sao ouverte par la gateway (`/gateway/sao/`).
+- **Sao servie par coog (`/`)** : non supportée. `TRYTOND_BUS__URL_HOST` n'est posé que sur coog, qui refuse donc lui-même les appels au bus (401) : aucun long polling n'occupe un worker coog. Il n'est jamais posé sur le bus, qui répondrait alors 401 à tout.
+- **Attente** : 50 s par défaut, loin sous le premier délai qui coupe sur le chemin, l'inactivité TCP du NLB AWS (350 s). Envoy n'a pas de délai d'inactivité et la route `/gateway/` suit `istio.gateway.routing.timeout`. Attention : un `istio.gateway.routing.retry.perTryTimeout` inférieur à l'attente coupe chaque requête du bus, puis la rejoue.
+- **Ressources** : sans `resources` propres, le bus partage l'enveloppe du pod cron (`backCore.cron.resources`) et la limite mémoire avec le cron, qui charge tout le pool. Mesurer la RAM du bus (`kubectl top pod --containers`) avant de relever `backCore.cron.resources` ou de donner des `resources` au bus.
+- **Plusieurs pods cron** : chaque bus reçoit toutes les notifications de la base (LISTEN/NOTIFY), aucune affinité n'est nécessaire.
+
+### Mise en service
+
+1. Déployer une gateway qui a la route du bus, puis le chart avec `backCore.bus.enabled: true`.
+2. Ouvrir Sao par `https://<hôte>/gateway/sao/` : un `POST /gateway/coog/<db>/bus` reste en attente, puis répond 200 au bout de `longPollingTimeout`.
+3. Lancer l'action « Message global » : la notification arrive dans les sessions ouvertes.
+4. Logs du conteneur `coog-cron-bus` : dans `get bus messages … from <user>@<adresse>`, l'adresse est celle du poste client (`TRYTOND_WEB__NUM_PROXIES=1`).
+
+### Retour arrière
+
+```yaml
+backCore:
+  bus:
+    enabled: false
+```
+
+Le conteneur, le Service et les variables de coog et de la gateway disparaissent. La gateway n'est retirée que si aucun portail ne l'utilise.
 
 ## Mode RabbitMQ : `legacy` vs `operator`
 
