@@ -4,7 +4,8 @@
           .Values.b2c.enabled
           .Values.b2b.enabled
           .Values.customerBackend.enabled
-          .Values.customerFrontend.enabled)
+          .Values.customerFrontend.enabled
+          .Values.backCore.bus.enabled)
 -}}
 {{- if .Values.istio.enabled }}
 apiVersion: security.istio.io/v1

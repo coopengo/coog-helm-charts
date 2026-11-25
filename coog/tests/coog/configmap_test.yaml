@@ -100,3 +100,44 @@ tests:
             http://test-coog
             https://cors0.local
             https://cors1.local
+
+  # [Start] Tryton bus (backCore.bus)
+  - it: Test bus variables absent by default
+    asserts:
+      - notExists:
+          path: data.TRYTOND_BUS__ALLOW_SUBSCRIBE
+      - notExists:
+          path: data.TRYTOND_BUS__URL_HOST
+
+  - it: Test bus announced at login, through the gateway (istio main host)
+    set:
+      istio:
+        enabled: true
+        mainHost: acme.example.com
+      backCore:
+        bus:
+          enabled: true
+    asserts:
+      - equal:
+          path: data.TRYTOND_BUS__ALLOW_SUBSCRIBE
+          value: "1"
+      - equal:
+          path: data.TRYTOND_BUS__URL_HOST
+          value: https://acme.example.com/gateway/coog/
+
+  - it: Test bus URL host without istio, custom gateway base path
+    set:
+      ingress:
+        host: acme.example.com
+      frontCore:
+        gateway:
+          extraEnvVar:
+            COOG_GATEWAY_BASE_PATH: /portal-gateway/
+      backCore:
+        bus:
+          enabled: true
+    asserts:
+      - equal:
+          path: data.TRYTOND_BUS__URL_HOST
+          value: https://acme.example.com/portal-gateway/coog/
+  # [End] Tryton bus

@@ -53,7 +53,12 @@ spec:
             claimName: {{ default (printf "%s-%s" .Release.Name .Values.backCore.persistentVolume.name | trunc 63 | trimSuffix "-") .Values.backCore.persistentVolume.existingClaim }}
     {{- end }}
       {{- if .Values.podLevelResources }}
-      {{- with include "general.resources.pod" (dict "containers" (list .Values.backCore.cron.resources) "context" $) }}
+      {{- /* The bus counts only when it declares resources: otherwise it shares the cron envelope */}}
+      {{- $containers := list .Values.backCore.cron.resources }}
+      {{- if (and .Values.backCore.bus.enabled .Values.backCore.bus.resources) }}
+      {{- $containers = append $containers .Values.backCore.bus.resources }}
+      {{- end }}
+      {{- with include "general.resources.pod" (dict "containers" $containers "context" $) }}
       resources: {{- . | nindent 8 }}
       {{- end }}
       {{- end }}
@@ -127,6 +132,75 @@ spec:
           {{- if not .Values.podLevelResources }}
           resources: {{- toYaml .Values.backCore.cron.resources | nindent 12 }}
           {{- end }}
+        {{- if .Values.backCore.bus.enabled }}
+        # Tryton bus (long polling), reached through the <short>-bus Service from the gateway
+        - name: {{ printf "%s-bus" (include "general.names.name" .) }}
+          image: "{{ default .Values.image.repository .Values.backCore.image.repository }}/{{ .Values.backCore.image.name }}:{{ default .Values.image.tag .Values.backCore.image.tag }}"
+          imagePullPolicy: {{ default .Values.image.pullPolicy .Values.backCore.image.pullPolicy | quote }}
+          securityContext:
+            seccompProfile:
+              type: RuntimeDefault
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            privileged: false
+            procMount: Default
+            runAsNonRoot: true
+            runAsUser: {{ default .Values.securityContext.runAsUser .Values.backCore.securityContext.runAsUser }}
+            runAsGroup: {{ default .Values.securityContext.runAsGroup .Values.backCore.securityContext.runAsGroup }}
+          command: ['ep', 'bus']
+          envFrom:
+            {{- if .Values.extraEnvVar }}
+            - configMapRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            - configMapRef:
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+            {{- if (and .Values.secrets .Values.secrets.extraEnvVar) }}
+            - secretRef:
+                name: {{ printf "%s-global-configuration" (include "general.names.short" .) }}
+            {{- end }}
+            - secretRef:
+                name: {{ printf "%s-backcore-configuration" (include "general.names.short" .) }}
+            - secretRef:
+                name: {{  printf "%s-postgresql" (include "general.names.short" .) }}
+          # No TRYTOND_BUS__URL_HOST here: the bus would answer 401 to every request
+          env:
+            # ep bus unlinks the coog modules: preloading the pool of the databases
+            # (backcore configuration) would fail on their missing code. The bus checks
+            # sessions and listens without a pool.
+            - name: TRYTOND_DATABASE_NAMES
+              value: ""
+            - name: TRYTOND_WEB__LISTEN
+              value: "0.0.0.0:8001"
+            # The gateway rewrites the Origin header to its COOG_BUS_URL origin before
+            # proxying to the bus, as it does for coog (see backcore.coog.cors)
+            - name: TRYTOND_WEB__CORS
+              value: {{ printf "http://%s-bus" (include "general.names.short" .) | quote }}
+            - name: TRYTOND_BUS__ALLOW_SUBSCRIBE
+              value: "1"
+            - name: TRYTOND_BUS__LONG_POLLING_TIMEOUT
+              value: {{ .Values.backCore.bus.longPollingTimeout | quote }}
+          ports:
+            - name: bus
+              containerPort: 8001
+          startupProbe:
+            tcpSocket:
+              port: bus
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.startupProbe .Values.backCore.bus.startupProbe) "context" $) | nindent 12 }}
+          livenessProbe:
+            tcpSocket:
+              port: bus
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.livenessProbe .Values.backCore.bus.livenessProbe) "context" $) | nindent 12 }}
+          readinessProbe:
+            tcpSocket:
+              port: bus
+            {{- include "general.tplvalues.render" (dict "value" (default .Values.readinessProbe .Values.backCore.bus.readinessProbe) "context" $) | nindent 12 }}
+          {{- if (and (not .Values.podLevelResources) .Values.backCore.bus.resources) }}
+          resources: {{- toYaml .Values.backCore.bus.resources | nindent 12 }}
+          {{- end }}
+        {{- end }}
       {{- with default .Values.nodeSelector .Values.backCore.cron.nodeSelector }}
       nodeSelector: {{- toYaml . | nindent 8 }}
       {{- end }}

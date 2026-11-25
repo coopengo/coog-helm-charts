@@ -149,6 +149,23 @@ tests:
           path: data.TRYTOND_DOCUMENT_API__TEMPORARY_UPLOAD_ROOT
           value: /workspace/io/uploads/
 
+  # NUM_PROXIES used to be set with clamav only: it does not depend on it
+  - it: Test TRYTOND_WEB__NUM_PROXIES without clamav
+    asserts:
+      - equal:
+          path: data.TRYTOND_WEB__NUM_PROXIES
+          value: "1"
+
+  - it: Test TRYTOND_GATEWAY__URL when only the bus enables the gateway
+    set:
+      backCore:
+        bus:
+          enabled: true
+    asserts:
+      - equal:
+          path: data.TRYTOND_GATEWAY__URL
+          value: http://test-coog-gateway
+
   - it: Test clamav disabled by default
     asserts:
       - notExists:
@@ -179,3 +196,6 @@ tests:
       - equal:
           path: data.TRYTOND_DATABASE__BINARY_SCANNER_DIRECTORY
           value: /tmp/
+      - equal:
+          path: data.TRYTOND_WEB__NUM_PROXIES
+          value: "1"

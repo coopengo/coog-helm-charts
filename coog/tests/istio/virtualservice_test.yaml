@@ -294,6 +294,47 @@ tests:
               uri: "/gateway/"
               redirectCode: 301
 
+  - it: Should route gateway traffic when only the bus enables the gateway
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+      backCore:
+        bus:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.http
+          content:
+            name: gateway
+            match:
+              - uri:
+                  prefix: "/gateway/"
+            rewrite:
+              uri: "/"
+            headers:
+              request:
+                set:
+                  x-forwarded-host: "%REQ(:authority)%"
+            route:
+              - destination:
+                  host: test-coog-gateway
+                  port:
+                    number: 80
+            timeout: 3600s
+
+  - it: Should not route gateway traffic without portals nor bus
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+    asserts:
+      - notContains:
+          path: spec.http
+          content:
+            name: gateway
+          any: true
+
   - it: Should configure default routes to coog service
     set:
       istio:
