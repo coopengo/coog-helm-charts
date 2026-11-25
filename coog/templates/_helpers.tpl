@@ -147,27 +147,6 @@ Usage: {{- include "coog.jwt.validate" . }}
 {{- end -}}
 
 {{/*
-Whether the gateway (coog-portal-gateway) is deployed: for the portals, or for the Tryton
-bus, which is only reached through it. Gates the gateway objects and what its pod reads
-(frontcore configuration, MongoDB secret). The Istio templates (gateway route in the
-VirtualService, gateway AuthorizationPolicy) keep their own copy of this list: keep them
-in sync.
-Usage: {{- if include "gateway.enabled" . }}
-*/}}
-{{- define "gateway.enabled" -}}
-{{- if (or .Values.frontCore.enabled
-          .Values.apiB2c.enabled
-          .Values.apiReferential.enabled
-          .Values.b2c.enabled
-          .Values.b2b.enabled
-          .Values.customerBackend.enabled
-          .Values.customerFrontend.enabled
-          .Values.backCore.bus.enabled) -}}
-true
-{{- end -}}
-{{- end -}}
-
-{{/*
 URL the coog login announces to Sao for the bus: the gateway route to the bus, on the host
 Sao is served from (the same host as TRYTOND_WEB__CORS). The trailing slash matters: Sao
 resolves "<db>/bus" against it.

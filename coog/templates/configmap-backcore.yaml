@@ -17,7 +17,15 @@ data:
   TRYTOND_REPORT__API: {{ $libroconvUri | quote }}
   {{- end }}
   TRYTOND_DATABASE_NAMES: {{ default .Release.Name (include "postgres.databases" .) | quote }}
-  {{- if include "gateway.enabled" . }}
+  {{- if (or .Values.frontCore.enabled
+          .Values.apiB2c.enabled
+          .Values.apiReferential.enabled
+          .Values.b2c.enabled
+          .Values.b2b.enabled
+          .Values.customerBackend.enabled
+          .Values.customerFrontend.enabled
+          .Values.backCore.bus.enabled)
+  }}
   TRYTOND_GATEWAY__URL: {{ printf "http://%s-gateway" (include "general.names.short" .) | quote }}
   {{- end }}
   # One reverse proxy in front of trytond (ingress): client address, host and scheme
