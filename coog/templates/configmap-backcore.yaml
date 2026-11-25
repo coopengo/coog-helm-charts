@@ -23,16 +23,19 @@ data:
           .Values.b2c.enabled
           .Values.b2b.enabled
           .Values.customerBackend.enabled
-          .Values.customerFrontend.enabled)
+          .Values.customerFrontend.enabled
+          .Values.backCore.bus.enabled)
   }}
   TRYTOND_GATEWAY__URL: {{ printf "http://%s-gateway" (include "general.names.short" .) | quote }}
   {{- end }}
+  # One reverse proxy in front of trytond (ingress): client address, host and scheme
+  # are read from its X-Forwarded-* headers
+  TRYTOND_WEB__NUM_PROXIES: "1"
   {{- if $clamav.enabled }}
   CLAMAV_HOST: {{ $clamav.host | quote }}
   CLAMAV_PORT: {{ $clamav.port | quote }}
   TRYTOND_DATABASE__BINARY_SCANNER: "clamav_wrapper.py"
   TRYTOND_DATABASE__BINARY_SCANNER_DIRECTORY: "/tmp/"
-  TRYTOND_WEB__NUM_PROXIES: "1"
   {{- end }}
   {{- range $key, $value := .Values.backCore.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}

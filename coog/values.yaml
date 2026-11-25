@@ -939,6 +939,24 @@ backCore:
       successThreshold: 1
       failureThreshold: 3
 
+  # -- Tryton bus (notifications pushed to Sao): a "bus" container (ep bus) in the
+  # cron pod, reached only through the gateway under /gateway/coog/<db>/bus.
+  # Enabling it enables the gateway. Requires coog >= 26.28, a gateway that has the
+  # /coog/:db/bus route, and Sao opened through the gateway (/gateway/sao/).
+  bus:
+    enabled: false
+
+    # -- Seconds a bus request waits for a message before answering empty. Keep it
+    # well below every timeout on the path (AWS NLB idle timeout: 350s).
+    longPollingTimeout: 50
+
+    # -- bus container's resource requests and limits. Empty by default: the bus
+    # shares the cron pod envelope (podLevelResources) and adds nothing to it.
+    resources: {}
+
+    # -- startupProbe, livenessProbe, readinessProbe (tcpSocket on the bus port)
+    # default to the global probes.
+
 #############################################################################################################################
 #                                            Back Additional components                                                     #
 #############################################################################################################################

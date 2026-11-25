@@ -117,6 +117,15 @@ tests:
       - hasDocuments:
           count: 1
 
+  - it: Test bus enabled configmap
+    set:
+      backCore:
+        bus:
+          enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
   - it: Test not enabled configmap (1/2)
     asserts:
       - hasDocuments:

@@ -374,3 +374,202 @@ tests:
           value:
             - ep
             - readiness_sub_service
+
+  # [Start] Tryton bus container (backCore.bus)
+  - it: Test bus container absent by default
+    template: cron/deployment.yaml
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 1
+
+  - it: Test bus container
+    template: cron/deployment.yaml
+    set:
+      backCore:
+        bus:
+          enabled: true
+      # The bus enables the gateway, which needs the JWT key (secret-backcore.yaml checks it)
+      secrets:
+        jwt_encryption: test-jwt-encryption-key
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 2
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].image
+          value: cooghub/coog:changeme
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].command
+          value:
+            - ep
+            - bus
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].env
+          content:
+            name: TRYTOND_WEB__LISTEN
+            value: "0.0.0.0:8001"
+      # Same origin as COOG_BUS_URL (gateway/configmap.yaml): the gateway rewrites Origin to it
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].env
+          content:
+            name: TRYTOND_WEB__CORS
+            value: http://test-coog-bus
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].env
+          content:
+            name: TRYTOND_BUS__ALLOW_SUBSCRIBE
+            value: "1"
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].env
+          content:
+            name: TRYTOND_BUS__LONG_POLLING_TIMEOUT
+            value: "50"
+      # No pool preload: ep bus unlinks the coog modules the databases activate
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].env
+          content:
+            name: TRYTOND_DATABASE_NAMES
+            value: ""
+      # url_host on the bus would make it answer 401 to every request
+      - notContains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].env
+          content:
+            name: TRYTOND_BUS__URL_HOST
+          any: true
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].envFrom
+          content:
+            configMapRef:
+              name: test-coog-backcore-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].envFrom
+          content:
+            secretRef:
+              name: test-coog-backcore-configuration
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].envFrom
+          content:
+            secretRef:
+              name: test-coog-postgresql
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].ports
+          content:
+            name: bus
+            containerPort: 8001
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].livenessProbe.tcpSocket.port
+          value: bus
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].readinessProbe.tcpSocket.port
+          value: bus
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].startupProbe.tcpSocket.port
+          value: bus
+      - notExists:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].volumeMounts
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].securityContext.allowPrivilegeEscalation
+          value: false
+      # No resources of its own: the bus shares the cron pod envelope, unchanged
+      - notExists:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].resources
+      - equal:
+          path: spec.template.spec.resources
+          value:
+            limits:
+              cpu: 600m
+              memory: 900Mi
+            requests:
+              cpu: 300m
+              memory: 450Mi
+      # The cron container itself is unchanged
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-cron")].command
+          value:
+            - ep
+            - cron
+
+  - it: Test bus long polling timeout
+    template: cron/deployment.yaml
+    set:
+      backCore:
+        bus:
+          enabled: true
+          longPollingTimeout: 30
+      secrets:
+        jwt_encryption: test-jwt-encryption-key
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].env
+          content:
+            name: TRYTOND_BUS__LONG_POLLING_TIMEOUT
+            value: "30"
+
+  - it: Test bus resources raise the pod-level envelope (max of the containers)
+    template: cron/deployment.yaml
+    set:
+      backCore:
+        bus:
+          enabled: true
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 200m
+              memory: 600Mi
+      secrets:
+        jwt_encryption: test-jwt-encryption-key
+    asserts:
+      - equal:
+          path: spec.template.spec.resources
+          value:
+            limits:
+              cpu: 1000m
+              memory: 1024Mi
+            requests:
+              cpu: 300m
+              memory: 600Mi
+      - notExists:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].resources
+
+  - it: Test bus resources without pod-level resources
+    template: cron/deployment.yaml
+    set:
+      podLevelResources: false
+      backCore:
+        bus:
+          enabled: true
+          resources:
+            limits:
+              memory: 1Gi
+      secrets:
+        jwt_encryption: test-jwt-encryption-key
+    asserts:
+      - notExists:
+          path: spec.template.spec.resources
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].resources
+          value:
+            limits:
+              memory: 1Gi
+
+  - it: Test bus probes follow backCore.bus
+    template: cron/deployment.yaml
+    set:
+      backCore:
+        bus:
+          enabled: true
+          livenessProbe:
+            periodSeconds: 60
+      secrets:
+        jwt_encryption: test-jwt-encryption-key
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[?(@.name == "coog-cron-bus")].livenessProbe.periodSeconds
+          value: 60
+  # [End] Tryton bus container

@@ -303,6 +303,15 @@ tests:
       - hasDocuments:
           count: 1
 
+  - it: Test gateway enabled ingress by the bus alone
+    set:
+      backCore:
+        bus:
+          enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+
   - it: Test not enabled ingress (1/2)
     asserts:
       - hasDocuments:
