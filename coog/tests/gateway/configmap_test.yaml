@@ -155,6 +155,51 @@ tests:
       - hasDocuments:
           count: 1
 
+  - it: Test ROOT_PATH_GATEWAY absent without edge
+    set:
+      frontCore:
+        enabled: true
+    asserts:
+      - notExists:
+          path: data.ROOT_PATH_GATEWAY
+
+  - it: Test ROOT_PATH_GATEWAY is the gateway base path in edge mode
+    set:
+      frontCore:
+        enabled: true
+        gateway:
+          edge: true
+    asserts:
+      - equal:
+          path: data.ROOT_PATH_GATEWAY
+          value: /gateway
+
+  - it: Test ROOT_PATH_GATEWAY follows COOG_GATEWAY_BASE_PATH, trailing slash dropped
+    set:
+      frontCore:
+        enabled: true
+        gateway:
+          edge: true
+          extraEnvVar:
+            COOG_GATEWAY_BASE_PATH: /api/
+    asserts:
+      - equal:
+          path: data.ROOT_PATH_GATEWAY
+          value: /api
+
+  - it: Test ROOT_PATH_GATEWAY set in extraEnvVar wins over the computed one
+    set:
+      frontCore:
+        enabled: true
+        gateway:
+          edge: true
+          extraEnvVar:
+            ROOT_PATH_GATEWAY: /custom
+    asserts:
+      - equal:
+          path: data.ROOT_PATH_GATEWAY
+          value: /custom
+
   - it: Test not enabled configmap (1/2)
     asserts:
       - hasDocuments:
