@@ -146,6 +146,106 @@ tests:
           path: spec.rules[0].from[0].source.notRemoteIpBlocks
           content: "5.6.7.8/32"
 
+  - it: Should keep a single gateway rule without edge
+    template: gateway/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+      frontCore:
+        enabled: true
+    asserts:
+      - notExists:
+          path: spec.rules[0].to
+      - notExists:
+          path: spec.rules[1]
+
+  - it: Should split the gateway rules by path in edge mode
+    template: gateway/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+        whiteList:
+          internalCidr:
+            - "10.0.0.0/8"
+          trustedCidr:
+            - "192.0.2.0/24"
+          publicCidr:
+            - "5.6.7.8/32"
+      portalV2: true
+      backCore:
+        coog:
+          istio:
+            whiteList:
+              publicCidr:
+                - "21.22.23.24/32"
+      frontCore:
+        enabled: true
+        gateway:
+          edge: true
+          istio:
+            whiteList:
+              publicCidr:
+                - "11.12.13.14/32"
+    asserts:
+      # API portal: the gateway whitelist
+      - equal:
+          path: spec.rules[0]
+          value:
+            from:
+              - source:
+                  notRemoteIpBlocks:
+                    - "10.0.0.0/8"
+                    - "192.0.2.0/24"
+                    - "5.6.7.8/32"
+                    - "11.12.13.14/32"
+            to:
+              - operation:
+                  paths:
+                    - "/gateway"
+                    - "/gateway/*"
+      # Everything relayed to the back office: coog's whitelist
+      - equal:
+          path: spec.rules[1]
+          value:
+            from:
+              - source:
+                  notRemoteIpBlocks:
+                    - "10.0.0.0/8"
+                    - "192.0.2.0/24"
+                    - "5.6.7.8/32"
+                    - "21.22.23.24/32"
+            to:
+              - operation:
+                  notPaths:
+                    - "/gateway"
+                    - "/gateway/*"
+      - notExists:
+          path: spec.rules[2]
+
+  - it: Should split the gateway rules on COOG_GATEWAY_BASE_PATH in edge mode
+    template: gateway/authorizationpolicy-istio.yaml
+    set:
+      istio:
+        enabled: true
+      portalV2: true
+      frontCore:
+        enabled: true
+        gateway:
+          edge: true
+          extraEnvVar:
+            COOG_GATEWAY_BASE_PATH: /api/
+    asserts:
+      - equal:
+          path: spec.rules[0].to[0].operation.paths
+          value:
+            - "/api"
+            - "/api/*"
+      - equal:
+          path: spec.rules[1].to[0].operation.notPaths
+          value:
+            - "/api"
+            - "/api/*"
+
   - it: Should not create gateway AuthorizationPolicy when frontCore is disabled
     template: gateway/authorizationpolicy-istio.yaml
     set:
