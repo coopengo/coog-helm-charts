@@ -143,6 +143,39 @@ Usage: {{- include "coog.jwt.validate" . }}
 {{- end -}}
 {{- end -}}
 
+{{/*
+Guards of frontCore.gateway.edge, the gateway as the edge of the deployment: the
+VirtualService sends / to it, without rewrite. The edge mode needs the Istio
+VirtualService, the Portal V2 gateway image (it reads ROOT_PATH_GATEWAY and serves Sao
+on /), an enabled gateway, and a gateway base path other than /, which Sao takes.
+
+This helper only validates; it emits nothing.
+
+Usage: {{- include "coog.gateway.edge.validate" . }}
+*/}}
+{{- define "coog.gateway.edge.validate" -}}
+{{- if .Values.frontCore.gateway.edge -}}
+{{- if not .Values.istio.enabled -}}
+{{- fail "frontCore.gateway.edge requires istio.enabled: the edge mode only exists in the Istio VirtualService. Set istio.enabled: true, or frontCore.gateway.edge: false." -}}
+{{- end -}}
+{{- if not .Values.portalV2 -}}
+{{- fail "frontCore.gateway.edge requires portalV2: true: only the coog-portal-gateway image reads ROOT_PATH_GATEWAY and serves Sao on /." -}}
+{{- end -}}
+{{- if not (or .Values.frontCore.enabled
+              .Values.apiB2c.enabled
+              .Values.apiReferential.enabled
+              .Values.b2c.enabled
+              .Values.b2b.enabled
+              .Values.customerBackend.enabled
+              .Values.customerFrontend.enabled) -}}
+{{- fail "frontCore.gateway.edge requires the gateway: enable frontCore or a portal." -}}
+{{- end -}}
+{{- if not (trimSuffix "/" (toString (default "" .Values.frontCore.gateway.extraEnvVar.COOG_GATEWAY_BASE_PATH))) -}}
+{{- fail "frontCore.gateway.edge requires frontCore.gateway.extraEnvVar.COOG_GATEWAY_BASE_PATH other than / (default /gateway): the gateway serves Sao on / and its API portal under that path." -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 
 {{/*
 Join TRYTOND_DATABASE_NAMES in string format
