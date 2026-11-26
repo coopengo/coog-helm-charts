@@ -1,5 +1,8 @@
+{{- include "coog.gateway.edge.validate" . }}
 {{- if .Values.istio.enabled }}
 {{- $globalDefaultTimeout := default "600s" .Values.istio.gateway.routing.timeout }}
+{{- /* Gateway as the edge: / goes to the gateway, without rewrite, which relays to coog */}}
+{{- $edge := .Values.frontCore.gateway.edge }}
 apiVersion: networking.istio.io/v1
 kind: VirtualService
 metadata:
@@ -23,12 +26,14 @@ spec:
     redirect:
       uri: "/"
       redirectCode: 307
+  {{- if not $edge }}
   - match:
     - uri:
         exact: /doc
     redirect:
       uri: /doc/
       redirectCode: 307
+  {{- end }}
   {{- if .Values.b2c.enabled }}
   - match:
     - uri:
@@ -144,6 +149,7 @@ spec:
            $.Values.b2b.enabled
            $.Values.customerBackend.enabled
            $.Values.customerFrontend.enabled) }}
+  {{- if not $edge }}
   - match:
     - uri:
         prefix: "/gateway/"
@@ -161,6 +167,7 @@ spec:
       perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
       retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
     {{- end }}
+  {{- end }}
     
   - match:
     - uri:
@@ -171,15 +178,17 @@ spec:
   {{- end }}
 
   - match:
+    {{- if not $edge }}
     - uri:
         prefix: "/docusign"
     - uri:
         prefix: "/doc"
+    {{- end }}
     - uri:
         prefix: "/"
     route:
     - destination:
-        host: {{ printf "%s" (include "general.names.short" $) }}
+        host: {{ ternary (printf "%s-%s" (include "general.names.short" $) "gateway") (printf "%s" (include "general.names.short" $)) $edge }}
         port:
           number: 80
     timeout: {{ $globalDefaultTimeout }}
