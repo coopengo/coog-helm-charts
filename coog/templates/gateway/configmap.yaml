@@ -24,6 +24,10 @@ data:
   {{- if .Values.backCore.bus.enabled }}
   COOG_BUS_URL: {{ printf "http://%s-bus" (include "general.names.short" .) | quote }}
   {{- end }}
+  {{- /* Edge mode: the gateway receives the full path; its API portal lives under this root */}}
+  {{- if and .Values.frontCore.gateway.edge (not (hasKey .Values.frontCore.gateway.extraEnvVar "ROOT_PATH_GATEWAY")) }}
+  ROOT_PATH_GATEWAY: {{ trimSuffix "/" (toString (default "" .Values.frontCore.gateway.extraEnvVar.COOG_GATEWAY_BASE_PATH)) | quote }}
+  {{- end }}
   WHITELIST: {{ include "frontcore.gateway.cors" . }}
   {{- range $key, $value := .Values.frontCore.gateway.extraEnvVar }}
   {{ $key }}: {{ $value | quote }}
