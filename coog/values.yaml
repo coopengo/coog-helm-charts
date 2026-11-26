@@ -945,7 +945,7 @@ backCore:
   # Enabling it enables the gateway. Requires coog >= 26.28, a gateway that has the
   # /coog/:db/bus route, and Sao opened through the gateway (/gateway/sao/).
   bus:
-    enabled: true
+    enabled: false
 
     # -- Seconds a bus request waits for a message before answering empty. Keep it
     # well below every timeout on the path (AWS NLB idle timeout: 350s).
