@@ -1061,6 +1061,16 @@ frontCore:
       # -- gateway image repository
       name: coog-gateway
 
+    # -- Gateway as the edge of the deployment (istio.enabled and portalV2 only, off by
+    # default). The VirtualService sends / to the gateway, without rewrite, instead of
+    # coog: the gateway serves Sao on /, its API portal under COOG_GATEWAY_BASE_PATH, and
+    # relays the rest (Sao RPC, callbacks, /doc) to coog. The b2c, b2b, customer-backend
+    # and customer-frontend routes, and the /sao and /gateway redirects, stay as they are.
+    # Sets ROOT_PATH_GATEWAY (= COOG_GATEWAY_BASE_PATH) on the gateway, and splits its
+    # AuthorizationPolicy by path: the API portal keeps the gateway whitelist, the rest
+    # takes coog's. Requires a coog-portal-gateway that reads ROOT_PATH_GATEWAY.
+    edge: false
+
     # -- Configure environement variables for this component
     extraEnvVar:
       BASE_PATH: "/gateway"

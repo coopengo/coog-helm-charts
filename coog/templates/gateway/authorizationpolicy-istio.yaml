@@ -38,5 +38,39 @@ spec:
         - {{ . | quote }}
         {{- end }}
         {{- end }}
+  {{- if .Values.frontCore.gateway.edge }}
+  {{- /* Edge mode: the API portal keeps the gateway whitelist, what the gateway relays
+         to the back office (Sao, RPC, callbacks, /doc) takes coog's */}}
+  {{- $basePath := trimSuffix "/" (toString (default "" .Values.frontCore.gateway.extraEnvVar.COOG_GATEWAY_BASE_PATH)) }}
+    to:
+    - operation:
+        paths:
+        - {{ $basePath | quote }}
+        - {{ printf "%s/*" $basePath | quote }}
+  - from:
+    - source:
+        notRemoteIpBlocks:
+        {{- with .Values.istio.whiteList.internalCidr }}
+        {{- range . }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- with .Values.istio.whiteList.trustedCidr }}
+        {{- range . }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- $coogPublicCidrs := concat $.Values.istio.whiteList.publicCidr (default $.Values.istio.whiteList.publicCidr $.Values.backCore.coog.istio.whiteList.publicCidr) }}
+        {{- with $coogPublicCidrs }}
+        {{- range . }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+    to:
+    - operation:
+        notPaths:
+        - {{ $basePath | quote }}
+        - {{ printf "%s/*" $basePath | quote }}
+  {{- end }}
 {{- end }}
 {{- end }}

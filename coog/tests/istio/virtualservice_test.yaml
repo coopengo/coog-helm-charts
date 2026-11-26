@@ -597,3 +597,160 @@ tests:
           value: redirect-b2c
       - notExists:
           path: spec.http[4].headers
+
+  # -- Gateway as the edge (frontCore.gateway.edge)
+  - it: Should send / to the gateway, without rewrite, in edge mode
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+      portalV2: true
+      frontCore:
+        enabled: true
+        gateway:
+          edge: true
+    asserts:
+      - equal:
+          path: spec.http[0].name
+          value: redirect-sao
+      - equal:
+          path: spec.http[1].name
+          value: redirect-sao-slash
+      - equal:
+          path: spec.http[2].name
+          value: redirect-gateway
+      - equal:
+          path: spec.http[3]
+          value:
+            name: gateway-edge
+            match:
+              - uri:
+                  prefix: "/"
+            headers:
+              request:
+                set:
+                  x-forwarded-host: "%REQ(:authority)%"
+            route:
+              - destination:
+                  host: test-coog-gateway
+                  port:
+                    number: 80
+            timeout: 3600s
+      # No /doc redirect, /gateway/ route, callbacks, /doc route nor coog route
+      - notExists:
+          path: spec.http[4]
+
+  - it: Should keep the portal routes ahead of the gateway in edge mode
+    set:
+      istio:
+        enabled: true
+        mainHost: coog.local
+      portalV2: true
+      b2c:
+        enabled: true
+      b2b:
+        enabled: true
+      customerBackend:
+        enabled: true
+      customerFrontend:
+        enabled: true
+      frontCore:
+        enabled: true
+        gateway:
+          edge: true
+    asserts:
+      - equal:
+          path: spec.http[0].name
+          value: redirect-sao
+      - equal:
+          path: spec.http[1].name
+          value: redirect-sao-slash
+      - equal:
+          path: spec.http[2].name
+          value: b2c
+      - equal:
+          path: spec.http[3].name
+          value: redirect-b2c
+      - equal:
+          path: spec.http[4].name
+          value: customer-backend
+      - equal:
+          path: spec.http[5].name
+          value: redirect-customer-backend
+      - equal:
+          path: spec.http[6].name
+          value: customer-frontend
+      - equal:
+          path: spec.http[7].name
+          value: redirect-customer-frontend
+      - equal:
+          path: spec.http[8].name
+          value: b2b
+      - equal:
+          path: spec.http[9].name
+          value: redirect-b2b
+      - equal:
+          path: spec.http[10].name
+          value: redirect-gateway
+      - equal:
+          path: spec.http[11].name
+          value: gateway-edge
+      - notExists:
+          path: spec.http[12]
+
+  - it: Should fail in edge mode without Istio
+    set:
+      istio:
+        enabled: false
+      portalV2: true
+      frontCore:
+        enabled: true
+        gateway:
+          edge: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "frontCore.gateway.edge requires istio.enabled: the edge mode only exists in the Istio VirtualService. Set istio.enabled: true, or frontCore.gateway.edge: false."
+
+  - it: Should fail in edge mode without portalV2
+    set:
+      istio:
+        enabled: true
+      portalV2: false
+      frontCore:
+        enabled: true
+        gateway:
+          edge: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "frontCore.gateway.edge requires portalV2: true: only the coog-portal-gateway image reads ROOT_PATH_GATEWAY and serves Sao on /."
+
+  - it: Should fail in edge mode without the gateway
+    set:
+      istio:
+        enabled: true
+      portalV2: true
+      frontCore:
+        enabled: false
+        gateway:
+          edge: true
+      backCore:
+        bus:
+          enabled: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "frontCore.gateway.edge requires the gateway: enable frontCore, a portal or backCore.bus."
+
+  - it: Should fail in edge mode with a gateway base path of /
+    set:
+      istio:
+        enabled: true
+      portalV2: true
+      frontCore:
+        enabled: true
+        gateway:
+          edge: true
+          extraEnvVar:
+            COOG_GATEWAY_BASE_PATH: "/"
+    asserts:
+      - failedTemplate:
+          errorMessage: "frontCore.gateway.edge requires frontCore.gateway.extraEnvVar.COOG_GATEWAY_BASE_PATH other than / (default /gateway): the gateway serves Sao on / and its API portal under that path."

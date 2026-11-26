@@ -1,5 +1,8 @@
+{{- include "coog.gateway.edge.validate" . }}
 {{- if .Values.istio.enabled }}
 {{- $globalDefaultTimeout := default "600s" .Values.istio.gateway.routing.timeout }}
+{{- /* Gateway as the edge: / goes to the gateway, without rewrite, which relays to coog */}}
+{{- $edge := .Values.frontCore.gateway.edge }}
 apiVersion: networking.istio.io/v1
 kind: VirtualService
 metadata:
@@ -25,6 +28,7 @@ spec:
     redirect:
       uri: "/"
       redirectCode: 307
+  {{- if not $edge }}
   - name: redirect-doc
     match:
     - uri:
@@ -32,6 +36,7 @@ spec:
     redirect:
       uri: /doc/
       redirectCode: 307
+  {{- end }}
   {{- if .Values.b2c.enabled }}
   - name: b2c
     match:
@@ -172,6 +177,7 @@ spec:
            $.Values.customerBackend.enabled
            $.Values.customerFrontend.enabled
            $.Values.backCore.bus.enabled) }}
+  {{- if not $edge }}
   - name: gateway
     match:
     - uri:
@@ -194,6 +200,7 @@ spec:
       perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
       retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
     {{- end }}
+  {{- end }}
     
   - name: redirect-gateway
     match:
@@ -203,6 +210,7 @@ spec:
       uri: "/gateway/"
       redirectCode: 301
   {{- end }}
+  {{- if not $edge }}
 
   - name: callback-docusign
     match:
@@ -284,7 +292,8 @@ spec:
       perTryTimeout: {{ .Values.istio.gateway.routing.retry.perTryTimeout }}
       retryOn: {{ .Values.istio.gateway.routing.retry.retryOn | quote }}
     {{- end }}
-  - name: coog
+  {{- end }}
+  - name: {{ ternary "gateway-edge" "coog" $edge }}
     match:
     - uri:
         prefix: "/"
@@ -294,7 +303,7 @@ spec:
           x-forwarded-host: "%REQ(:authority)%"
     route:
     - destination:
-        host: {{ printf "%s" (include "general.names.short" $) }}
+        host: {{ ternary (printf "%s-%s" (include "general.names.short" $) "gateway") (printf "%s" (include "general.names.short" $)) $edge }}
         port:
           number: 80
     timeout: {{ $globalDefaultTimeout }}

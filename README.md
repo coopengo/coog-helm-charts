@@ -209,6 +209,59 @@ backCore:
 
 Le conteneur, le Service et les variables de coog et de la gateway disparaissent. La gateway n'est retirée que si aucun portail ne l'utilise.
 
+## Gateway en edge (`frontCore.gateway.edge`)
+
+Option **opt-in**, désactivée par défaut, Istio et `portalV2` uniquement. La gateway devient le point d'entrée par défaut du tenant : le VirtualService lui envoie `/`, sans réécriture, à la place de coog. Elle sert Sao à `/`, son portail API sous `COOG_GATEWAY_BASE_PATH` (`/gateway`), et relaie le reste vers coog (RPC de Sao, callbacks, `/doc`). Les routes des portails b2c, b2b, customer-backend et customer-frontend, et les redirections `/sao` et `/gateway`, ne changent pas.
+
+```text
+NLB AWS
+         │ TLS terminé par Istio
+         ▼
+┌────────────────┐                   ┌───────────────────┐                   ┌──────┐
+│ ingressgateway │  /                │ gateway           │  RPC, callbacks,  │ coog │
+│ Istio          ├──────────────────►│ Sao à /           ├──────────────────►│      │
+│                │  sans réécriture  │ API sous /gateway │  /doc, /liveness  │      │
+└────────────────┘                   └───────────────────┘                   └──────┘
+```
+
+L'ingressgateway garde ses routes directes vers les portails b2c, b2b et customer-*, et ses redirections `/sao` et `/gateway`.
+
+```yaml
+portalV2: true
+istio:
+  enabled: true
+frontCore:
+  gateway:
+    edge: true
+```
+
+| Objet | Ce que l'option change |
+| :-- | :-- |
+| VirtualService | route `gateway-edge` : `/` vers `<short>-gateway`, sans réécriture, à la place de la route `coog`. Retirées : la route `/gateway/`, la redirection `/doc` vers `/doc/`, les callbacks `/docusign`, `/cryptolog`, `/paybox` et la route `/doc`, que la gateway relaie. Gardées : les portails, les redirections `/sao`, `/sao/` et `/gateway` |
+| configmap gateway | `ROOT_PATH_GATEWAY` = `COOG_GATEWAY_BASE_PATH` sans `/` final. Une valeur posée dans `frontCore.gateway.extraEnvVar.ROOT_PATH_GATEWAY` l'emporte |
+| AuthorizationPolicy gateway | deux règles DENY par chemin : `COOG_GATEWAY_BASE_PATH` et ce qu'il contient gardent la liste blanche de la gateway (`frontCore.gateway.istio.whiteList.publicCidr`), le reste prend celle de coog (`backCore.coog.istio.whiteList.publicCidr`) |
+
+- **Prérequis** : `istio.enabled`, `portalV2: true`, une gateway activée (frontCore, un portail ou le bus) et un `COOG_GATEWAY_BASE_PATH` autre que `/`, sinon le rendu échoue. Une image `coog-portal-gateway` qui lit `ROOT_PATH_GATEWAY` (version minimale à préciser, PINTE-30243).
+- **Inchangés** : `BASE_PATH`, `COOG_GATEWAY_BASE_PATH`, `COOG_GATEWAY_URL`, et l'URL du bus annoncée par coog (`https://<hôte>/gateway/coog/`).
+- **AuthorizationPolicy de coog** : inchangée. Derrière la gateway, le filtrage par IP client se fait sur la gateway.
+- **Sonde `httpProbe`** : `https://<hôte>/liveness` traverse la gateway, puis coog.
+
+### Mise en service
+
+1. Déployer une gateway qui lit `ROOT_PATH_GATEWAY`, puis le chart avec `frontCore.gateway.edge: true`.
+2. Ouvrir Sao par `https://<hôte>/` : connexion, appels RPC et bus fonctionnent.
+3. `https://<hôte>/gateway/` sert le portail API, `/gateway` répond 301, `/sao` répond 307.
+
+### Retour arrière
+
+```yaml
+frontCore:
+  gateway:
+    edge: false
+```
+
+Le VirtualService, la configmap et l'AuthorizationPolicy de la gateway reviennent à leur rendu précédent.
+
 ## Mode RabbitMQ : `legacy` vs `operator`
 
 Le chart supporte deux modes de déploiement RabbitMQ via le toggle `rabbitmq.mode` :
